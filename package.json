@@ -1,0 +1,29 @@
+{
+  "name": "weavcraft",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "author": "",
+  "homepage": "https://github.com/taco3064/weavcraft#readme",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taco3064/weavcraft.git"
+  },
+  "bugs": {
+    "url": "https://github.com/taco3064/weavcraft/issues"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "scripts": {
+    "commit": "git-cz",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "commitizen": "^4.3.0",
+    "husky": "^9.0.11"
+  }
+}
