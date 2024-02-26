@@ -18,12 +18,16 @@
       "path": "cz-conventional-changelog"
     }
   },
+  "nx": {
+    "targets": {}
+  },
   "scripts": {
     "commit": "git-cz",
     "prepare": "husky"
   },
   "devDependencies": {
     "commitizen": "^4.3.0",
-    "husky": "^9.0.11"
+    "husky": "^9.0.11",
+    "nx": "18.0.5"
   }
 }
