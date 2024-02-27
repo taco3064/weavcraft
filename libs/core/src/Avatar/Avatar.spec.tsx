@@ -10,6 +10,26 @@ describe('@weavcraft/Avatar', () => {
     expect(baseElement).toBeTruthy();
   });
 
+  it('should render an image', () => {
+    const { baseElement } = render(
+      <Avatar src="https://mui.com/static/images/avatar/1.jpg" />
+    );
+
+    const el = baseElement.querySelector('img');
+
+    expect(el).toHaveAttribute(
+      'src',
+      'https://mui.com/static/images/avatar/1.jpg'
+    );
+  });
+
+  it('should render text', () => {
+    const { baseElement } = render(<Avatar text="A" />);
+    const el = getByTestId(baseElement, 'avatar');
+
+    expect(el).toHaveTextContent('A');
+  });
+
   it('should correctly apply the width prop', () => {
     const { baseElement } = render(<Avatar width="80px" />);
     const el = getByTestId(baseElement, 'avatar');

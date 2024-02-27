@@ -1,4 +1,6 @@
 import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import AvatarGroup from './AvatarGroup';
 
 describe('@weavcraft/AvatarGroup', () => {
@@ -32,6 +34,25 @@ describe('@weavcraft/AvatarGroup', () => {
     const els = baseElement.querySelectorAll('img');
 
     expect(els.length).toBe(data.length);
+  });
+
+  it('should avatarProps correctly', () => {
+    const { baseElement } = render(
+      <AvatarGroup
+        data={data}
+        avatarProps={{
+          width: '80px',
+          height: '80px',
+        }}
+      />
+    );
+
+    const els = baseElement.querySelectorAll('div[data-testid="avatar"]');
+
+    els.forEach((el) => {
+      expect(el).toHaveStyle('width: 80px');
+      expect(el).toHaveStyle('height: 80px');
+    });
   });
 
   const data = [
