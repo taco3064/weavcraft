@@ -1,6 +1,4 @@
-import { getByTestId, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-
+import { render } from '@testing-library/react';
 import AvatarGroup from './AvatarGroup';
 
 describe('@weavcraft/AvatarGroup', () => {
@@ -38,9 +36,9 @@ describe('@weavcraft/AvatarGroup', () => {
       <AvatarGroup data={data} dataProps={{ text: 'name' }} />
     );
 
-    const avatars = baseElement.querySelectorAll('div[data-testid="avatar"]');
+    const els = baseElement.querySelectorAll('div[data-testid="avatar"]');
 
-    expect(avatars.length).toBe(5);
+    expect(els.length).toBe(5);
   });
 
   it('should render 5 img avatars', () => {
@@ -54,8 +52,8 @@ describe('@weavcraft/AvatarGroup', () => {
       />
     );
 
-    const avatars = baseElement.querySelectorAll('img');
+    const els = baseElement.querySelectorAll('img');
 
-    expect(avatars.length).toBe(5);
+    expect(els.length).toBe(5);
   });
 });

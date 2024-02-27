@@ -12,15 +12,15 @@ describe('@weavcraft/Avatar', () => {
 
   it('should correctly apply the width prop', () => {
     const { baseElement } = render(<Avatar width="80px" />);
-    const component = getByTestId(baseElement, 'avatar');
+    const el = getByTestId(baseElement, 'avatar');
 
-    expect(component).toHaveStyle('width: 80px');
+    expect(el).toHaveStyle('width: 80px');
   });
 
   it('should correctly apply the height prop', () => {
     const { baseElement } = render(<Avatar height="80px" />);
-    const component = getByTestId(baseElement, 'avatar');
+    const el = getByTestId(baseElement, 'avatar');
 
-    expect(component).toHaveStyle('height: 80px');
+    expect(el).toHaveStyle('height: 80px');
   });
 });
