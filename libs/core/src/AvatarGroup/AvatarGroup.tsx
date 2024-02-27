@@ -1,6 +1,5 @@
 import MuiAvatarGroup from '@mui/material/AvatarGroup';
 import _get from 'lodash/get';
-import _pick from 'lodash/pick';
 import { useMemo } from 'react';
 
 import Avatar, { type AvatarProps } from '../Avatar';
@@ -10,17 +9,17 @@ import type { Data } from '../types';
 export default function AvatarGroup<T extends Data>({
   avatarProps,
   data,
-  dataProps = {},
+  propMapping = {},
   ...props
 }: AvatarGroupProps<T>) {
-  const stringify = JSON.stringify(dataProps);
+  const stringify = JSON.stringify(propMapping);
 
   const items = useMemo<AvatarProps[]>(() => {
-    const keys = Object.entries(JSON.parse(stringify));
+    const entries = Object.entries(JSON.parse(stringify));
 
     return (
       data?.map((item) =>
-        keys.reduce<AvatarProps>(
+        entries.reduce<AvatarProps>(
           (result, [key, path]) => ({
             ...result,
             [key]: _get(item, path as string),

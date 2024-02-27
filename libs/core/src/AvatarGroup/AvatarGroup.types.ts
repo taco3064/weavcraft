@@ -2,9 +2,12 @@ import MuiAvatarGroup from '@mui/material/AvatarGroup';
 import type { ComponentProps } from 'react';
 
 import type { AvatarProps } from '../Avatar';
-import type { Data } from '../types';
+import type { Data, OverridePropNames } from '../types';
 
-type OverrideChildPropNames = 'alt' | 'src' | 'srcSet' | 'text';
+type OverrideChildPropNames = OverridePropNames<
+  AvatarProps,
+  'alt' | 'src' | 'srcSet' | 'text'
+>;
 
 export interface AvatarGroupProps<T extends Data>
   extends Pick<
@@ -13,5 +16,5 @@ export interface AvatarGroupProps<T extends Data>
   > {
   avatarProps?: Omit<AvatarProps, OverrideChildPropNames>;
   data?: T[];
-  dataProps?: Partial<Record<OverrideChildPropNames, string>>;
+  propMapping?: Partial<Record<OverrideChildPropNames, string>>;
 }
