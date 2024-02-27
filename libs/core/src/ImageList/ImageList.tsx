@@ -8,17 +8,17 @@ import type { Data } from '../types';
 import type { ImageListProps, ImageListItemProps } from './ImageList.types';
 
 export default function ImageList<T extends Data>({
-  action,
+  itemAction,
   data,
   itemProps: defaultItemProps,
   propMapping = {},
   onItemToggle,
   ...props
 }: ImageListProps<T>) {
-  const { type: Action, props: actionProps } = action || {};
+  const { type: Action, props: actionProps } = itemAction || {};
   const stringify = JSON.stringify(propMapping);
 
-  const items = useMemo<(ImageListItemProps & { item: T })[]>(() => {
+  const items = useMemo(() => {
     const entries = Object.entries(JSON.parse(stringify));
 
     return (
@@ -37,36 +37,34 @@ export default function ImageList<T extends Data>({
 
   return (
     <MuiImageList {...props}>
-      {items.map(
-        ({ item, alt, description, src, srcSet, ...itemProps }, index) => (
-          <MuiImageListItem
-            key={index}
-            {...defaultItemProps}
-            {...itemProps}
-            data-testid={alt}
-          >
-            <img {...{ alt, src, srcSet }} loading="lazy" />
+      {items.map(({ item, alt, description, src, srcSet, ...itemProps }, i) => (
+        <MuiImageListItem
+          key={i}
+          data-testid={alt}
+          {...defaultItemProps}
+          {...itemProps}
+        >
+          <img {...{ alt, src, srcSet }} loading="lazy" />
 
-            {[Action, alt, description].some(Boolean) && (
-              <MuiImageListItemBar
-                position="below"
-                title={alt}
-                subtitle={description}
-                actionIcon={
-                  Action && (
-                    <Action
-                      {...actionProps}
-                      {...(onItemToggle && {
-                        onClick: () => onItemToggle?.(item),
-                      })}
-                    />
-                  )
-                }
-              />
-            )}
-          </MuiImageListItem>
-        )
-      )}
+          {[Action, alt, description].some(Boolean) && (
+            <MuiImageListItemBar
+              position="below"
+              title={alt}
+              subtitle={description}
+              actionIcon={
+                Action && (
+                  <Action
+                    {...actionProps}
+                    {...(onItemToggle && {
+                      onClick: () => onItemToggle?.(item),
+                    })}
+                  />
+                )
+              }
+            />
+          )}
+        </MuiImageListItem>
+      ))}
     </MuiImageList>
   );
 }

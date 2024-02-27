@@ -14,7 +14,7 @@ export default function AvatarGroup<T extends Data>({
 }: AvatarGroupProps<T>) {
   const stringify = JSON.stringify(propMapping);
 
-  const items = useMemo<AvatarProps[]>(() => {
+  const items = useMemo(() => {
     const entries = Object.entries(JSON.parse(stringify));
 
     return (
@@ -32,8 +32,8 @@ export default function AvatarGroup<T extends Data>({
 
   return (
     <MuiAvatarGroup {...props}>
-      {items.map((itemProps, index) => (
-        <Avatar key={index} {...avatarProps} {...itemProps} />
+      {items.map((itemProps, i) => (
+        <Avatar key={i} {...avatarProps} {...itemProps} />
       ))}
     </MuiAvatarGroup>
   );

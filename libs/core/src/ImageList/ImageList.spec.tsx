@@ -87,7 +87,7 @@ describe('@weavcraft/ImageList', () => {
         data={data.slice(0, size)}
         itemProps={{ rows: 1, cols: 1 }}
         propMapping={{ src: 'img' }}
-        action={<Icon code="faClose" />}
+        itemAction={<Icon code="faClose" />}
       />
     );
 
@@ -105,7 +105,7 @@ describe('@weavcraft/ImageList', () => {
         data={data.slice(0, size)}
         itemProps={{ rows: 1, cols: 1 }}
         propMapping={{ src: 'img' }}
-        action={
+        itemAction={
           <IconButton>
             <Icon code="faClose" />
           </IconButton>
