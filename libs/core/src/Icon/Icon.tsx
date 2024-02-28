@@ -1,13 +1,12 @@
-import * as Fortawesome from '@fortawesome/free-solid-svg-icons';
 import MuiSvgIcon from '@mui/material/SvgIcon';
 import _get from 'lodash/get';
 import { useMemo } from 'react';
 
-import type { IconProps } from './Icon.types';
+import { FaIcon, type IconProps } from './Icon.types';
 
 export default function Icon({ code, ...props }: IconProps) {
   const options = useMemo(() => {
-    const icon = _get(Fortawesome, [code, 'icon']);
+    const icon = _get(FaIcon, [code, 'icon']);
 
     if (icon) {
       const [width, height, , , svgPathData] = icon;

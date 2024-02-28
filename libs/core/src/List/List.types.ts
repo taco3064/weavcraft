@@ -2,28 +2,21 @@ import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
 import MuiListSubheader from '@mui/material/ListSubheader';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ComponentType, ReactNode } from 'react';
 
-import type { AvatarGroupProps } from '../AvatarGroup';
-import type { IconProps } from '../Icon';
-import type {
-  ActionElement,
-  Data,
-  OverridableNames,
-  PropMapping,
-} from '../types';
+import { Avatar, type AvatarProps } from '../Avatar';
+import { Icon, type IconProps } from '../Icon';
+import type { AvatarGroupProps, OverridablePropNames } from '../AvatarGroup';
+import type { ActionElement, Data, OverridableNames } from '../types';
 
+//* Variables
 export type IndicatorVariant = 'avatar' | 'icon';
 export type ListItemVariant = 'button' | 'item';
 
+//* Component Props
 type MuiListItemProps = Pick<
   ComponentProps<typeof MuiListItem>,
-  | 'alignItems'
-  | 'children'
-  | 'dense'
-  | 'disableGutters'
-  | 'disablePadding'
-  | 'divider'
+  'alignItems' | 'dense' | 'disableGutters' | 'disablePadding' | 'divider'
 >;
 
 interface MuiListItemButtonProps
@@ -31,7 +24,6 @@ interface MuiListItemButtonProps
     ComponentProps<typeof MuiListItemButton>,
     | 'alignItems'
     | 'autoFocus'
-    | 'children'
     | 'dense'
     | 'disabled'
     | 'disableGutters'
@@ -42,7 +34,7 @@ interface MuiListItemButtonProps
   href?: string;
 }
 
-export interface IntersectionProps<V extends ListItemVariant>
+interface IntersectionProps<V extends ListItemVariant>
   extends Pick<
     MuiListItemProps & MuiListItemButtonProps,
     Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>
@@ -65,31 +57,29 @@ export type ListItemProps<V extends ListItemVariant> = IntersectionProps<V> &
         onClick?: V extends 'button' ? () => void : undefined;
       });
 
-export type IndicatorProps<T extends Data, H extends IndicatorVariant> = {
+type IndicatorProps<H extends IndicatorVariant> = {
   variant: H;
-} & (H extends 'avatar' ? AvatarGroupProps<T>['avatarProps'] : IconProps);
-
-type ListPropMapping<
-  T extends Data,
-  V extends ListItemVariant,
-  H extends IndicatorVariant
-> = PropMapping<
-  | Exclude<OverridableNames<ListItemProps<V>>, 'onClick'>
-  | (H extends 'avatar' ? keyof AvatarGroupProps<T>['propMapping'] : 'code')
->;
+} & Partial<H extends 'avatar' ? Omit<AvatarProps, 'variant'> : IconProps>;
 
 export interface ListProps<
   T extends Data,
   V extends ListItemVariant,
   H extends IndicatorVariant
-> extends ListPropMapping<T, V, H>,
-    Pick<ComponentProps<typeof MuiList>, 'dense' | 'disablePadding'> {
+> extends Pick<ComponentProps<typeof MuiList>, 'dense' | 'disablePadding'> {
   data?: T[];
-  indicatorProps?: IndicatorProps<T, H>;
+  indicatorProps?: IndicatorProps<H>;
   itemProps?: IntersectionProps<V>;
   itemAction?: ActionElement;
 
   onItemToggle?: (item: T) => void;
+
+  propMapping?: Partial<
+    Record<
+      | Exclude<OverridableNames<ListItemProps<V>>, 'onClick'>
+      | (H extends 'avatar' ? OverridablePropNames : 'code'),
+      string
+    >
+  >;
 
   subheaderProps?: Pick<
     ComponentProps<typeof MuiListSubheader>,
@@ -101,3 +91,26 @@ export interface ListProps<
     action?: ReactNode;
   };
 }
+
+//* Custom Hooks
+export type IndicatorDefinition<H extends IndicatorVariant> = {
+  defaultIndicatorProps: Omit<IndicatorProps<H>, 'variant'>;
+  indicatorVariant: H;
+};
+
+export type ListItemDefinition<V extends ListItemVariant> = {
+  ListItem: ComponentType<Omit<IntersectionProps<V>, 'variant'>>;
+  defaultItemProps: Omit<IntersectionProps<V>, 'variant'>;
+  itemVariant: ListItemVariant;
+};
+
+export type ItemDefinition<
+  T extends Data,
+  V extends ListItemVariant,
+  H extends IndicatorVariant
+> = ListItemProps<V> & {
+  item: T;
+  indicatorProps?: ComponentProps<
+    H extends 'avatar' ? typeof Avatar : typeof Icon
+  >;
+};

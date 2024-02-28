@@ -4,9 +4,11 @@ import type { ComponentProps } from 'react';
 import type { AvatarProps } from '../Avatar';
 import type { Data, OverridableNames, PropMapping } from '../types';
 
+export type OverridablePropNames = 'alt' | 'src' | 'srcSet' | 'text';
+
 type OverrideChildPropNames = OverridableNames<
   AvatarProps,
-  'alt' | 'src' | 'srcSet' | 'text'
+  OverridablePropNames
 >;
 
 export interface AvatarGroupProps<T extends Data>

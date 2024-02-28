@@ -2,22 +2,21 @@ import MuiList from '@mui/material/List';
 import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
-import MuiListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiListSubheader from '@mui/material/ListSubheader';
 import MuiToolbar from '@mui/material/Toolbar';
 import MuiTypography from '@mui/material/Typography';
 import _get from 'lodash/get';
-import { useMemo } from 'react';
-import type { ComponentType } from 'react';
+import { useMemo, type ComponentProps } from 'react';
 
 import Avatar from '../Avatar';
 import Icon from '../Icon';
 import type { Data } from '../types';
 import type {
-  IndicatorProps,
+  IndicatorDefinition,
   IndicatorVariant,
-  IntersectionProps,
+  ItemDefinition,
+  ListItemDefinition,
   ListItemProps,
   ListItemVariant,
   ListProps,
@@ -33,39 +32,35 @@ export default function List<
   itemProps,
   indicatorProps,
   subheaderProps,
-  propMapping,
+  propMapping = {},
   onItemToggle,
   ...props
 }: ListProps<T, V, H>) {
   const { type: Action, props: actionProps } = itemAction || {};
   const stringify = JSON.stringify(propMapping);
 
-  const Indicator = useMemo(() => {
-    const indicatorVariant = indicatorProps?.variant || 'icon';
+  const { defaultIndicatorProps, indicatorVariant } = useMemo(() => {
+    const { variant = 'icon', ...defaultIndicatorProps } = indicatorProps || {};
 
-    return (indicatorVariant === 'avatar' ? Avatar : Icon) as ComponentType<
-      Omit<IndicatorProps<T, H>, 'variant'>
-    >;
-  }, [indicatorProps?.variant]);
+    return {
+      defaultIndicatorProps,
+      indicatorVariant: variant,
+    } as IndicatorDefinition<H>;
+  }, [indicatorProps]);
 
-  const { ListItem, defaultItemProps } = useMemo<{
-    ListItem: ComponentType<Omit<IntersectionProps<V>, 'variant'>>;
-    defaultItemProps: Omit<IntersectionProps<V>, 'variant'>;
-  }>(() => {
+  const { ListItem, defaultItemProps, itemVariant } = useMemo<
+    ListItemDefinition<V>
+  >(() => {
     const { variant = 'item', ...defaultItemProps } = itemProps || {};
 
     return {
       ListItem: variant === 'button' ? MuiListItemButton : MuiListItem,
       defaultItemProps,
+      itemVariant: variant,
     };
   }, [itemProps]);
 
-  const items = useMemo<
-    (ListItemProps<V> & {
-      item: T;
-      indicatorProps?: Omit<IndicatorProps<T, H>, 'variant'>;
-    })[]
-  >(() => {
+  const items = useMemo<ItemDefinition<T, V, H>[]>(() => {
     const entries = Object.entries(JSON.parse(stringify));
 
     return (
@@ -80,6 +75,12 @@ export default function List<
                 [key]: _get(item, path as string),
               } as never,
             };
+          } else if (key === 'href' && itemVariant === 'button') {
+            return {
+              ...result,
+              href: _get(item, path as string),
+              LinkComponent: 'a',
+            };
           }
 
           return {
@@ -89,14 +90,18 @@ export default function List<
         }, {} as ListItemProps<V>),
       })) || []
     );
-  }, [data, stringify]);
+  }, [data, itemVariant, stringify]);
 
   return (
     <MuiList
       {...props}
+      data-testid="List"
       subheader={
         subheaderProps && (
-          <MuiListSubheader disableSticky={subheaderProps.disableSticky}>
+          <MuiListSubheader
+            disableSticky={subheaderProps.disableSticky}
+            data-testid="subheader"
+          >
             <MuiToolbar
               variant="dense"
               disableGutters={subheaderProps.disableGutters}
@@ -125,40 +130,48 @@ export default function List<
     >
       {items.map(
         ({ item, indicatorProps, primary, secondary, ...itemProps }, i) => (
-          <ListItem
-            key={i}
-            data-testid={primary}
-            {...defaultItemProps}
-            {...itemProps}
-            {...(_get(itemProps, 'href') && { LinkComponent: 'a' })}
-          >
-            {!indicatorProps ? null : (
+          <ListItem key={i} {...defaultItemProps} {...itemProps}>
+            {!defaultIndicatorProps && !indicatorProps ? null : (
               <MuiListItemIcon>
-                <Indicator {...indicatorProps} />
+                {indicatorVariant === 'avatar' ? (
+                  <Avatar
+                    {...({
+                      ...defaultIndicatorProps,
+                      ...indicatorProps,
+                    } as ComponentProps<typeof Avatar>)}
+                  />
+                ) : (
+                  <Icon
+                    {...({
+                      ...defaultIndicatorProps,
+                      ...indicatorProps,
+                    } as ComponentProps<typeof Icon>)}
+                  />
+                )}
               </MuiListItemIcon>
             )}
 
             <MuiListItemText
               {...{ primary, secondary }}
               primaryTypographyProps={{
+                className: 'primary',
                 variant: 'body1',
                 color: 'textPrimary',
               }}
               secondaryTypographyProps={{
+                className: 'secondary',
                 variant: 'body2',
                 color: 'textSecondary',
               }}
             />
 
             {Action && (
-              <MuiListItemSecondaryAction>
-                <Action
-                  {...actionProps}
-                  {...(onItemToggle && {
-                    onClick: () => onItemToggle?.(item),
-                  })}
-                />
-              </MuiListItemSecondaryAction>
+              <Action
+                {...actionProps}
+                {...(onItemToggle && {
+                  onClick: () => onItemToggle?.(item),
+                })}
+              />
             )}
           </ListItem>
         )
