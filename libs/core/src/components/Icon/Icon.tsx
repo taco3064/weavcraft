@@ -3,10 +3,15 @@ import _get from 'lodash/get';
 import { useMemo } from 'react';
 
 import { FaIcon, type IconProps } from './Icon.types';
+import { usePropsTransformation } from '../../hooks';
+import type { GenericData } from '../../types';
 
-export default function Icon({ code, ...props }: IconProps) {
+export default function Icon<D extends GenericData>(props: IconProps<D>) {
+  const { code, ...iconProps } = usePropsTransformation(props);
+
   const options = useMemo(() => {
-    const icon = _get(FaIcon, [code, 'icon']);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const icon = _get(FaIcon, [code!, 'icon']);
 
     if (icon) {
       const [width, height, , , svgPathData] = icon;
@@ -19,9 +24,9 @@ export default function Icon({ code, ...props }: IconProps) {
 
   return !options ? null : (
     <MuiSvgIcon
-      {...props}
+      {...iconProps}
       viewBox={`0 0 ${options.width} ${options.height}`}
-      data-testid={code}
+      data-testid={`Icon_${code}`}
     >
       {typeof options.svgPathData === 'string' ? (
         <path d={options.svgPathData} />

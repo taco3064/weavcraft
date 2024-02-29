@@ -1,17 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ReactElement } from 'react';
+import type { JSXElementConstructor, ReactElement } from 'react';
 
-export type Data = {
-  [key: string]: any;
+type NonCallbackProps<P> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  [K in Extract<keyof P, string>]: P[K] extends Function ? never : K;
+}[Extract<keyof P, string>];
+
+export type GenericData = {
+  [key: string]: unknown;
 };
 
-export type ActionElement = ReactElement<{ onClick?: never | (() => void) }>;
+export type MappableProps<D extends GenericData, P> = P & {
+  data?: D;
+  propMapping?: Partial<Record<NonCallbackProps<P>, string>>;
+};
 
-export type OverridableNames<
-  P,
-  N extends Extract<keyof P, string> = Extract<keyof P, string>
-> = Extract<keyof P, N>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BaseActionProps = Record<string, any> & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onClick?: never | ((...args: any[]) => void);
+};
 
-export interface PropMapping<T extends string> {
-  propMapping?: Partial<Record<T, string>>;
-}
+export type ActionElement<
+  D extends GenericData,
+  P extends BaseActionProps,
+  M = Omit<MappableProps<D, P>, 'data'>
+> = ReactElement<M, JSXElementConstructor<M>>;
