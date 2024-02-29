@@ -7,3 +7,8 @@ export const DataDisplay = {
   ImageList: Comp.ImageList,
   List: Comp.List,
 };
+
+export const Input = {
+  Checkbox: Comp.Checkbox,
+  CheckboxGroup: Comp.CheckboxGroup,
+};
