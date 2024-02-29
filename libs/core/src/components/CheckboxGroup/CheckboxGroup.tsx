@@ -9,15 +9,15 @@ import type { GenericData } from '../../types';
 
 export default function CheckboxGroup<D extends GenericData>({
   title,
-  itemProps,
-  items,
+  optionProps,
+  options,
   onChange,
 }: CheckboxGroupProps<D>) {
   const handleChange = (checked: boolean, data?: D) => {
-    const newItems: D[] = !items ? [] : [...items];
+    const newItems: D[] = !options ? [] : [...options];
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const index = newItems.indexOf(data!) ?? -1;
-    const { propMapping } = itemProps || {};
+    const { propMapping } = optionProps || {};
 
     if (!propMapping?.checked || !data || index < 0) {
       return onChange?.(newItems);
@@ -32,9 +32,9 @@ export default function CheckboxGroup<D extends GenericData>({
       {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
 
       <MuiFormGroup>
-        {items?.map((item, i) => (
+        {options?.map((item, i) => (
           <Checkbox
-            {...itemProps}
+            {...optionProps}
             key={i}
             data={item}
             onChange={handleChange}

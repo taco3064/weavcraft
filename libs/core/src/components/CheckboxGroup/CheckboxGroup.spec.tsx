@@ -15,8 +15,8 @@ describe('@weavcraft/CheckboxGroup', () => {
   it('should render all checkboxes', () => {
     const { baseElement, getAllByTestId } = render(
       <CheckboxGroup
-        items={data}
-        itemProps={{
+        options={data}
+        optionProps={{
           propMapping: { label: 'name', checked: 'selected' },
         }}
       />
@@ -39,8 +39,8 @@ describe('@weavcraft/CheckboxGroup', () => {
 
     const { baseElement } = render(
       <CheckboxGroup
-        items={clone}
-        itemProps={{
+        options={clone}
+        optionProps={{
           propMapping: { label: 'name', checked: 'selected' },
         }}
         onChange={onChange}
