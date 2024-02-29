@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
@@ -34,17 +33,17 @@ describe('@weavcraft/ImageList', () => {
     expect(img1st).toHaveStyle(`grid-row-end: span ${data[0].rows};`);
   });
 
-  it('should render action icons and correctly trigger onItemToggle', () => {
-    const onItemToggle = jest.fn();
+  it('should render action icons with onItemActionClick', () => {
+    const onItemActionClick = jest.fn();
 
     const { baseElement } = render(
       <ImageList
         items={data}
-        onItemToggle={onItemToggle}
+        onItemActionClick={onItemActionClick}
         itemAction={
-          <Button {...{ propMapping: { children: 'title' } as never }}>
+          <button {...{ propMapping: { children: 'title' } as never }}>
             Click me
-          </Button>
+          </button>
         }
         itemProps={{
           propMapping: {
@@ -59,12 +58,12 @@ describe('@weavcraft/ImageList', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemToggle).toHaveBeenNthCalledWith(i + 1, data[i]);
+      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, data[i]);
       expect(btn).toHaveTextContent(data[i].title);
     });
 
     expect(buttons).toHaveLength(data.length);
-    expect(onItemToggle).toHaveBeenCalledTimes(data.length);
+    expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
   });
 
   const data = [

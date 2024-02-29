@@ -1,4 +1,3 @@
-import MuiButton from '@mui/material/Button';
 import MuiList from '@mui/material/List';
 import { getByTestId, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -80,7 +79,7 @@ describe('@weavcraft/ListItem', () => {
   it('should render action', () => {
     const { baseElement } = render(
       <MuiList>
-        <ListItem action={<MuiButton>Click Me</MuiButton>} />
+        <ListItem action={<button>Click Me</button>} />
       </MuiList>
     );
 

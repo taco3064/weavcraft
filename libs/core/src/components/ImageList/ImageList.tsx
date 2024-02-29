@@ -7,17 +7,17 @@ import type { ImageListProps } from './ImageList.types';
 
 export default function ImageList<
   D extends GenericData,
-  P extends BaseActionProps
+  A extends BaseActionProps
 >({
   itemAction,
   itemProps,
   items = [],
-  onItemToggle,
+  onItemActionClick,
   ...props
-}: ImageListProps<D, P>) {
+}: ImageListProps<D, A>) {
   const { Action, getActionProps } = useActionPropsTransformation(
     itemAction,
-    onItemToggle
+    onItemActionClick
   );
 
   return (

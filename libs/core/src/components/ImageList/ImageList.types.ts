@@ -11,10 +11,10 @@ type MuiImageListProps = Pick<
 
 export interface ImageListProps<
   D extends GenericData,
-  P extends BaseActionProps
+  A extends BaseActionProps
 > extends MuiImageListProps {
-  itemAction?: ActionElement<D, P>;
-  itemProps?: Omit<ImageListItemProps<D>, 'data' | 'actionIcon'>;
+  itemAction?: ActionElement<D, A>;
+  itemProps?: Omit<ImageListItemProps<D>, 'data' | 'action'>;
   items?: D[];
-  onItemToggle?: (item: D) => void;
+  onItemActionClick?: (item: D) => void;
 }
