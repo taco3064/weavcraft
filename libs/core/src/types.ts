@@ -5,13 +5,25 @@ type NonCallbackProps<P> = {
   [K in Extract<keyof P, string>]: P[K] extends Function ? never : K;
 }[Extract<keyof P, string>];
 
+export type PropertyPath<
+  D extends GenericData,
+  K extends keyof D = keyof D
+> = K extends string
+  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    D[K] extends Record<string, any> | undefined
+    ? D[K] extends undefined
+      ? `${K}`
+      : `${K}.${PropertyPath<NonNullable<D[K]>>}` | `${K}`
+    : `${K}`
+  : never;
+
 export type GenericData = {
   [key: string]: unknown;
 };
 
 export type MappableProps<D extends GenericData, P> = P & {
   data?: D;
-  propMapping?: Partial<Record<NonCallbackProps<P>, string>>;
+  propMapping?: Partial<Record<NonCallbackProps<P>, PropertyPath<D>>>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

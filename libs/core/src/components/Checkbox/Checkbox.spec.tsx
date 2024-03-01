@@ -26,10 +26,7 @@ describe('@weavcraft/Checkbox', () => {
 
   it('should render form control label with data', () => {
     const { baseElement } = render(
-      <Checkbox
-        data={data}
-        propMapping={{ label: 'name', checked: 'selected' }}
-      />
+      <Checkbox data={data} propMapping={{ label: 'name' }} />
     );
 
     const label = getByTestId(baseElement, 'FormControlLabel');
@@ -39,7 +36,7 @@ describe('@weavcraft/Checkbox', () => {
 
   it('should render checkbox with data', () => {
     const { baseElement } = render(
-      <Checkbox data={data} propMapping={{ checked: 'selected' }} />
+      <Checkbox checked data={data} propMapping={{ value: 'code' }} />
     );
 
     const checkbox = baseElement.querySelector(
@@ -47,6 +44,7 @@ describe('@weavcraft/Checkbox', () => {
     );
 
     expect(checkbox).toBeTruthy();
+    expect(checkbox).toHaveAttribute('value', data.code);
   });
 
   it('should call onChange with correct data', () => {
@@ -54,8 +52,9 @@ describe('@weavcraft/Checkbox', () => {
 
     const { baseElement } = render(
       <Checkbox
+        checked
         data={data}
-        propMapping={{ checked: 'selected' }}
+        propMapping={{ value: 'code' }}
         onChange={onChange}
       />
     );
@@ -65,8 +64,5 @@ describe('@weavcraft/Checkbox', () => {
     expect(onChange).toHaveBeenCalledWith(false, data);
   });
 
-  const data = {
-    name: 'Remy Sharp',
-    selected: true,
-  };
+  const data = { name: 'Remy Sharp', code: 'HS001' };
 });

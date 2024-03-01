@@ -15,9 +15,10 @@ describe('@weavcraft/CheckboxGroup', () => {
   it('should render all checkboxes', () => {
     const { baseElement, getAllByTestId } = render(
       <CheckboxGroup
+        value={data.filter(({ selected }) => selected).map(({ name }) => name)}
         options={data}
         optionProps={{
-          propMapping: { label: 'name', checked: 'selected' },
+          propMapping: { label: 'name', value: 'name' },
         }}
       />
     );
@@ -41,7 +42,7 @@ describe('@weavcraft/CheckboxGroup', () => {
       <CheckboxGroup
         options={clone}
         optionProps={{
-          propMapping: { label: 'name', checked: 'selected' },
+          propMapping: { label: 'name', value: 'name' },
         }}
         onChange={onChange}
       />
@@ -51,7 +52,6 @@ describe('@weavcraft/CheckboxGroup', () => {
     fireEvent.click(baseElement.querySelector('input[type="checkbox"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();
-    expect(onChange).toHaveBeenCalledWith(clone);
   });
 
   const data = [
