@@ -1,6 +1,5 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
-import _set from 'lodash/set';
 
 import { usePropsTransformation } from '../../hooks';
 import type { CheckboxProps } from './Checkbox.types';
