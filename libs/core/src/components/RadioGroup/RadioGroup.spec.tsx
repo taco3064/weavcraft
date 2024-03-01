@@ -1,21 +1,21 @@
 import { fireEvent, getByTestId, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import CheckboxGroup from './CheckboxGroup';
+import RadioGroup from './RadioGroup';
 
-describe('@weavcraft/CheckboxGroup', () => {
+describe('@weavcraft/RadioGroup', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CheckboxGroup />);
-    const group = getByTestId(baseElement, 'CheckboxGroup');
+    const { baseElement } = render(<RadioGroup />);
+    const group = getByTestId(baseElement, 'RadioGroup');
 
     expect(baseElement).toBeTruthy();
     expect(group).toBeTruthy();
   });
 
-  it('should render all checkboxes', () => {
+  it('should render all radios', () => {
     const { baseElement, getAllByTestId } = render(
-      <CheckboxGroup
-        value={data.filter(({ selected }) => selected).map(({ name }) => name)}
+      <RadioGroup
+        value={data.find(({ selected }) => selected)?.name}
         options={data}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
@@ -23,15 +23,10 @@ describe('@weavcraft/CheckboxGroup', () => {
       />
     );
 
-    const checked = baseElement.querySelectorAll(
-      'input[type="checkbox"]:checked'
-    );
+    const checked = baseElement.querySelectorAll('input[type="radio"]:checked');
 
     expect(getAllByTestId('SelectionControl')).toHaveLength(data.length);
-
-    expect(checked).toHaveLength(
-      data.filter(({ selected }) => selected).length
-    );
+    expect(checked).toHaveLength(1);
   });
 
   it('should call onChange with correct data', () => {
@@ -39,7 +34,7 @@ describe('@weavcraft/CheckboxGroup', () => {
     const onChange = jest.fn();
 
     const { baseElement } = render(
-      <CheckboxGroup
+      <RadioGroup
         options={clone}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
@@ -49,7 +44,7 @@ describe('@weavcraft/CheckboxGroup', () => {
     );
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    fireEvent.click(baseElement.querySelector('input[type="checkbox"]')!);
+    fireEvent.click(baseElement.querySelector('input[type="radio"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();
   });

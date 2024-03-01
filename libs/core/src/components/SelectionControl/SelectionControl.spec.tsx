@@ -1,11 +1,11 @@
 import { fireEvent, getByTestId, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import Checkbox from './Checkbox';
+import SelectionControl from './SelectionControl';
 
-describe('@weavcraft/Checkbox', () => {
+describe('@weavcraft/SelectionControl', () => {
   it('should render form control label successfully', () => {
-    const { baseElement } = render(<Checkbox label="test" />);
+    const { baseElement } = render(<SelectionControl label="test" />);
     const label = getByTestId(baseElement, 'FormControlLabel');
     const checkbox = baseElement.querySelector('input[type="checkbox"]');
 
@@ -16,17 +16,28 @@ describe('@weavcraft/Checkbox', () => {
   });
 
   it('should render checkbox successfully', () => {
-    const { baseElement } = render(<Checkbox />);
-    const checkbox = getByTestId(baseElement, 'Checkbox');
+    const { baseElement } = render(<SelectionControl />);
+    const checkbox = getByTestId(baseElement, 'SelectionControl');
 
     expect(baseElement).toBeTruthy();
     expect(checkbox).toBeTruthy();
     expect(checkbox.tagName).toBe('SPAN');
+    expect(baseElement.querySelector('input[type="checkbox"]')).toBeTruthy();
+  });
+
+  it('should render radio successfully', () => {
+    const { baseElement } = render(<SelectionControl variant="radio" />);
+    const checkbox = getByTestId(baseElement, 'SelectionControl');
+
+    expect(baseElement).toBeTruthy();
+    expect(checkbox).toBeTruthy();
+    expect(checkbox.tagName).toBe('SPAN');
+    expect(baseElement.querySelector('input[type="radio"]')).toBeTruthy();
   });
 
   it('should render form control label with data', () => {
     const { baseElement } = render(
-      <Checkbox data={data} propMapping={{ label: 'name' }} />
+      <SelectionControl data={data} propMapping={{ label: 'name' }} />
     );
 
     const label = getByTestId(baseElement, 'FormControlLabel');
@@ -36,7 +47,7 @@ describe('@weavcraft/Checkbox', () => {
 
   it('should render checkbox with data', () => {
     const { baseElement } = render(
-      <Checkbox checked data={data} propMapping={{ value: 'code' }} />
+      <SelectionControl checked data={data} propMapping={{ value: 'code' }} />
     );
 
     const checkbox = baseElement.querySelector(
@@ -51,7 +62,7 @@ describe('@weavcraft/Checkbox', () => {
     const onChange = jest.fn();
 
     const { baseElement } = render(
-      <Checkbox
+      <SelectionControl
         checked
         data={data}
         propMapping={{ value: 'code' }}

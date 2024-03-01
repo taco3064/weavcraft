@@ -1,13 +1,17 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
+import MuiRadio from '@mui/material/Radio';
 
 import { usePropsTransformation } from '../../hooks';
-import type { CheckboxProps } from './Checkbox.types';
+import type { SelectionControlProps, Variant } from './SelectionControl.types';
 import type { GenericData } from '../../types';
 
-export default function Checkbox<D extends GenericData>(
-  props: CheckboxProps<D>
-) {
+export default function SelectionControl<
+  D extends GenericData,
+  V extends Variant = 'checkbox'
+>({ variant, ...props }: SelectionControlProps<V, D>) {
+  const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
+
   const {
     label,
     labelPlacement,
@@ -19,11 +23,11 @@ export default function Checkbox<D extends GenericData>(
   } = usePropsTransformation(props);
 
   const control = (
-    <MuiCheckbox
+    <Control
       {...checkboxProps}
       {...{ disabled, required }}
       defaultChecked={checked}
-      data-testid="Checkbox"
+      data-testid="SelectionControl"
       onChange={(_e, checked) => onChange?.(checked, props.data)}
     />
   );

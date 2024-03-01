@@ -9,6 +9,7 @@ export const DataDisplay = {
 };
 
 export const Input = {
-  Checkbox: Comp.Checkbox,
   CheckboxGroup: Comp.CheckboxGroup,
+  RadioGroup: Comp.RadioGroup,
+  SelectionControl: Comp.SelectionControl,
 };
