@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import RadioGroup from './RadioGroup';
 
-describe('@weavcraft/RadioGroup', () => {
+describe('@weavcraft/components/RadioGroup', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<RadioGroup />);
     const group = getByTestId(baseElement, 'RadioGroup');

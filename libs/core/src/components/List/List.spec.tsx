@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import List from './List';
 
-describe('@weavcraft/List', () => {
+describe('@weavcraft/components/List', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<List />);
 

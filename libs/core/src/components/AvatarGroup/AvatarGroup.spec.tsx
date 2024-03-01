@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import AvatarGroup from './AvatarGroup';
 
-describe('@weavcraft/AvatarGroup', () => {
+describe('@weavcraft/components/AvatarGroup', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<AvatarGroup />);
 

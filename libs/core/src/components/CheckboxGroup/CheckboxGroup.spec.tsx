@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import CheckboxGroup from './CheckboxGroup';
 
-describe('@weavcraft/CheckboxGroup', () => {
+describe('@weavcraft/components/CheckboxGroup', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<CheckboxGroup />);
     const group = getByTestId(baseElement, 'CheckboxGroup');

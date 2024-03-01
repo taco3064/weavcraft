@@ -6,7 +6,7 @@ import {
   usePropsTransformation,
 } from './usePropsTransformation';
 
-describe('@weavcraft/usePropsTransformation', () => {
+describe('@weavcraft/hooks/usePropsTransformation', () => {
   it('should transform data to props according to the propMapping', () => {
     const { result } = renderHook(() =>
       usePropsTransformation({

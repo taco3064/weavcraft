@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import Icon from '../Icon';
 import ListItem from './ListItem';
 
-describe('@weavcraft/ListItem', () => {
+describe('@weavcraft/components/ListItem', () => {
   it('should render item successfully', () => {
     const { baseElement } = render(
       <MuiList>

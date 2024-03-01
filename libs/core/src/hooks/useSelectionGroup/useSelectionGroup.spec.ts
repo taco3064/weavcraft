@@ -4,7 +4,7 @@ import {
   useSingleSelectionGroup,
 } from './useSelectionGroup';
 
-describe('useMultipleSelectionGroup', () => {
+describe('@weavcraft/hooks/useMultipleSelectionGroup', () => {
   it('should handle multiple selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
@@ -26,7 +26,7 @@ describe('useMultipleSelectionGroup', () => {
   });
 });
 
-describe('useSingleSelectionGroup', () => {
+describe('@weavcraft/hooks/useSingleSelectionGroup', () => {
   it('should handle single selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
