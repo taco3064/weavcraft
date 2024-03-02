@@ -7,3 +7,4 @@ export * from './List';
 export * from './RadioGroup';
 export * from './SelectionControl';
 export * from './SwitchField';
+export * from './TextField';
