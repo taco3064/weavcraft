@@ -1,5 +1,5 @@
 import MuiTextField from '@mui/material/TextField';
-import type { ComponentProps, ElementType } from 'react';
+import type { ComponentProps, ElementType, ReactNode } from 'react';
 
 type MuiTextFieldProps = Omit<
   ComponentProps<typeof MuiTextField>,
@@ -8,18 +8,26 @@ type MuiTextFieldProps = Omit<
 
 export type MuiInputProps = NonNullable<MuiTextFieldProps['InputProps']>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface BaseInputProps<C extends ElementType<any>>
+  extends Omit<
+    MuiInputProps,
+    'inputComponent' | 'inputProps' | 'endAdornment' | 'startAdornment'
+  > {
+  inputComponent?: C;
+  inputProps?: ComponentProps<C>;
+}
+
 export interface BaseFieldProps<
   V,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  C extends ElementType<any> = ElementType<any>
+  C extends ElementType<any>
 > extends Omit<MuiTextFieldProps, 'InputProps'> {
+  InputProps?: BaseInputProps<C>;
+  adornment?: ReactNode;
+  adornmentPosition?: 'start' | 'end';
   value?: V;
   onChange?: (value: V, name?: string) => void;
-
-  InputProps?: Omit<MuiInputProps, 'inputComponent' | 'inputProps'> & {
-    inputComponent?: C;
-    inputProps?: ComponentProps<C>;
-  };
 }
 
 export type BaseFieldExtendedProps<
@@ -28,6 +36,8 @@ export type BaseFieldExtendedProps<
   C extends ElementType<any> = ElementType<any>
 > = Pick<
   BaseFieldProps<V, C>,
+  | 'adornment'
+  | 'adornmentPosition'
   | 'color'
   | 'disabled'
   | 'error'

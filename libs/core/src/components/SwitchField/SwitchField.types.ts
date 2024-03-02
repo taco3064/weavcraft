@@ -13,7 +13,7 @@ type MuiFormControlLabelProps = Omit<
 
 export type SwitchInputProps = MuiSwitchProps & MuiFormControlLabelProps;
 
-export type SwitchFieldProps = BaseFieldProps<
-  boolean,
-  ElementType<SwitchInputProps>
+export type SwitchFieldProps = Omit<
+  BaseFieldProps<boolean, ElementType<SwitchInputProps>>,
+  'adornmentPosition'
 >;

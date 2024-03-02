@@ -33,6 +33,7 @@ export default function SwitchField({
   return (
     <BaseField
       {...props}
+      adornmentPosition="start"
       label={placeholder ? label : undefined}
       data-testid="SwitchField"
       InputLabelProps={{ shrink: true }}
