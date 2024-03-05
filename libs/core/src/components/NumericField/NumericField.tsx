@@ -1,5 +1,5 @@
 import { NumericFormat } from 'react-number-format';
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
 import BaseField from '../BaseField';
 
