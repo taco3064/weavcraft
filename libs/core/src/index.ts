@@ -15,5 +15,6 @@ export const Input = {
   RadioGroup: Comp.RadioGroup,
   SelectionControl: Comp.SelectionControl,
   SwitchField: Comp.SwitchField,
+  TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,
 };
