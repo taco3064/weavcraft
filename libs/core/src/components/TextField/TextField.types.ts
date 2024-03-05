@@ -1,3 +1,3 @@
-import type { BaseFieldProps } from '../BaseField';
+import type { BaseFieldWithoutInputProps } from '../BaseField';
 
-export type TextFieldProps = BaseFieldProps<string>;
+export type TextFieldProps = BaseFieldWithoutInputProps<string>;

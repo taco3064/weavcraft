@@ -6,6 +6,21 @@ type MuiTextFieldProps = Omit<
   'defaultValue' | 'value' | 'onChange'
 >;
 
+type BasePropNames =
+  | 'adornment'
+  | 'adornmentPosition'
+  | 'color'
+  | 'disabled'
+  | 'error'
+  | 'helperText'
+  | 'label'
+  | 'name'
+  | 'placeholder'
+  | 'required'
+  | 'size'
+  | 'value'
+  | 'onChange';
+
 export type MuiInputProps = NonNullable<MuiTextFieldProps['InputProps']>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +36,7 @@ interface BaseInputProps<C extends ElementType<any>>
 export interface BaseFieldProps<
   V,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  C extends ElementType<any>
+  C extends ElementType<any> = ElementType<any>
 > extends Omit<MuiTextFieldProps, 'InputProps'> {
   InputProps?: BaseInputProps<C>;
   adornment?: ReactNode;
@@ -35,20 +50,9 @@ export type BaseFieldExtendedProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   C extends ElementType<any> = ElementType<any>,
   K extends keyof BaseFieldProps<V, C> | never = never
-> = Pick<
-  BaseFieldProps<V, C>,
-  | 'adornment'
-  | 'adornmentPosition'
-  | 'color'
-  | 'disabled'
-  | 'error'
-  | 'helperText'
-  | 'label'
-  | 'name'
-  | 'placeholder'
-  | 'required'
-  | 'size'
-  | 'value'
-  | 'onChange'
-  | K
->;
+> = Pick<BaseFieldProps<V, C>, BasePropNames | K>;
+
+export type BaseFieldWithoutInputProps<
+  V,
+  K extends keyof BaseFieldProps<V> | never = never
+> = Pick<BaseFieldProps<V>, BasePropNames | K>;
