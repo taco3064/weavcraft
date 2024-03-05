@@ -27,7 +27,7 @@ export interface BaseFieldProps<
   adornment?: ReactNode;
   adornmentPosition?: 'start' | 'end';
   value?: V;
-  onChange?: (value: V, name?: string) => void;
+  onChange?: (value: V | undefined, name?: string) => void;
 }
 
 export type BaseFieldExtendedProps<

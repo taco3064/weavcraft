@@ -4,6 +4,7 @@ export * from './CheckboxGroup';
 export * from './Icon';
 export * from './ImageList';
 export * from './List';
+export * from './NumericField';
 export * from './RadioGroup';
 export * from './SelectionControl';
 export * from './SwitchField';
