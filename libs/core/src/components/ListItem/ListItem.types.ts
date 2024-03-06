@@ -2,6 +2,7 @@ import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
 import type { ComponentProps, ReactNode } from 'react';
 
+import type { BaseListItemProps } from '../../hooks';
 import type { GenericData, MappableProps } from '../../types';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
@@ -16,16 +17,16 @@ type MuiListItemButtonProps = Pick<
   'alignItems' | 'dense' | 'disableGutters' | 'divider'
 >;
 
-export interface BaseListItemProps {
-  primary?: string;
-  secondary?: string;
-  disabled?: boolean;
-  href?: string;
-  selected?: boolean;
-}
+type MappableListItemProps<D extends GenericData> = MappableProps<
+  D,
+  BaseListItemProps & {
+    href?: string;
+    selected?: boolean;
+  }
+>;
 
 export interface ListItemProps<D extends GenericData, V extends ListItemVariant>
-  extends MappableProps<D, BaseListItemProps>,
+  extends MappableListItemProps<D>,
     Pick<
       MuiListItemProps & MuiListItemButtonProps,
       Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>

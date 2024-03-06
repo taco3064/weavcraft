@@ -3,7 +3,7 @@ import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
 
 import SelectionControl from '../SelectionControl';
-import { useMultipleSelectionGroup } from '../../hooks';
+import { useMultipleSelection } from '../../hooks';
 import type { CheckboxGroupProps } from './CheckboxGroup.types';
 import type { GenericData } from '../../types';
 
@@ -11,7 +11,7 @@ export default function CheckboxGroup<D extends GenericData>(
   props: CheckboxGroupProps<D>
 ) {
   const { title, optionProps, options } = props;
-  const { selected, onChange } = useMultipleSelectionGroup<D>(props);
+  const { selected, onChange } = useMultipleSelection<D>(props);
 
   return (
     <MuiFormControl component="fieldset" data-testid="CheckboxGroup">

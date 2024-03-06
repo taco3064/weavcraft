@@ -1,7 +1,7 @@
 import _get from 'lodash/get';
 import type { ComponentType } from 'react';
 
-import type { ActionElement, BaseActionProps, GenericData } from '../../types';
+import type { ActionElement, BaseSlotProps, GenericData } from '../../types';
 import type { TargetProps } from './usePropsTransformation.types';
 
 export function getProps<P extends TargetProps>({
@@ -26,7 +26,7 @@ export function usePropsTransformation<P extends TargetProps>(
 
 export function useSlotPropsTransformation<
   D extends GenericData,
-  P extends BaseActionProps
+  P extends BaseSlotProps
 >(action?: ActionElement<D, P>, onItemToggle?: (item: D) => void) {
   const { type: Slot, props } = action || {};
 

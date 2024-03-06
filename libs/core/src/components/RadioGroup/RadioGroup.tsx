@@ -3,7 +3,7 @@ import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
 
 import SelectionControl from '../SelectionControl';
-import { useSingleSelectionGroup } from '../../hooks';
+import { useSingleSelection } from '../../hooks';
 import type { RadioGroupProps } from './RadioGroup.types';
 import type { GenericData } from '../../types';
 
@@ -11,7 +11,7 @@ export default function RadioGroup<D extends GenericData>(
   props: RadioGroupProps<D>
 ) {
   const { title, optionProps, options } = props;
-  const { selected, onChange } = useSingleSelectionGroup<D>(props);
+  const { selected, onChange } = useSingleSelection<D>(props);
 
   return (
     <MuiFormControl component="fieldset" data-testid="RadioGroup">

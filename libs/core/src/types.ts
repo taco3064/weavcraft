@@ -24,12 +24,12 @@ export type MappableProps<D extends GenericData, P> = P & {
   propMapping?: Partial<Record<NonCallbackProps<P>, PropertyPath<D>>>;
 };
 
-export type BaseActionProps = Record<string, any> & {
+export type BaseSlotProps = Record<string, any> & {
   onClick?: never | ((...args: any[]) => void);
 };
 
 export type ActionElement<
   D extends GenericData,
-  P extends BaseActionProps,
+  P extends BaseSlotProps,
   M = Omit<MappableProps<D, P>, 'data'>
 > = ReactElement<M, JSXElementConstructor<M>>;

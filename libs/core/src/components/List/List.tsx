@@ -6,13 +6,13 @@ import MuiTypography from '@mui/material/Typography';
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
 import { useSlotPropsTransformation } from '../../hooks';
-import type { BaseActionProps, GenericData } from '../../types';
+import type { BaseSlotProps, GenericData } from '../../types';
 import type { ListProps } from './List.types';
 
 export default function List<
   D extends GenericData,
-  I extends BaseActionProps,
-  A extends BaseActionProps,
+  I extends BaseSlotProps,
+  A extends BaseSlotProps,
   V extends ListItemVariant = 'item'
 >({
   //* Subheader

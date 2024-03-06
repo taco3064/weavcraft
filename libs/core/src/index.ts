@@ -9,12 +9,13 @@ export const DataDisplay = {
 };
 
 export const Input = {
+  SelectionControl: Comp.SelectionControl,
   CheckboxGroup: Comp.CheckboxGroup,
   RadioGroup: Comp.RadioGroup,
-  SelectionControl: Comp.SelectionControl,
+  MultipleSelectField: Comp.MultipleSelectField,
+  SingleSelectField: Comp.SingleSelectField,
   NumericField: Comp.NumericField,
   NumericFormatField: Comp.NumericFormatField,
-  SingleSelectField: Comp.SingleSelectField,
   SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,

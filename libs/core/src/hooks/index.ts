@@ -1,3 +1,7 @@
-export * from './usePropsTransformation';
-export * from './useSelectionGroup';
+export * from './useSelection';
 export * from './useUrlValidation';
+
+export {
+  usePropsTransformation,
+  useSlotPropsTransformation,
+} from './usePropsTransformation';

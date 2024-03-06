@@ -1,4 +1,12 @@
-import type { GenericData, MappableProps, PropertyPath } from '../../types';
+import type { ReactNode } from 'react';
+
+import type {
+  ActionElement,
+  BaseSlotProps,
+  GenericData,
+  MappableProps,
+  PropertyPath,
+} from '../../types';
 
 type PropertyType<
   D extends GenericData,
@@ -22,6 +30,7 @@ type GroupValue<
   >
 > = NonNullable<V>;
 
+//* Prop Types
 export interface GroupProps<
   T extends 'single' | 'multiple',
   D extends GenericData,
@@ -33,4 +42,22 @@ export interface GroupProps<
   options?: D[];
   value?: T extends 'multiple' ? V[] : V;
   onChange?: (data?: T extends 'multiple' ? V[] : V, name?: string) => void;
+}
+
+export interface BaseListItemProps {
+  primary?: string;
+  secondary?: string;
+  disabled?: boolean;
+}
+
+interface BaseOptionProps extends BaseListItemProps {
+  value?: any;
+}
+
+export interface BaseSelectFieldProps<
+  T extends 'single' | 'multiple',
+  D extends GenericData,
+  I extends BaseSlotProps
+> extends GroupProps<T, D, MappableProps<D, BaseOptionProps>> {
+  optionIndicator?: ActionElement<D, I>;
 }

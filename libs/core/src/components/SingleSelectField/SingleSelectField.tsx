@@ -1,14 +1,13 @@
 import MuiMenuItem from '@mui/material/MenuItem';
 
 import BaseField from '../BaseField';
-import ListItem from '../ListItem';
-import { getProps, useSlotPropsTransformation } from '../../hooks';
-import type { BaseActionProps, GenericData } from '../../types';
+import { useOptionsRender } from '../../hooks';
+import type { BaseSlotProps, GenericData } from '../../types';
 import type { SingleSelectFieldProps } from './SingleSelectField.types';
 
 export default function SingleSelectField<
   D extends GenericData,
-  I extends BaseActionProps
+  I extends BaseSlotProps
 >({
   emptyText,
   optionIndicator,
@@ -16,7 +15,7 @@ export default function SingleSelectField<
   options,
   ...props
 }: SingleSelectFieldProps<D, I>) {
-  const ItemIndicator = useSlotPropsTransformation(optionIndicator);
+  const children = useOptionsRender({ optionIndicator, optionProps, options });
   const displayEmpty = Boolean(emptyText);
 
   return (
@@ -37,32 +36,7 @@ export default function SingleSelectField<
         </MuiMenuItem>
       )}
 
-      {options?.map((item, i) => {
-        const { disabled, value, ...itemProps } = getProps({
-          ...optionProps,
-          data: item,
-        });
-
-        return (
-          <MuiMenuItem
-            {...{ disabled, value }}
-            disableGutters
-            key={i}
-            data-testid="SingleSelectFieldOption"
-          >
-            <ListItem
-              {...itemProps}
-              variant="item"
-              data={item}
-              indicator={
-                ItemIndicator.Slot && (
-                  <ItemIndicator.Slot {...ItemIndicator.getSlotProps(item)} />
-                )
-              }
-            />
-          </MuiMenuItem>
-        );
-      })}
+      {children}
     </BaseField>
   );
 }

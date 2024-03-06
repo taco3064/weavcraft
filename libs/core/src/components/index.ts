@@ -4,6 +4,7 @@ export * from './CheckboxGroup';
 export * from './Icon';
 export * from './ImageList';
 export * from './List';
+export * from './MultipleSelectField';
 export * from './NumericField';
 export * from './NumericFormatField';
 export * from './RadioGroup';

@@ -1,7 +1,7 @@
 import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { ActionElement, BaseActionProps, GenericData } from '../../types';
+import type { ActionElement, BaseSlotProps, GenericData } from '../../types';
 import type { IconProps } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
 
@@ -12,8 +12,8 @@ type MuiListProps = Pick<
 
 export interface ListProps<
   D extends GenericData,
-  I extends BaseActionProps,
-  A extends BaseActionProps,
+  I extends BaseSlotProps,
+  A extends BaseSlotProps,
   V extends ListItemVariant
 > extends MuiListProps {
   //* Subheader

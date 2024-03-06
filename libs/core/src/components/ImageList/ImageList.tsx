@@ -2,12 +2,12 @@ import MuiImageList from '@mui/material/ImageList';
 
 import ImageListItem from '../ImageListItem';
 import { useSlotPropsTransformation } from '../../hooks';
-import type { BaseActionProps, GenericData } from '../../types';
+import type { BaseSlotProps, GenericData } from '../../types';
 import type { ImageListProps } from './ImageList.types';
 
 export default function ImageList<
   D extends GenericData,
-  A extends BaseActionProps
+  A extends BaseSlotProps
 >({
   itemAction,
   itemProps,

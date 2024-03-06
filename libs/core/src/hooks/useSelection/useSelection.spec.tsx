@@ -1,14 +1,11 @@
 import { renderHook, act } from '@testing-library/react';
-import {
-  useMultipleSelectionGroup,
-  useSingleSelectionGroup,
-} from './useSelectionGroup';
+import { useMultipleSelection, useSingleSelection } from './useSelection';
 
-describe('@weavcraft/hooks/useMultipleSelectionGroup', () => {
+describe('@weavcraft/hooks/useMultipleSelection', () => {
   it('should handle multiple selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
-      useMultipleSelectionGroup({
+      useMultipleSelection({
         name: 'test',
         optionProps: { propMapping: { value: 'id' } },
         options: [{ id: '1' }, { id: '2' }],
@@ -27,11 +24,11 @@ describe('@weavcraft/hooks/useMultipleSelectionGroup', () => {
   });
 });
 
-describe('@weavcraft/hooks/useSingleSelectionGroup', () => {
+describe('@weavcraft/hooks/useSingleSelection', () => {
   it('should handle single selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
-      useSingleSelectionGroup({
+      useSingleSelection({
         optionProps: { propMapping: { value: 'id' } },
         options: [{ id: '1' }, { id: '2' }],
         value: '1',
