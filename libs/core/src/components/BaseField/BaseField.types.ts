@@ -18,6 +18,7 @@ type BasePropNames =
   | 'placeholder'
   | 'required'
   | 'size'
+  | 'variant'
   | 'value'
   | 'onChange';
 

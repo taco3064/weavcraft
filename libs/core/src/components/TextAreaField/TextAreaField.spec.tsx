@@ -5,9 +5,10 @@ import TextAreaField from './TextAreaField';
 
 describe('@weavcraft/components/TextAreaField', () => {
   it('should render successfully', () => {
-    const { baseElement, getByTestId } = render(<TextAreaField />);
+    const { getByTestId } = render(<TextAreaField variant="standard" />);
+    const textarea = getByTestId('TextAreaField');
 
-    expect(baseElement).toBeTruthy();
-    expect(getByTestId('TextAreaField')).toBeTruthy();
+    expect(textarea).toBeTruthy();
+    expect(textarea.querySelector('.MuiInputBase-input')).toBeTruthy();
   });
 });

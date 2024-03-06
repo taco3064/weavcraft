@@ -6,13 +6,14 @@ import SingleSelectField from './SingleSelectField';
 
 describe('@weavcraft/components/SingleSelectField', () => {
   it('should render successfully', () => {
-    const { baseElement, getByTestId, getByRole } = render(
-      <SingleSelectField />
+    const { getByTestId, getByRole } = render(
+      <SingleSelectField variant="filled" />
     );
-    const selectField = getByTestId('SingleSelectField');
 
-    expect(baseElement).toBeTruthy();
-    expect(selectField).toBeTruthy();
+    const select = getByTestId('SingleSelectField');
+
+    expect(select).toBeTruthy();
+    expect(select.querySelector('.MuiFilledInput-root')).toBeTruthy();
 
     fireEvent.mouseDown(getByRole('combobox'));
     expect(getByTestId('SingleSelectFieldMenu')).toBeTruthy();

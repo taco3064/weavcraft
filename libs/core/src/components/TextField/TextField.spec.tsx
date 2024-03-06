@@ -5,9 +5,10 @@ import TextField from './TextField';
 
 describe('@weavcraft/components/TextField', () => {
   it('should render successfully', () => {
-    const { baseElement, getByTestId } = render(<TextField />);
+    const { getByTestId } = render(<TextField variant="outlined" />);
+    const text = getByTestId('TextField');
 
-    expect(baseElement).toBeTruthy();
     expect(getByTestId('TextField')).toBeTruthy();
+    expect(text.querySelector('.MuiOutlinedInput-root')).toBeTruthy();
   });
 });
