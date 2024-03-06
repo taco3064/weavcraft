@@ -51,7 +51,7 @@ describe('@weavcraft/components/SingleSelectField', () => {
 
     expect(options).toHaveLength(data.length);
 
-    options.map((option, i) => {
+    options.forEach((option, i) => {
       expect(option).toHaveTextContent(data[i].name);
       expect(option).toHaveAttribute('data-value', data[i].id);
     });

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, renderHook } from '@testing-library/react';
+import { fireEvent, render, renderHook } from '@testing-library/react';
 import { useState } from 'react';
 import '@testing-library/jest-dom';
 
@@ -42,7 +42,7 @@ describe('@weavcraft/components/NumericField', () => {
     const input = getByTestId('NumericInput');
 
     expect(input).toHaveValue('20');
-    act(() => fireEvent.change(input, { target: { value: '40' } }));
+    fireEvent.change(input, { target: { value: '40' } });
     expect(result.current[0]).toBe(20);
   });
 
@@ -60,7 +60,7 @@ describe('@weavcraft/components/NumericField', () => {
     const input = getByTestId('NumericInput');
 
     expect(input).toHaveValue('20');
-    act(() => fireEvent.change(input, { target: { value: '5' } }));
+    fireEvent.change(input, { target: { value: '5' } });
     expect(result.current[0]).toBe(20);
   });
 
@@ -79,7 +79,7 @@ describe('@weavcraft/components/NumericField', () => {
     const input = getByTestId('NumericInput');
 
     expect(input).toHaveValue('123.46');
-    act(() => fireEvent.change(input, { target: { value: '5555.555' } }));
+    fireEvent.change(input, { target: { value: '5555.555' } });
     expect(result.current[0]).toBe(5555.55);
   });
 
@@ -97,7 +97,7 @@ describe('@weavcraft/components/NumericField', () => {
     const input = getByTestId('NumericInput');
 
     expect(input).toHaveValue('-123');
-    act(() => fireEvent.change(input, { target: { value: '-456' } }));
+    fireEvent.change(input, { target: { value: '-456' } });
     expect(result.current[0]).toBe(-456);
   });
 });
