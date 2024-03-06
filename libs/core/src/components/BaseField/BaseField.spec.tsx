@@ -14,11 +14,11 @@ describe('@weavcraft/components/BaseField', () => {
     const mockOnChange = jest.fn();
 
     const { getByRole } = render(
-      <BaseField label="Test" onChange={mockOnChange} />
+      <BaseField name="test" label="Test" onChange={mockOnChange} />
     );
 
     fireEvent.change(getByRole('textbox'), { target: { value: 'test value' } });
-    expect(mockOnChange).toHaveBeenCalledWith('test value');
+    expect(mockOnChange).toHaveBeenCalledWith('test value', 'test');
   });
 
   it('displays the label', () => {

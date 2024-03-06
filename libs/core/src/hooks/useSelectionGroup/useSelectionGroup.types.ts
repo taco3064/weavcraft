@@ -29,7 +29,7 @@ export interface GroupProps<
   V = GroupValue<D, P>
 > {
   name?: string;
-  optionProps?: P;
+  optionProps?: Omit<P, 'data'>;
   options?: D[];
   value?: T extends 'multiple' ? V[] : V;
   onChange?: (data?: T extends 'multiple' ? V[] : V, name?: string) => void;

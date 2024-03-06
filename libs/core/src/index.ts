@@ -14,6 +14,7 @@ export const Input = {
   SelectionControl: Comp.SelectionControl,
   NumericField: Comp.NumericField,
   NumericFormatField: Comp.NumericFormatField,
+  SingleSelectField: Comp.SingleSelectField,
   SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,

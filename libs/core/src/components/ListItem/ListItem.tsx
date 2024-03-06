@@ -63,7 +63,7 @@ export default function ListItem<
   );
 
   return variant === 'item' ? (
-    <MuiListItem {...listItemProps} data-testid="ListItem">
+    <MuiListItem {...listItemProps} component="div" data-testid="ListItem">
       {children}
     </MuiListItem>
   ) : (

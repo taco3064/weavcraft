@@ -36,7 +36,12 @@ export function useSlotPropsTransformation<
     getSlotProps: (data: D): P =>
       ({
         ...getProps({ ...props, data }),
-        onClick: () => onItemToggle?.(data),
+        ...(onItemToggle && {
+          onClick: (...args) => {
+            args.forEach((arg) => arg?.stopPropagation());
+            onItemToggle(data);
+          },
+        }),
       } as P),
   };
 }

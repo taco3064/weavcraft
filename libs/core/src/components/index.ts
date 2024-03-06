@@ -8,6 +8,7 @@ export * from './NumericField';
 export * from './NumericFormatField';
 export * from './RadioGroup';
 export * from './SelectionControl';
+export * from './SingleSelectField';
 export * from './SwitchField';
 export * from './TextAreaField';
 export * from './TextField';
