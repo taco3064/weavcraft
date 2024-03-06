@@ -16,7 +16,7 @@ type MuiListItemButtonProps = Pick<
   'alignItems' | 'dense' | 'disableGutters' | 'divider'
 >;
 
-interface BaseListItemProps {
+export interface BaseListItemProps {
   primary?: string;
   secondary?: string;
   disabled?: boolean;

@@ -5,7 +5,7 @@ import MuiTypography from '@mui/material/Typography';
 
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
-import { useActionPropsTransformation } from '../../hooks';
+import { useSlotPropsTransformation } from '../../hooks';
 import type { BaseActionProps, GenericData } from '../../types';
 import type { ListProps } from './List.types';
 
@@ -34,12 +34,9 @@ export default function List<
   //* List
   ...props
 }: ListProps<D, I, A, V>) {
-  const ItemAction = useActionPropsTransformation(
-    itemAction,
-    onItemActionClick
-  );
+  const ItemAction = useSlotPropsTransformation(itemAction, onItemActionClick);
 
-  const ItemIndicator = useActionPropsTransformation(
+  const ItemIndicator = useSlotPropsTransformation(
     itemIndicator,
     onItemIndicatorClick
   );
@@ -82,13 +79,13 @@ export default function List<
           variant={itemVariant || 'item'}
           data={item}
           indicator={
-            ItemIndicator.Action && (
-              <ItemIndicator.Action {...ItemIndicator.getActionProps(item)} />
+            ItemIndicator.Slot && (
+              <ItemIndicator.Slot {...ItemIndicator.getSlotProps(item)} />
             )
           }
           action={
-            ItemAction.Action && (
-              <ItemAction.Action {...ItemAction.getActionProps(item)} />
+            ItemAction.Slot && (
+              <ItemAction.Slot {...ItemAction.getSlotProps(item)} />
             )
           }
         />

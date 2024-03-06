@@ -2,7 +2,7 @@ import Button, { type ButtonProps } from '@mui/material/Button';
 import { render, renderHook } from '@testing-library/react';
 
 import {
-  useActionPropsTransformation,
+  useSlotPropsTransformation,
   usePropsTransformation,
 } from './usePropsTransformation';
 
@@ -75,7 +75,7 @@ describe('@weavcraft/hooks/usePropsTransformation', () => {
     const data = { type: 'primary' };
 
     const { result } = renderHook(() =>
-      useActionPropsTransformation<{ type: string }, ButtonProps>(
+      useSlotPropsTransformation<{ type: string }, ButtonProps>(
         <Button {...{ propMapping: { color: 'type' } as never }}>
           Click me
         </Button>,
@@ -83,13 +83,13 @@ describe('@weavcraft/hooks/usePropsTransformation', () => {
       )
     );
 
-    const { Action, getActionProps } = result.current;
+    const { Slot, getSlotProps } = result.current;
 
-    expect(Action).toBe(Button);
-    expect(getActionProps(data)).toHaveProperty('color', 'primary');
+    expect(Slot).toBe(Button);
+    expect(getSlotProps(data)).toHaveProperty('color', 'primary');
 
-    if (Action) {
-      const { baseElement } = render(<Action {...getActionProps(data)} />);
+    if (Slot) {
+      const { baseElement } = render(<Slot {...getSlotProps(data)} />);
 
       const button = baseElement.querySelector('button');
 

@@ -4,7 +4,11 @@ import type { ComponentType } from 'react';
 import type { ActionElement, BaseActionProps, GenericData } from '../../types';
 import type { TargetProps } from './usePropsTransformation.types';
 
-function getProps<P extends TargetProps>({ data, propMapping, ...props }: P) {
+export function getProps<P extends TargetProps>({
+  data,
+  propMapping,
+  ...props
+}: P) {
   return Object.entries(propMapping || {}).reduce(
     (result, [key, path]) => ({
       ...result,
@@ -20,16 +24,16 @@ export function usePropsTransformation<P extends TargetProps>(
   return getProps(props);
 }
 
-export function useActionPropsTransformation<
+export function useSlotPropsTransformation<
   D extends GenericData,
   P extends BaseActionProps
 >(action?: ActionElement<D, P>, onItemToggle?: (item: D) => void) {
-  const { type: Action, props } = action || {};
+  const { type: Slot, props } = action || {};
 
   return {
-    Action: Action as ComponentType<P> | undefined,
+    Slot: Slot as ComponentType<P> | undefined,
 
-    getActionProps: (data: D): P =>
+    getSlotProps: (data: D): P =>
       ({
         ...getProps({ ...props, data }),
         onClick: () => onItemToggle?.(data),

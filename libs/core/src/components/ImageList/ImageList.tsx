@@ -1,7 +1,7 @@
 import MuiImageList from '@mui/material/ImageList';
 
 import ImageListItem from '../ImageListItem';
-import { useActionPropsTransformation } from '../../hooks';
+import { useSlotPropsTransformation } from '../../hooks';
 import type { BaseActionProps, GenericData } from '../../types';
 import type { ImageListProps } from './ImageList.types';
 
@@ -15,10 +15,7 @@ export default function ImageList<
   onItemActionClick,
   ...props
 }: ImageListProps<D, A>) {
-  const { Action, getActionProps } = useActionPropsTransformation(
-    itemAction,
-    onItemActionClick
-  );
+  const Action = useSlotPropsTransformation(itemAction, onItemActionClick);
 
   return (
     <MuiImageList {...props} data-testid="ImageList">
@@ -27,7 +24,7 @@ export default function ImageList<
           {...itemProps}
           key={i}
           data={item}
-          action={Action && <Action {...getActionProps(item)} />}
+          action={Action.Slot && <Action.Slot {...Action.getSlotProps(item)} />}
         />
       ))}
     </MuiImageList>
