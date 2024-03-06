@@ -48,7 +48,6 @@ describe('@weavcraft/components/CheckboxGroup', () => {
       />
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     fireEvent.click(baseElement.querySelector('input[type="checkbox"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();

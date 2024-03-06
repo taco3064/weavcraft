@@ -10,7 +10,6 @@ export default function Icon<D extends GenericData>(props: IconProps<D>) {
   const { code, ...iconProps } = usePropsTransformation(props);
 
   const options = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const icon = _get(FaIcon, [code!, 'icon']);
 
     if (icon) {

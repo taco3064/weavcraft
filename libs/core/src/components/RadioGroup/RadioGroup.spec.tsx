@@ -43,7 +43,6 @@ describe('@weavcraft/components/RadioGroup', () => {
       />
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     fireEvent.click(baseElement.querySelector('input[type="radio"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();

@@ -8,7 +8,7 @@ describe('@weavcraft/components/TextField', () => {
     const { getByTestId } = render(<TextField variant="outlined" />);
     const text = getByTestId('TextField');
 
-    expect(getByTestId('TextField')).toBeTruthy();
+    expect(text).toBeTruthy();
     expect(text.querySelector('.MuiOutlinedInput-root')).toBeTruthy();
   });
 });
