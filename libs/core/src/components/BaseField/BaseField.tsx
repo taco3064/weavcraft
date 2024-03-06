@@ -4,7 +4,6 @@ import type { ElementType } from 'react';
 
 import type { BaseFieldProps, MuiInputProps } from './BaseField.types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function BaseField<V, C extends ElementType<any>>({
   InputProps,
   adornment,

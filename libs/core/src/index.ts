@@ -10,10 +10,10 @@ export const DataDisplay = {
 
 export const Input = {
   CheckboxGroup: Comp.CheckboxGroup,
-  NumericField: Comp.NumericField,
-  NumericFormatField: Comp.NumericFormatField,
   RadioGroup: Comp.RadioGroup,
   SelectionControl: Comp.SelectionControl,
+  NumericField: Comp.NumericField,
+  NumericFormatField: Comp.NumericFormatField,
   SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,

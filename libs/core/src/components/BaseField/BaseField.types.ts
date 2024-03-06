@@ -23,7 +23,6 @@ type BasePropNames =
 
 export type MuiInputProps = NonNullable<MuiTextFieldProps['InputProps']>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface BaseInputProps<C extends ElementType<any>>
   extends Omit<
     MuiInputProps,
@@ -35,7 +34,6 @@ interface BaseInputProps<C extends ElementType<any>>
 
 export interface BaseFieldProps<
   V,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   C extends ElementType<any> = ElementType<any>
 > extends Omit<MuiTextFieldProps, 'InputProps'> {
   InputProps?: BaseInputProps<C>;
@@ -47,7 +45,6 @@ export interface BaseFieldProps<
 
 export type BaseFieldExtendedProps<
   V,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   C extends ElementType<any> = ElementType<any>,
   K extends keyof BaseFieldProps<V, C> | never = never
 > = Pick<BaseFieldProps<V, C>, BasePropNames | K>;

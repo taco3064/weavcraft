@@ -9,6 +9,7 @@ describe('@weavcraft/hooks/useMultipleSelectionGroup', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
       useMultipleSelectionGroup({
+        name: 'test',
         optionProps: { propMapping: { value: 'id' } },
         options: [{ id: '1' }, { id: '2' }],
         value: ['1'],
@@ -22,7 +23,7 @@ describe('@weavcraft/hooks/useMultipleSelectionGroup', () => {
       result.current.onChange(true, { id: '2' });
     });
 
-    expect(onChange).toHaveBeenCalledWith(['1', '2']);
+    expect(onChange).toHaveBeenCalledWith(['1', '2'], 'test');
   });
 });
 
@@ -44,6 +45,6 @@ describe('@weavcraft/hooks/useSingleSelectionGroup', () => {
       result.current.onChange(true, { id: '2' });
     });
 
-    expect(onChange).toHaveBeenCalledWith('2');
+    expect(onChange).toHaveBeenCalledWith('2', undefined);
   });
 });

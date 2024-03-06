@@ -6,12 +6,12 @@ import type { GroupProps } from './useSelectionGroup.types';
 import type { GenericData, MappableProps } from '../../types';
 
 export function useMultipleSelectionGroup<D extends GenericData>({
+  name,
   optionProps,
   options,
   value,
   onChange,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-GroupProps<'multiple', D, MappableProps<D, { value?: any }>>) {
+}: GroupProps<'multiple', D, MappableProps<D, { value?: any }>>) {
   type GroupValue = NonNullable<typeof value>[number];
 
   return {
@@ -34,19 +34,19 @@ GroupProps<'multiple', D, MappableProps<D, { value?: any }>>) {
         const values = new Set<GroupValue>([...(value || [])]);
 
         values[checked ? 'add' : 'delete'](optionValue);
-        onChange?.([...values]);
+        onChange?.([...values], name);
       }
     },
   };
 }
 
 export function useSingleSelectionGroup<D extends GenericData>({
+  name,
   optionProps,
   options,
   value,
   onChange,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-GroupProps<'single', D, MappableProps<D, { value?: any }>>) {
+}: GroupProps<'single', D, MappableProps<D, { value?: any }>>) {
   type GroupValue = NonNullable<typeof value>;
 
   return {
@@ -66,7 +66,7 @@ GroupProps<'single', D, MappableProps<D, { value?: any }>>) {
       const optionValue = _get(data, path as string) as GroupValue;
 
       if (checked) {
-        onChange?.(optionValue || undefined);
+        onChange?.(optionValue || undefined, name);
       }
     },
   };

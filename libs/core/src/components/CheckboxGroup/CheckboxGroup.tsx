@@ -20,6 +20,7 @@ export default function CheckboxGroup<D extends GenericData>(
       <MuiFormGroup>
         {options?.map((item, i) => (
           <SelectionControl
+            name={props.name}
             {...optionProps}
             variant="checkbox"
             key={i}

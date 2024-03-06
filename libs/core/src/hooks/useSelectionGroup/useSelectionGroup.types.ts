@@ -15,7 +15,6 @@ type PropertyType<
 
 type GroupValue<
   D extends GenericData,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   P extends MappableProps<D, { value?: any }>,
   V = PropertyType<
     D,
@@ -26,12 +25,12 @@ type GroupValue<
 export interface GroupProps<
   T extends 'single' | 'multiple',
   D extends GenericData,
-  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   P extends MappableProps<D, { value?: any }>,
   V = GroupValue<D, P>
 > {
+  name?: string;
   optionProps?: P;
   options?: D[];
   value?: T extends 'multiple' ? V[] : V;
-  onChange?: (data?: T extends 'multiple' ? V[] : V) => void;
+  onChange?: (data?: T extends 'multiple' ? V[] : V, name?: string) => void;
 }
