@@ -6,4 +6,7 @@ export type MultipleSelectFieldProps<
   D extends GenericData,
   I extends BaseSlotProps
 > = BaseSelectFieldProps<'multiple', D, I> &
-  Omit<BaseFieldWithoutInputProps<unknown>, 'value' | 'onChange'>;
+  Omit<
+    BaseFieldWithoutInputProps<unknown>,
+    'adornmentPosition' | 'value' | 'onChange'
+  >;

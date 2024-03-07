@@ -1,26 +1,26 @@
 import MuiTextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 import BaseField from '../BaseField';
-import type { DatePickerFieldProps } from './DatePickerField.types';
+import type { TimePickerFieldProps } from './TimePickerField.types';
 
-export default function DatePickerField({
+export default function TimePickerField({
   disableFuture,
   disablePast,
-  format = 'YYYY-MM-DD',
+  format = 'HH:mm',
   label,
-  maxDate,
-  minDate,
+  maxTime,
+  minTime,
   name,
   openTo,
   views,
   value,
   onChange,
   ...props
-}: DatePickerFieldProps) {
+}: TimePickerFieldProps) {
   return (
-    <MobileDatePicker
+    <MobileTimePicker
       {...{
         disableFuture,
         disablePast,
@@ -29,8 +29,9 @@ export default function DatePickerField({
         views,
       }}
       closeOnSelect
-      maxDate={!maxDate ? undefined : dayjs(maxDate, format)}
-      minDate={!minDate ? undefined : dayjs(minDate, format)}
+      ampm={false}
+      maxTime={!maxTime ? undefined : dayjs(maxTime, format)}
+      minTime={!minTime ? undefined : dayjs(minTime, format)}
       label={label}
       name={name}
       value={!value ? '' : dayjs(value, format)}
@@ -40,12 +41,12 @@ export default function DatePickerField({
       slots={{ textField: BaseField as typeof MuiTextField }}
       slotProps={{
         mobilePaper: {
-          'data-testid': 'DatePickerFieldMenu',
+          'data-testid': 'TimePickerFieldMenu',
         } as never,
         textField: {
           ...props,
           name,
-          'data-testid': 'DatePickerField',
+          'data-testid': 'TimePickerField',
         } as never,
       }}
     />

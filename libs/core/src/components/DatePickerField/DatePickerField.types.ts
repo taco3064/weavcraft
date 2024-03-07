@@ -1,20 +1,15 @@
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { MobileDatePicker as MuiDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import type { ComponentProps } from 'react';
 
 import type { BaseFieldWithoutInputProps } from '../BaseField';
 
-type MuiMobileDatePickerProps = Pick<
-  ComponentProps<typeof MobileDatePicker>,
-  | 'closeOnSelect'
-  | 'disableFuture'
-  | 'disablePast'
-  | 'format'
-  | 'openTo'
-  | 'views'
+type MuiDatePickerProps = Pick<
+  ComponentProps<typeof MuiDatePicker>,
+  'disableFuture' | 'disablePast' | 'format' | 'openTo' | 'views'
 >;
 
 export interface DatePickerFieldProps
-  extends MuiMobileDatePickerProps,
+  extends MuiDatePickerProps,
     BaseFieldWithoutInputProps<string> {
   maxDate?: string;
   minDate?: string;

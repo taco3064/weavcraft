@@ -6,6 +6,9 @@ export interface SingleSelectFieldProps<
   D extends GenericData,
   I extends BaseSlotProps
 > extends BaseSelectFieldProps<'single', D, I>,
-    Omit<BaseFieldWithoutInputProps<unknown>, 'value' | 'onChange'> {
+    Omit<
+      BaseFieldWithoutInputProps<unknown>,
+      'adornmentPosition' | 'value' | 'onChange'
+    > {
   emptyText?: string;
 }

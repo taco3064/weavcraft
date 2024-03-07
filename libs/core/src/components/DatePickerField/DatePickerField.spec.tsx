@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { fireEvent, render } from '@testing-library/react';
@@ -29,6 +30,42 @@ describe('@weavcraft/components/DatePickerField', () => {
 
     expect(field).toBeTruthy();
     expect(field.querySelector('input')).toHaveValue('2022/01/01');
+  });
+
+  it('should disable date options with maxDate', () => {
+    const value = '2019-03-16';
+
+    const { getByTestId } = render(
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePickerField maxDate={value} value={value} />
+      </LocalizationProvider>
+    );
+
+    fireEvent.click(getByTestId('DatePickerField'));
+
+    expect(
+      getByTestId('DatePickerFieldMenu').querySelectorAll(
+        'button.MuiPickersDay-root:disabled'
+      )
+    ).toHaveLength(dayjs(value).daysInMonth() - dayjs(value).date());
+  });
+
+  it('should disable date options with minDate', () => {
+    const value = '2019-03-16';
+
+    const { getByTestId } = render(
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePickerField minDate={value} value={value} />
+      </LocalizationProvider>
+    );
+
+    fireEvent.click(getByTestId('DatePickerField'));
+
+    expect(
+      getByTestId('DatePickerFieldMenu').querySelectorAll(
+        'button.MuiPickersDay-root:disabled'
+      )
+    ).toHaveLength(dayjs(value).date() - 1);
   });
 
   it('should call onChange with formatted value', () => {

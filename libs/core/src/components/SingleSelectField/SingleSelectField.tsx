@@ -23,6 +23,7 @@ export default function SingleSelectField<
       {...props}
       select
       data-testid="SingleSelectField"
+      adornmentPosition="start"
       SelectProps={{
         displayEmpty,
         MenuProps: {

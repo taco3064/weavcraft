@@ -27,6 +27,7 @@ export default function MultipleSelectField<
       select
       value={selected}
       data-testid="MultipleSelectField"
+      adornmentPosition="start"
       SelectProps={{
         multiple: true,
         renderValue: () => (

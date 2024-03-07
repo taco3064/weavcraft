@@ -10,14 +10,18 @@ export const DataDisplay = {
 
 export const Input = {
   CheckboxGroup: Comp.CheckboxGroup,
-  DatePickerField: Comp.DatePickerField,
-  MultipleSelectField: Comp.MultipleSelectField,
+  RadioGroup: Comp.RadioGroup,
   NumericField: Comp.NumericField,
   NumericFormatField: Comp.NumericFormatField,
-  RadioGroup: Comp.RadioGroup,
-  SelectionControl: Comp.SelectionControl,
+  MultipleSelectField: Comp.MultipleSelectField,
   SingleSelectField: Comp.SingleSelectField,
   SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,
+  DatePickerField: Comp.DatePickerField,
+  TimePickerField: Comp.TimePickerField,
+};
+
+export const Tool = {
+  SelectionControl: Comp.SelectionControl,
 };
