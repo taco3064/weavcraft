@@ -2,6 +2,7 @@ export * from './Avatar';
 export * from './AvatarGroup';
 export * from './CheckboxGroup';
 export * from './DatePickerField';
+export * from './DateTimePickerField';
 export * from './Icon';
 export * from './ImageList';
 export * from './List';

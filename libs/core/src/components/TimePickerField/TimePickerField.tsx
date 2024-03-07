@@ -1,6 +1,6 @@
 import MuiTextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { MobileTimePicker as MuiMobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 import BaseField from '../BaseField';
 import type { TimePickerFieldProps } from './TimePickerField.types';
@@ -20,7 +20,7 @@ export default function TimePickerField({
   ...props
 }: TimePickerFieldProps) {
   return (
-    <MobileTimePicker
+    <MuiMobileTimePicker
       {...{
         disableFuture,
         disablePast,

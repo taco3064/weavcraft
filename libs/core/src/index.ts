@@ -18,8 +18,9 @@ export const Input = {
   SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,
-  DatePickerField: Comp.DatePickerField,
   TimePickerField: Comp.TimePickerField,
+  DatePickerField: Comp.DatePickerField,
+  DateTimePickerField: Comp.DateTimePickerField,
 };
 
 export const Tool = {
