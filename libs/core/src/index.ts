@@ -1,5 +1,9 @@
 import * as Comp from './components';
 
+export const Layout = {
+  Accordion: Comp.Accordion,
+};
+
 export const DataDisplay = {
   Avatar: Comp.Avatar,
   AvatarGroup: Comp.AvatarGroup,
