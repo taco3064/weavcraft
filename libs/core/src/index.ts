@@ -2,6 +2,7 @@ import * as Comp from './components';
 
 export const Layout = {
   Accordion: Comp.Accordion,
+  Toolbar: Comp.Toolbar,
 };
 
 export const DataDisplay = {
@@ -27,6 +28,6 @@ export const Input = {
   DateTimePickerField: Comp.DateTimePickerField,
 };
 
-export const Tool = {
+export const Interaction = {
   SelectionControl: Comp.SelectionControl,
 };

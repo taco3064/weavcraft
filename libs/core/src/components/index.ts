@@ -17,3 +17,4 @@ export * from './SwitchField';
 export * from './TextAreaField';
 export * from './TextField';
 export * from './TimePickerField';
+export * from './Toolbar';
