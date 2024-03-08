@@ -1,30 +1,30 @@
-import { getByTestId, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import List from './List';
 
 describe('@weavcraft/components/List', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<List />);
+    const { getByTestId } = render(<List />);
 
-    expect(baseElement).toBeTruthy();
+    expect(getByTestId('List')).toBeTruthy();
   });
 
   it('should render subheader by title', () => {
-    const { baseElement } = render(<List title="My List" />);
-    const subheader = getByTestId(baseElement, 'ListSubheader');
+    const { getByTestId } = render(<List title="My List" />);
+    const subheader = getByTestId('ListSubheader');
 
     expect(subheader).toBeTruthy();
     expect(subheader.textContent).toBe('My List');
   });
 
   it('should render subheader by icon', () => {
-    const { baseElement } = render(
+    const { getByTestId } = render(
       <List icon={{ code: 'faGithub', color: 'primary' }} />
     );
 
-    const subheader = getByTestId(baseElement, 'ListSubheader');
-    const icon = getByTestId(baseElement, 'Icon_faGithub');
+    const subheader = getByTestId('ListSubheader');
+    const icon = getByTestId('Icon_faGithub');
 
     expect(subheader).toBeTruthy();
     expect(icon).toBeTruthy();
@@ -32,9 +32,9 @@ describe('@weavcraft/components/List', () => {
   });
 
   it('should render subheader by action', () => {
-    const { baseElement } = render(<List action={<button>Click me</button>} />);
-    const subheader = getByTestId(baseElement, 'ListSubheader');
-    const button = baseElement.querySelector('button');
+    const { getByTestId } = render(<List action={<button>Click me</button>} />);
+    const subheader = getByTestId('ListSubheader');
+    const button = subheader.querySelector('button');
 
     expect(subheader).toBeTruthy();
     expect(button).toBeTruthy();
@@ -110,6 +110,23 @@ describe('@weavcraft/components/List', () => {
 
     expect(buttons).toHaveLength(data.length);
     expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
+  });
+
+  it('should render nested items when itemNested prop is provided', () => {
+    const { getAllByTestId } = render(
+      <List
+        items={data}
+        itemNested={<div data-testid="NestedDiv">Nested Content</div>}
+        itemProps={{
+          propMapping: {
+            primary: 'title',
+            secondary: 'content',
+          },
+        }}
+      />
+    );
+
+    expect(getAllByTestId('NestedDiv')).toHaveLength(data.length);
   });
 
   const data = [

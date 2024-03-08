@@ -1,7 +1,7 @@
 import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { ActionElement, BaseSlotProps, GenericData } from '../../types';
+import type { BaseSlotProps, GenericData, SlotElement } from '../../types';
 import type { IconProps } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
 
@@ -10,12 +10,8 @@ type MuiListProps = Pick<
   'dense' | 'disablePadding'
 >;
 
-export interface ListProps<
-  D extends GenericData,
-  I extends BaseSlotProps,
-  A extends BaseSlotProps,
-  V extends ListItemVariant
-> extends MuiListProps {
+export interface ListProps<D extends GenericData, V extends ListItemVariant>
+  extends MuiListProps {
   //* Subheader
   title?: string;
   icon?: Pick<IconProps<never>, 'code' | 'color'>;
@@ -24,8 +20,9 @@ export interface ListProps<
   disableSubheaderGutters?: boolean;
 
   //* ListItem
-  itemAction?: ActionElement<D, A>;
-  itemIndicator?: ActionElement<D, I>;
+  itemAction?: SlotElement<D, BaseSlotProps>;
+  itemIndicator?: SlotElement<D, BaseSlotProps>;
+  itemNested?: SlotElement<D, any>;
   itemVariant?: V;
   items?: D[];
   itemProps?: Omit<

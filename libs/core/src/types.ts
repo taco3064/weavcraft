@@ -28,7 +28,7 @@ export type BaseSlotProps = Record<string, any> & {
   onClick?: never | ((...args: any[]) => void);
 };
 
-export type ActionElement<
+export type SlotElement<
   D extends GenericData,
   P extends BaseSlotProps,
   M = Omit<MappableProps<D, P>, 'data'>

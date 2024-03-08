@@ -6,13 +6,11 @@ import MuiTypography from '@mui/material/Typography';
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
 import { useSlotPropsTransformation } from '../../hooks';
-import type { BaseSlotProps, GenericData } from '../../types';
+import type { GenericData } from '../../types';
 import type { ListProps } from './List.types';
 
 export default function List<
   D extends GenericData,
-  I extends BaseSlotProps,
-  A extends BaseSlotProps,
   V extends ListItemVariant = 'item'
 >({
   //* Subheader
@@ -25,6 +23,7 @@ export default function List<
   //* ListItem
   itemAction,
   itemIndicator,
+  itemNested,
   itemProps,
   itemVariant,
   items = [],
@@ -33,8 +32,9 @@ export default function List<
 
   //* List
   ...props
-}: ListProps<D, I, A, V>) {
+}: ListProps<D, V>) {
   const ItemAction = useSlotPropsTransformation(itemAction, onItemActionClick);
+  const ItemNested = useSlotPropsTransformation(itemNested);
 
   const ItemIndicator = useSlotPropsTransformation(
     itemIndicator,
@@ -86,6 +86,11 @@ export default function List<
           action={
             ItemAction.Slot && (
               <ItemAction.Slot {...ItemAction.getSlotProps(item)} />
+            )
+          }
+          nested={
+            ItemNested.Slot && (
+              <ItemNested.Slot {...ItemNested.getSlotProps(item)} />
             )
           }
         />

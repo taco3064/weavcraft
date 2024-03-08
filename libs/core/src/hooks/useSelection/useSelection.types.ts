@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import type {
-  ActionElement,
+  SlotElement,
   BaseSlotProps,
   GenericData,
   MappableProps,
@@ -59,5 +59,5 @@ export interface BaseSelectFieldProps<
   D extends GenericData,
   I extends BaseSlotProps
 > extends GroupProps<T, D, MappableProps<D, BaseOptionProps>> {
-  optionIndicator?: ActionElement<D, I>;
+  optionIndicator?: SlotElement<D, I>;
 }
