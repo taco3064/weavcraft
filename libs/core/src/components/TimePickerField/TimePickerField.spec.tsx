@@ -1,17 +1,12 @@
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import TimePickerField from './TimePickerField';
+import { renderWithLocalizationProvider } from '../testing.utils';
 
 describe('@weavcraft/components/TimePickerField', () => {
   it('should render successfully', () => {
-    const { getByTestId } = render(
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePickerField />
-      </LocalizationProvider>
-    );
+    const { getByTestId } = renderWithLocalizationProvider(<TimePickerField />);
 
     const field = getByTestId('TimePickerField');
 
@@ -21,10 +16,8 @@ describe('@weavcraft/components/TimePickerField', () => {
   });
 
   it('should render value with format successfully', () => {
-    const { getByTestId } = render(
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePickerField format="HH+mm" value="13+30" />
-      </LocalizationProvider>
+    const { getByTestId } = renderWithLocalizationProvider(
+      <TimePickerField format="HH+mm" value="13+30" />
     );
 
     const field = getByTestId('TimePickerField');
@@ -36,10 +29,8 @@ describe('@weavcraft/components/TimePickerField', () => {
   it('should disable date options with maxTime', () => {
     const value = '20:30';
 
-    const { getByTestId } = render(
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePickerField maxTime={value} value={value} />
-      </LocalizationProvider>
+    const { getByTestId } = renderWithLocalizationProvider(
+      <TimePickerField maxTime={value} value={value} />
     );
 
     fireEvent.click(getByTestId('TimePickerField'));
@@ -54,10 +45,8 @@ describe('@weavcraft/components/TimePickerField', () => {
   it('should disable date options with minTime', () => {
     const value = '13:30';
 
-    const { getByTestId } = render(
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePickerField minTime={value} value={value} />
-      </LocalizationProvider>
+    const { getByTestId } = renderWithLocalizationProvider(
+      <TimePickerField minTime={value} value={value} />
     );
 
     fireEvent.click(getByTestId('TimePickerField'));
@@ -72,10 +61,8 @@ describe('@weavcraft/components/TimePickerField', () => {
   it('should call onChange with formatted value', async () => {
     const onChange = jest.fn();
 
-    const { getByTestId } = render(
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePickerField name="time" value="15:00" onChange={onChange} />
-      </LocalizationProvider>
+    const { getByTestId } = renderWithLocalizationProvider(
+      <TimePickerField name="time" value="15:00" onChange={onChange} />
     );
 
     fireEvent.click(getByTestId('TimePickerField'));

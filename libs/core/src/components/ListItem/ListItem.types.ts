@@ -21,6 +21,7 @@ type MappableListItemProps<D extends GenericData> = MappableProps<
   D,
   BaseListItemProps & {
     href?: string;
+    nestedId?: string;
     selected?: boolean;
   }
 >;
@@ -35,6 +36,7 @@ export interface ListItemProps<D extends GenericData, V extends ListItemVariant>
   disabled?: V extends 'item' ? undefined : boolean;
   href?: V extends 'link' ? string : undefined;
   indicator?: ReactNode;
+  nested?: ReactNode;
   selected?: V extends 'button' ? boolean : undefined;
   variant?: V;
   onItemClick?: V extends 'button' ? (data?: D) => void : undefined;

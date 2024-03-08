@@ -30,7 +30,7 @@ export interface ListProps<
   items?: D[];
   itemProps?: Omit<
     ListItemProps<D, V>,
-    'data' | 'action' | 'indicator' | 'variant'
+    'data' | 'action' | 'indicator' | 'nested' | 'nestedId' | 'variant'
   >;
 
   onItemActionClick?: (item: D) => void;
