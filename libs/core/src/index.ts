@@ -2,6 +2,7 @@ import * as Comp from './components';
 
 export const Layout = {
   Accordion: Comp.Accordion,
+  Collapse: Comp.Collapse,
   Toolbar: Comp.Toolbar,
 };
 
