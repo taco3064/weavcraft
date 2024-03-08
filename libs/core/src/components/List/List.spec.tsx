@@ -112,23 +112,6 @@ describe('@weavcraft/components/List', () => {
     expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
   });
 
-  it('should render nested items when itemNested prop is provided', () => {
-    const { getAllByTestId } = render(
-      <List
-        items={data}
-        itemNested={<div data-testid="NestedDiv">Nested Content</div>}
-        itemProps={{
-          propMapping: {
-            primary: 'title',
-            secondary: 'content',
-          },
-        }}
-      />
-    );
-
-    expect(getAllByTestId('NestedDiv')).toHaveLength(data.length);
-  });
-
   const data = [
     {
       title: 'Brunch this weekend?',

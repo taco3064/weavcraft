@@ -17,8 +17,6 @@ export default function ListItem<
     disabled,
     href,
     indicator,
-    nested,
-    nestedId,
     primary,
     secondary,
     selected,
@@ -64,36 +62,21 @@ export default function ListItem<
     </>
   );
 
-  return (
-    <>
-      {variant === 'item' ? (
-        <MuiListItem {...listItemProps} data-testid="ListItem">
-          {children}
-        </MuiListItem>
-      ) : (
-        <MuiListItemButton
-          {...listItemProps}
-          {...{ disabled, selected }}
-          {...(variant === 'link' &&
-            isHrefValid && { LinkComponent: 'a', href })}
-          {...(variant === 'button' && {
-            onClick: () => onItemClick?.(props.data as D),
-          })}
-          data-testid={`ListItem${variant === 'link' ? 'Link' : 'Button'}`}
-        >
-          {children}
-        </MuiListItemButton>
-      )}
-
-      {!nested && !nestedId ? null : (
-        <MuiListItem
-          {...listItemProps}
-          id={nestedId}
-          data-testid="ListItemNested"
-        >
-          {nested}
-        </MuiListItem>
-      )}
-    </>
+  return variant === 'item' ? (
+    <MuiListItem {...listItemProps} data-testid="ListItem">
+      {children}
+    </MuiListItem>
+  ) : (
+    <MuiListItemButton
+      {...listItemProps}
+      {...{ disabled, selected }}
+      {...(variant === 'link' && isHrefValid && { LinkComponent: 'a', href })}
+      {...(variant === 'button' && {
+        onClick: () => onItemClick?.(props.data as D),
+      })}
+      data-testid={`ListItem${variant === 'link' ? 'Link' : 'Button'}`}
+    >
+      {children}
+    </MuiListItemButton>
   );
 }

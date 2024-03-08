@@ -22,12 +22,11 @@ export interface ListProps<D extends GenericData, V extends ListItemVariant>
   //* ListItem
   itemAction?: SlotElement<D, BaseSlotProps>;
   itemIndicator?: SlotElement<D, BaseSlotProps>;
-  itemNested?: SlotElement<D, any>;
   itemVariant?: V;
   items?: D[];
   itemProps?: Omit<
     ListItemProps<D, V>,
-    'data' | 'action' | 'indicator' | 'nested' | 'nestedId' | 'variant'
+    'data' | 'action' | 'indicator' | 'variant'
   >;
 
   onItemActionClick?: (item: D) => void;

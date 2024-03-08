@@ -23,7 +23,6 @@ export default function List<
   //* ListItem
   itemAction,
   itemIndicator,
-  itemNested,
   itemProps,
   itemVariant,
   items = [],
@@ -34,7 +33,6 @@ export default function List<
   ...props
 }: ListProps<D, V>) {
   const ItemAction = useSlotPropsTransformation(itemAction, onItemActionClick);
-  const ItemNested = useSlotPropsTransformation(itemNested);
 
   const ItemIndicator = useSlotPropsTransformation(
     itemIndicator,
@@ -86,11 +84,6 @@ export default function List<
           action={
             ItemAction.Slot && (
               <ItemAction.Slot {...ItemAction.getSlotProps(item)} />
-            )
-          }
-          nested={
-            ItemNested.Slot && (
-              <ItemNested.Slot {...ItemNested.getSlotProps(item)} />
             )
           }
         />
