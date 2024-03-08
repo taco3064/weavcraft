@@ -5,6 +5,7 @@ export * from './CheckboxGroup';
 export * from './Collapse';
 export * from './DatePickerField';
 export * from './DateTimePickerField';
+export * from './Dialog';
 export * from './Icon';
 export * from './ImageList';
 export * from './List';

@@ -19,6 +19,7 @@ export default function Collapse({
       {!expanded ? null : children}
     </MuiCollapse>
   );
+
   useEffect(() => {
     if (containerId) {
       setContainer(document.getElementById(containerId) || undefined);
