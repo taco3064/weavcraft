@@ -35,7 +35,7 @@ describe('@weavcraft/components/SingleSelectField', () => {
   it('should render all options', () => {
     const { getAllByTestId, getByRole } = render(
       <SingleSelectField
-        options={data}
+        records={records}
         optionProps={{
           propMapping: {
             primary: 'name',
@@ -49,18 +49,18 @@ describe('@weavcraft/components/SingleSelectField', () => {
 
     const options = getAllByTestId('SingleSelectFieldOption');
 
-    expect(options).toHaveLength(data.length);
+    expect(options).toHaveLength(records.length);
 
     options.forEach((option, i) => {
-      expect(option).toHaveTextContent(data[i].name);
-      expect(option).toHaveAttribute('data-value', data[i].id);
+      expect(option).toHaveTextContent(records[i].name);
+      expect(option).toHaveAttribute('data-value', records[i].id);
     });
   });
 
   it('should render option indicators', () => {
     const { getAllByTestId, getByRole } = render(
       <SingleSelectField
-        options={data}
+        records={records}
         optionIndicator={<Icon code="faGithub" />}
         optionProps={{
           propMapping: {
@@ -72,16 +72,16 @@ describe('@weavcraft/components/SingleSelectField', () => {
     );
 
     fireEvent.mouseDown(getByRole('combobox'));
-    expect(getAllByTestId('Icon_faGithub')).toHaveLength(data.length);
+    expect(getAllByTestId('Icon_faGithub')).toHaveLength(records.length);
   });
 
   it('should call onChange with correct data', () => {
-    const index = Math.floor(Math.random() * data.length);
+    const index = Math.floor(Math.random() * records.length);
     const onChange = jest.fn();
 
     const { getAllByRole, getByRole } = render(
       <SingleSelectField
-        options={data}
+        records={records}
         onChange={onChange}
         optionProps={{
           propMapping: {
@@ -95,10 +95,10 @@ describe('@weavcraft/components/SingleSelectField', () => {
     fireEvent.mouseDown(getByRole('combobox'));
     fireEvent.click(getAllByRole('option')[index]);
 
-    expect(onChange).toHaveBeenCalledWith(data[index].id, undefined);
+    expect(onChange).toHaveBeenCalledWith(records[index].id, undefined);
   });
 
-  const data = [
+  const records = [
     {
       id: 'T001',
       name: 'Remy Sharp',

@@ -1,15 +1,13 @@
-import type { ReactNode } from 'react';
-
 import type {
-  SlotElement,
-  BaseSlotProps,
   GenericData,
   MappableProps,
   PropertyPath,
-} from '../../types';
+  SlotElement,
+  StoreProps,
+} from '../../contexts';
 
 type PropertyType<
-  D extends GenericData,
+  D extends {},
   P extends PropertyPath<D> = PropertyPath<D>
 > = P extends `${infer K}.${infer Rest}`
   ? K extends keyof D
@@ -21,27 +19,33 @@ type PropertyType<
   ? D[P]
   : never;
 
-type GroupValue<
-  D extends GenericData,
-  P extends MappableProps<D, { value?: any }>,
-  V = PropertyType<
-    D,
-    Extract<NonNullable<P['propMapping']>['value'], PropertyPath<D>>
+export type ControlProps<D extends GenericData> = {
+  value?: any;
+} & MappableProps<D, { value?: any }>;
+
+export type ControlValue<
+  T extends 'single' | 'multiple',
+  P extends ControlProps<GenericData>,
+  V = NonNullable<
+    PropertyType<
+      NonNullable<P['data']>,
+      Extract<
+        NonNullable<P['propMapping']>['value'],
+        PropertyPath<NonNullable<P['data']>>
+      >
+    >
   >
-> = NonNullable<V>;
+> = T extends 'multiple' ? V[] : V;
 
 //* Prop Types
 export interface GroupProps<
   T extends 'single' | 'multiple',
-  D extends GenericData,
-  P extends MappableProps<D, { value?: any }>,
-  V = GroupValue<D, P>
-> {
+  P extends ControlProps<GenericData>
+> extends StoreProps<NonNullable<P['data']>> {
   name?: string;
   optionProps?: Omit<P, 'data'>;
-  options?: D[];
-  value?: T extends 'multiple' ? V[] : V;
-  onChange?: (data?: T extends 'multiple' ? V[] : V, name?: string) => void;
+  value?: ControlValue<T, P>;
+  onChange?: (value?: ControlValue<T, P>, name?: string) => void;
 }
 
 export interface BaseListItemProps {
@@ -56,8 +60,7 @@ interface BaseOptionProps extends BaseListItemProps {
 
 export interface BaseSelectFieldProps<
   T extends 'single' | 'multiple',
-  D extends GenericData,
-  I extends BaseSlotProps
-> extends GroupProps<T, D, MappableProps<D, BaseOptionProps>> {
-  optionIndicator?: SlotElement<D, I>;
+  D extends GenericData
+> extends GroupProps<T, BaseOptionProps & MappableProps<D, BaseOptionProps>> {
+  optionIndicator?: SlotElement;
 }

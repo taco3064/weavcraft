@@ -9,7 +9,7 @@ describe('@weavcraft/components/MultipleSelectField', () => {
   it('should render with all options successfully', () => {
     const { getAllByTestId, getByTestId, getByRole } = render(
       <MultipleSelectField
-        options={data}
+        records={records}
         optionProps={{
           propMapping: {
             primary: 'name',
@@ -26,18 +26,18 @@ describe('@weavcraft/components/MultipleSelectField', () => {
 
     const options = getAllByTestId('SingleSelectFieldOption');
 
-    expect(options).toHaveLength(data.length);
+    expect(options).toHaveLength(records.length);
 
     options.forEach((option, i) => {
-      expect(option).toHaveTextContent(data[i].name);
-      expect(option).toHaveAttribute('data-value', data[i].id);
+      expect(option).toHaveTextContent(records[i].name);
+      expect(option).toHaveAttribute('data-value', records[i].id);
     });
   });
 
   it('should render option indicators', () => {
     const { getAllByTestId, getByRole } = render(
       <MultipleSelectField
-        options={data}
+        records={records}
         optionIndicator={<Icon code="faGithub" />}
         optionProps={{
           propMapping: {
@@ -49,14 +49,14 @@ describe('@weavcraft/components/MultipleSelectField', () => {
     );
 
     fireEvent.mouseDown(getByRole('combobox'));
-    expect(getAllByTestId('Icon_faGithub')).toHaveLength(data.length);
+    expect(getAllByTestId('Icon_faGithub')).toHaveLength(records.length);
   });
 
   it('should all chips be rendered', () => {
     const { getAllByTestId } = render(
       <MultipleSelectField
-        options={data}
-        value={data.map((d) => d.id)}
+        records={records}
+        value={records.map((d) => d.id)}
         optionProps={{
           propMapping: {
             primary: 'name',
@@ -68,20 +68,20 @@ describe('@weavcraft/components/MultipleSelectField', () => {
 
     const chips = getAllByTestId('MultipleSelectFieldChip');
 
-    expect(chips).toHaveLength(data.length);
-    chips.forEach((chip, i) => expect(chip).toHaveTextContent(data[i].name));
+    expect(chips).toHaveLength(records.length);
+    chips.forEach((chip, i) => expect(chip).toHaveTextContent(records[i].name));
   });
 
   it('should call onChange with correct data', () => {
-    const initIndex = Math.floor(Math.random() * data.length);
-    const index = (initIndex + 1) % data.length;
+    const initIndex = Math.floor(Math.random() * records.length);
+    const index = (initIndex + 1) % records.length;
     const { result } = renderHook(() =>
-      useState<string[] | undefined>([data[initIndex].id])
+      useState<string[] | undefined>([records[initIndex].id])
     );
 
     const { getAllByRole, getByRole } = render(
       <MultipleSelectField
-        options={data}
+        records={records}
         value={result.current[0]}
         onChange={result.current[1]}
         optionProps={{
@@ -95,25 +95,25 @@ describe('@weavcraft/components/MultipleSelectField', () => {
 
     fireEvent.mouseDown(getByRole('combobox'));
     fireEvent.click(getAllByRole('option')[index]);
-    expect(result.current[0]).toContain(data[index].id);
+    expect(result.current[0]).toContain(records[index].id);
 
     expect(result.current[0]).toEqual(
-      [initIndex, index].map((i) => data[i].id)
+      [initIndex, index].map((i) => records[i].id)
     );
   });
 
   it('should call onChange with correct data when removing a chip', () => {
-    const indexes = ((index) => [index, (index + 1) % data.length])(
-      Math.floor(Math.random() * data.length)
+    const indexes = ((index) => [index, (index + 1) % records.length])(
+      Math.floor(Math.random() * records.length)
     );
 
     const { result } = renderHook(() =>
-      useState<string[] | undefined>(indexes.map((i) => data[i].id))
+      useState<string[] | undefined>(indexes.map((i) => records[i].id))
     );
 
     const { getAllByTestId } = render(
       <MultipleSelectField
-        options={data}
+        records={records}
         value={result.current[0]}
         onChange={result.current[1]}
         optionProps={{
@@ -126,10 +126,10 @@ describe('@weavcraft/components/MultipleSelectField', () => {
     );
 
     fireEvent.click(getAllByTestId('CancelIcon')[0]);
-    expect(result.current[0]).not.toContain(data[indexes[0]].id);
+    expect(result.current[0]).not.toContain(records[indexes[0]].id);
   });
 
-  const data = [
+  const records = [
     {
       id: 'T001',
       name: 'Remy Sharp',

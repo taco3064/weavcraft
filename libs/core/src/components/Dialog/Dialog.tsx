@@ -5,7 +5,7 @@ import MuiDialogContent from '@mui/material/DialogContent';
 import MuiDialogTitle from '@mui/material/DialogTitle';
 import MuiIconButton from '@mui/material/IconButton';
 import MuiSlide from '@mui/material/Slide';
-import { forwardRef, useState, type ReactElement, type Ref } from 'react';
+import { forwardRef, useState, type ReactElement } from 'react';
 import type { TransitionProps } from '@mui/material/transitions';
 
 import Icon from '../Icon';

@@ -1,11 +1,9 @@
 import type { BaseFieldWithoutInputProps } from '../BaseField';
 import type { BaseSelectFieldProps } from '../../hooks';
-import type { BaseSlotProps, GenericData } from '../../types';
+import type { GenericData } from '../../contexts';
 
-export interface SingleSelectFieldProps<
-  D extends GenericData,
-  I extends BaseSlotProps
-> extends BaseSelectFieldProps<'single', D, I>,
+export interface SingleSelectFieldProps<D extends GenericData>
+  extends BaseSelectFieldProps<'single', D>,
     Omit<
       BaseFieldWithoutInputProps<unknown>,
       'adornmentPosition' | 'value' | 'onChange'

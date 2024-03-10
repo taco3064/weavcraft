@@ -1,14 +1,16 @@
 import MuiImageListItem from '@mui/material/ImageListItem';
 import MuiImageListItemBar from '@mui/material/ImageListItemBar';
 
-import { usePropsTransformation, useUrlValidation } from '../../hooks';
-import type { GenericData } from '../../types';
-import type { ImageListItemProps } from './ImageListItem.types';
+import { useUrlValidation } from '../../hooks';
+import { withGenerateDataProps } from '../../contexts';
 
-export default function ImageListItem<D extends GenericData>(
-  props: ImageListItemProps<D>
-) {
-  const {
+import type {
+  ImageListItemProps,
+  MappablePropNames,
+} from './ImageListItem.types';
+
+export default withGenerateDataProps<ImageListItemProps, MappablePropNames>(
+  function ImageListItem({
     action,
     actionPosition,
     barPosition,
@@ -16,27 +18,27 @@ export default function ImageListItem<D extends GenericData>(
     description,
     src,
     srcSet,
-    ...imageListItemProps
-  } = usePropsTransformation(props);
+    ...props
+  }: ImageListItemProps) {
+    const isUrlValid = useUrlValidation(src);
 
-  const isUrlValid = useUrlValidation(src);
+    return !isUrlValid ? null : (
+      <MuiImageListItem {...props} data-testid="ImageListItem">
+        <img {...{ src, srcSet }} alt={title} loading="lazy" />
 
-  return !isUrlValid ? null : (
-    <MuiImageListItem {...imageListItemProps} data-testid="ImageListItem">
-      <img {...{ src, srcSet }} alt={title} loading="lazy" />
-
-      {!action && !title && !description ? null : (
-        <MuiImageListItemBar
-          {...{
-            actionPosition,
-            title,
-          }}
-          actionIcon={action}
-          position={barPosition}
-          subtitle={description}
-          data-testid="ImageListItemBar"
-        />
-      )}
-    </MuiImageListItem>
-  );
-}
+        {!action && !title && !description ? null : (
+          <MuiImageListItemBar
+            {...{
+              actionPosition,
+              title,
+            }}
+            actionIcon={action}
+            position={barPosition}
+            subtitle={description}
+            data-testid="ImageListItemBar"
+          />
+        )}
+      </MuiImageListItem>
+    );
+  }
+);

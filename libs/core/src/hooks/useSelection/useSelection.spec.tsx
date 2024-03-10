@@ -8,7 +8,7 @@ describe('@weavcraft/hooks/useMultipleSelection', () => {
       useMultipleSelection({
         name: 'test',
         optionProps: { propMapping: { value: 'id' } },
-        options: [{ id: '1' }, { id: '2' }],
+        records: [{ id: '1' }, { id: '2' }],
         value: ['1'],
         onChange,
       })
@@ -30,7 +30,7 @@ describe('@weavcraft/hooks/useSingleSelection', () => {
     const { result } = renderHook(() =>
       useSingleSelection({
         optionProps: { propMapping: { value: 'id' } },
-        options: [{ id: '1' }, { id: '2' }],
+        records: [{ id: '1' }, { id: '2' }],
         value: '1',
         onChange,
       })

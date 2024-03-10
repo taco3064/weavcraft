@@ -43,7 +43,7 @@ describe('@weavcraft/components/List', () => {
   it('should render all items', () => {
     const { getAllByTestId } = render(
       <List
-        items={data}
+        records={records}
         itemProps={{
           propMapping: {
             primary: 'title',
@@ -53,7 +53,7 @@ describe('@weavcraft/components/List', () => {
       />
     );
 
-    expect(getAllByTestId('ListItem')).toHaveLength(data.length);
+    expect(getAllByTestId('ListItem')).toHaveLength(records.length);
   });
 
   it('should render item indicators', () => {
@@ -61,7 +61,7 @@ describe('@weavcraft/components/List', () => {
 
     const { baseElement } = render(
       <List
-        items={data}
+        records={records}
         itemIndicator={<button>O</button>}
         itemProps={{
           propMapping: {
@@ -77,11 +77,11 @@ describe('@weavcraft/components/List', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemIndicatorClick).toHaveBeenNthCalledWith(i + 1, data[i]);
+      expect(onItemIndicatorClick).toHaveBeenNthCalledWith(i + 1, records[i]);
     });
 
-    expect(buttons).toHaveLength(data.length);
-    expect(onItemIndicatorClick).toHaveBeenCalledTimes(data.length);
+    expect(buttons).toHaveLength(records.length);
+    expect(onItemIndicatorClick).toHaveBeenCalledTimes(records.length);
   });
 
   it('should render item actions', () => {
@@ -89,7 +89,7 @@ describe('@weavcraft/components/List', () => {
 
     const { baseElement } = render(
       <List
-        items={data}
+        records={records}
         itemAction={<button>Click me</button>}
         itemProps={{
           propMapping: {
@@ -105,14 +105,14 @@ describe('@weavcraft/components/List', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, data[i]);
+      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, records[i]);
     });
 
-    expect(buttons).toHaveLength(data.length);
-    expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
+    expect(buttons).toHaveLength(records.length);
+    expect(onItemActionClick).toHaveBeenCalledTimes(records.length);
   });
 
-  const data = [
+  const records = [
     {
       title: 'Brunch this weekend?',
       icon: 'faGithub',

@@ -1,12 +1,10 @@
 import type { BaseFieldWithoutInputProps } from '../BaseField';
 import type { BaseSelectFieldProps } from '../../hooks';
-import type { BaseSlotProps, GenericData } from '../../types';
+import type { GenericData } from '../../contexts';
 
-export type MultipleSelectFieldProps<
-  D extends GenericData,
-  I extends BaseSlotProps
-> = BaseSelectFieldProps<'multiple', D, I> &
-  Omit<
-    BaseFieldWithoutInputProps<unknown>,
-    'adornmentPosition' | 'value' | 'onChange'
-  >;
+export type MultipleSelectFieldProps<D extends GenericData> =
+  BaseSelectFieldProps<'multiple', D> &
+    Omit<
+      BaseFieldWithoutInputProps<unknown>,
+      'adornmentPosition' | 'value' | 'onChange'
+    >;

@@ -13,7 +13,7 @@ describe('@weavcraft/components/ImageList', () => {
   it('should render all images', () => {
     const { baseElement, getAllByTestId } = render(
       <ImageList
-        items={data}
+        records={records}
         itemProps={{
           propMapping: {
             cols: 'cols',
@@ -28,9 +28,9 @@ describe('@weavcraft/components/ImageList', () => {
     const img1st = getAllByTestId('ImageListItem')[0];
     const imgs = baseElement.querySelectorAll('img');
 
-    expect(imgs).toHaveLength(data.length);
-    expect(img1st).toHaveStyle(`grid-column-end: span ${data[0].cols};`);
-    expect(img1st).toHaveStyle(`grid-row-end: span ${data[0].rows};`);
+    expect(imgs).toHaveLength(records.length);
+    expect(img1st).toHaveStyle(`grid-column-end: span ${records[0].cols};`);
+    expect(img1st).toHaveStyle(`grid-row-end: span ${records[0].rows};`);
   });
 
   it('should render action icons with onItemActionClick', () => {
@@ -38,7 +38,7 @@ describe('@weavcraft/components/ImageList', () => {
 
     const { baseElement } = render(
       <ImageList
-        items={data}
+        records={records}
         onItemActionClick={onItemActionClick}
         itemAction={
           <button {...{ propMapping: { children: 'title' } as never }}>
@@ -58,15 +58,15 @@ describe('@weavcraft/components/ImageList', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, data[i]);
-      expect(btn).toHaveTextContent(data[i].title);
+      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, records[i]);
+      expect(btn).toHaveTextContent(records[i].title);
     });
 
-    expect(buttons).toHaveLength(data.length);
-    expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
+    expect(buttons).toHaveLength(records.length);
+    expect(onItemActionClick).toHaveBeenCalledTimes(records.length);
   });
 
-  const data = [
+  const records = [
     {
       img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
       title: 'Breakfast',

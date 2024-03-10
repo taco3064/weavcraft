@@ -1,7 +1,7 @@
 import MuiAccordion from '@mui/material/Accordion';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { IconProps } from '../Icon';
+import type { IconCode } from '../Icon';
 
 type MuiAccordionProps = Pick<
   ComponentProps<typeof MuiAccordion>,
@@ -12,6 +12,6 @@ export interface AccordionProps extends MuiAccordionProps {
   action?: ReactNode;
   children?: ReactNode;
   disableActionSpacing?: boolean;
-  expandIcon?: IconProps<never>['code'];
+  expandIcon?: IconCode;
   title?: string;
 }

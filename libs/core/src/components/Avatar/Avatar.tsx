@@ -1,16 +1,20 @@
 import MuiAvatar from '@mui/material/Avatar';
 
-import { usePropsTransformation, useUrlValidation } from '../../hooks';
+import { useUrlValidation } from '../../hooks';
+import { withGenerateDataProps } from '../../contexts';
 import type { AvatarProps } from './Avatar.types';
-import type { GenericData } from '../../types';
 
-export default function Avatar<D extends GenericData>(props: AvatarProps<D>) {
-  const { height, text, width, ...avatarProps } = usePropsTransformation(props);
-  const isUrlValid = useUrlValidation(avatarProps.src);
+export default withGenerateDataProps<AvatarProps>(function Avatar({
+  height,
+  text,
+  width,
+  ...props
+}) {
+  const isUrlValid = useUrlValidation(props.src);
 
   return (
-    <MuiAvatar {...avatarProps} sx={{ width, height }} data-testid="Avatar">
+    <MuiAvatar {...props} sx={{ width, height }} data-testid="Avatar">
       {isUrlValid ? null : text?.charAt(0)}
     </MuiAvatar>
   );
-}
+});

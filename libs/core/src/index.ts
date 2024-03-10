@@ -7,12 +7,19 @@ export const Layout = {
   Toolbar: Comp.Toolbar,
 };
 
-export const DataDisplay = {
-  Avatar: Comp.Avatar,
+export const DataCollection = {
   AvatarGroup: Comp.AvatarGroup,
-  Icon: Comp.Icon,
   ImageList: Comp.ImageList,
   List: Comp.List,
+};
+
+export const DataItem = {
+  Avatar: Comp.Avatar,
+  Icon: Comp.Icon,
+};
+
+export const Interaction = {
+  SelectionControl: Comp.SelectionControl,
 };
 
 export const Input = {
@@ -28,8 +35,4 @@ export const Input = {
   TimePickerField: Comp.TimePickerField,
   DatePickerField: Comp.DatePickerField,
   DateTimePickerField: Comp.DateTimePickerField,
-};
-
-export const Interaction = {
-  SelectionControl: Comp.SelectionControl,
 };

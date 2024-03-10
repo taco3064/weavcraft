@@ -4,35 +4,36 @@ import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
-import { useMemo, type ComponentType } from 'react';
+import { useMemo } from 'react';
 
-import type { BaseSelectFieldProps, GroupProps } from './useSelection.types';
-import type { BaseSlotProps, GenericData, MappableProps } from '../../types';
+import { getProps, useGenerateSlotProps } from '../../contexts';
+import type { GenericData } from '../../contexts';
 
-import {
-  getProps,
-  useSlotPropsTransformation,
-} from '../usePropsTransformation';
+import type {
+  BaseSelectFieldProps,
+  ControlProps,
+  GroupProps,
+} from './useSelection.types';
 
 export function useMultipleSelection<D extends GenericData>({
   name,
   optionProps,
-  options,
+  records,
   value,
   onChange,
-}: GroupProps<'multiple', D, MappableProps<D, { value?: any }>>) {
+}: GroupProps<'multiple', ControlProps<D>>) {
   type GroupValue = NonNullable<typeof value>[number];
 
   return {
     selected: useMemo<boolean[]>(
       () =>
-        options?.map((data) => {
+        records?.map((data) => {
           const { value: path } = optionProps?.propMapping || {};
           const optionValue = _get(data, path as string) as GroupValue;
 
           return value?.includes(optionValue) || false;
         }) || [],
-      [optionProps?.propMapping, options, value]
+      [optionProps?.propMapping, records, value]
     ),
 
     onChange: (checked: boolean, data?: D) => {
@@ -52,22 +53,22 @@ export function useMultipleSelection<D extends GenericData>({
 export function useSingleSelection<D extends GenericData>({
   name,
   optionProps,
-  options,
+  records,
   value,
   onChange,
-}: GroupProps<'single', D, MappableProps<D, { value?: any }>>) {
+}: GroupProps<'single', ControlProps<D>>) {
   type GroupValue = NonNullable<typeof value>;
 
   return {
     selected: useMemo<boolean[]>(
       () =>
-        options?.map((data) => {
+        records?.map((data) => {
           const { value: path } = optionProps?.propMapping || {};
           const optionValue = _get(data, path as string) as GroupValue;
 
           return value === optionValue;
         }) || [],
-      [optionProps?.propMapping, options, value]
+      [optionProps?.propMapping, records, value]
     ),
 
     onChange: (checked: boolean, data?: D) => {
@@ -83,15 +84,14 @@ export function useSingleSelection<D extends GenericData>({
 
 export function useOptionsRender<
   T extends 'single' | 'multiple',
-  D extends GenericData,
-  I extends BaseSlotProps
->({ optionIndicator, optionProps, options }: BaseSelectFieldProps<T, D, I>) {
-  const ItemIndicator = useSlotPropsTransformation(optionIndicator);
+  D extends GenericData
+>({ optionIndicator, optionProps, records }: BaseSelectFieldProps<T, D>) {
+  const ItemIndicator = useGenerateSlotProps(optionIndicator);
 
-  return options?.map((item, i) => {
+  return records?.map((data, i) => {
     const { disabled, primary, secondary, value } = getProps({
       ...optionProps,
-      data: item,
+      data,
     });
 
     return (
@@ -104,7 +104,7 @@ export function useOptionsRender<
         <MuiListItem component="div">
           {!ItemIndicator.Slot ? null : (
             <MuiListItemIcon>
-              <ItemIndicator.Slot {...ItemIndicator.getSlotProps(item)} />
+              <ItemIndicator.Slot {...ItemIndicator.getSlotProps(data)} />
             </MuiListItemIcon>
           )}
 

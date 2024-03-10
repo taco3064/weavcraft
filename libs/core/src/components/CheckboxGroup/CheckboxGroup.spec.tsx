@@ -15,11 +15,13 @@ describe('@weavcraft/components/CheckboxGroup', () => {
   it('should render all checkboxes', () => {
     const { baseElement, getAllByTestId } = render(
       <CheckboxGroup
-        value={data.filter(({ selected }) => selected).map(({ name }) => name)}
-        options={data}
+        records={records}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
+        value={records
+          .filter(({ selected }) => selected)
+          .map(({ name }) => name)}
       />
     );
 
@@ -27,20 +29,20 @@ describe('@weavcraft/components/CheckboxGroup', () => {
       'input[type="checkbox"]:checked'
     );
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(data.length);
+    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
 
     expect(checked).toHaveLength(
-      data.filter(({ selected }) => selected).length
+      records.filter(({ selected }) => selected).length
     );
   });
 
   it('should call onChange with correct data', () => {
-    const clone = JSON.parse(JSON.stringify(data));
+    const clone = JSON.parse(JSON.stringify(records));
     const onChange = jest.fn();
 
     const { baseElement } = render(
       <CheckboxGroup
-        options={clone}
+        records={clone}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -53,7 +55,7 @@ describe('@weavcraft/components/CheckboxGroup', () => {
     expect(onChange).toHaveBeenCalled();
   });
 
-  const data = [
+  const records = [
     {
       name: 'Remy Sharp',
       selected: false,

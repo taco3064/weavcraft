@@ -1,2 +1,2 @@
 export { default, default as ImageListItem } from './ImageListItem';
-export type { ImageListItemProps } from './ImageListItem.types';
+export type { WrapperProps as ImageListItemProps } from './ImageListItem.types';

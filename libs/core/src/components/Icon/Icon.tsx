@@ -3,12 +3,12 @@ import _get from 'lodash/get';
 import { useMemo } from 'react';
 
 import { FaIcon, type IconProps } from './Icon.types';
-import { usePropsTransformation } from '../../hooks';
-import type { GenericData } from '../../types';
+import { withGenerateDataProps } from '../../contexts';
 
-export default function Icon<D extends GenericData>(props: IconProps<D>) {
-  const { code, ...iconProps } = usePropsTransformation(props);
-
+export default withGenerateDataProps<IconProps>(function Icon({
+  code,
+  ...props
+}) {
   const options = useMemo(() => {
     const icon = _get(FaIcon, [code!, 'icon']);
 
@@ -23,7 +23,7 @@ export default function Icon<D extends GenericData>(props: IconProps<D>) {
 
   return !options ? null : (
     <MuiSvgIcon
-      {...iconProps}
+      {...props}
       viewBox={`0 0 ${options.width} ${options.height}`}
       data-testid={`Icon_${code}`}
     >
@@ -36,4 +36,4 @@ export default function Icon<D extends GenericData>(props: IconProps<D>) {
       )}
     </MuiSvgIcon>
   );
-}
+});

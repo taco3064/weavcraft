@@ -4,7 +4,7 @@ import MuiSvgIcon from '@mui/material/SvgIcon';
 import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import type { ComponentProps } from 'react';
 
-import type { GenericData, MappableProps } from '../../types';
+import type { GenerateDataWrapperProps, GenericData } from '../../contexts';
 
 export const FaIcon = { ...FaSolid, ...FaBrands } as const;
 
@@ -17,8 +17,13 @@ type MuiIconProps = Pick<
   'color' | 'fontSize'
 >;
 
-interface BaseIconProps extends MuiIconProps {
-  code?: FortawesomeCode<typeof FaIcon>;
+export type IconCode = FortawesomeCode<typeof FaIcon>;
+
+export interface IconProps extends MuiIconProps {
+  code?: IconCode;
 }
 
-export type IconProps<D extends GenericData> = MappableProps<D, BaseIconProps>;
+export type WrapperProps<D extends GenericData> = GenerateDataWrapperProps<
+  D,
+  IconProps
+>;

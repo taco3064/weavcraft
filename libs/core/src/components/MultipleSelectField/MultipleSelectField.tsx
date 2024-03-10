@@ -3,27 +3,29 @@ import MuiChip from '@mui/material/Chip';
 import _get from 'lodash/get';
 
 import BaseField from '../BaseField';
+import { useGenerateStoreProps, type GenericData } from '../../contexts';
 import { useOptionsRender } from '../../hooks';
-import type { BaseSlotProps, GenericData } from '../../types';
 import type { MultipleSelectFieldProps } from './MultipleSelectField.types';
 
-export default function MultipleSelectField<
-  D extends GenericData,
-  I extends BaseSlotProps
->({
-  optionIndicator,
-  optionProps,
-  options,
-  ...props
-}: MultipleSelectFieldProps<D, I>) {
+export default function MultipleSelectField<D extends GenericData>(
+  props: MultipleSelectFieldProps<D>
+) {
+  const { optionIndicator, optionProps, records, ...fieldProps } =
+    useGenerateStoreProps(props);
+
   const propMapping = optionProps?.propMapping || {};
 
-  const children = useOptionsRender({ optionIndicator, optionProps, options });
-  const selected = props.value || [];
+  const children = useOptionsRender({
+    optionIndicator,
+    optionProps,
+    records,
+  });
+
+  const selected = fieldProps.value || [];
 
   return (
     <BaseField
-      {...props}
+      {...fieldProps}
       select
       value={selected}
       data-testid="MultipleSelectField"
@@ -33,8 +35,8 @@ export default function MultipleSelectField<
         renderValue: () => (
           <MuiBox display="flex" flexWrap="wrap" gap={0.5}>
             {selected.map((value, i) => {
-              const data = options?.find(
-                (option) => _get(option, propMapping.value as string) === value
+              const data = records?.find(
+                (data) => _get(data, propMapping.value as string) === value
               );
 
               return (

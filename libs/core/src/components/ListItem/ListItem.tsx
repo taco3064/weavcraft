@@ -4,27 +4,31 @@ import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
 
-import { usePropsTransformation, useUrlValidation } from '../../hooks';
-import type { GenericData } from '../../types';
-import type { ListItemProps, ListItemVariant } from './ListItem.types';
+import { useGenerateData, withGenerateDataProps } from '../../contexts';
+import { useUrlValidation } from '../../hooks';
 
-export default function ListItem<
-  D extends GenericData,
-  V extends ListItemVariant = 'item'
->(props: ListItemProps<D, V>) {
-  const {
-    action,
-    disabled,
-    href,
-    indicator,
-    primary,
-    secondary,
-    selected,
-    variant = 'item',
-    onItemClick,
-    ...listItemProps
-  } = usePropsTransformation(props);
+import type {
+  MappablePropNames,
+  ListItemProps,
+  ListItemVariant,
+} from './ListItem.types';
 
+export default withGenerateDataProps<
+  ListItemProps<ListItemVariant>,
+  MappablePropNames
+>(function ListItem({
+  action,
+  disabled,
+  href,
+  indicator,
+  primary,
+  secondary,
+  selected,
+  variant = 'item',
+  onItemClick,
+  ...props
+}) {
+  const data = useGenerateData();
   const isHrefValid = useUrlValidation(href);
 
   const children = (
@@ -63,20 +67,20 @@ export default function ListItem<
   );
 
   return variant === 'item' ? (
-    <MuiListItem {...listItemProps} data-testid="ListItem">
+    <MuiListItem {...props} data-testid="ListItem">
       {children}
     </MuiListItem>
   ) : (
     <MuiListItemButton
-      {...listItemProps}
+      {...props}
       {...{ disabled, selected }}
       {...(variant === 'link' && isHrefValid && { LinkComponent: 'a', href })}
       {...(variant === 'button' && {
-        onClick: () => onItemClick?.(props.data as D),
+        onClick: () => onItemClick?.(data),
       })}
       data-testid={`ListItem${variant === 'link' ? 'Link' : 'Button'}`}
     >
       {children}
     </MuiListItemButton>
   );
-}
+});

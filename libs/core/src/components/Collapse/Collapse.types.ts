@@ -1,7 +1,7 @@
 import MuiCollapse from '@mui/material/Collapse';
 import type { ComponentProps, ReactElement } from 'react';
 
-import type { BaseSlotProps } from '../../types';
+import type { SlotProps } from '../../contexts';
 
 type MuiCollapseProps = Pick<
   ComponentProps<typeof MuiCollapse>,
@@ -10,5 +10,5 @@ type MuiCollapseProps = Pick<
 
 export interface CollapseProps extends MuiCollapseProps {
   containerId?: string;
-  toggle?: ReactElement<BaseSlotProps>;
+  toggle?: ReactElement<SlotProps>;
 }

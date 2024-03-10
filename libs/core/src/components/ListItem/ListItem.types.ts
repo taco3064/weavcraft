@@ -3,7 +3,7 @@ import MuiListItemButton from '@mui/material/ListItemButton';
 import type { ComponentProps, ReactNode } from 'react';
 
 import type { BaseListItemProps } from '../../hooks';
-import type { GenericData, MappableProps } from '../../types';
+import type { GenerateDataWrapperProps, GenericData } from '../../contexts';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
@@ -17,25 +17,33 @@ type MuiListItemButtonProps = Pick<
   'alignItems' | 'dense' | 'disableGutters' | 'divider'
 >;
 
-type MappableListItemProps<D extends GenericData> = MappableProps<
-  D,
-  BaseListItemProps & {
-    href?: string;
-    selected?: boolean;
-  }
+type BasePropName = Extract<
+  keyof MuiListItemProps,
+  keyof MuiListItemButtonProps
 >;
 
-export interface ListItemProps<D extends GenericData, V extends ListItemVariant>
-  extends MappableListItemProps<D>,
-    Pick<
-      MuiListItemProps & MuiListItemButtonProps,
-      Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>
-    > {
+export type MappablePropNames =
+  | BasePropName
+  | 'disabled'
+  | 'href'
+  | 'primary'
+  | 'secondary'
+  | 'selected';
+
+export interface ListItemProps<V extends ListItemVariant>
+  extends BaseListItemProps,
+    Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
+  href?: V extends 'link' ? string : undefined;
+  selected?: V extends 'button' ? boolean : undefined;
+
   action?: ReactNode;
   disabled?: V extends 'item' ? undefined : boolean;
-  href?: V extends 'link' ? string : undefined;
   indicator?: ReactNode;
-  selected?: V extends 'button' ? boolean : undefined;
   variant?: V;
-  onItemClick?: V extends 'button' ? (data?: D) => void : undefined;
+  onItemClick?: V extends 'button' ? (data?: GenericData) => void : undefined;
 }
+
+export type WrapperProps<
+  D extends GenericData,
+  V extends ListItemVariant
+> = GenerateDataWrapperProps<D, ListItemProps<V>, MappablePropNames>;

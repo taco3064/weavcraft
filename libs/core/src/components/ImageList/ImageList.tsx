@@ -1,25 +1,30 @@
 import MuiImageList from '@mui/material/ImageList';
 
 import ImageListItem from '../ImageListItem';
-import { useSlotPropsTransformation } from '../../hooks';
-import type { BaseSlotProps, GenericData } from '../../types';
 import type { ImageListProps } from './ImageList.types';
 
-export default function ImageList<
-  D extends GenericData,
-  A extends BaseSlotProps
->({
-  itemAction,
-  itemProps,
-  items = [],
-  onItemActionClick,
-  ...props
-}: ImageListProps<D, A>) {
-  const Action = useSlotPropsTransformation(itemAction, onItemActionClick);
+import {
+  useGenerateSlotProps,
+  useGenerateStoreProps,
+  type GenericData,
+} from '../../contexts';
+
+export default function ImageList<D extends GenericData>(
+  props: ImageListProps<D>
+) {
+  const {
+    itemAction,
+    itemProps,
+    records = [],
+    onItemActionClick,
+    ...listProps
+  } = useGenerateStoreProps(props);
+
+  const Action = useGenerateSlotProps(itemAction, onItemActionClick);
 
   return (
-    <MuiImageList {...props} data-testid="ImageList">
-      {items.map((item, i) => (
+    <MuiImageList {...listProps} data-testid="ImageList">
+      {records.map((item, i) => (
         <ImageListItem
           {...itemProps}
           key={i}

@@ -15,8 +15,8 @@ describe('@weavcraft/components/RadioGroup', () => {
   it('should render all radios', () => {
     const { baseElement, getAllByTestId } = render(
       <RadioGroup
-        value={data.find(({ selected }) => selected)?.name}
-        options={data}
+        value={records.find(({ selected }) => selected)?.name}
+        records={records}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -25,17 +25,17 @@ describe('@weavcraft/components/RadioGroup', () => {
 
     const checked = baseElement.querySelectorAll('input[type="radio"]:checked');
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(data.length);
+    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
     expect(checked).toHaveLength(1);
   });
 
   it('should call onChange with correct data', () => {
-    const clone = JSON.parse(JSON.stringify(data));
+    const clone = JSON.parse(JSON.stringify(records));
     const onChange = jest.fn();
 
     const { baseElement } = render(
       <RadioGroup
-        options={clone}
+        records={clone}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -48,7 +48,7 @@ describe('@weavcraft/components/RadioGroup', () => {
     expect(onChange).toHaveBeenCalled();
   });
 
-  const data = [
+  const records = [
     {
       name: 'Remy Sharp',
       selected: false,
