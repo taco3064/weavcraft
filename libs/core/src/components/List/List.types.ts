@@ -5,7 +5,7 @@ import type { IconProps } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
 
 import type {
-  GenerateStoreWrapperProps,
+  GenerateStoreWrappedProps,
   GenericData,
   SlotElement,
 } from '../../contexts';
@@ -24,7 +24,7 @@ export type MappablePropNames = keyof BaseListProps;
 export type ListProps<
   D extends GenericData,
   V extends ListItemVariant
-> = GenerateStoreWrapperProps<
+> = GenerateStoreWrappedProps<
   D,
   MuiListProps &
     BaseListProps & {

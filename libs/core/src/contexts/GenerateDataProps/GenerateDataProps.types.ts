@@ -38,7 +38,7 @@ export interface MappableProps<D extends GenericData, P = {}> {
   >;
 }
 
-export type GenerateDataWrapperProps<
+export type GenerateDataWrappedProps<
   D extends GenericData,
   P,
   K extends keyof P = keyof P
@@ -54,7 +54,7 @@ export type MappableStoreProps<
   P extends StoreProps<D>
 > = Pick<MappableProps<D, P>, 'propMapping'>;
 
-export type GenerateStoreWrapperProps<
+export type GenerateStoreWrappedProps<
   D extends GenericData,
   P,
   K extends keyof (P & StoreProps<D>) = 'records'

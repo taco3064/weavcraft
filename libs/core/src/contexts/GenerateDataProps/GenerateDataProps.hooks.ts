@@ -2,7 +2,7 @@ import _get from 'lodash/get';
 import { createContext, useContext, type ComponentType } from 'react';
 
 import type {
-  GenerateStoreWrapperProps,
+  GenerateStoreWrappedProps,
   GenericData,
   MappableProps,
   SlotElement,
@@ -37,7 +37,7 @@ export function useGenerateStoreProps<
   D extends GenericData,
   P,
   K extends keyof (P & StoreProps<D>) = 'records'
->(props: GenerateStoreWrapperProps<D, P, K>) {
+>(props: GenerateStoreWrappedProps<D, P, K>) {
   const data = useGenerateData<D>();
 
   return getProps({ ...props, data });

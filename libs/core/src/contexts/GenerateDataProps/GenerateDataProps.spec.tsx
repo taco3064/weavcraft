@@ -10,7 +10,7 @@ import {
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenerateStoreWrapperProps,
+  GenerateStoreWrappedProps,
   GenericData,
   SlotElement,
 } from './GenerateDataProps.types';
@@ -74,7 +74,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       };
 
       function Store(
-        props: GenerateStoreWrapperProps<
+        props: GenerateStoreWrappedProps<
           typeof data,
           { title?: string },
           'title'

@@ -8,8 +8,8 @@ export {
 } from './GenerateDataProps.hooks';
 
 export type {
-  GenerateDataWrapperProps,
-  GenerateStoreWrapperProps,
+  GenerateDataWrappedProps,
+  GenerateStoreWrappedProps,
   GenericData,
   MappableProps,
   PropertyPath,

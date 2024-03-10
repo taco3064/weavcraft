@@ -4,6 +4,6 @@ export default SelectionControl;
 export { SelectionControl };
 
 export type {
-  WrapperProps as SelectionControlProps,
+  WrappedProps as SelectionControlProps,
   Variant,
 } from './SelectionControl.types';

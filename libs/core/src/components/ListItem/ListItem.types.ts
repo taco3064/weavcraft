@@ -3,7 +3,7 @@ import MuiListItemButton from '@mui/material/ListItemButton';
 import type { ComponentProps, ReactNode } from 'react';
 
 import type { BaseListItemProps } from '../../hooks';
-import type { GenerateDataWrapperProps, GenericData } from '../../contexts';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
@@ -43,7 +43,7 @@ export interface ListItemProps<V extends ListItemVariant>
   onItemClick?: V extends 'button' ? (data?: GenericData) => void : undefined;
 }
 
-export type WrapperProps<
+export type WrappedProps<
   D extends GenericData,
   V extends ListItemVariant
-> = GenerateDataWrapperProps<D, ListItemProps<V>, MappablePropNames>;
+> = GenerateDataWrappedProps<D, ListItemProps<V>, MappablePropNames>;

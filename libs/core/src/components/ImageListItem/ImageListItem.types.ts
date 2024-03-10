@@ -2,7 +2,7 @@ import MuiImageListItem from '@mui/material/ImageListItem';
 import type { ImageListItemBarProps as MuiImageListItemBarProps } from '@mui/material/ImageListItemBar';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { GenericData, GenerateDataWrapperProps } from '../../contexts';
+import type { GenericData, GenerateDataWrappedProps } from '../../contexts';
 
 type MuiImageListItemProps = Pick<
   ComponentProps<typeof MuiImageListItem>,
@@ -24,7 +24,7 @@ export interface ImageListItemProps extends BaseImageListItemProps {
   barPosition?: MuiImageListItemBarProps['position'];
 }
 
-export type WrapperProps<D extends GenericData> = GenerateDataWrapperProps<
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   ImageListItemProps,
   MappablePropNames

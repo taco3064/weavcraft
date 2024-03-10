@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import type { ImageListItemProps } from '../ImageListItem';
 
 import type {
-  GenerateStoreWrapperProps,
+  GenerateStoreWrappedProps,
   GenericData,
   SlotElement,
 } from '../../contexts';
@@ -14,7 +14,7 @@ type MuiImageListProps = Pick<
   'cols' | 'gap' | 'rowHeight' | 'variant'
 >;
 
-export type ImageListProps<D extends GenericData> = GenerateStoreWrapperProps<
+export type ImageListProps<D extends GenericData> = GenerateStoreWrappedProps<
   D,
   MuiImageListProps & {
     itemAction?: SlotElement;

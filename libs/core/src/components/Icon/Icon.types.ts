@@ -4,7 +4,7 @@ import MuiSvgIcon from '@mui/material/SvgIcon';
 import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrapperProps, GenericData } from '../../contexts';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 export const FaIcon = { ...FaSolid, ...FaBrands } as const;
 
@@ -23,7 +23,7 @@ export interface IconProps extends MuiIconProps {
   code?: IconCode;
 }
 
-export type WrapperProps<D extends GenericData> = GenerateDataWrapperProps<
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   IconProps
 >;

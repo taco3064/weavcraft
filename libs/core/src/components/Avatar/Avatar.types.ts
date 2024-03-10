@@ -1,7 +1,7 @@
 import MuiAvatar from '@mui/material/Avatar';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrapperProps, GenericData } from '../../contexts';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 type MuiAvatarProps = Pick<
   ComponentProps<typeof MuiAvatar>,
@@ -14,7 +14,7 @@ export interface AvatarProps extends MuiAvatarProps {
   height?: string;
 }
 
-export type WrapperProps<D extends GenericData> = GenerateDataWrapperProps<
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   AvatarProps
 >;
