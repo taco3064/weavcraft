@@ -58,6 +58,7 @@ export function useGenerateSlotProps<D extends GenericData>(
         ...(onItemToggle && {
           onClick: (...args: any[]) => {
             args.forEach((arg) => arg?.stopPropagation?.());
+            props?.onClick?.(...args);
             onItemToggle(data);
           },
         }),
