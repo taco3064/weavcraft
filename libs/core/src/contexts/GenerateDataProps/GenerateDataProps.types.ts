@@ -13,11 +13,11 @@ export interface GenericData {
     | string
     | undefined
     | GenericData
-    | Array<GenericData[keyof GenericData]>;
+    | GenericData[];
 }
 
 export type PropertyPath<
-  D extends {},
+  D extends GenericData,
   K extends keyof D = keyof D
 > = K extends string
   ? D[K] extends Record<string, any> | undefined
@@ -56,10 +56,14 @@ export type MappableStoreProps<
 
 export type GenerateStoreWrapperProps<
   D extends GenericData,
-  P extends StoreProps<D>,
-  K extends keyof P = 'records'
+  P,
+  K extends keyof (P & StoreProps<D>) = 'records'
 > = P &
-  MappableStoreProps<NonNullable<P['records']>[number], Pick<P, K | 'records'>>;
+  StoreProps<D> &
+  MappableStoreProps<
+    NonNullable<(P & StoreProps<D>)['records']>[number],
+    Pick<P & StoreProps<D>, K | 'records'>
+  >;
 
 export type SlotProps = Record<string, any> & {
   onClick?: never | ((...args: any[]) => void);

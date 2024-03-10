@@ -7,7 +7,6 @@ import type {
   GenerateStoreWrapperProps,
   GenericData,
   SlotElement,
-  StoreProps,
 } from '../../contexts';
 
 type MuiImageListProps = Pick<
@@ -17,10 +16,9 @@ type MuiImageListProps = Pick<
 
 export type ImageListProps<D extends GenericData> = GenerateStoreWrapperProps<
   D,
-  MuiImageListProps &
-    StoreProps<D> & {
-      itemAction?: SlotElement;
-      itemProps?: Omit<ImageListItemProps<D>, 'data' | 'action'>;
-      onItemActionClick?: (item: D) => void;
-    }
+  MuiImageListProps & {
+    itemAction?: SlotElement;
+    itemProps?: Omit<ImageListItemProps<D>, 'data' | 'action'>;
+    onItemActionClick?: (item: D) => void;
+  }
 >;

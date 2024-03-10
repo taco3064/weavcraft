@@ -3,11 +3,7 @@ import type { ComponentProps } from 'react';
 
 import type { AvatarProps } from '../Avatar';
 
-import type {
-  GenerateStoreWrapperProps,
-  GenericData,
-  StoreProps,
-} from '../../contexts';
+import type { GenerateStoreWrapperProps, GenericData } from '../../contexts';
 
 type MuiAvatarGroupProps = Pick<
   ComponentProps<typeof MuiAvatarGroup>,
@@ -16,8 +12,7 @@ type MuiAvatarGroupProps = Pick<
 
 export type AvatarGroupProps<D extends GenericData> = GenerateStoreWrapperProps<
   D,
-  MuiAvatarGroupProps &
-    StoreProps<D> & {
-      itemProps?: Omit<AvatarProps<D>, 'data'>;
-    }
+  MuiAvatarGroupProps & {
+    itemProps?: Omit<AvatarProps<D>, 'data'>;
+  }
 >;

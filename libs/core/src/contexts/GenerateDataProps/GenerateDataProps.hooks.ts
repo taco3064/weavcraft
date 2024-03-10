@@ -35,10 +35,10 @@ export function useGenerateData<D extends GenericData>() {
 
 export function useGenerateStoreProps<
   D extends GenericData,
-  P extends StoreProps<D>,
-  K extends keyof P = 'records'
+  P,
+  K extends keyof (P & StoreProps<D>) = 'records'
 >(props: GenerateStoreWrapperProps<D, P, K>) {
-  const data = useGenerateData();
+  const data = useGenerateData<D>();
 
   return getProps({ ...props, data });
 }

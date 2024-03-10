@@ -8,7 +8,6 @@ import type {
   GenerateStoreWrapperProps,
   GenericData,
   SlotElement,
-  StoreProps,
 } from '../../contexts';
 
 type MuiListProps = Pick<
@@ -28,8 +27,7 @@ export type ListProps<
 > = GenerateStoreWrapperProps<
   D,
   MuiListProps &
-    BaseListProps &
-    StoreProps<D> & {
+    BaseListProps & {
       //* Subheader
       icon?: Pick<IconProps<D>, 'code' | 'color'>;
       action?: ReactNode;
