@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import Icon from '../Icon';
 import MultipleSelectField from './MultipleSelectField';
 
-describe('@weavcraft/components/MultipleSelectField', () => {
+describe('@weavcraft/core/components/MultipleSelectField', () => {
   it('should render with all options successfully', () => {
     const { getAllByTestId, getByTestId, getByRole } = render(
       <MultipleSelectField

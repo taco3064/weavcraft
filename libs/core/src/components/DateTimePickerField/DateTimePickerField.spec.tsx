@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import DateTimePickerField from './DateTimePickerField';
 import { renderWithLocalizationProvider } from '../testing.utils';
 
-describe('@weavcraft/components/DateTimePickerField', () => {
+describe('@weavcraft/core/components/DateTimePickerField', () => {
   it('should render successfully', () => {
     const { getByTestId } = renderWithLocalizationProvider(
       <DateTimePickerField />

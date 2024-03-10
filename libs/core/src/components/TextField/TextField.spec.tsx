@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import TextField from './TextField';
 
-describe('@weavcraft/components/TextField', () => {
+describe('@weavcraft/core/components/TextField', () => {
   it('should render successfully', () => {
     const { getByTestId } = render(<TextField variant="outlined" />);
     const text = getByTestId('TextField');

@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 
 import NumericField from './NumericField';
 
-describe('@weavcraft/components/NumericField', () => {
+describe('@weavcraft/core/components/NumericField', () => {
   it('renders without crashing', () => {
     const { getByTestId } = render(<NumericField />);
     const field = getByTestId('NumericField');

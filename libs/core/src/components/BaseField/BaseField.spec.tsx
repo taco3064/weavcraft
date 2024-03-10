@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import BaseField from './BaseField';
 
-describe('@weavcraft/components/BaseField', () => {
+describe('@weavcraft/core/components/BaseField', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<BaseField />);
 

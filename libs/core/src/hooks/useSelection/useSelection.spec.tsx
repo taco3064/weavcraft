@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useMultipleSelection, useSingleSelection } from './useSelection';
 
-describe('@weavcraft/hooks/useMultipleSelection', () => {
+describe('@weavcraft/core/hooks/useMultipleSelection', () => {
   it('should handle multiple selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>
@@ -24,7 +24,7 @@ describe('@weavcraft/hooks/useMultipleSelection', () => {
   });
 });
 
-describe('@weavcraft/hooks/useSingleSelection', () => {
+describe('@weavcraft/core/hooks/useSingleSelection', () => {
   it('should handle single selection', () => {
     const onChange = jest.fn();
     const { result } = renderHook(() =>

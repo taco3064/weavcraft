@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import NumericFormatField from './NumericFormatField';
 
-describe('@weavcraft/components/NumericFormatField', () => {
+describe('@weavcraft/core/components/NumericFormatField', () => {
   it('renders without crashing', () => {
     const { getByTestId } = render(<NumericFormatField />);
 

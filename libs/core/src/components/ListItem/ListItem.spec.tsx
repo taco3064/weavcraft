@@ -9,7 +9,7 @@ function renderWithList(...args: Parameters<typeof render>) {
   return render(<MuiList>{args[0]}</MuiList>, args[1]);
 }
 
-describe('@weavcraft/components/ListItem', () => {
+describe('@weavcraft/core/components/ListItem', () => {
   it('should render item successfully', () => {
     const { getByTestId } = renderWithList(<ListItem />);
 

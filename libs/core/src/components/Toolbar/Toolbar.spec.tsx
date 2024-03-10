@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Toolbar from './Toolbar';
 
-describe('@weavcraft/components/Toolbar', () => {
+describe('@weavcraft/core/components/Toolbar', () => {
   it('renders the children', () => {
     const { getByTestId } = render(
       <Toolbar>

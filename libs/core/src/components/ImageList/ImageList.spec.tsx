@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import ImageList from './ImageList';
 
-describe('@weavcraft/components/ImageList', () => {
+describe('@weavcraft/core/components/ImageList', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<ImageList />);
 

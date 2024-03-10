@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import List from './List';
 
-describe('@weavcraft/components/List', () => {
+describe('@weavcraft/core/components/List', () => {
   it('should render successfully', () => {
     const { getByTestId } = render(<List />);
 

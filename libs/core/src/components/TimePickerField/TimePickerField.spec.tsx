@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import TimePickerField from './TimePickerField';
 import { renderWithLocalizationProvider } from '../testing.utils';
 
-describe('@weavcraft/components/TimePickerField', () => {
+describe('@weavcraft/core/components/TimePickerField', () => {
   it('should render successfully', () => {
     const { getByTestId } = renderWithLocalizationProvider(<TimePickerField />);
 

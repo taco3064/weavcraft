@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Collapse from './Collapse';
 
-describe('@weavcraft/components/Collapse', () => {
+describe('@weavcraft/core/components/Collapse', () => {
   it('renders without crashing', () => {
     const { getByTestId, queryByText } = render(
       <Collapse>

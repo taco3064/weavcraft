@@ -2,8 +2,10 @@ import * as Comp from './components';
 
 export const Layout = {
   Accordion: Comp.Accordion,
+  Avatar: Comp.Avatar,
   Collapse: Comp.Collapse,
   Dialog: Comp.Dialog,
+  Icon: Comp.Icon,
   Toolbar: Comp.Toolbar,
 };
 
@@ -11,11 +13,6 @@ export const DataCollection = {
   AvatarGroup: Comp.AvatarGroup,
   ImageList: Comp.ImageList,
   List: Comp.List,
-};
-
-export const DataItem = {
-  Avatar: Comp.Avatar,
-  Icon: Comp.Icon,
 };
 
 export const Interaction = {

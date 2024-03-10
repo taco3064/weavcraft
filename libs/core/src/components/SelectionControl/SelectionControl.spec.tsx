@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import SelectionControl from './SelectionControl';
 
-describe('@weavcraft/components/SelectionControl', () => {
+describe('@weavcraft/core/components/SelectionControl', () => {
   it('should render form control label successfully', () => {
     const { baseElement } = render(<SelectionControl label="test" />);
     const label = getByTestId(baseElement, 'FormControlLabel');

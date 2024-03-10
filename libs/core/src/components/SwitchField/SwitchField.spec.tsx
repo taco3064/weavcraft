@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import SwitchField from './SwitchField';
 
-describe('@weavcraft/components/SwitchField', () => {
+describe('@weavcraft/core/components/SwitchField', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<SwitchField />);
 

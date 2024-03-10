@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Accordion from './Accordion';
 
-describe('@weavcraft/components/Accordion', () => {
+describe('@weavcraft/core/components/Accordion', () => {
   it('renders the title', () => {
     const { getByText } = render(<Accordion title="Test Title" />);
 

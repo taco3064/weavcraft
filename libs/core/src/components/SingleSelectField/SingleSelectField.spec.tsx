@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import Icon from '../Icon';
 import SingleSelectField from './SingleSelectField';
 
-describe('@weavcraft/components/SingleSelectField', () => {
+describe('@weavcraft/core/components/SingleSelectField', () => {
   it('should render successfully', () => {
     const { getByTestId, getByRole } = render(
       <SingleSelectField variant="filled" />

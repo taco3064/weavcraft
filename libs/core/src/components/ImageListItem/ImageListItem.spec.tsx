@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 
 import ImageListItem from './ImageListItem';
 
-describe('@weavcraft/components/ImageListItem', () => {
+describe('@weavcraft/core/components/ImageListItem', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <MuiImageList>

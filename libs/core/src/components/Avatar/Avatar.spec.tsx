@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Avatar from './Avatar';
 
-describe('@weavcraft/components/Avatar', () => {
+describe('@weavcraft/core/components/Avatar', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<Avatar />);
 
