@@ -26,6 +26,8 @@ export type MappablePropNames =
   | BasePropName
   | 'disabled'
   | 'href'
+  | 'nestedId'
+  | 'nested'
   | 'primary'
   | 'secondary'
   | 'selected';
@@ -34,6 +36,8 @@ export interface ListItemProps<V extends ListItemVariant>
   extends BaseListItemProps,
     Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
   href?: V extends 'link' ? string : undefined;
+  nested?: ReactNode;
+  nestedId?: string;
   selected?: V extends 'button' ? boolean : undefined;
 
   action?: ReactNode;

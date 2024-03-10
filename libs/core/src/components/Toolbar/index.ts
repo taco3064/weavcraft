@@ -1,2 +1,2 @@
 export { default, default as Toolbar } from './Toolbar';
-export type { ToolbarProps } from './Toolbar.types';
+export type { WrappedProps as ToolbarProps } from './Toolbar.types';

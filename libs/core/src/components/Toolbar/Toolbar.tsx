@@ -1,23 +1,34 @@
 import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
+import MuiTypography from '@mui/material/Typography';
 
+import Icon from '../Icon';
+import { withGenerateDataProps } from '../../contexts';
 import type { ToolbarProps } from './Toolbar.types';
 
-export default function Toolbar({
+export default withGenerateDataProps<ToolbarProps>(function Toolbar({
   children,
   color = 'transparent',
   disableGutters,
   elevation,
+  icon,
   position = 'sticky',
   square,
+  title,
   variant,
-}: ToolbarProps) {
+}) {
   return (
     <MuiAppBar data-testid="AppBar" {...{ color, elevation, position, square }}>
       <MuiToolbar
         data-testid="Toolbar"
-        {...{ children, disableGutters, variant }}
-      />
+        style={{ gap: 8 }}
+        {...{ disableGutters, variant }}
+      >
+        {icon && <Icon code={icon} />}
+        {title && <MuiTypography variant="h6">{title}</MuiTypography>}
+
+        {children}
+      </MuiToolbar>
     </MuiAppBar>
   );
-}
+});

@@ -4,16 +4,17 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 
 import Icon from '../Icon';
+import { withGenerateDataProps } from '../../contexts';
 import type { AccordionProps } from './Accordion.types';
 
-export default function Accordion({
+export default withGenerateDataProps<AccordionProps>(function Accordion({
   action,
   children,
   disableActionSpacing,
   expandIcon,
   expanded,
   title,
-}: AccordionProps) {
+}) {
   return (
     <MuiAccordion defaultExpanded={expanded} data-testid="Accordion">
       <MuiAccordionSummary
@@ -41,4 +42,4 @@ export default function Accordion({
       )}
     </MuiAccordion>
   );
-}
+});

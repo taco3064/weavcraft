@@ -1,7 +1,4 @@
-import SelectionControl from './SelectionControl';
-
-export default SelectionControl;
-export { SelectionControl };
+export { default, default as SelectionControl } from './SelectionControl';
 
 export type {
   WrappedProps as SelectionControlProps,

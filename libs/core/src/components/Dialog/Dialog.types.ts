@@ -2,8 +2,13 @@ import MuiDialog from '@mui/material/Dialog';
 import type { ButtonProps } from '@mui/material/Button';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
 
-import type { SlotProps } from '../../contexts';
 import type { IconCode } from '../Icon';
+
+import type {
+  GenerateDataWrappedProps,
+  GenericData,
+  SlotProps,
+} from '../../contexts';
 
 type MuiDialogProps = Pick<
   ComponentProps<typeof MuiDialog>,
@@ -23,3 +28,9 @@ export interface DialogProps extends MuiDialogProps {
     color?: ButtonProps['color'];
   }[];
 }
+
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+  D,
+  DialogProps,
+  'children' | 'icon' | 'title'
+>;

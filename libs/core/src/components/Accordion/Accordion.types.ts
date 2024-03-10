@@ -1,6 +1,7 @@
 import MuiAccordion from '@mui/material/Accordion';
 import type { ComponentProps, ReactNode } from 'react';
 
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiAccordionProps = Pick<
@@ -15,3 +16,9 @@ export interface AccordionProps extends MuiAccordionProps {
   expandIcon?: IconCode;
   title?: string;
 }
+
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+  D,
+  AccordionProps,
+  'children' | 'expanded' | 'expandIcon' | 'title'
+>;

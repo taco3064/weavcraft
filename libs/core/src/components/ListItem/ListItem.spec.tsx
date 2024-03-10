@@ -78,11 +78,64 @@ describe('@weavcraft/core/components/ListItem', () => {
     expect(buttons).toHaveLength(1);
   });
 
+  it('should render nested items correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nested={<div>Nested Content</div>} />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveTextContent('Nested Content');
+  });
+
+  it('should assign nestedId correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nestedId="testNestedId" />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveAttribute('id', 'testNestedId');
+  });
+
+  it('should render nested items correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nested={<div>Nested Content</div>} />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveTextContent('Nested Content');
+  });
+
+  it('should assign nestedId correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nestedId="testNestedId" />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveAttribute('id', 'testNestedId');
+  });
+
   it('should correctly render item with data', () => {
     const { getByTestId } = renderWithList(
       <ListItem
         data={data}
         propMapping={{
+          nestedId: 'title',
           primary: 'title',
           secondary: 'content',
         }}
@@ -91,11 +144,14 @@ describe('@weavcraft/core/components/ListItem', () => {
 
     const el = getByTestId('ListItem');
     const text = getByTestId('ListItemText');
+    const nested = getByTestId('ListItemNested');
     const primary = text.querySelector('.primary');
     const secondary = text.querySelector('.secondary');
 
     expect(el).toBeTruthy();
     expect(text).toBeTruthy();
+    expect(nested).toBeTruthy();
+    expect(nested).toHaveAttribute('id', data.title);
     expect(primary).toHaveTextContent(data.title);
     expect(secondary).toHaveTextContent(data.content);
   });

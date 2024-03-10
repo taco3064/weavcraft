@@ -21,6 +21,8 @@ export default withGenerateDataProps<
   disabled,
   href,
   indicator,
+  nested,
+  nestedId,
   primary,
   secondary,
   selected,
@@ -66,21 +68,32 @@ export default withGenerateDataProps<
     </>
   );
 
-  return variant === 'item' ? (
-    <MuiListItem {...props} data-testid="ListItem">
-      {children}
-    </MuiListItem>
-  ) : (
-    <MuiListItemButton
-      {...props}
-      {...{ disabled, selected }}
-      {...(variant === 'link' && isHrefValid && { LinkComponent: 'a', href })}
-      {...(variant === 'button' && {
-        onClick: () => onItemClick?.(data),
-      })}
-      data-testid={`ListItem${variant === 'link' ? 'Link' : 'Button'}`}
-    >
-      {children}
-    </MuiListItemButton>
+  return (
+    <>
+      {variant === 'item' ? (
+        <MuiListItem {...props} data-testid="ListItem">
+          {children}
+        </MuiListItem>
+      ) : (
+        <MuiListItemButton
+          {...props}
+          {...{ disabled, selected }}
+          {...(variant === 'link' &&
+            isHrefValid && { LinkComponent: 'a', href })}
+          {...(variant === 'button' && {
+            onClick: () => onItemClick?.(data),
+          })}
+          data-testid={`ListItem${variant === 'link' ? 'Link' : 'Button'}`}
+        >
+          {children}
+        </MuiListItemButton>
+      )}
+
+      {!nested && !nestedId ? null : (
+        <MuiListItem disableGutters id={nestedId} data-testid="ListItemNested">
+          {nested}
+        </MuiListItem>
+      )}
+    </>
   );
 });

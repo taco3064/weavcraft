@@ -9,6 +9,7 @@ import { forwardRef, useState, type ReactElement } from 'react';
 import type { TransitionProps } from '@mui/material/transitions';
 
 import Icon from '../Icon';
+import { withGenerateDataProps } from '../../contexts';
 import type { DialogProps } from './Dialog.types';
 
 const Transition = forwardRef<
@@ -18,7 +19,7 @@ const Transition = forwardRef<
   return <MuiSlide direction="up" ref={ref} {...props} />;
 });
 
-export default function Dialog({
+export default withGenerateDataProps<DialogProps>(function Dialog({
   actions,
   children,
   icon,
@@ -26,7 +27,7 @@ export default function Dialog({
   toggle,
   onActionClick,
   ...props
-}: DialogProps) {
+}) {
   const { type: Toggle, props: toggleProps } = toggle || {};
   const [open, setOpen] = useState(false);
 
@@ -87,4 +88,4 @@ export default function Dialog({
       </MuiDialog>
     </>
   );
-}
+});

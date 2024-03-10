@@ -32,4 +32,17 @@ describe('@weavcraft/core/components/Toolbar', () => {
     expect(appbar).toHaveClass('MuiAppBar-colorPrimary');
     expect(appbar).toHaveStyle('position: fixed');
   });
+
+  it('renders with icon prop', () => {
+    const { getByTestId } = render(<Toolbar icon="faGithub" />);
+
+    expect(getByTestId('Icon_faGithub')).toBeTruthy();
+  });
+
+  it('renders with title prop', () => {
+    const { getByText } = render(<Toolbar title="Test Title" />);
+    const title = getByText('Test Title');
+
+    expect(title).toBeInTheDocument();
+  });
 });
