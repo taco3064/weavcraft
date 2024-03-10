@@ -33,14 +33,6 @@ export function useGenerateData<D extends GenericData>() {
   return useContext(GenerateDataPropsContext) as D;
 }
 
-export function useGenerateDataProps<P>(
-  propMapping?: MappableProps<GenericData, P>
-) {
-  const data = useGenerateData();
-
-  return getProps({ data, propMapping }) as P;
-}
-
 export function useGenerateStoreProps<
   D extends GenericData,
   P extends StoreProps<D>,

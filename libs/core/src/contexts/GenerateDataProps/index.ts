@@ -3,7 +3,6 @@ export { withGenerateDataProps } from './GenerateDataProps';
 export {
   getProps,
   useGenerateData,
-  useGenerateDataProps,
   useGenerateSlotProps,
   useGenerateStoreProps,
 } from './GenerateDataProps.hooks';
