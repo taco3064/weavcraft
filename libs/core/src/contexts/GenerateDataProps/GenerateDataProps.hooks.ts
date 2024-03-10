@@ -18,7 +18,7 @@ export function getProps<D extends GenericData, P extends MappableProps<D>>({
   return Object.entries(propMapping || {}).reduce(
     (result, [key, path]) => ({
       ...result,
-      [key]: _get(data, path as string),
+      [key]: _get(result, key) || _get(data, path as string),
     }),
     { ...props } as Omit<P, 'data' | 'propMapping'>
   );

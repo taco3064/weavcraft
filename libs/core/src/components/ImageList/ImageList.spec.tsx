@@ -59,7 +59,7 @@ describe('@weavcraft/core/components/ImageList', () => {
     buttons.forEach((btn, i) => {
       btn.click();
       expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, records[i]);
-      expect(btn).toHaveTextContent(records[i].title);
+      expect(btn).toHaveTextContent('Click me');
     });
 
     expect(buttons).toHaveLength(records.length);
