@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Chip from './Chip';
 
-describe('Chip', () => {
+describe('@weavcraft/core/components/Chip', () => {
   it('should render successfully', () => {
     const { getByTestId } = render(<Chip />);
 

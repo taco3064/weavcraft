@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Dialog from './Dialog';
 
-describe('Dialog', () => {
+describe('@weavcraft/core/components/Dialog', () => {
   it('renders correctly', () => {
     const { baseElement, queryByTestId } = render(<Dialog />);
 

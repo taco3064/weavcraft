@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Badge from './Badge';
 
-describe('Badge', () => {
+describe('@weavcraft/core/components/Badge', () => {
   it('renders without crashing', () => {
     const { getByTestId } = render(<Badge />);
 

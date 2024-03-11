@@ -5,10 +5,10 @@ export const Display = {
   Badge: Comp.Badge,
   Chip: Comp.Chip,
   Icon: Comp.Icon,
+  Tooltip: Comp.Tooltip,
 
   /**
    * TODO: Need to add the following components
-   * * - Tooltip
    * * - Typography
    */
 };

@@ -10,13 +10,13 @@ export default withGenerateDataProps<ChipProps, MappablePropNames>(
     return (
       <MuiChip
         {...props}
-        data-testid="Chip"
-        avatar={indicator}
-        onDelete={() => onDelete?.(data)}
         {...(onClick && {
           clickable: true,
           onClick: () => onClick(data),
         })}
+        data-testid="Chip"
+        avatar={indicator}
+        onDelete={() => onDelete?.(data)}
       />
     );
   }
