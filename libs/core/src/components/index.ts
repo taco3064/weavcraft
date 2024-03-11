@@ -23,3 +23,4 @@ export * from './TextField';
 export * from './TimePickerField';
 export * from './Toolbar';
 export * from './Tooltip';
+export * from './Typography';

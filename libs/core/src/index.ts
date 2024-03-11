@@ -6,11 +6,7 @@ export const Display = {
   Chip: Comp.Chip,
   Icon: Comp.Icon,
   Tooltip: Comp.Tooltip,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Typography
-   */
+  Typography: Comp.Typography,
 };
 
 export const Layout = {
