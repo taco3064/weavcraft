@@ -1,30 +1,30 @@
-import { getByTestId, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import List from './List';
 
-describe('@weavcraft/List', () => {
+describe('@weavcraft/core/components/List', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<List />);
+    const { getByTestId } = render(<List />);
 
-    expect(baseElement).toBeTruthy();
+    expect(getByTestId('List')).toBeTruthy();
   });
 
   it('should render subheader by title', () => {
-    const { baseElement } = render(<List title="My List" />);
-    const subheader = getByTestId(baseElement, 'ListSubheader');
+    const { getByTestId } = render(<List title="My List" />);
+    const subheader = getByTestId('ListSubheader');
 
     expect(subheader).toBeTruthy();
     expect(subheader.textContent).toBe('My List');
   });
 
   it('should render subheader by icon', () => {
-    const { baseElement } = render(
+    const { getByTestId } = render(
       <List icon={{ code: 'faGithub', color: 'primary' }} />
     );
 
-    const subheader = getByTestId(baseElement, 'ListSubheader');
-    const icon = getByTestId(baseElement, 'Icon_faGithub');
+    const subheader = getByTestId('ListSubheader');
+    const icon = getByTestId('Icon_faGithub');
 
     expect(subheader).toBeTruthy();
     expect(icon).toBeTruthy();
@@ -32,9 +32,9 @@ describe('@weavcraft/List', () => {
   });
 
   it('should render subheader by action', () => {
-    const { baseElement } = render(<List action={<button>Click me</button>} />);
-    const subheader = getByTestId(baseElement, 'ListSubheader');
-    const button = baseElement.querySelector('button');
+    const { getByTestId } = render(<List action={<button>Click me</button>} />);
+    const subheader = getByTestId('ListSubheader');
+    const button = subheader.querySelector('button');
 
     expect(subheader).toBeTruthy();
     expect(button).toBeTruthy();
@@ -43,7 +43,7 @@ describe('@weavcraft/List', () => {
   it('should render all items', () => {
     const { getAllByTestId } = render(
       <List
-        items={data}
+        records={records}
         itemProps={{
           propMapping: {
             primary: 'title',
@@ -53,7 +53,7 @@ describe('@weavcraft/List', () => {
       />
     );
 
-    expect(getAllByTestId('ListItem')).toHaveLength(data.length);
+    expect(getAllByTestId('ListItem')).toHaveLength(records.length);
   });
 
   it('should render item indicators', () => {
@@ -61,7 +61,7 @@ describe('@weavcraft/List', () => {
 
     const { baseElement } = render(
       <List
-        items={data}
+        records={records}
         itemIndicator={<button>O</button>}
         itemProps={{
           propMapping: {
@@ -77,11 +77,11 @@ describe('@weavcraft/List', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemIndicatorClick).toHaveBeenNthCalledWith(i + 1, data[i]);
+      expect(onItemIndicatorClick).toHaveBeenNthCalledWith(i + 1, records[i]);
     });
 
-    expect(buttons).toHaveLength(data.length);
-    expect(onItemIndicatorClick).toHaveBeenCalledTimes(data.length);
+    expect(buttons).toHaveLength(records.length);
+    expect(onItemIndicatorClick).toHaveBeenCalledTimes(records.length);
   });
 
   it('should render item actions', () => {
@@ -89,7 +89,7 @@ describe('@weavcraft/List', () => {
 
     const { baseElement } = render(
       <List
-        items={data}
+        records={records}
         itemAction={<button>Click me</button>}
         itemProps={{
           propMapping: {
@@ -105,14 +105,14 @@ describe('@weavcraft/List', () => {
 
     buttons.forEach((btn, i) => {
       btn.click();
-      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, data[i]);
+      expect(onItemActionClick).toHaveBeenNthCalledWith(i + 1, records[i]);
     });
 
-    expect(buttons).toHaveLength(data.length);
-    expect(onItemActionClick).toHaveBeenCalledTimes(data.length);
+    expect(buttons).toHaveLength(records.length);
+    expect(onItemActionClick).toHaveBeenCalledTimes(records.length);
   });
 
-  const data = [
+  const records = [
     {
       title: 'Brunch this weekend?',
       icon: 'faGithub',

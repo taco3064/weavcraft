@@ -1,25 +1,25 @@
-import { fireEvent, getByTestId, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import CheckboxGroup from './CheckboxGroup';
 
-describe('@weavcraft/CheckboxGroup', () => {
+describe('@weavcraft/core/components/CheckboxGroup', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CheckboxGroup />);
-    const group = getByTestId(baseElement, 'CheckboxGroup');
+    const { getByTestId } = render(<CheckboxGroup />);
 
-    expect(baseElement).toBeTruthy();
-    expect(group).toBeTruthy();
+    expect(getByTestId('CheckboxGroup')).toBeTruthy();
   });
 
   it('should render all checkboxes', () => {
     const { baseElement, getAllByTestId } = render(
       <CheckboxGroup
-        value={data.filter(({ selected }) => selected).map(({ name }) => name)}
-        options={data}
+        records={records}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
+        value={records
+          .filter(({ selected }) => selected)
+          .map(({ name }) => name)}
       />
     );
 
@@ -27,20 +27,20 @@ describe('@weavcraft/CheckboxGroup', () => {
       'input[type="checkbox"]:checked'
     );
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(data.length);
+    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
 
     expect(checked).toHaveLength(
-      data.filter(({ selected }) => selected).length
+      records.filter(({ selected }) => selected).length
     );
   });
 
   it('should call onChange with correct data', () => {
-    const clone = JSON.parse(JSON.stringify(data));
+    const clone = JSON.parse(JSON.stringify(records));
     const onChange = jest.fn();
 
     const { baseElement } = render(
       <CheckboxGroup
-        options={clone}
+        records={clone}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -48,13 +48,12 @@ describe('@weavcraft/CheckboxGroup', () => {
       />
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     fireEvent.click(baseElement.querySelector('input[type="checkbox"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();
   });
 
-  const data = [
+  const records = [
     {
       name: 'Remy Sharp',
       selected: false,

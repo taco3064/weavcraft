@@ -3,7 +3,7 @@ import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
 import type { ComponentProps } from 'react';
 
-import type { GenericData, MappableProps } from '../../types';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 export type Variant = 'checkbox' | 'radio';
 
@@ -17,19 +17,22 @@ type MuiFormControlLabelProps = Pick<
   'disabled' | 'label' | 'labelPlacement' | 'required' | 'value'
 >;
 
-type BaseCheckboxProps = Omit<
-  Partial<MuiSelectionControlProps & MuiFormControlLabelProps>,
-  'checked' | 'labelPlacement'
+type BaseSelectionControlProps = Partial<
+  MuiSelectionControlProps & MuiFormControlLabelProps
 >;
 
-export interface SelectionControlProps<V extends Variant, D extends GenericData>
-  extends MappableProps<D, BaseCheckboxProps> {
-  variant?: V;
-  checked?: MuiSelectionControlProps['checked'];
-  onChange?: (checked: boolean, data?: D) => void;
+export type MappablePropNames = keyof Omit<
+  BaseSelectionControlProps,
+  'color' | 'labelPlacement' | 'size'
+>;
 
-  labelPlacement?: Extract<
-    MuiFormControlLabelProps['labelPlacement'],
-    'end' | 'start'
-  >;
+export interface SelectionControlProps<V extends Variant>
+  extends BaseSelectionControlProps {
+  variant?: V;
+  onChange?: (checked: boolean, data?: GenericData) => void;
 }
+
+export type WrappedProps<
+  V extends Variant,
+  D extends GenericData
+> = GenerateDataWrappedProps<D, SelectionControlProps<V>, MappablePropNames>;

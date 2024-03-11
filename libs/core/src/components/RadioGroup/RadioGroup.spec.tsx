@@ -1,22 +1,20 @@
-import { fireEvent, getByTestId, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import RadioGroup from './RadioGroup';
 
-describe('@weavcraft/RadioGroup', () => {
+describe('@weavcraft/core/components/RadioGroup', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<RadioGroup />);
-    const group = getByTestId(baseElement, 'RadioGroup');
+    const { getByTestId } = render(<RadioGroup />);
 
-    expect(baseElement).toBeTruthy();
-    expect(group).toBeTruthy();
+    expect(getByTestId('RadioGroup')).toBeTruthy();
   });
 
   it('should render all radios', () => {
     const { baseElement, getAllByTestId } = render(
       <RadioGroup
-        value={data.find(({ selected }) => selected)?.name}
-        options={data}
+        value={records.find(({ selected }) => selected)?.name}
+        records={records}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -25,17 +23,17 @@ describe('@weavcraft/RadioGroup', () => {
 
     const checked = baseElement.querySelectorAll('input[type="radio"]:checked');
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(data.length);
+    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
     expect(checked).toHaveLength(1);
   });
 
   it('should call onChange with correct data', () => {
-    const clone = JSON.parse(JSON.stringify(data));
+    const clone = JSON.parse(JSON.stringify(records));
     const onChange = jest.fn();
 
     const { baseElement } = render(
       <RadioGroup
-        options={clone}
+        records={clone}
         optionProps={{
           propMapping: { label: 'name', value: 'name' },
         }}
@@ -43,13 +41,12 @@ describe('@weavcraft/RadioGroup', () => {
       />
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     fireEvent.click(baseElement.querySelector('input[type="radio"]')!);
     clone[0].selected = !clone[0].selected;
     expect(onChange).toHaveBeenCalled();
   });
 
-  const data = [
+  const records = [
     {
       name: 'Remy Sharp',
       selected: false,

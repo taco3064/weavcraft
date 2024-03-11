@@ -1,13 +1,13 @@
-import type { GenericData } from '../../types';
+import type { GenericData } from '../../contexts';
 import type { GroupProps } from '../../hooks';
 import type { SelectionControlProps } from '../SelectionControl';
 
 type BaseCheckboxProps<D extends GenericData> = Omit<
   SelectionControlProps<'checkbox', D>,
-  'checked' | 'data'
+  'checked'
 >;
 
 export interface CheckboxGroupProps<D extends GenericData>
-  extends GroupProps<'multiple', D, BaseCheckboxProps<D>> {
+  extends GroupProps<'multiple', BaseCheckboxProps<D>> {
   title?: string;
 }

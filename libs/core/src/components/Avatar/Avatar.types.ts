@@ -1,20 +1,23 @@
 import MuiAvatar from '@mui/material/Avatar';
 import type { ComponentProps } from 'react';
 
-import type { GenericData, MappableProps } from '../../types';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 type MuiAvatarProps = Pick<
   ComponentProps<typeof MuiAvatar>,
   'variant' | 'alt' | 'src' | 'srcSet'
 >;
 
-interface BaseAvatarProps extends MuiAvatarProps {
+export interface AvatarProps extends MuiAvatarProps {
   text?: string;
   width?: string;
   height?: string;
 }
 
-export type AvatarProps<D extends GenericData> = MappableProps<
+export type MappablePropNames = keyof Omit<AvatarProps, 'width' | 'height'>;
+
+export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
-  BaseAvatarProps
+  AvatarProps,
+  MappablePropNames
 >;

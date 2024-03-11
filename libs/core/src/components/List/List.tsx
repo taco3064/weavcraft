@@ -5,48 +5,48 @@ import MuiTypography from '@mui/material/Typography';
 
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
-import { useActionPropsTransformation } from '../../hooks';
-import type { BaseActionProps, GenericData } from '../../types';
 import type { ListProps } from './List.types';
 
-export default function List<
-  D extends GenericData,
-  I extends BaseActionProps,
-  A extends BaseActionProps,
-  V extends ListItemVariant = 'item'
->({
-  //* Subheader
-  title,
-  icon,
-  action,
-  disableSubheaderSticky,
-  disableSubheaderGutters,
+import {
+  useGenerateSlotProps,
+  useGenerateStoreProps,
+  type GenericData,
+} from '../../contexts';
 
-  //* ListItem
-  itemAction,
-  itemIndicator,
-  itemProps,
-  itemVariant,
-  items = [],
-  onItemActionClick,
-  onItemIndicatorClick,
+export default function List<D extends GenericData, V extends ListItemVariant>(
+  props: ListProps<D, V>
+) {
+  const {
+    //* Subheader
+    title,
+    icon,
+    action,
+    disableSubheaderSticky,
+    disableSubheaderGutters,
 
-  //* List
-  ...props
-}: ListProps<D, I, A, V>) {
-  const ItemAction = useActionPropsTransformation(
+    //* ListItem
     itemAction,
-    onItemActionClick
-  );
+    itemIndicator,
+    itemProps,
+    itemVariant,
+    records = [],
+    onItemActionClick,
+    onItemIndicatorClick,
 
-  const ItemIndicator = useActionPropsTransformation(
+    //* List
+    ...listProps
+  } = useGenerateStoreProps(props);
+
+  const ItemAction = useGenerateSlotProps(itemAction, onItemActionClick);
+
+  const ItemIndicator = useGenerateSlotProps(
     itemIndicator,
     onItemIndicatorClick
   );
 
   return (
     <MuiList
-      {...props}
+      {...listProps}
       data-testid="List"
       subheader={
         ![title, icon, action].some(Boolean) ? null : (
@@ -75,20 +75,20 @@ export default function List<
         )
       }
     >
-      {items.map((item, i) => (
+      {records.map((item, i) => (
         <ListItem
           {...itemProps}
           key={i}
           variant={itemVariant || 'item'}
           data={item}
           indicator={
-            ItemIndicator.Action && (
-              <ItemIndicator.Action {...ItemIndicator.getActionProps(item)} />
+            ItemIndicator.Slot && (
+              <ItemIndicator.Slot {...ItemIndicator.getSlotProps(item)} />
             )
           }
           action={
-            ItemAction.Action && (
-              <ItemAction.Action {...ItemAction.getActionProps(item)} />
+            ItemAction.Slot && (
+              <ItemAction.Slot {...ItemAction.getSlotProps(item)} />
             )
           }
         />

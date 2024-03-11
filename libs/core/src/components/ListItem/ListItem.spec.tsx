@@ -1,33 +1,29 @@
 import MuiList from '@mui/material/List';
-import { getByTestId, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import Icon from '../Icon';
 import ListItem from './ListItem';
 
-describe('@weavcraft/ListItem', () => {
+function renderWithList(...args: Parameters<typeof render>) {
+  return render(<MuiList>{args[0]}</MuiList>, args[1]);
+}
+
+describe('@weavcraft/core/components/ListItem', () => {
   it('should render item successfully', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem />
-      </MuiList>
-    );
+    const { getByTestId } = renderWithList(<ListItem />);
 
-    const el = getByTestId(baseElement, 'ListItem');
-
-    expect(el).toBeTruthy();
+    expect(getByTestId('ListItem')).toBeTruthy();
   });
 
   it('should render button successfully', () => {
     const onItemClick = jest.fn();
 
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem variant="button" onItemClick={onItemClick} />
-      </MuiList>
+    const { getByTestId } = renderWithList(
+      <ListItem variant="button" onItemClick={onItemClick} />
     );
 
-    const el = getByTestId(baseElement, 'ListItemButton');
+    const el = getByTestId('ListItemButton');
 
     el.click();
     expect(el).toBeTruthy();
@@ -35,26 +31,22 @@ describe('@weavcraft/ListItem', () => {
   });
 
   it('should render link successfully', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem variant="link" href={data.url} />
-      </MuiList>
+    const { getByTestId } = renderWithList(
+      <ListItem variant="link" href={data.url} />
     );
 
-    const el = getByTestId(baseElement, 'ListItemLink');
+    const el = getByTestId('ListItemLink');
 
     expect(el).toBeTruthy();
     expect(el).toHaveAttribute('href', data.url);
   });
 
   it('should render text', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem primary={data.title} secondary={data.content} />
-      </MuiList>
+    const { getByTestId } = renderWithList(
+      <ListItem primary={data.title} secondary={data.content} />
     );
 
-    const text = getByTestId(baseElement, 'ListItemText');
+    const text = getByTestId('ListItemText');
     const primary = text.querySelector('.primary');
     const secondary = text.querySelector('.secondary');
 
@@ -64,110 +56,78 @@ describe('@weavcraft/ListItem', () => {
   });
 
   it('should render indicator', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem indicator={<Icon code="faGithub" />} />
-      </MuiList>
+    const { getByTestId } = renderWithList(
+      <ListItem indicator={<Icon code="faGithub" />} />
     );
 
-    const el = getByTestId(baseElement, 'Icon_faGithub');
+    const el = getByTestId('Icon_faGithub');
 
     expect(el).toBeTruthy();
     expect(el.tagName).toBe('svg');
   });
 
   it('should render action', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem action={<button>Click Me</button>} />
-      </MuiList>
+    const { getByTestId } = renderWithList(
+      <ListItem action={<button>Click Me</button>} />
     );
 
-    const el = getByTestId(baseElement, 'ListItemAction');
-    const buttons = baseElement.querySelectorAll('button');
+    const el = getByTestId('ListItemAction');
+    const buttons = el.querySelectorAll('button');
 
     expect(el).toBeTruthy();
     expect(buttons).toHaveLength(1);
   });
 
-  it('should correctly render item with data', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem
-          data={data}
-          propMapping={{
-            primary: 'title',
-            secondary: 'content',
-          }}
-        />
-      </MuiList>
+  it('should render nested items correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nested={<div>Nested Content</div>} />
     );
 
-    const el = getByTestId(baseElement, 'ListItem');
-    const text = getByTestId(baseElement, 'ListItemText');
-    const primary = text.querySelector('.primary');
-    const secondary = text.querySelector('.secondary');
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
 
     expect(el).toBeTruthy();
-    expect(text).toBeTruthy();
-    expect(primary).toHaveTextContent(data.title);
-    expect(secondary).toHaveTextContent(data.content);
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveTextContent('Nested Content');
   });
 
-  it('should correctly render button with data', () => {
-    const onItemClick = jest.fn();
-
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem
-          variant="button"
-          data={data}
-          onItemClick={onItemClick}
-          propMapping={{
-            primary: 'title',
-            secondary: 'content',
-          }}
-        />
-      </MuiList>
+  it('should assign nestedId correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nestedId="testNestedId" />
     );
 
-    const el = getByTestId(baseElement, 'ListItemButton');
-    const text = getByTestId(baseElement, 'ListItemText');
-    const primary = text.querySelector('.primary');
-    const secondary = text.querySelector('.secondary');
-
-    el.click();
-    expect(text).toBeTruthy();
-    expect(primary).toHaveTextContent(data.title);
-    expect(secondary).toHaveTextContent(data.content);
-    expect(onItemClick).toHaveBeenCalledWith(data);
-  });
-
-  it('should correctly render link with data', () => {
-    const { baseElement } = render(
-      <MuiList>
-        <ListItem
-          variant="link"
-          data={data}
-          propMapping={{
-            primary: 'title',
-            secondary: 'content',
-            href: 'url',
-          }}
-        />
-      </MuiList>
-    );
-
-    const el = getByTestId(baseElement, 'ListItemLink');
-    const text = getByTestId(baseElement, 'ListItemText');
-    const primary = text.querySelector('.primary');
-    const secondary = text.querySelector('.secondary');
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
 
     expect(el).toBeTruthy();
-    expect(text).toBeTruthy();
-    expect(primary).toHaveTextContent(data.title);
-    expect(secondary).toHaveTextContent(data.content);
-    expect(el).toHaveAttribute('href', data.url);
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveAttribute('id', 'testNestedId');
+  });
+
+  it('should render nested items correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nested={<div>Nested Content</div>} />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveTextContent('Nested Content');
+  });
+
+  it('should assign nestedId correctly', () => {
+    const { getByTestId } = renderWithList(
+      <ListItem nestedId="testNestedId" />
+    );
+
+    const el = getByTestId('ListItem');
+    const nestedEl = getByTestId('ListItemNested');
+
+    expect(el).toBeTruthy();
+    expect(nestedEl).toBeTruthy();
+    expect(nestedEl).toHaveAttribute('id', 'testNestedId');
   });
 
   const data = {

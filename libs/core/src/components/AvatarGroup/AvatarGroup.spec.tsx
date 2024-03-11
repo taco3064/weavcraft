@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import AvatarGroup from './AvatarGroup';
 
-describe('@weavcraft/AvatarGroup', () => {
+describe('@weavcraft/core/components/AvatarGroup', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<AvatarGroup />);
 
@@ -12,21 +12,21 @@ describe('@weavcraft/AvatarGroup', () => {
 
   it('should render all text avatars', () => {
     const { getAllByTestId } = render(
-      <AvatarGroup items={data} itemProps={{ text: 'name' }} />
+      <AvatarGroup records={records} itemProps={{ text: 'name' }} />
     );
 
-    expect(getAllByTestId('Avatar')).toHaveLength(data.length);
+    expect(getAllByTestId('Avatar')).toHaveLength(records.length);
   });
 
   it('should render all img avatars', () => {
     const { getAllByTestId } = render(
-      <AvatarGroup items={data} itemProps={{ alt: 'name', src: 'url' }} />
+      <AvatarGroup records={records} itemProps={{ alt: 'name', src: 'url' }} />
     );
 
-    expect(getAllByTestId('Avatar')).toHaveLength(data.length);
+    expect(getAllByTestId('Avatar')).toHaveLength(records.length);
   });
 
-  const data = [
+  const records = [
     {
       name: 'Remy Sharp',
       url: 'https://mui.com/static/images/avatar/1.jpg',

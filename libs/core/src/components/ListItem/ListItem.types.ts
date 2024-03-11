@@ -1,8 +1,9 @@
 import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ReactElement, ReactNode } from 'react';
 
-import type { GenericData, MappableProps } from '../../types';
+import type { BaseListItemProps } from '../../hooks';
+import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
@@ -16,25 +17,42 @@ type MuiListItemButtonProps = Pick<
   'alignItems' | 'dense' | 'disableGutters' | 'divider'
 >;
 
-interface BaseListItemProps {
-  primary?: string;
-  secondary?: string;
-  disabled?: boolean;
-  href?: string;
-  selected?: boolean;
+type BasePropName = Extract<
+  keyof MuiListItemProps,
+  keyof MuiListItemButtonProps
+>;
+
+export interface ListItemProps<V extends ListItemVariant>
+  extends BaseListItemProps,
+    Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
+  href?: V extends 'link' ? string : undefined;
+  nested?: ReactNode;
+  nestedId?: string;
+  selected?: V extends 'button' ? boolean : undefined;
+
+  action?: ReactElement;
+  disabled?: V extends 'item' ? undefined : boolean;
+  indicator?: ReactElement;
+  variant?: V;
+
+  onItemClick?: V extends 'button'
+    ? <D extends GenericData>(data?: D) => void
+    : undefined;
 }
 
-export interface ListItemProps<D extends GenericData, V extends ListItemVariant>
-  extends MappableProps<D, BaseListItemProps>,
-    Pick<
-      MuiListItemProps & MuiListItemButtonProps,
-      Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>
-    > {
-  action?: ReactNode;
-  disabled?: V extends 'item' ? undefined : boolean;
-  href?: V extends 'link' ? string : undefined;
-  indicator?: ReactNode;
-  selected?: V extends 'button' ? boolean : undefined;
-  variant?: V;
-  onItemClick?: V extends 'button' ? (data?: D) => void : undefined;
-}
+export type MappablePropNames = keyof Pick<
+  ListItemProps<ListItemVariant>,
+  | BasePropName
+  | 'disabled'
+  | 'href'
+  | 'nestedId'
+  | 'nested'
+  | 'primary'
+  | 'secondary'
+  | 'selected'
+>;
+
+export type WrappedProps<
+  D extends GenericData,
+  V extends ListItemVariant
+> = GenerateDataWrappedProps<D, ListItemProps<V>, MappablePropNames>;

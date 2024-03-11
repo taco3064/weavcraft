@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useUrlValidation } from './useUrlValidation';
 
-describe('@weavcraft/useUrlValidation', () => {
+describe('@weavcraft/core/hooks/useUrlValidation', () => {
   it('should return true if the URL is valid', () => {
     const { result } = renderHook(() =>
       useUrlValidation('https://weavcraft.io')

@@ -1,38 +1,50 @@
 import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { ActionElement, BaseActionProps, GenericData } from '../../types';
 import type { IconProps } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
+
+import type {
+  GenerateStoreWrappedProps,
+  GenericData,
+  SlotElement,
+} from '../../contexts';
 
 type MuiListProps = Pick<
   ComponentProps<typeof MuiList>,
   'dense' | 'disablePadding'
 >;
 
-export interface ListProps<
-  D extends GenericData,
-  I extends BaseActionProps,
-  A extends BaseActionProps,
-  V extends ListItemVariant
-> extends MuiListProps {
-  //* Subheader
+type BaseListProps = {
   title?: string;
-  icon?: Pick<IconProps<never>, 'code' | 'color'>;
-  action?: ReactNode;
-  disableSubheaderSticky?: boolean;
-  disableSubheaderGutters?: boolean;
+};
 
-  //* ListItem
-  itemAction?: ActionElement<D, A>;
-  itemIndicator?: ActionElement<D, I>;
-  itemVariant?: V;
-  items?: D[];
-  itemProps?: Omit<
-    ListItemProps<D, V>,
-    'data' | 'action' | 'indicator' | 'variant'
-  >;
+export type MappablePropNames = keyof BaseListProps;
 
-  onItemActionClick?: (item: D) => void;
-  onItemIndicatorClick?: (item: D) => void;
-}
+export type ListProps<
+  D extends GenericData,
+  V extends ListItemVariant
+> = GenerateStoreWrappedProps<
+  D,
+  MuiListProps &
+    BaseListProps & {
+      //* Subheader
+      icon?: Pick<IconProps<D>, 'code' | 'color'>;
+      action?: ReactNode;
+      disableSubheaderSticky?: boolean;
+      disableSubheaderGutters?: boolean;
+
+      //* ListItem
+      itemAction?: SlotElement;
+      itemIndicator?: SlotElement;
+      itemVariant?: ListItemProps<D, V>['variant'];
+      itemProps?: Omit<
+        ListItemProps<D, V>,
+        'data' | 'action' | 'indicator' | 'variant'
+      >;
+
+      onItemActionClick?: (item: D) => void;
+      onItemIndicatorClick?: (item: D) => void;
+    },
+  MappablePropNames
+>;
