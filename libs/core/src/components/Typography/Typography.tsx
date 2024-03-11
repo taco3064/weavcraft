@@ -1,10 +1,11 @@
 import MuiTypography from '@mui/material/Typography';
 
+import Icon from '../Icon';
 import { withGenerateDataProps } from '../../contexts';
 import type { TypographyProps, MappablePropNames } from './Typography.types';
 
 export default withGenerateDataProps<TypographyProps, MappablePropNames>(
-  function Typography({ align, ...props }) {
+  function Typography({ align, children, icon, ...props }) {
     return (
       <MuiTypography
         {...props}
@@ -12,6 +13,7 @@ export default withGenerateDataProps<TypographyProps, MappablePropNames>(
         display="flex"
         flexDirection="row"
         alignItems="center"
+        gap={1}
         justifyContent={
           align === 'center'
             ? 'center'
@@ -19,7 +21,10 @@ export default withGenerateDataProps<TypographyProps, MappablePropNames>(
             ? 'flex-end'
             : 'flex-start'
         }
-      />
+      >
+        {icon && <Icon color="inherit" fontSize="inherit" code={icon} />}
+        {children}
+      </MuiTypography>
     );
   }
 );

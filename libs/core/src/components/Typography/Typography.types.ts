@@ -2,8 +2,9 @@ import MuiTypography from '@mui/material/Typography';
 import type { ComponentProps } from 'react';
 
 import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { IconCode } from '../Icon';
 
-export type TypographyProps = Pick<
+type MuiTypographyProps = Pick<
   ComponentProps<typeof MuiTypography>,
   | 'align'
   | 'children'
@@ -16,7 +17,14 @@ export type TypographyProps = Pick<
   | 'whiteSpace'
 >;
 
-export type MappablePropNames = keyof Pick<TypographyProps, 'children'>;
+export interface TypographyProps extends MuiTypographyProps {
+  icon?: IconCode;
+}
+
+export type MappablePropNames = keyof Pick<
+  TypographyProps,
+  'children' | 'icon'
+>;
 
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,

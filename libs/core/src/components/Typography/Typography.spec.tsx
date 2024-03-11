@@ -31,4 +31,16 @@ describe('Typography', () => {
       justifyContent: 'flex-end',
     });
   });
+
+  it('renders with children', () => {
+    const { getByText } = render(<Typography>Test</Typography>);
+
+    expect(getByText('Test')).toBeInTheDocument();
+  });
+
+  it('renders with icon', () => {
+    const { getByTestId } = render(<Typography icon="faGithub" />);
+
+    expect(getByTestId('Icon_faGithub')).toBeInTheDocument();
+  });
 });
