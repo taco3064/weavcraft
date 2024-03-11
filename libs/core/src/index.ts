@@ -1,22 +1,62 @@
 import * as Comp from './components';
 
-export const Layout = {
-  Accordion: Comp.Accordion,
+export const Display = {
   Avatar: Comp.Avatar,
-  Collapse: Comp.Collapse,
-  Dialog: Comp.Dialog,
+  Badge: Comp.Badge,
   Icon: Comp.Icon,
-  Toolbar: Comp.Toolbar,
+
+  /**
+   * TODO: Need to add the following components
+   * * - Chip
+   * * - Tooltip
+   * * - Typography
+   */
 };
 
-export const DataCollection = {
+export const Layout = {
+  Accordion: Comp.Accordion,
+  Collapse: Comp.Collapse,
+  Dialog: Comp.Dialog,
+  Toolbar: Comp.Toolbar,
+
+  /**
+   * TODO: Need to add the following components
+   * * - Card
+   * * - Container
+   * * - Divider (唯一一個不支援資料轉換 props 的元件)
+   * * - Drawer
+   * * - Form
+   * * - Popover
+   */
+};
+
+export const Collection = {
   AvatarGroup: Comp.AvatarGroup,
   ImageList: Comp.ImageList,
   List: Comp.List,
+
+  /**
+   * TODO: Need to add the following components
+   * * - ButtonGroup
+   * * - Grid
+   * * - Menu
+   * * - SpeedDial
+   * * - Step
+   * * - ToggleButtonGroup
+   */
 };
 
 export const Interaction = {
   SelectionControl: Comp.SelectionControl,
+
+  /**
+   * TODO: Need to add the following components
+   * * - Button
+   * * - Fab
+   * * - IconButton
+   * * - Link
+   * * - Slider
+   */
 };
 
 export const Input = {
