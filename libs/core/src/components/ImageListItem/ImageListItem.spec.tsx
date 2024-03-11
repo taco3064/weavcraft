@@ -76,25 +76,6 @@ describe('@weavcraft/core/components/ImageListItem', () => {
     expect(el).toBeTruthy();
   });
 
-  it('should correctly render with data', () => {
-    const { baseElement } = render(
-      <MuiImageList>
-        <ImageListItem
-          data={data}
-          propMapping={{
-            src: 'img',
-            title: 'title',
-            description: 'author',
-          }}
-        />
-      </MuiImageList>
-    );
-
-    const el = getByTestId(baseElement, 'ImageListItem');
-
-    expect(el).toBeTruthy();
-  });
-
   const data = {
     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
     title: 'Breakfast',

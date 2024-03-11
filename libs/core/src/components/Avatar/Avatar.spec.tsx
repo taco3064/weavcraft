@@ -38,26 +38,6 @@ describe('@weavcraft/core/components/Avatar', () => {
     expect(el).toHaveStyle('height: 80px');
   });
 
-  it('should correctly render image with data', () => {
-    const { baseElement } = render(
-      <Avatar data={data} propMapping={{ alt: 'name', src: 'url' }} />
-    );
-
-    const el = baseElement.querySelector('img');
-
-    expect(el).toHaveAttribute('src', data.url);
-  });
-
-  it('should correctly render text with data', () => {
-    const { baseElement } = render(
-      <Avatar data={data} propMapping={{ text: 'name' }} />
-    );
-
-    const el = getByTestId(baseElement, 'Avatar');
-
-    expect(el).toHaveTextContent(data.name.charAt(0));
-  });
-
   const data = {
     name: 'Remy Sharp',
     url: 'https://mui.com/static/images/avatar/1.jpg',

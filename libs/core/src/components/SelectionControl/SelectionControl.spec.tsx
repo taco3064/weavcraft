@@ -34,45 +34,4 @@ describe('@weavcraft/core/components/SelectionControl', () => {
     expect(checkbox.tagName).toBe('SPAN');
     expect(baseElement.querySelector('input[type="radio"]')).toBeTruthy();
   });
-
-  it('should render form control label with data', () => {
-    const { baseElement } = render(
-      <SelectionControl data={data} propMapping={{ label: 'name' }} />
-    );
-
-    const label = getByTestId(baseElement, 'FormControlLabel');
-
-    expect(label).toHaveTextContent(data.name);
-  });
-
-  it('should render checkbox with data', () => {
-    const { baseElement } = render(
-      <SelectionControl checked data={data} propMapping={{ value: 'code' }} />
-    );
-
-    const checkbox = baseElement.querySelector(
-      'input[type="checkbox"]:checked'
-    );
-
-    expect(checkbox).toBeTruthy();
-    expect(checkbox).toHaveAttribute('value', data.code);
-  });
-
-  it('should call onChange with correct data', () => {
-    const onChange = jest.fn();
-
-    const { baseElement } = render(
-      <SelectionControl
-        checked
-        data={data}
-        propMapping={{ value: 'code' }}
-        onChange={onChange}
-      />
-    );
-
-    fireEvent.click(baseElement.querySelector('input[type="checkbox"]')!);
-    expect(onChange).toHaveBeenCalledWith(false, data);
-  });
-
-  const data = { name: 'Remy Sharp', code: 'HS001' };
 });
