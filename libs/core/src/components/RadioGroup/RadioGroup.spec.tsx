@@ -1,15 +1,13 @@
-import { fireEvent, getByTestId, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import RadioGroup from './RadioGroup';
 
 describe('@weavcraft/core/components/RadioGroup', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<RadioGroup />);
-    const group = getByTestId(baseElement, 'RadioGroup');
+    const { getByTestId } = render(<RadioGroup />);
 
-    expect(baseElement).toBeTruthy();
-    expect(group).toBeTruthy();
+    expect(getByTestId('RadioGroup')).toBeTruthy();
   });
 
   it('should render all radios', () => {

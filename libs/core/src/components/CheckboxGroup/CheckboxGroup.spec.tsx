@@ -1,15 +1,13 @@
-import { fireEvent, getByTestId, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import CheckboxGroup from './CheckboxGroup';
 
 describe('@weavcraft/core/components/CheckboxGroup', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CheckboxGroup />);
-    const group = getByTestId(baseElement, 'CheckboxGroup');
+    const { getByTestId } = render(<CheckboxGroup />);
 
-    expect(baseElement).toBeTruthy();
-    expect(group).toBeTruthy();
+    expect(getByTestId('CheckboxGroup')).toBeTruthy();
   });
 
   it('should render all checkboxes', () => {

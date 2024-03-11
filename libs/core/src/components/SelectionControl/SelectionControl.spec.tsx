@@ -1,12 +1,14 @@
-import { fireEvent, getByTestId, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import SelectionControl from './SelectionControl';
 
 describe('@weavcraft/core/components/SelectionControl', () => {
   it('should render form control label successfully', () => {
-    const { baseElement } = render(<SelectionControl label="test" />);
-    const label = getByTestId(baseElement, 'FormControlLabel');
+    const { baseElement, getByTestId } = render(
+      <SelectionControl label="test" />
+    );
+    const label = getByTestId('FormControlLabel');
     const checkbox = baseElement.querySelector('input[type="checkbox"]');
 
     expect(baseElement).toBeTruthy();
@@ -16,8 +18,8 @@ describe('@weavcraft/core/components/SelectionControl', () => {
   });
 
   it('should render checkbox successfully', () => {
-    const { baseElement } = render(<SelectionControl />);
-    const checkbox = getByTestId(baseElement, 'SelectionControl');
+    const { baseElement, getByTestId } = render(<SelectionControl />);
+    const checkbox = getByTestId('SelectionControl');
 
     expect(baseElement).toBeTruthy();
     expect(checkbox).toBeTruthy();
@@ -26,8 +28,10 @@ describe('@weavcraft/core/components/SelectionControl', () => {
   });
 
   it('should render radio successfully', () => {
-    const { baseElement } = render(<SelectionControl variant="radio" />);
-    const checkbox = getByTestId(baseElement, 'SelectionControl');
+    const { baseElement, getByTestId } = render(
+      <SelectionControl variant="radio" />
+    );
+    const checkbox = getByTestId('SelectionControl');
 
     expect(baseElement).toBeTruthy();
     expect(checkbox).toBeTruthy();
