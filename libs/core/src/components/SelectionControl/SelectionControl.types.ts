@@ -23,7 +23,7 @@ type BaseSelectionControlProps = Partial<
 
 export type MappablePropNames = keyof Omit<
   BaseSelectionControlProps,
-  'labelPlacement'
+  'color' | 'labelPlacement' | 'size'
 >;
 
 export interface SelectionControlProps<V extends Variant>

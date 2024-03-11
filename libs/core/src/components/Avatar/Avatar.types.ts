@@ -14,7 +14,10 @@ export interface AvatarProps extends MuiAvatarProps {
   height?: string;
 }
 
+export type MappablePropNames = keyof Omit<AvatarProps, 'width' | 'height'>;
+
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
-  AvatarProps
+  AvatarProps,
+  MappablePropNames
 >;

@@ -23,7 +23,10 @@ export interface IconProps extends MuiIconProps {
   code?: IconCode;
 }
 
+export type MappablePropNames = keyof Pick<IconProps, 'code'>;
+
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
-  IconProps
+  IconProps,
+  MappablePropNames
 >;

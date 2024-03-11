@@ -12,6 +12,8 @@ type MuiCollapseProps = Pick<
   'children' | 'orientation'
 >;
 
+export type MappablePropNames = keyof MuiCollapseProps;
+
 export interface CollapseProps extends MuiCollapseProps {
   containerId?: string;
   toggle?: ReactElement<SlotProps>;
@@ -20,5 +22,5 @@ export interface CollapseProps extends MuiCollapseProps {
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   CollapseProps,
-  'children' | 'containerId'
+  MappablePropNames
 >;

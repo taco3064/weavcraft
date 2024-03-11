@@ -29,8 +29,13 @@ export interface DialogProps extends MuiDialogProps {
   }[];
 }
 
+export type MappablePropNames = keyof Pick<
+  DialogProps,
+  'children' | 'icon' | 'title'
+>;
+
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   DialogProps,
-  'children' | 'icon' | 'title'
+  MappablePropNames
 >;

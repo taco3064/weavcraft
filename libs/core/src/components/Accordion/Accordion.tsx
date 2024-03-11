@@ -5,41 +5,43 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 
 import Icon from '../Icon';
 import { withGenerateDataProps } from '../../contexts';
-import type { AccordionProps } from './Accordion.types';
+import type { AccordionProps, MappablePropNames } from './Accordion.types';
 
-export default withGenerateDataProps<AccordionProps>(function Accordion({
-  action,
-  children,
-  disableActionSpacing,
-  expandIcon,
-  expanded,
-  title,
-}) {
-  return (
-    <MuiAccordion defaultExpanded={expanded} data-testid="Accordion">
-      <MuiAccordionSummary
-        expandIcon={<Icon code={expandIcon} />}
-        data-testid="AccordionSummary"
-      >
-        {title}
-      </MuiAccordionSummary>
+export default withGenerateDataProps<AccordionProps, MappablePropNames>(
+  function Accordion({
+    action,
+    children,
+    disableActionSpacing,
+    expandIcon,
+    expanded,
+    title,
+  }) {
+    return (
+      <MuiAccordion defaultExpanded={expanded} data-testid="Accordion">
+        <MuiAccordionSummary
+          expandIcon={<Icon code={expandIcon} />}
+          data-testid="AccordionSummary"
+        >
+          {title}
+        </MuiAccordionSummary>
 
-      {!expanded ? null : (
-        <>
-          <MuiAccordionDetails data-testid="AccordionDetails">
-            {children}
-          </MuiAccordionDetails>
+        {!expanded ? null : (
+          <>
+            <MuiAccordionDetails data-testid="AccordionDetails">
+              {children}
+            </MuiAccordionDetails>
 
-          {action && (
-            <MuiAccordionActions
-              disableSpacing={disableActionSpacing}
-              data-testid="AccordionActions"
-            >
-              {action}
-            </MuiAccordionActions>
-          )}
-        </>
-      )}
-    </MuiAccordion>
-  );
-});
+            {action && (
+              <MuiAccordionActions
+                disableSpacing={disableActionSpacing}
+                data-testid="AccordionActions"
+              >
+                {action}
+              </MuiAccordionActions>
+            )}
+          </>
+        )}
+      </MuiAccordion>
+    );
+  }
+);

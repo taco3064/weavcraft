@@ -21,8 +21,10 @@ export interface ToolbarProps extends MuiAppBarProps, MuiToolbarProps {
   title?: string;
 }
 
+export type MappablePropNames = keyof Pick<ToolbarProps, 'icon' | 'title'>;
+
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   ToolbarProps,
-  'icon' | 'title'
+  MappablePropNames
 >;

@@ -10,7 +10,7 @@ import type { TransitionProps } from '@mui/material/transitions';
 
 import Icon from '../Icon';
 import { withGenerateDataProps } from '../../contexts';
-import type { DialogProps } from './Dialog.types';
+import type { DialogProps, MappablePropNames } from './Dialog.types';
 
 const Transition = forwardRef<
   unknown,
@@ -19,73 +19,75 @@ const Transition = forwardRef<
   return <MuiSlide direction="up" ref={ref} {...props} />;
 });
 
-export default withGenerateDataProps<DialogProps>(function Dialog({
-  actions,
-  children,
-  icon,
-  title,
-  toggle,
-  onActionClick,
-  ...props
-}) {
-  const { type: Toggle, props: toggleProps } = toggle || {};
-  const [open, setOpen] = useState(false);
+export default withGenerateDataProps<DialogProps, MappablePropNames>(
+  function Dialog({
+    actions,
+    children,
+    icon,
+    title,
+    toggle,
+    onActionClick,
+    ...props
+  }) {
+    const { type: Toggle, props: toggleProps } = toggle || {};
+    const [open, setOpen] = useState(false);
 
-  return (
-    <>
-      {Toggle && (
-        <Toggle
-          {...toggleProps}
-          data-testid="DialogToggle"
-          onClick={(...e: any[]) => {
-            setOpen(true);
-            toggleProps?.onClick?.(...e);
-          }}
-        />
-      )}
-
-      <MuiDialog
-        {...props}
-        TransitionComponent={Transition}
-        data-testid="Dialog"
-        open={open}
-      >
-        <MuiDialogTitle display="flex" gap={8} data-testid="DialogTitle">
-          {icon && <Icon code={icon} />}
-          {title}
-
-          <MuiIconButton
-            data-testid="DialogCloseButton"
-            sx={{ marginLeft: 'auto' }}
-            onClick={() => setOpen(false)}
-          >
-            <Icon code="faClose" />
-          </MuiIconButton>
-        </MuiDialogTitle>
-
-        <MuiDialogContent data-testid="DialogContent">
-          {children}
-        </MuiDialogContent>
-
-        {!actions?.length ? null : (
-          <MuiDialogActions data-testid="DialogActions">
-            {actions.map(({ text, icon, color }, i) => (
-              <MuiButton
-                key={i}
-                color={color}
-                startIcon={icon && <Icon code={icon} />}
-                data-testid={`DialogAction_${i}`}
-                onClick={() => {
-                  setOpen(false);
-                  onActionClick?.(text || i);
-                }}
-              >
-                {text || `Text ${i}`}
-              </MuiButton>
-            ))}
-          </MuiDialogActions>
+    return (
+      <>
+        {Toggle && (
+          <Toggle
+            {...toggleProps}
+            data-testid="DialogToggle"
+            onClick={(...e: any[]) => {
+              setOpen(true);
+              toggleProps?.onClick?.(...e);
+            }}
+          />
         )}
-      </MuiDialog>
-    </>
-  );
-});
+
+        <MuiDialog
+          {...props}
+          TransitionComponent={Transition}
+          data-testid="Dialog"
+          open={open}
+        >
+          <MuiDialogTitle display="flex" gap={8} data-testid="DialogTitle">
+            {icon && <Icon code={icon} />}
+            {title}
+
+            <MuiIconButton
+              data-testid="DialogCloseButton"
+              sx={{ marginLeft: 'auto' }}
+              onClick={() => setOpen(false)}
+            >
+              <Icon code="faClose" />
+            </MuiIconButton>
+          </MuiDialogTitle>
+
+          <MuiDialogContent data-testid="DialogContent">
+            {children}
+          </MuiDialogContent>
+
+          {!actions?.length ? null : (
+            <MuiDialogActions data-testid="DialogActions">
+              {actions.map(({ text, icon, color }, i) => (
+                <MuiButton
+                  key={i}
+                  color={color}
+                  startIcon={icon && <Icon code={icon} />}
+                  data-testid={`DialogAction_${i}`}
+                  onClick={() => {
+                    setOpen(false);
+                    onActionClick?.(text || i);
+                  }}
+                >
+                  {text || `Text ${i}`}
+                </MuiButton>
+              ))}
+            </MuiDialogActions>
+          )}
+        </MuiDialog>
+      </>
+    );
+  }
+);

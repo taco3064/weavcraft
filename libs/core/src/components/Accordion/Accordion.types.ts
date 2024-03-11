@@ -17,8 +17,13 @@ export interface AccordionProps extends MuiAccordionProps {
   title?: string;
 }
 
+export type MappablePropNames = keyof Pick<
+  AccordionProps,
+  'children' | 'expandIcon' | 'title'
+>;
+
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,
   AccordionProps,
-  'children' | 'expanded' | 'expandIcon' | 'title'
+  MappablePropNames
 >;
