@@ -3,11 +3,11 @@ import * as Comp from './components';
 export const Display = {
   Avatar: Comp.Avatar,
   Badge: Comp.Badge,
+  Chip: Comp.Chip,
   Icon: Comp.Icon,
 
   /**
    * TODO: Need to add the following components
-   * * - Chip
    * * - Tooltip
    * * - Typography
    */

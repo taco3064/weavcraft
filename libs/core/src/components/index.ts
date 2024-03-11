@@ -3,6 +3,7 @@ export * from './Avatar';
 export * from './AvatarGroup';
 export * from './Badge';
 export * from './CheckboxGroup';
+export * from './Chip';
 export * from './Collapse';
 export * from './DatePickerField';
 export * from './DateTimePickerField';
