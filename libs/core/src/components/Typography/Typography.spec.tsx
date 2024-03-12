@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Typography from './Typography';
 
-describe('Typography', () => {
+describe('@weavcraft/core/components/Typography', () => {
   it('renders with default props', () => {
     const { getByTestId } = render(<Typography />);
     const typographyElement = getByTestId('Typography');

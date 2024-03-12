@@ -1,9 +1,9 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import Fab from './Fab';
 
-describe('Fab', () => {
+describe('@weavcraft/core/components/Fab', () => {
   it('renders without crashing', () => {
     const { getByTestId } = render(<Fab />);
     const fab = getByTestId('Fab');
