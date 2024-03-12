@@ -28,12 +28,12 @@ export const Layout = {
 
 export const Collection = {
   AvatarGroup: Comp.AvatarGroup,
+  ButtonGroup: Comp.ButtonGroup,
   ImageList: Comp.ImageList,
   List: Comp.List,
 
   /**
    * TODO: Need to add the following components
-   * * - ButtonGroup
    * * - Grid
    * * - Menu
    * * - SpeedDial

@@ -3,6 +3,7 @@ export * from './Avatar';
 export * from './AvatarGroup';
 export * from './Badge';
 export * from './Button';
+export * from './ButtonGroup';
 export * from './CheckboxGroup';
 export * from './Chip';
 export * from './Collapse';
