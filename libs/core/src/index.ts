@@ -12,6 +12,7 @@ export const Display = {
 export const Layout = {
   Accordion: Comp.Accordion,
   Collapse: Comp.Collapse,
+  Container: Comp.Container,
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
   Toolbar: Comp.Toolbar,
@@ -19,7 +20,6 @@ export const Layout = {
   /**
    * TODO: Need to add the following components
    * * - Card
-   * * - Container
    * * - Drawer
    * * - Form
    * * - Popover
