@@ -5,7 +5,13 @@ import '@testing-library/jest-dom';
 import Tooltip from './Tooltip';
 
 describe('@weavcraft/core/components/Tooltip', () => {
-  it('renders correctly', async () => {
+  it('renders correctly', () => {
+    const { baseElement } = render(<Tooltip />);
+
+    expect(baseElement).toBeTruthy();
+  });
+
+  it('should popup tooltip', async () => {
     const { getByTestId, queryByTestId, waitForShow } = renderWithShow(
       <Tooltip title="Tooltip">
         <MuiButton data-testid="button">Button</MuiButton>

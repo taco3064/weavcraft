@@ -20,6 +20,7 @@ export * from './List';
 export * from './MultipleSelectField';
 export * from './NumericField';
 export * from './NumericFormatField';
+export * from './Popover';
 export * from './RadioGroup';
 export * from './Selection';
 export * from './SingleSelectField';

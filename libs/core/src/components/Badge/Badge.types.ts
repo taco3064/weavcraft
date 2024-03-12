@@ -15,9 +15,12 @@ type MuiBadgeProps = Pick<
   | 'variant'
 >;
 
+export type AnchorOrigin<
+  K extends keyof NonNullable<MuiBadgeProps['anchorOrigin']>
+> = NonNullable<MuiBadgeProps['anchorOrigin']>[K];
+
 export interface BadgeProps extends Omit<MuiBadgeProps, 'anchorOrigin'> {
-  anchorHorizontal?: NonNullable<MuiBadgeProps['anchorOrigin']>['horizontal'];
-  anchorVertical?: NonNullable<MuiBadgeProps['anchorOrigin']>['vertical'];
+  anchorPosition?: `${AnchorOrigin<'vertical'>}-${AnchorOrigin<'horizontal'>}`;
 }
 
 export type MappablePropNames = keyof Pick<

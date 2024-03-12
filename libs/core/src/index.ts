@@ -15,6 +15,7 @@ export const Layout = {
   Container: Comp.Container,
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
+  Popover: Comp.Popover,
   Toolbar: Comp.Toolbar,
 
   /**
@@ -22,7 +23,6 @@ export const Layout = {
    * * - Card
    * * - Drawer
    * * - Form
-   * * - Popover
    */
 };
 
