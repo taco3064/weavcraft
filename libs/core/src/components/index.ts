@@ -18,6 +18,7 @@ export * from './IconButton';
 export * from './ImageList';
 export * from './Link';
 export * from './List';
+export * from './Menu';
 export * from './MultipleSelectField';
 export * from './NumericField';
 export * from './NumericFormatField';

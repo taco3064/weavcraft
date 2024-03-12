@@ -31,11 +31,11 @@ export const Collection = {
   ButtonGroup: Comp.ButtonGroup,
   ImageList: Comp.ImageList,
   List: Comp.List,
+  Menu: Comp.Menu,
 
   /**
    * TODO: Need to add the following components
    * * - Grid
-   * * - Menu
    * * - SpeedDial
    * * - Step
    * * - ToggleButtonGroup

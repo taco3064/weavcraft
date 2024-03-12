@@ -9,7 +9,7 @@ import type {
 
 type MuiPopoverProps = Pick<
   ComponentProps<typeof MuiPopover>,
-  'anchorEl' | 'anchorOrigin' | 'children' | 'elevation' | 'transformOrigin'
+  'anchorOrigin' | 'children' | 'elevation' | 'transformOrigin'
 >;
 
 export type AnchorOrigin<
