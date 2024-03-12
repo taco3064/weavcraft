@@ -15,13 +15,15 @@ type MuiBadgeProps = Pick<
   | 'variant'
 >;
 
-type BaseBadgeProps = Pick<MuiBadgeProps, 'badgeContent' | 'children' | 'max'>;
-export type MappablePropNames = keyof BaseBadgeProps;
-
 export interface BadgeProps extends Omit<MuiBadgeProps, 'anchorOrigin'> {
   anchorHorizontal?: NonNullable<MuiBadgeProps['anchorOrigin']>['horizontal'];
   anchorVertical?: NonNullable<MuiBadgeProps['anchorOrigin']>['vertical'];
 }
+
+export type MappablePropNames = keyof Pick<
+  BadgeProps,
+  'badgeContent' | 'children' | 'max'
+>;
 
 export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
   D,

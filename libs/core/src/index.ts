@@ -43,11 +43,11 @@ export const Collection = {
 };
 
 export const Interaction = {
+  Button: Comp.Button,
   SelectionControl: Comp.SelectionControl,
 
   /**
    * TODO: Need to add the following components
-   * * - Button
    * * - Fab
    * * - IconButton
    * * - Link

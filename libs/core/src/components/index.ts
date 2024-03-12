@@ -2,6 +2,7 @@ export * from './Accordion';
 export * from './Avatar';
 export * from './AvatarGroup';
 export * from './Badge';
+export * from './Button';
 export * from './CheckboxGroup';
 export * from './Chip';
 export * from './Collapse';
