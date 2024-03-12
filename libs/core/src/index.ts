@@ -46,11 +46,11 @@ export const Interaction = {
   Button: Comp.Button,
   Fab: Comp.Fab,
   IconButton: Comp.IconButton,
+  Link: Comp.Link,
   Selection: Comp.Selection,
 
   /**
    * TODO: Need to add the following components
-   * * - Link
    * * - Slider
    */
 };

@@ -13,6 +13,7 @@ export * from './Fab';
 export * from './Icon';
 export * from './IconButton';
 export * from './ImageList';
+export * from './Link';
 export * from './List';
 export * from './MultipleSelectField';
 export * from './NumericField';
