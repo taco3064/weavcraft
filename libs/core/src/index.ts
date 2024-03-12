@@ -48,11 +48,7 @@ export const Interaction = {
   IconButton: Comp.IconButton,
   Link: Comp.Link,
   Selection: Comp.Selection,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Slider
-   */
+  Slider: Comp.Slider,
 };
 
 export const Input = {
