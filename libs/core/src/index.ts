@@ -13,13 +13,13 @@ export const Layout = {
   Accordion: Comp.Accordion,
   Collapse: Comp.Collapse,
   Dialog: Comp.Dialog,
+  Divider: Comp.Divider,
   Toolbar: Comp.Toolbar,
 
   /**
    * TODO: Need to add the following components
    * * - Card
    * * - Container
-   * * - Divider (唯一一個不支援資料轉換 props 的元件)
    * * - Drawer
    * * - Form
    * * - Popover
