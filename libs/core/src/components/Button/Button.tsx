@@ -5,10 +5,14 @@ import { withGenerateDataProps } from '../../contexts';
 import type { ButtonProps, MappablePropNames } from './Button.types';
 
 export default withGenerateDataProps<ButtonProps, MappablePropNames>(
-  function Button({ icon, iconPosition = 'start', text, ...props }) {
+  function Button({ href, icon, iconPosition = 'start', text, ...props }) {
     return (
       <MuiButton
         {...props}
+        {...(href && {
+          LinkComponent: 'a',
+          href,
+        })}
         {...(icon && {
           [`${iconPosition}Icon`]: <Icon code={icon} />,
         })}

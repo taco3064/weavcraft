@@ -3,11 +3,22 @@ import '@testing-library/jest-dom';
 
 import Button from './Button';
 
-describe('Button', () => {
+describe('@weavcraft/core/components/Button', () => {
   it('renders without crashing', () => {
     const { getByTestId } = render(<Button text="Test Button" />);
+    const button = getByTestId('Button');
 
-    expect(getByTestId('Button')).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+    expect(button.tagName).toBe('BUTTON');
+  });
+
+  it('renders with href when passed', () => {
+    const url = 'https://example.com';
+    const { getByTestId } = render(<Button text="Test Button" href={url} />);
+    const button = getByTestId('Button') as HTMLAnchorElement;
+
+    expect(button.tagName).toBe('A');
+    expect(button).toHaveAttribute('href', url);
   });
 
   it('renders the correct text', () => {

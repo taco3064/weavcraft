@@ -9,6 +9,7 @@ export * from './Collapse';
 export * from './DatePickerField';
 export * from './DateTimePickerField';
 export * from './Dialog';
+export * from './Fab';
 export * from './Icon';
 export * from './ImageList';
 export * from './List';
