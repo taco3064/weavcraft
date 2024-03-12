@@ -14,7 +14,7 @@ export default withGenerateDataProps<ButtonProps, MappablePropNames>(
           href,
         })}
         {...(icon && {
-          [`${iconPosition}Icon`]: <Icon code={icon} />,
+          [`${iconPosition}Icon`]: <Icon fontSize="inherit" code={icon} />,
         })}
         data-testid="Button"
       >

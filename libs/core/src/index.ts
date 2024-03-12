@@ -45,11 +45,11 @@ export const Collection = {
 export const Interaction = {
   Button: Comp.Button,
   Fab: Comp.Fab,
+  IconButton: Comp.IconButton,
   Selection: Comp.Selection,
 
   /**
    * TODO: Need to add the following components
-   * * - IconButton
    * * - Link
    * * - Slider
    */

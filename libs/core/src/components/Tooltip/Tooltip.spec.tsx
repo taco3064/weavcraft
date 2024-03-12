@@ -5,28 +5,27 @@ import '@testing-library/jest-dom';
 import Tooltip from './Tooltip';
 
 describe('@weavcraft/core/components/Tooltip', () => {
-  it('renders correctly', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('renders correctly', async () => {
+    const { getByTestId, queryByTestId, waitForShow } = renderWithShow(
       <Tooltip title="Tooltip">
         <MuiButton data-testid="button">Button</MuiButton>
       </Tooltip>
     );
 
-    expect(getByTestId('TooltipContent')).toBeTruthy();
+    expect(queryByTestId('Tooltip')).not.toBeTruthy();
+    expect(getByTestId('TooltipToggle')).toBeTruthy();
     expect(getByTestId('button')).toBeTruthy();
 
-    fireEvent.click(getByTestId('TooltipContent'));
-
-    waitFor(async () => {
-      const tooltip = queryByTestId('Tooltip');
+    await waitForShow(() => {
+      const tooltip = getByTestId('Tooltip');
 
       expect(tooltip).toBeTruthy();
       expect(tooltip).toHaveTextContent('Tooltip');
     });
   });
 
-  it('renders without crashing when target is disabled', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('renders without crashing when target is disabled', async () => {
+    const { getByTestId, waitForShow } = renderWithShow(
       <Tooltip title="Tooltip">
         <MuiButton disabled data-testid="button">
           Button
@@ -34,33 +33,47 @@ describe('@weavcraft/core/components/Tooltip', () => {
       </Tooltip>
     );
 
-    expect(getByTestId('TooltipContent')).toBeTruthy();
-    expect(getByTestId('button')).toBeTruthy();
-
-    fireEvent.click(getByTestId('TooltipContent'));
-
-    waitFor(async () => {
-      const tooltip = queryByTestId('Tooltip');
+    await waitForShow(() => {
+      const tooltip = getByTestId('Tooltip');
 
       expect(tooltip).toBeTruthy();
       expect(tooltip).toHaveTextContent('Tooltip');
     });
   });
 
-  it('tooltip is not rendered when disabled', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('tooltip is not rendered when disabled', async () => {
+    const { queryByTestId, waitForShow } = renderWithShow(
       <Tooltip title="Tooltip" disabled>
         <MuiButton data-testid="button">Button</MuiButton>
       </Tooltip>
     );
 
-    expect(getByTestId('TooltipContent')).toBeTruthy();
-    expect(getByTestId('button')).toBeTruthy();
-
-    fireEvent.click(getByTestId('TooltipContent'));
-
-    waitFor(async () => {
+    await waitForShow(async () => {
       expect(queryByTestId('Tooltip')).not.toBeTruthy();
     });
   });
+
+  it('tooltip is not rendered when title is empty', async () => {
+    const { queryByTestId, waitForShow } = renderWithShow(
+      <Tooltip>
+        <MuiButton data-testid="button">Button</MuiButton>
+      </Tooltip>
+    );
+
+    await waitForShow(() => {
+      expect(queryByTestId('Tooltip')).not.toBeTruthy();
+    });
+  });
+
+  function renderWithShow(...e: Parameters<typeof render>) {
+    const result = render(...e);
+
+    const waitForShow: typeof waitFor<void> = async (f) => {
+      fireEvent.touchStart(result.getByTestId('TooltipToggle'));
+
+      return waitFor(f);
+    };
+
+    return { ...result, waitForShow };
+  }
 });

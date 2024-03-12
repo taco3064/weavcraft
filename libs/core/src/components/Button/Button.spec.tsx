@@ -5,7 +5,7 @@ import Button from './Button';
 
 describe('@weavcraft/core/components/Button', () => {
   it('renders without crashing', () => {
-    const { getByTestId } = render(<Button text="Test Button" />);
+    const { getByTestId } = render(<Button />);
     const button = getByTestId('Button');
 
     expect(button).toBeInTheDocument();

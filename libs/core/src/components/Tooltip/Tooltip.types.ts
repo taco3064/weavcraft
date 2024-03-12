@@ -3,9 +3,11 @@ import type { ComponentProps } from 'react';
 
 import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
-type MuiTooltipProps = Pick<
-  ComponentProps<typeof MuiTooltip>,
-  'arrow' | 'children' | 'placement' | 'title'
+type MuiTooltipProps = Partial<
+  Pick<
+    ComponentProps<typeof MuiTooltip>,
+    'arrow' | 'children' | 'placement' | 'title'
+  >
 >;
 
 export interface TooltipProps extends Omit<MuiTooltipProps, 'placement'> {

@@ -11,6 +11,7 @@ export * from './DateTimePickerField';
 export * from './Dialog';
 export * from './Fab';
 export * from './Icon';
+export * from './IconButton';
 export * from './ImageList';
 export * from './List';
 export * from './MultipleSelectField';
