@@ -45,7 +45,7 @@ export const Collection = {
 export const Interaction = {
   Button: Comp.Button,
   Fab: Comp.Fab,
-  SelectionControl: Comp.SelectionControl,
+  Selection: Comp.Selection,
 
   /**
    * TODO: Need to add the following components

@@ -1,9 +1,9 @@
 import type { GenericData } from '../../contexts';
 import type { GroupProps } from '../../hooks';
-import type { SelectionControlProps } from '../SelectionControl';
+import type { SelectionProps } from '../Selection';
 
 type BaseRadioProps<D extends GenericData> = Omit<
-  SelectionControlProps<'radio', D>,
+  SelectionProps<'radio', D>,
   'checked'
 >;
 

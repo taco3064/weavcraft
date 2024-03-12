@@ -5,34 +5,33 @@ import type { ComponentProps } from 'react';
 
 import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
 
-export type Variant = 'checkbox' | 'radio';
-
-type MuiSelectionControlProps = Pick<
-  ComponentProps<typeof MuiCheckbox> & ComponentProps<typeof MuiRadio>,
-  'checked' | 'color' | 'name' | 'size'
->;
+export type SelectionVariant = 'checkbox' | 'radio';
 
 type MuiFormControlLabelProps = Pick<
   ComponentProps<typeof MuiFormControlLabel>,
   'disabled' | 'label' | 'labelPlacement' | 'required' | 'value'
 >;
 
-type BaseSelectionControlProps = Partial<
-  MuiSelectionControlProps & MuiFormControlLabelProps
+type BaseSelectionProps = Partial<
+  MuiFormControlLabelProps &
+    Pick<
+      ComponentProps<typeof MuiCheckbox> & ComponentProps<typeof MuiRadio>,
+      'checked' | 'color' | 'name' | 'size'
+    >
 >;
 
 export type MappablePropNames = keyof Omit<
-  BaseSelectionControlProps,
+  BaseSelectionProps,
   'color' | 'labelPlacement' | 'size'
 >;
 
-export interface SelectionControlProps<V extends Variant>
-  extends BaseSelectionControlProps {
+export interface SelectionProps<V extends SelectionVariant>
+  extends BaseSelectionProps {
   variant?: V;
   onChange?: (checked: boolean, data?: GenericData) => void;
 }
 
 export type WrappedProps<
-  V extends Variant,
+  V extends SelectionVariant,
   D extends GenericData
-> = GenerateDataWrappedProps<D, SelectionControlProps<V>, MappablePropNames>;
+> = GenerateDataWrappedProps<D, SelectionProps<V>, MappablePropNames>;

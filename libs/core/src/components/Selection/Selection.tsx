@@ -6,14 +6,14 @@ import { withGenerateDataProps, useGenerateData } from '../../contexts';
 
 import type {
   MappablePropNames,
-  SelectionControlProps,
-  Variant,
-} from './SelectionControl.types';
+  SelectionProps,
+  SelectionVariant,
+} from './Selection.types';
 
 export default withGenerateDataProps<
-  SelectionControlProps<Variant>,
+  SelectionProps<SelectionVariant>,
   MappablePropNames
->(function SelectionControl({
+>(function Selection({
   label,
   labelPlacement,
   checked,
@@ -31,7 +31,7 @@ export default withGenerateDataProps<
       {...props}
       {...{ disabled, required }}
       defaultChecked={checked}
-      data-testid="SelectionControl"
+      data-testid="Selection"
       onChange={(_e, checked) => onChange?.(checked, data)}
     />
   );

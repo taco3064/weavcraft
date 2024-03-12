@@ -2,7 +2,7 @@ import MuiFormControl from '@mui/material/FormControl';
 import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
 
-import SelectionControl from '../SelectionControl';
+import Selection from '../Selection';
 import { useGenerateStoreProps, type GenericData } from '../../contexts';
 import { useMultipleSelection } from '../../hooks';
 import type { CheckboxGroupProps } from './CheckboxGroup.types';
@@ -20,7 +20,7 @@ export default function CheckboxGroup<D extends GenericData>(
 
       <MuiFormGroup>
         {records?.map((data, i) => (
-          <SelectionControl
+          <Selection
             name={props.name}
             {...optionProps}
             variant="checkbox"
