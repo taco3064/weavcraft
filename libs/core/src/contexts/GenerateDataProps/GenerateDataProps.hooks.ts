@@ -26,7 +26,7 @@ export function usePropsGenerator() {
         ...result,
         [key]: _get(result, key) || _get(data, path as string),
       }),
-      { ...props } as Omit<P, 'data' | 'propMapping'>
+      props
     );
   };
 }
