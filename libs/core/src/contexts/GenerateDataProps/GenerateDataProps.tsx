@@ -22,9 +22,15 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     const data = props.data || generateData;
     const componentProps = getProps({ ...props, data });
 
-    return (
+    const children = (
+      <Target {...(componentProps as P & JSX.IntrinsicAttributes)} />
+    );
+
+    return !props.data ? (
+      children
+    ) : (
       <GenerateDataPropsContext.Provider value={data}>
-        <Target {...(componentProps as P & JSX.IntrinsicAttributes)} />
+        {children}
       </GenerateDataPropsContext.Provider>
     );
   };
