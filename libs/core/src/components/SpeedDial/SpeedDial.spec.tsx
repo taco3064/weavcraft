@@ -18,9 +18,9 @@ describe('@weavcraft/core/components/SpeedDial', () => {
 
     expect(actions).toHaveLength(records.length);
 
-    actions.forEach((action, index) => {
-      expect(action).toHaveClass('SpeedDialActionTooltipPlacement-right');
-    });
+    actions.forEach((action) =>
+      expect(action).toHaveClass('SpeedDialActionTooltipPlacement-right')
+    );
   });
 
   it('should render all actions with item propMapping', async () => {
