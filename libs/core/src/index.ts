@@ -27,13 +27,10 @@ export const Layout = {
 };
 
 export const Collection = {
-  AvatarGroup: Comp.AvatarGroup,
-  ButtonGroup: Comp.ButtonGroup,
   Grid: Comp.Grid,
-  ImageList: Comp.ImageList,
   List: Comp.List,
-  Menu: Comp.Menu,
-  SpeedDial: Comp.SpeedDial,
+  AvatarGroup: Comp.AvatarGroup,
+  ImageList: Comp.ImageList,
 
   /**
    * TODO: Need to add the following components
@@ -43,25 +40,28 @@ export const Collection = {
 
 export const Interaction = {
   Button: Comp.Button,
-  Fab: Comp.Fab,
+  ButtonGroup: Comp.ButtonGroup,
   IconButton: Comp.IconButton,
   Link: Comp.Link,
+  Fab: Comp.Fab,
+  Menu: Comp.Menu,
+  SpeedDial: Comp.SpeedDial,
   Selection: Comp.Selection,
   Slider: Comp.Slider,
 };
 
 export const Input = {
-  CheckboxGroup: Comp.CheckboxGroup,
-  RadioGroup: Comp.RadioGroup,
-  ToggleButtonGroup: Comp.ToggleButtonGroup,
-  NumericField: Comp.NumericField,
-  NumericFormatField: Comp.NumericFormatField,
-  MultipleSelectField: Comp.MultipleSelectField,
-  SingleSelectField: Comp.SingleSelectField,
-  SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,
+  NumericField: Comp.NumericField,
+  NumericFormatField: Comp.NumericFormatField,
+  SwitchField: Comp.SwitchField,
+  MultipleSelectField: Comp.MultipleSelectField,
+  SingleSelectField: Comp.SingleSelectField,
   TimePickerField: Comp.TimePickerField,
   DatePickerField: Comp.DatePickerField,
   DateTimePickerField: Comp.DateTimePickerField,
+  CheckboxGroup: Comp.CheckboxGroup,
+  RadioGroup: Comp.RadioGroup,
+  ToggleButtonGroup: Comp.ToggleButtonGroup,
 };
