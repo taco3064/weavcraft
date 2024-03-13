@@ -43,10 +43,10 @@ export default function ToggleButtonGroup<
           text,
           value = i,
           ...buttonProps
-        } = getProps({
+        } = getProps<D, ToggleButtonProps<D>>({
           ...optionProps,
           data: option,
-        }) as ToggleButtonProps<D>;
+        });
 
         return (
           <MuiToggleButton
