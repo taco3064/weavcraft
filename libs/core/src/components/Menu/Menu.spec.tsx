@@ -58,7 +58,6 @@ describe('@weavcraft/core/components/Menu', () => {
   });
 
   it('should call onItemClick when a button is clicked', async () => {
-    const index = Math.floor(Math.random() * records.length);
     const onClick = jest.fn();
 
     const { queryAllByTestId, waitForShow } = renderWithShow(
@@ -72,6 +71,8 @@ describe('@weavcraft/core/components/Menu', () => {
     );
 
     await waitForShow(() => {
+      const index = Math.floor(Math.random() * records.length);
+
       fireEvent.click(queryAllByTestId('ListItemButton')[index]);
       expect(onClick).toHaveBeenCalledWith(records[index]);
     });

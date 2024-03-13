@@ -32,11 +32,11 @@ export const Collection = {
   ImageList: Comp.ImageList,
   List: Comp.List,
   Menu: Comp.Menu,
+  SpeedDial: Comp.SpeedDial,
 
   /**
    * TODO: Need to add the following components
    * * - Grid
-   * * - SpeedDial
    * * - Step
    * * - ToggleButtonGroup
    */

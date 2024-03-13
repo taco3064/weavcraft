@@ -1,4 +1,3 @@
-import MuiButton from '@mui/material/Button';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 

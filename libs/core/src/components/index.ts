@@ -27,6 +27,7 @@ export * from './RadioGroup';
 export * from './Selection';
 export * from './SingleSelectField';
 export * from './Slider';
+export * from './SpeedDial';
 export * from './SwitchField';
 export * from './TextAreaField';
 export * from './TextField';
