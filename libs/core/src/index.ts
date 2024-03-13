@@ -29,6 +29,7 @@ export const Layout = {
 export const Collection = {
   AvatarGroup: Comp.AvatarGroup,
   ButtonGroup: Comp.ButtonGroup,
+  Grid: Comp.Grid,
   ImageList: Comp.ImageList,
   List: Comp.List,
   Menu: Comp.Menu,
@@ -36,7 +37,6 @@ export const Collection = {
 
   /**
    * TODO: Need to add the following components
-   * * - Grid
    * * - Step
    * * - ToggleButtonGroup
    */
