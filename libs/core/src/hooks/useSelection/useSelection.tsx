@@ -12,6 +12,7 @@ import type { GenericData } from '../../contexts';
 import type {
   BaseSelectFieldProps,
   ControlProps,
+  ControlVariant,
   GroupProps,
 } from './useSelection.types';
 
@@ -83,7 +84,7 @@ export function useSingleSelection<D extends GenericData>({
 }
 
 export function useOptionsRender<
-  T extends 'single' | 'multiple',
+  T extends ControlVariant,
   D extends GenericData
 >({ optionIndicator, optionProps, records }: BaseSelectFieldProps<T, D>) {
   const ItemIndicator = useGenerateSlotProps(optionIndicator);

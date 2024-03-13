@@ -38,7 +38,6 @@ export const Collection = {
   /**
    * TODO: Need to add the following components
    * * - Step
-   * * - ToggleButtonGroup
    */
 };
 
@@ -54,6 +53,7 @@ export const Interaction = {
 export const Input = {
   CheckboxGroup: Comp.CheckboxGroup,
   RadioGroup: Comp.RadioGroup,
+  ToggleButtonGroup: Comp.ToggleButtonGroup,
   NumericField: Comp.NumericField,
   NumericFormatField: Comp.NumericFormatField,
   MultipleSelectField: Comp.MultipleSelectField,

@@ -33,6 +33,7 @@ export * from './SwitchField';
 export * from './TextAreaField';
 export * from './TextField';
 export * from './TimePickerField';
+export * from './ToggleButtonGroup';
 export * from './Toolbar';
 export * from './Tooltip';
 export * from './Typography';
