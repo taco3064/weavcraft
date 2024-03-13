@@ -6,7 +6,7 @@ import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import { useMemo } from 'react';
 
-import { getProps, useGenerateSlotProps } from '../../contexts';
+import { usePropsGenerator, useGenerateSlotProps } from '../../contexts';
 import type { GenericData } from '../../contexts';
 
 import type {
@@ -88,6 +88,7 @@ export function useOptionsRender<
   D extends GenericData
 >({ optionIndicator, optionProps, records }: BaseSelectFieldProps<T, D>) {
   const ItemIndicator = useGenerateSlotProps(optionIndicator);
+  const getProps = usePropsGenerator();
 
   return records?.map((data, i) => {
     const { disabled, primary, secondary, value } = getProps({

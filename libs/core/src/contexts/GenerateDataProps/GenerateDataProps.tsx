@@ -2,8 +2,8 @@ import type { ComponentType } from 'react';
 
 import {
   GenerateDataPropsContext,
-  getProps,
   useGenerateData,
+  usePropsGenerator,
 } from './GenerateDataProps.hooks';
 
 import type {
@@ -18,6 +18,7 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
   function ComponentWrapper<D extends GenericData>(
     props: GenerateDataWrappedProps<D, P, K>
   ) {
+    const getProps = usePropsGenerator();
     const generateData = useGenerateData<D>();
     const data = props.data || generateData;
     const componentProps = getProps({ ...props, data });

@@ -9,25 +9,27 @@ import type {
   StoreProps,
 } from './GenerateDataProps.types';
 
-//* Methods
-export function getProps<D extends GenericData, P extends MappableProps<D>>({
-  data,
-  propMapping,
-  ...props
-}: P) {
-  return Object.entries(propMapping || {}).reduce(
-    (result, [key, path]) => ({
-      ...result,
-      [key]: _get(result, key) || _get(data, path as string),
-    }),
-    { ...props } as Omit<P, 'data' | 'propMapping'>
-  );
-}
-
-//* Custom Hooks
+//* Context
 export const GenerateDataPropsContext = createContext<GenericData | undefined>(
   undefined
 );
+
+//* Custom Hooks
+export function usePropsGenerator() {
+  return function <D extends GenericData, P extends MappableProps<D>>({
+    data,
+    propMapping,
+    ...props
+  }: P) {
+    return Object.entries(propMapping || {}).reduce(
+      (result, [key, path]) => ({
+        ...result,
+        [key]: _get(result, key) || _get(data, path as string),
+      }),
+      { ...props } as Omit<P, 'data' | 'propMapping'>
+    );
+  };
+}
 
 export function useGenerateData<D extends GenericData>() {
   return useContext(GenerateDataPropsContext) as D;
@@ -39,6 +41,7 @@ export function useGenerateStoreProps<
   K extends keyof (P & StoreProps<D>) = 'records'
 >(props: GenerateStoreWrappedProps<D, P, K>) {
   const data = useGenerateData<D>();
+  const getProps = usePropsGenerator();
 
   return getProps({ ...props, data });
 }
@@ -48,6 +51,7 @@ export function useGenerateSlotProps<D extends GenericData>(
   onItemToggle?: (item: D) => void
 ) {
   const { type: Slot, props } = action || {};
+  const getProps = usePropsGenerator();
 
   return {
     Slot: Slot as ComponentType<typeof props> | undefined,

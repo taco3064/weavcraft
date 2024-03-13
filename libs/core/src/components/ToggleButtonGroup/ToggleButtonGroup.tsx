@@ -5,7 +5,7 @@ import Icon from '../Icon';
 import type { ControlVariant } from '../../hooks';
 
 import {
-  getProps,
+  usePropsGenerator,
   useGenerateStoreProps,
   type GenericData,
 } from '../../contexts';
@@ -19,6 +19,8 @@ export default function ToggleButtonGroup<
   D extends GenericData,
   T extends ControlVariant
 >(props: ToggleButtonGroupProps<D, T>) {
+  const getProps = usePropsGenerator();
+
   const {
     variant = 'single',
     name,

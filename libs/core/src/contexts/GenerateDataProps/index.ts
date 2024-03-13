@@ -1,8 +1,8 @@
 export { withGenerateDataProps } from './GenerateDataProps';
 
 export {
-  getProps,
   useGenerateData,
+  usePropsGenerator,
   useGenerateSlotProps,
   useGenerateStoreProps,
 } from './GenerateDataProps.hooks';
