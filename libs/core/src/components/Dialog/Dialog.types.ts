@@ -5,8 +5,8 @@ import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import type { IconCode } from '../Icon';
 
 import type {
-  GenerateDataWrappedProps,
   GenericData,
+  PropsWithMappedData,
   SlotProps,
 } from '../../contexts';
 
@@ -34,7 +34,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'icon' | 'title'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   DialogProps,
   MappablePropNames

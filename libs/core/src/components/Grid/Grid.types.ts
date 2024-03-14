@@ -1,7 +1,7 @@
 import MuiGrid from '@mui/material/Grid';
 import type { ComponentProps } from 'react';
 
-import type { GenerateStoreWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithStore } from '../../contexts';
 import type { GridItemProps } from '../GridItem';
 
 type MuiGridProps = Pick<
@@ -9,7 +9,7 @@ type MuiGridProps = Pick<
   'children' | 'columns' | 'justifyContent' | 'spacing'
 >;
 
-export type GridProps<D extends GenericData> = GenerateStoreWrappedProps<
+export type GridProps<D extends GenericData> = PropsWithStore<
   D,
   Pick<MuiGridProps, 'children' | 'justifyContent' | 'spacing'> & {
     columns?: Extract<MuiGridProps['columns'], number>;

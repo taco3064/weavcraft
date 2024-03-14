@@ -1,7 +1,7 @@
 import MuiGrid, { type RegularBreakpoints } from '@mui/material/Grid';
 import type { ComponentProps } from 'react';
 
-import type { GenericData, GenerateDataWrappedProps } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { ToolbarProps } from '../Toolbar';
 
 type MuiGridProps = Pick<
@@ -32,7 +32,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'icon' | 'title'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   GridItemProps,
   MappablePropNames

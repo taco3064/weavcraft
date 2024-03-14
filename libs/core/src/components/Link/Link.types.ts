@@ -2,7 +2,7 @@ import MuiLink from '@mui/material/Link';
 import type { ComponentProps } from 'react';
 
 import type { BaseTypographyProps } from '../Typography';
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiLinkProps = Pick<
@@ -19,7 +19,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'icon' | 'href'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   LinkProps,
   MappablePropNames

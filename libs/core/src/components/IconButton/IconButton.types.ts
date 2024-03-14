@@ -1,7 +1,7 @@
 import MuiIconButton from '@mui/material/IconButton';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiIconButtonProps = Pick<
@@ -19,7 +19,7 @@ export type MappablePropNames = keyof Pick<
   'disabled' | 'href' | 'icon'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   IconButtonProps,
   MappablePropNames

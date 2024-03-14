@@ -2,7 +2,7 @@ import MuiButtonGroup from '@mui/material/ButtonGroup';
 import type { ComponentProps } from 'react';
 
 import type { ButtonProps } from '../Button';
-import type { GenerateStoreWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithStore } from '../../contexts';
 
 type MuiButtonGroupProps = Pick<
   ComponentProps<typeof MuiButtonGroup>,
@@ -11,7 +11,7 @@ type MuiButtonGroupProps = Pick<
 
 export type MappablePropNames = keyof Pick<MuiButtonGroupProps, 'disabled'>;
 
-export type ButtonGroupProps<D extends GenericData> = GenerateStoreWrappedProps<
+export type ButtonGroupProps<D extends GenericData> = PropsWithStore<
   D,
   MuiButtonGroupProps & {
     borderRadiusVariant?: 'top' | 'bottom' | 'none';

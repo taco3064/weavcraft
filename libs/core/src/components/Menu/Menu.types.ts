@@ -1,19 +1,14 @@
 import type { ReactElement } from 'react';
 
+import type { GenericData, PropsWithStore, SlotProps } from '../../contexts';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
-
-import type {
-  GenerateStoreWrappedProps,
-  GenericData,
-  SlotProps,
-} from '../../contexts';
 
 export type MenuItemVariant = Extract<ListItemVariant, 'button' | 'link'>;
 
 export type MenuProps<
   D extends GenericData,
   V extends MenuItemVariant
-> = GenerateStoreWrappedProps<
+> = PropsWithStore<
   D,
   {
     toggle?: ReactElement<SlotProps>;

@@ -2,8 +2,8 @@ import MuiPopover from '@mui/material/Popover';
 import type { ComponentProps, ReactElement } from 'react';
 
 import type {
-  GenerateDataWrappedProps,
   GenericData,
+  PropsWithMappedData,
   SlotProps,
 } from '../../contexts';
 
@@ -24,7 +24,7 @@ export interface PopoverProps
 
 export type MappablePropNames = keyof Pick<PopoverProps, 'children'>;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   PopoverProps,
   MappablePropNames

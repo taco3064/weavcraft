@@ -7,31 +7,27 @@ import {
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenerateDataWrappedProps,
   GenericData,
+  PropsWithMappedData,
 } from './GenerateDataProps.types';
 
 //* HOC
 export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
-  Target: ComponentType<P>
+  Component: ComponentType<P>
 ) =>
-  function ComponentWrapper<D extends GenericData>(
-    props: GenerateDataWrappedProps<D, P, K>
+  function GenerateDataWrapper<D extends GenericData>(
+    props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGenerator();
     const generateData = useGenerateData<D>();
     const data = props.data || generateData;
-    const componentProps = getProps({ ...props, data });
-
-    const children = (
-      <Target {...(componentProps as P & JSX.IntrinsicAttributes)} />
-    );
+    const consumer = <Component {...getProps({ ...props, data })} />;
 
     return !props.data ? (
-      children
+      consumer
     ) : (
       <GenerateDataPropsContext.Provider value={data}>
-        {children}
+        {consumer}
       </GenerateDataPropsContext.Provider>
     );
   };

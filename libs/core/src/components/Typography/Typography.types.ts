@@ -1,7 +1,7 @@
 import MuiTypography from '@mui/material/Typography';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiTypographyProps = Pick<
@@ -26,7 +26,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'icon'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   TypographyProps,
   MappablePropNames

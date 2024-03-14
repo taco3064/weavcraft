@@ -1,8 +1,9 @@
 import MuiSpeedDial from '@mui/material/SpeedDial';
 import type { ComponentProps } from 'react';
 
-import type { GenerateStoreWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithStore } from '../../contexts';
 import type { IconCode } from '../Icon';
+
 import type {
   SpeedDialActionProps,
   TooltipPlacement,
@@ -11,7 +12,7 @@ import type {
 //* Component Props
 type MuiSpeedDialProps = Pick<ComponentProps<typeof MuiSpeedDial>, 'direction'>;
 
-export type SpeedDialProps<D extends GenericData> = GenerateStoreWrappedProps<
+export type SpeedDialProps<D extends GenericData> = PropsWithStore<
   D,
   {
     ariaLabel?: string;

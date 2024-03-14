@@ -3,7 +3,7 @@ import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 
 export type SelectionVariant = 'checkbox' | 'radio';
 
@@ -34,4 +34,4 @@ export interface SelectionProps<V extends SelectionVariant>
 export type WrappedProps<
   V extends SelectionVariant,
   D extends GenericData
-> = GenerateDataWrappedProps<D, SelectionProps<V>, MappablePropNames>;
+> = PropsWithMappedData<D, SelectionProps<V>, MappablePropNames>;

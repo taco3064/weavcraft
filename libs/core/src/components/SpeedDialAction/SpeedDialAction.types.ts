@@ -1,7 +1,7 @@
 import MuiSpeedDialAction from '@mui/material/SpeedDialAction';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiSpeedDialActionProps = Pick<
@@ -22,7 +22,7 @@ export type MappablePropNames = keyof Pick<
   'icon' | 'tooltipTitle'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   SpeedDialActionProps,
   MappablePropNames

@@ -3,7 +3,7 @@ import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { ComponentProps } from 'react';
 
 import type { ControlVariant, GroupProps } from '../../hooks';
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiToggleButtonGroupProps = Pick<
@@ -22,7 +22,7 @@ interface BaseToggleButtonProps extends MuiToggleButtonProps {
   value?: any;
 }
 
-export type ToggleButtonProps<D extends GenericData> = GenerateDataWrappedProps<
+export type ToggleButtonProps<D extends GenericData> = PropsWithMappedData<
   D,
   BaseToggleButtonProps,
   keyof Pick<BaseToggleButtonProps, 'disabled' | 'icon' | 'text' | 'value'>

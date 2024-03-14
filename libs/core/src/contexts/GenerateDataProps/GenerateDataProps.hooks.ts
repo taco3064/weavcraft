@@ -2,9 +2,9 @@ import _get from 'lodash/get';
 import { createContext, useContext, type ComponentType } from 'react';
 
 import type {
-  GenerateStoreWrappedProps,
   GenericData,
   MappableProps,
+  PropsWithStore,
   SlotElement,
   StoreProps,
 } from './GenerateDataProps.types';
@@ -16,18 +16,18 @@ export const GenerateDataPropsContext = createContext<GenericData | undefined>(
 
 //* Custom Hooks
 export function usePropsGenerator() {
-  return function <D extends GenericData, P extends MappableProps<D>>({
-    data,
-    propMapping,
-    ...props
-  }: P) {
+  return function <
+    D extends GenericData,
+    P extends MappableProps<D>,
+    R = Omit<P, 'data' | 'propMapping'>
+  >({ data, propMapping, ...props }: P) {
     return Object.entries(propMapping || {}).reduce(
       (result, [key, path]) => ({
         ...result,
         [key]: _get(result, key) || _get(data, path as string),
       }),
       props
-    );
+    ) as R;
   };
 }
 
@@ -39,7 +39,7 @@ export function useGenerateStoreProps<
   D extends GenericData,
   P,
   K extends keyof (P & StoreProps<D>) = 'records'
->(props: GenerateStoreWrappedProps<D, P, K>) {
+>(props: PropsWithStore<D, P, K>) {
   const data = useGenerateData<D>();
   const getProps = usePropsGenerator();
 

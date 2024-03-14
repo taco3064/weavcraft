@@ -1,7 +1,7 @@
 import MuiFab from '@mui/material/Fab';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiFabProps = Pick<
@@ -21,7 +21,7 @@ export type MappablePropNames = keyof Pick<
   'containerId' | 'disabled' | 'href' | 'icon' | 'text'
 >;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   FabProps,
   MappablePropNames
