@@ -4,9 +4,7 @@ import { createContext, useContext, type ComponentType } from 'react';
 import type {
   GenericData,
   MappableProps,
-  PropsWithStore,
   SlotElement,
-  StoreProps,
 } from './GenerateDataProps.types';
 
 //* Context
@@ -15,12 +13,11 @@ export const GenerateDataPropsContext = createContext<GenericData | undefined>(
 );
 
 //* Custom Hooks
-export function usePropsGenerator() {
+export function usePropsGenerator<D extends GenericData>() {
   return function <
-    D extends GenericData,
     P extends MappableProps<D>,
     R = Omit<P, 'data' | 'propMapping'>
-  >({ data, propMapping, ...props }: P) {
+  >({ data, propMapping, ...props }: P & MappableProps<D>) {
     return Object.entries(propMapping || {}).reduce(
       (result, [key, path]) => ({
         ...result,
@@ -33,17 +30,6 @@ export function usePropsGenerator() {
 
 export function useGenerateData<D extends GenericData>() {
   return useContext(GenerateDataPropsContext) as D;
-}
-
-export function useGenerateStoreProps<
-  D extends GenericData,
-  P,
-  K extends keyof (P & StoreProps<D>) = 'records'
->(props: PropsWithStore<D, P, K>) {
-  const data = useGenerateData<D>();
-  const getProps = usePropsGenerator();
-
-  return getProps({ ...props, data });
 }
 
 export function useGenerateSlotProps<D extends GenericData>(

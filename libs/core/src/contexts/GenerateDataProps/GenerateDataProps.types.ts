@@ -45,7 +45,7 @@ export type PropsWithMappedData<
 > = P & MappableProps<D, Pick<P, K>>;
 
 //* Generate Store Props
-export type StoreProps<D extends GenericData = GenericData> = {
+export type StoreProps<D extends GenericData> = {
   records?: D[];
 };
 
@@ -54,12 +54,14 @@ type MappableStoreProps<D extends GenericData, P extends StoreProps<D>> = Pick<
   'propMapping'
 >;
 
-export type PropsWithStore<
+export type PropsWithStore<D extends GenericData, P = {}> = P &
+  StoreProps<Extract<D, GenericData>>;
+
+export type PropsWithMappedStore<
   D extends GenericData,
-  P,
+  P = {},
   K extends keyof (P & StoreProps<D>) = 'records'
-> = P &
-  StoreProps<D> &
+> = PropsWithStore<D, P> &
   MappableStoreProps<
     NonNullable<(P & StoreProps<D>)['records']>[number],
     Pick<P & StoreProps<D>, K | 'records'>

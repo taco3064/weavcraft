@@ -7,7 +7,7 @@ type BaseRadioProps<D extends GenericData> = Omit<
   'checked'
 >;
 
-export interface RadioGroupProps<D extends GenericData>
+export interface RadioGroupProps<D extends GenericData = {}>
   extends GroupProps<'single', BaseRadioProps<D>> {
   title?: string;
 }

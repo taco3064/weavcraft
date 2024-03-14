@@ -29,8 +29,8 @@ export type ToggleButtonProps<D extends GenericData> = PropsWithMappedData<
 >;
 
 export interface ToggleButtonGroupProps<
-  D extends GenericData,
-  T extends ControlVariant
+  D extends GenericData = {},
+  T extends ControlVariant = ControlVariant
 > extends MuiToggleButtonGroupProps,
     GroupProps<T, ToggleButtonProps<D>> {
   variant?: T;

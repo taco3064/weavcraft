@@ -3,14 +3,16 @@ import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
 
 import Selection from '../Selection';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import { useSingleSelection } from '../../hooks';
 import type { RadioGroupProps } from './RadioGroup.types';
 
-export default function RadioGroupProps<D extends GenericData>(
+const withStoreProps = makeStoreProps<RadioGroupProps>();
+
+export default withStoreProps(function RadioGroupProps<D extends GenericData>(
   props: RadioGroupProps<D>
 ) {
-  const { title, optionProps, records } = useGenerateStoreProps(props);
+  const { title, optionProps, records } = props;
   const { selected, onChange } = useSingleSelection(props);
 
   return (
@@ -32,4 +34,4 @@ export default function RadioGroupProps<D extends GenericData>(
       </MuiFormGroup>
     </MuiFormControl>
   );
-}
+});

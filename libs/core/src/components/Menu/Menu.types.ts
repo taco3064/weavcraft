@@ -6,8 +6,8 @@ import type { ListItemProps, ListItemVariant } from '../ListItem';
 export type MenuItemVariant = Extract<ListItemVariant, 'button' | 'link'>;
 
 export type MenuProps<
-  D extends GenericData,
-  V extends MenuItemVariant
+  D extends GenericData = {},
+  V extends MenuItemVariant = MenuItemVariant
 > = PropsWithStore<
   D,
   {

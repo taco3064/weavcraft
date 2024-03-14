@@ -3,16 +3,17 @@ import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
 
 import Selection from '../Selection';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import { useMultipleSelection } from '../../hooks';
 import type { CheckboxGroupProps } from './CheckboxGroup.types';
 
-export default function CheckboxGroup<D extends GenericData>(
+const withStoreProps = makeStoreProps<CheckboxGroupProps>();
+
+export default withStoreProps(function CheckboxGroup<D extends GenericData>(
   props: CheckboxGroupProps<D>
 ) {
-  const { title, ...groupProps } = useGenerateStoreProps(props);
-  const { optionProps, records } = groupProps;
-  const { selected, onChange } = useMultipleSelection<D>(groupProps);
+  const { title, optionProps, records } = props;
+  const { selected, onChange } = useMultipleSelection<D>(props);
 
   return (
     <MuiFormControl component="fieldset" data-testid="CheckboxGroup">
@@ -33,4 +34,4 @@ export default function CheckboxGroup<D extends GenericData>(
       </MuiFormGroup>
     </MuiFormControl>
   );
-}
+});

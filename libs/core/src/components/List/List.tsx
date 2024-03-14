@@ -5,38 +5,39 @@ import MuiTypography from '@mui/material/Typography';
 
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
-import type { ListProps } from './List.types';
+import type { ListProps, MappablePropNames } from './List.types';
 
 import {
+  makeStoreProps,
   useGenerateSlotProps,
-  useGenerateStoreProps,
   type GenericData,
 } from '../../contexts';
 
-export default function List<D extends GenericData, V extends ListItemVariant>(
-  props: ListProps<D, V>
-) {
-  const {
-    //* Subheader
-    title,
-    icon,
-    action,
-    disableSubheaderSticky,
-    disableSubheaderGutters,
+const withStoreProps = makeStoreProps<ListProps, MappablePropNames>();
 
-    //* ListItem
-    itemAction,
-    itemIndicator,
-    itemProps,
-    itemVariant,
-    records = [],
-    onItemActionClick,
-    onItemIndicatorClick,
+export default withStoreProps(function List<
+  D extends GenericData,
+  V extends ListItemVariant
+>({
+  //* Subheader
+  title,
+  icon,
+  action,
+  disableSubheaderSticky,
+  disableSubheaderGutters,
 
-    //* List
-    ...listProps
-  } = useGenerateStoreProps(props);
+  //* ListItem
+  itemAction,
+  itemIndicator,
+  itemProps,
+  itemVariant,
+  records = [],
+  onItemActionClick,
+  onItemIndicatorClick,
 
+  //* List
+  ...props
+}: ListProps<D, V>) {
   const ItemAction = useGenerateSlotProps(itemAction, onItemActionClick);
 
   const ItemIndicator = useGenerateSlotProps(
@@ -46,7 +47,7 @@ export default function List<D extends GenericData, V extends ListItemVariant>(
 
   return (
     <MuiList
-      {...listProps}
+      {...props}
       data-testid="List"
       subheader={
         ![title, icon, action].some(Boolean) ? null : (
@@ -95,4 +96,4 @@ export default function List<D extends GenericData, V extends ListItemVariant>(
       ))}
     </MuiList>
   );
-}
+});

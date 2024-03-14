@@ -9,7 +9,7 @@ type MuiAvatarGroupProps = Pick<
   'spacing' | 'max' | 'total' | 'variant'
 >;
 
-export type AvatarGroupProps<D extends GenericData> = PropsWithStore<
+export type AvatarGroupProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiAvatarGroupProps & {
     itemProps?: Omit<AvatarProps<D>, 'data'>;

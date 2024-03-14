@@ -1,22 +1,27 @@
 import MuiMenuItem from '@mui/material/MenuItem';
 
 import BaseField from '../BaseField';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import { useOptionsRender } from '../../hooks';
 import type { SingleSelectFieldProps } from './SingleSelectField.types';
 
-export default function SingleSelectField<D extends GenericData>(
-  props: SingleSelectFieldProps<D>
-) {
-  const { emptyText, optionIndicator, optionProps, records, ...fieldProps } =
-    useGenerateStoreProps(props);
+const withStoreProps = makeStoreProps<SingleSelectFieldProps>();
 
+export default withStoreProps(function SingleSelectField<
+  D extends GenericData
+>({
+  emptyText,
+  optionIndicator,
+  optionProps,
+  records,
+  ...props
+}: SingleSelectFieldProps<D>) {
   const children = useOptionsRender({ optionIndicator, optionProps, records });
   const displayEmpty = Boolean(emptyText);
 
   return (
     <BaseField
-      {...fieldProps}
+      {...props}
       select
       data-testid="SingleSelectField"
       adornmentPosition="start"
@@ -36,4 +41,4 @@ export default function SingleSelectField<D extends GenericData>(
       {children}
     </BaseField>
   );
-}
+});

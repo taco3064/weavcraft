@@ -17,8 +17,8 @@ type BaseListProps = {
 export type MappablePropNames = keyof BaseListProps;
 
 export type ListProps<
-  D extends GenericData,
-  V extends ListItemVariant
+  D extends GenericData = {},
+  V extends ListItemVariant = ListItemVariant
 > = PropsWithStore<
   D,
   MuiListProps &
@@ -40,6 +40,5 @@ export type ListProps<
 
       onItemActionClick?: (item: D) => void;
       onItemIndicatorClick?: (item: D) => void;
-    },
-  MappablePropNames
+    }
 >;

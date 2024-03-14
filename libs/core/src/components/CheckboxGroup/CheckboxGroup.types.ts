@@ -7,7 +7,7 @@ type BaseCheckboxProps<D extends GenericData> = Omit<
   'checked'
 >;
 
-export interface CheckboxGroupProps<D extends GenericData>
+export interface CheckboxGroupProps<D extends GenericData = {}>
   extends GroupProps<'multiple', BaseCheckboxProps<D>> {
   title?: string;
 }

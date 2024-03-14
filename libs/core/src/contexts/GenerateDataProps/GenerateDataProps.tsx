@@ -9,6 +9,9 @@ import {
 import type {
   GenericData,
   PropsWithMappedData,
+  PropsWithMappedStore,
+  PropsWithStore,
+  StoreProps,
 } from './GenerateDataProps.types';
 
 //* HOC
@@ -31,3 +34,34 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
       </GenerateDataPropsContext.Provider>
     );
   };
+
+export function makeStoreProps<
+  R extends PropsWithStore<{}>,
+  K extends keyof R = 'records'
+>() {
+  return (Component: ComponentType<R>) =>
+    function GenerateStoreWrapper<
+      D extends GenericData,
+      P = PropsWithStore<D, Omit<R, 'records'>>
+    >(props: PropsWithMappedStore<D, P, Extract<K, keyof P>>) {
+      const getProps = usePropsGenerator();
+      const data = useGenerateData();
+
+      return <Component {...getProps({ ...props, data })} />;
+    };
+}
+
+// export const withGenerateStoreProps = <
+//   P extends PropsWithStore,
+//   K extends keyof P = 'records'
+// >(
+//   Component: ComponentType<PropsWithStore<NonNullable<P['records']>[number], P>>
+// ): FC<PropsWithMappedStore<NonNullable<P['records']>[number], P, K>> =>
+//   function GenerateStoreWrapper(
+//     props: PropsWithMappedStore<NonNullable<P['records']>[number], P, K>
+//   ) {
+//     const getProps = usePropsGenerator();
+//     const data = useGenerateData<NonNullable<P['records']>[number]>();
+
+//     return <Component {...getProps({ ...props, data })} />;
+//   };

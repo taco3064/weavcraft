@@ -3,16 +3,22 @@ import MuiMenuItem from '@mui/material/MenuItem';
 import { useId, useState } from 'react';
 
 import ListItem from '../ListItem';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import type { MenuItemVariant, MenuProps } from './Menu.types';
 
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+const withStoreProps = makeStoreProps<MenuProps>();
 
-export default function Menu<D extends GenericData, V extends MenuItemVariant>(
-  props: MenuProps<D, V>
-) {
-  const { toggle, itemProps, itemVariant, records, onItemClick, ...menuProps } =
-    useGenerateStoreProps(props);
-
+export default withStoreProps(function Menu<
+  D extends GenericData,
+  V extends MenuItemVariant
+>({
+  toggle,
+  itemProps,
+  itemVariant,
+  records,
+  onItemClick,
+  ...props
+}: MenuProps<D, V>) {
   const { type: Toggle, props: toggleProps } = toggle || {};
   const [open, setOpen] = useState(false);
   const id = useId();
@@ -32,7 +38,7 @@ export default function Menu<D extends GenericData, V extends MenuItemVariant>(
       )}
 
       <MuiMenu
-        {...menuProps}
+        {...props}
         anchorEl={() => document.getElementById(id)!}
         open={open}
         onClose={() => setOpen(false)}
@@ -59,4 +65,4 @@ export default function Menu<D extends GenericData, V extends MenuItemVariant>(
       </MuiMenu>
     </>
   );
-}
+});

@@ -92,13 +92,13 @@ describe('@weavcraft/core/components/List', () => {
       <List
         records={records}
         itemAction={<button>Click me</button>}
+        onItemActionClick={onItemActionClick}
         itemProps={{
           propMapping: {
             primary: 'title',
             secondary: 'content',
           },
         }}
-        onItemActionClick={onItemActionClick}
       />
     );
 

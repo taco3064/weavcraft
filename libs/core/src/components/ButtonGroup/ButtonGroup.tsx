@@ -1,23 +1,21 @@
 import MuiButtonGroup from '@mui/material/ButtonGroup';
 
 import Button from '../Button';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
-import type { ButtonGroupProps } from './ButtonGroup.types';
+import { makeStoreProps, type GenericData } from '../../contexts';
+import type { ButtonGroupProps, MappablePropNames } from './ButtonGroup.types';
 
-export default function ButtonGroup<D extends GenericData>(
-  props: ButtonGroupProps<D>
-) {
-  const {
-    borderRadiusVariant,
-    itemProps,
-    records,
-    onItemClick,
-    ...groupProps
-  } = useGenerateStoreProps(props);
+const withStoreProps = makeStoreProps<ButtonGroupProps, MappablePropNames>();
 
+export default withStoreProps(function ButtonGroup<D extends GenericData>({
+  borderRadiusVariant,
+  itemProps,
+  records,
+  onItemClick,
+  ...props
+}: ButtonGroupProps<D>) {
   return (
     <MuiButtonGroup
-      {...groupProps}
+      {...props}
       data-testid="ButtonGroup"
       style={{
         ...(borderRadiusVariant === 'none' && {
@@ -43,4 +41,4 @@ export default function ButtonGroup<D extends GenericData>(
       ))}
     </MuiButtonGroup>
   );
-}
+});

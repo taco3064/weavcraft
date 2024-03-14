@@ -3,18 +3,18 @@ import _pick from 'lodash/pick';
 import { Children, cloneElement, isValidElement, useMemo } from 'react';
 
 import GridItem, { type GridItemBrakpoints, GridItemProps } from '../GridItem';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import type { GridProps } from './Grid.types';
 
-export default function Grid<D extends GenericData>(props: GridProps<D>) {
-  const {
-    children,
-    columns = 12,
-    itemProps = {},
-    records = [],
-    ...gridProps
-  } = useGenerateStoreProps(props);
+const withStoreProps = makeStoreProps<GridProps>();
 
+export default withStoreProps(function Grid<D extends GenericData>({
+  children,
+  columns = 12,
+  itemProps = {},
+  records = [],
+  ...props
+}: GridProps<D>) {
   const stringifyProps = JSON.stringify(itemProps);
 
   const gridItemProps = useMemo<GridItemProps<D>>(() => {
@@ -36,7 +36,7 @@ export default function Grid<D extends GenericData>(props: GridProps<D>) {
   }, [columns, stringifyProps]);
 
   return (
-    <MuiGrid {...gridProps} data-testid="Grid" columns={columns}>
+    <MuiGrid {...props} data-testid="Grid" columns={columns}>
       {records?.map((item, i) => (
         <GridItem {...gridItemProps} key={i} data={item}>
           {Children.map(children, (child, ii) =>
@@ -46,4 +46,4 @@ export default function Grid<D extends GenericData>(props: GridProps<D>) {
       ))}
     </MuiGrid>
   );
-}
+});

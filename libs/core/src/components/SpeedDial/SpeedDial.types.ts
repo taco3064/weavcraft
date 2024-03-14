@@ -12,7 +12,7 @@ import type {
 //* Component Props
 type MuiSpeedDialProps = Pick<ComponentProps<typeof MuiSpeedDial>, 'direction'>;
 
-export type SpeedDialProps<D extends GenericData> = PropsWithStore<
+export type SpeedDialProps<D extends GenericData = {}> = PropsWithStore<
   D,
   {
     ariaLabel?: string;

@@ -9,7 +9,7 @@ type MuiGridProps = Pick<
   'children' | 'columns' | 'justifyContent' | 'spacing'
 >;
 
-export type GridProps<D extends GenericData> = PropsWithStore<
+export type GridProps<D extends GenericData = {}> = PropsWithStore<
   D,
   Pick<MuiGridProps, 'children' | 'justifyContent' | 'spacing'> & {
     columns?: Extract<MuiGridProps['columns'], number>;

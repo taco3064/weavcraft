@@ -11,12 +11,11 @@ type MuiButtonGroupProps = Pick<
 
 export type MappablePropNames = keyof Pick<MuiButtonGroupProps, 'disabled'>;
 
-export type ButtonGroupProps<D extends GenericData> = PropsWithStore<
+export type ButtonGroupProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiButtonGroupProps & {
     borderRadiusVariant?: 'top' | 'bottom' | 'none';
     itemProps?: Pick<ButtonProps<D>, 'iconPosition' | 'propMapping'>;
     onItemClick?: (item: D) => void;
-  },
-  MappablePropNames
+  }
 >;

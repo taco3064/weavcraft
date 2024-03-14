@@ -5,8 +5,8 @@ import Icon from '../Icon';
 import type { ControlVariant } from '../../hooks';
 
 import {
+  makeStoreProps,
   usePropsGenerator,
-  useGenerateStoreProps,
   type GenericData,
 } from '../../contexts';
 
@@ -15,27 +15,27 @@ import type {
   ToggleButtonGroupProps,
 } from './ToggleButtonGroup.types';
 
-export default function ToggleButtonGroup<
+const withStoreProps = makeStoreProps<ToggleButtonGroupProps>();
+
+export default withStoreProps(function ToggleButtonGroup<
   D extends GenericData,
   T extends ControlVariant
->(props: ToggleButtonGroupProps<D, T>) {
-  const getProps = usePropsGenerator();
-
-  const {
-    variant = 'single',
-    name,
-    optionProps,
-    records,
-    value,
-    onChange,
-    ...groupProps
-  } = useGenerateStoreProps(props);
+>({
+  variant,
+  name,
+  optionProps,
+  records,
+  value,
+  onChange,
+  ...props
+}: ToggleButtonGroupProps<D, T>) {
+  const getProps = usePropsGenerator<D>();
 
   return (
     <MuiToggleButtonGroup
-      {...groupProps}
+      {...props}
       data-testid="ToggleButtonGroup"
-      exclusive={variant === 'single'}
+      exclusive={variant !== 'multiple'}
       defaultValue={value as never}
       onChange={(_e, newValue) => onChange?.(newValue, name)}
     >
@@ -45,7 +45,7 @@ export default function ToggleButtonGroup<
           text,
           value = i,
           ...buttonProps
-        } = getProps<D, ToggleButtonProps<D>>({
+        } = getProps<ToggleButtonProps<D>>({
           ...optionProps,
           data: option,
         });
@@ -63,4 +63,4 @@ export default function ToggleButtonGroup<
       })}
     </MuiToggleButtonGroup>
   );
-}
+});

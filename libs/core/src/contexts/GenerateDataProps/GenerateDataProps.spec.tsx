@@ -2,18 +2,9 @@ import { fireEvent, render, renderHook } from '@testing-library/react';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
+import { useGenerateSlotProps } from './GenerateDataProps.hooks';
 import { withGenerateDataProps } from './GenerateDataProps';
-
-import {
-  useGenerateSlotProps,
-  useGenerateStoreProps,
-} from './GenerateDataProps.hooks';
-
-import type {
-  GenericData,
-  PropsWithStore,
-  SlotElement,
-} from './GenerateDataProps.types';
+import type { GenericData, SlotElement } from './GenerateDataProps.types';
 
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
   describe('withGenerateDataProps', () => {
@@ -63,36 +54,6 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
           {props.children}
         </div>
       )
-    );
-  });
-
-  describe('useGenerateStoreProps', () => {
-    it('should return correct store props', () => {
-      const data = {
-        key: 'dummy',
-        list: [{ name: 'Tom' }, { name: 'Johnny' }],
-      };
-
-      function Store(
-        props: PropsWithStore<typeof data, { title?: string }, 'title'>
-      ) {
-        const { records, title } = useGenerateStoreProps(props);
-
-        expect(records).toEqual(data.list);
-        expect(title).toBe(data.key);
-
-        return null;
-      }
-
-      render(
-        <WrappedDummy data={data}>
-          <Store propMapping={{ title: 'key', records: 'list' }} />
-        </WrappedDummy>
-      );
-    });
-
-    const WrappedDummy = withGenerateDataProps(
-      (props: { children?: ReactNode }) => <div>{props.children}</div>
     );
   });
 

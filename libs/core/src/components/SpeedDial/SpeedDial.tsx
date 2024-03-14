@@ -5,7 +5,7 @@ import type { Property } from 'csstype';
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
 import SpeedDialAction from '../SpeedDialAction';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 
 import type { Origin, PositionSplit, SpeedDialProps } from './SpeedDial.types';
 
@@ -30,20 +30,18 @@ const ORIGIN: Origin = {
 };
 
 //* Components
-export default function SpeedDial<D extends GenericData>(
-  props: SpeedDialProps<D>
-) {
-  const {
-    ariaLabel = 'SpeedDial',
-    containerId,
-    icon,
-    itemProps,
-    openIcon,
-    position = 'bottom-left',
-    records,
-    onItemClick,
-  } = useGenerateStoreProps(props);
+const withStoreProps = makeStoreProps<SpeedDialProps>();
 
+export default withStoreProps(function SpeedDial<D extends GenericData>({
+  ariaLabel = 'SpeedDial',
+  containerId,
+  icon,
+  itemProps,
+  openIcon,
+  position = 'bottom-left',
+  records,
+  onItemClick,
+}: SpeedDialProps<D>) {
   const [cssPosition, setCssPosition] = useState<Property.Position>('fixed');
   const [vertical, horizontal] = position.split('-') as PositionSplit;
   const { direction, tooltipPlacement } = ORIGIN[`${vertical}-${horizontal}`];
@@ -81,4 +79,4 @@ export default function SpeedDial<D extends GenericData>(
       </MuiSpeedDial>
     </PortalContainer>
   );
-}
+});

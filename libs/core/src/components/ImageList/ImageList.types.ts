@@ -9,7 +9,7 @@ type MuiImageListProps = Pick<
   'cols' | 'gap' | 'rowHeight' | 'variant'
 >;
 
-export type ImageListProps<D extends GenericData> = PropsWithStore<
+export type ImageListProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiImageListProps & {
     itemAction?: SlotElement;
