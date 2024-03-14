@@ -9,7 +9,7 @@ import type { ListProps, MappablePropNames } from './List.types';
 
 import {
   makeStoreProps,
-  useGenerateSlotProps,
+  useComponentSlot,
   type GenericData,
 } from '../../contexts';
 
@@ -38,12 +38,9 @@ export default withStoreProps(function List<
   //* List
   ...props
 }: ListProps<D, V>) {
-  const ItemAction = useGenerateSlotProps(itemAction, onItemActionClick);
+  const ItemAction = useComponentSlot(itemAction, onItemActionClick);
 
-  const ItemIndicator = useGenerateSlotProps(
-    itemIndicator,
-    onItemIndicatorClick
-  );
+  const ItemIndicator = useComponentSlot(itemIndicator, onItemIndicatorClick);
 
   return (
     <MuiList

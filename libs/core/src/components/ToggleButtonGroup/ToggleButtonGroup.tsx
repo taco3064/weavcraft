@@ -6,7 +6,7 @@ import type { ControlVariant } from '../../hooks';
 
 import {
   makeStoreProps,
-  usePropsGenerator,
+  usePropsGetter,
   type GenericData,
 } from '../../contexts';
 
@@ -29,7 +29,7 @@ export default withStoreProps(function ToggleButtonGroup<
   onChange,
   ...props
 }: ToggleButtonGroupProps<D, T>) {
-  const getProps = usePropsGenerator<D>();
+  const getProps = usePropsGetter<D>();
 
   return (
     <MuiToggleButtonGroup

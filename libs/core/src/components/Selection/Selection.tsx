@@ -2,7 +2,7 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
 
-import { withGenerateDataProps, useGenerateData } from '../../contexts';
+import { withGenerateDataProps, useComponentData } from '../../contexts';
 
 import type {
   MappablePropNames,
@@ -24,7 +24,7 @@ export default withGenerateDataProps<
   ...props
 }) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const data = useGenerateData();
+  const data = useComponentData();
 
   const control = (
     <Control

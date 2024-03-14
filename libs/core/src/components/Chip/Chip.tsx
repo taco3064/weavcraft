@@ -1,11 +1,11 @@
 import MuiChip from '@mui/material/Chip';
 
-import { useGenerateData, withGenerateDataProps } from '../../contexts';
+import { useComponentData, withGenerateDataProps } from '../../contexts';
 import type { ChipProps, MappablePropNames } from './Chip.types';
 
 export default withGenerateDataProps<ChipProps, MappablePropNames>(
   function Chip({ indicator, onClick, onDelete, ...props }) {
-    const data = useGenerateData();
+    const data = useComponentData();
 
     return (
       <MuiChip

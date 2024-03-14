@@ -5,7 +5,7 @@ import type { ImageListProps } from './ImageList.types';
 
 import {
   makeStoreProps,
-  useGenerateSlotProps,
+  useComponentSlot,
   type GenericData,
 } from '../../contexts';
 
@@ -18,7 +18,7 @@ export default withStoreProps(function ImageList<D extends GenericData>({
   onItemActionClick,
   ...props
 }: ImageListProps<D>) {
-  const Action = useGenerateSlotProps(itemAction, onItemActionClick);
+  const Action = useComponentSlot(itemAction, onItemActionClick);
 
   return (
     <MuiImageList {...props} data-testid="ImageList">

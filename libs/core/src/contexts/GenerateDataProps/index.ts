@@ -1,9 +1,9 @@
 export { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
 
 export {
-  useGenerateData,
-  usePropsGenerator,
-  useGenerateSlotProps,
+  useComponentData,
+  usePropsGetter,
+  useComponentSlot,
 } from './GenerateDataProps.hooks';
 
 export type {

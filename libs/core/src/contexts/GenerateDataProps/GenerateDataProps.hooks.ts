@@ -32,13 +32,13 @@ const VALUE_TYPE_MAP: ValueTypeMapping = {
 };
 
 //* Context
+export const ComponentDataContext = createContext<GenericData | undefined>(
+  undefined
+);
+
 export const DataStructureContext = createContext<
   DataStructureContextValue | undefined
 >(undefined);
-
-export const GenerateDataPropsContext = createContext<GenericData | undefined>(
-  undefined
-);
 
 //* Zustand
 const useStructure = create<StructureState>(() => {
@@ -85,8 +85,32 @@ export function useSymbolId() {
   return useMemo(() => Symbol(id), [id]);
 }
 
-export const useGenerateData = <D extends GenericData>() =>
-  useContext(GenerateDataPropsContext) as D;
+export const useComponentData = <D extends GenericData>() =>
+  useContext(ComponentDataContext) as D;
+
+export function useComponentSlot<D extends GenericData>(
+  action?: SlotElement,
+  onItemToggle?: (item: D) => void
+) {
+  const { type: Slot, props } = action || {};
+  const getProps = usePropsGetter();
+
+  return {
+    Slot: Slot as ComponentType<typeof props> | undefined,
+
+    getSlotProps: (data: D) =>
+      ({
+        ...getProps({ ...props, data }),
+        ...(onItemToggle && {
+          onClick: (...args: any[]) => {
+            args.forEach((arg) => arg?.stopPropagation?.());
+            props?.onClick?.(...args);
+            onItemToggle(data);
+          },
+        }),
+      } as typeof props),
+  };
+}
 
 export function useDataStructure() {
   const { uid, paths } = useContext(DataStructureContext) || {};
@@ -98,7 +122,7 @@ export function useDataStructure() {
   };
 }
 
-export function usePropsGenerator<D extends GenericData>() {
+export function usePropsGetter<D extends GenericData>() {
   const { superior, paths } = useDataStructure();
   const { set, destroy } = useStructure();
   const destroyRef = useRef(() => destroy(superior, paths));
@@ -123,29 +147,5 @@ export function usePropsGenerator<D extends GenericData>() {
         [key]: _get(result, key) || _get(data, path as string),
       };
     }, props) as R;
-  };
-}
-
-export function useGenerateSlotProps<D extends GenericData>(
-  action?: SlotElement,
-  onItemToggle?: (item: D) => void
-) {
-  const { type: Slot, props } = action || {};
-  const getProps = usePropsGenerator();
-
-  return {
-    Slot: Slot as ComponentType<typeof props> | undefined,
-
-    getSlotProps: (data: D) =>
-      ({
-        ...getProps({ ...props, data }),
-        ...(onItemToggle && {
-          onClick: (...args: any[]) => {
-            args.forEach((arg) => arg?.stopPropagation?.());
-            props?.onClick?.(...args);
-            onItemToggle(data);
-          },
-        }),
-      } as typeof props),
   };
 }

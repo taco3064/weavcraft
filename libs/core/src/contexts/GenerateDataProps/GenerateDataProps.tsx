@@ -2,10 +2,10 @@ import { useMemo, type ComponentType } from 'react';
 
 import {
   DataStructureContext,
-  GenerateDataPropsContext,
+  ComponentDataContext,
   useDataStructure,
-  useGenerateData,
-  usePropsGenerator,
+  useComponentData,
+  usePropsGetter,
   useSymbolId,
 } from './GenerateDataProps.hooks';
 
@@ -23,17 +23,17 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
   function GenerateDataWrapper<D extends GenericData>(
     props: PropsWithMappedData<D, P, K>
   ) {
-    const getProps = usePropsGenerator();
-    const context = useGenerateData<D>();
+    const getProps = usePropsGetter();
+    const context = useComponentData<D>();
     const data = props.data || context;
     const consumer = <Component {...getProps({ ...props, data })} />;
 
     return !props.data ? (
       consumer
     ) : (
-      <GenerateDataPropsContext.Provider value={data}>
+      <ComponentDataContext.Provider value={data}>
         {consumer}
-      </GenerateDataPropsContext.Provider>
+      </ComponentDataContext.Provider>
     );
   };
 
@@ -49,8 +49,8 @@ export function makeStoreProps<
       const { records, propMapping } = props;
       const { superior, paths } = useDataStructure();
 
-      const getProps = usePropsGenerator();
-      const data = useGenerateData();
+      const getProps = usePropsGetter();
+      const data = useComponentData();
       const uid = useSymbolId();
 
       const value = useMemo(
