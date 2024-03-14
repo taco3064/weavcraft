@@ -1,9 +1,12 @@
-import type { ComponentType } from 'react';
+import { useMemo, type ComponentType } from 'react';
 
 import {
+  DataStructureContext,
   GenerateDataPropsContext,
+  useDataStructure,
   useGenerateData,
   usePropsGenerator,
+  useSymbolId,
 } from './GenerateDataProps.hooks';
 
 import type {
@@ -21,8 +24,8 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGenerator();
-    const generateData = useGenerateData<D>();
-    const data = props.data || generateData;
+    const context = useGenerateData<D>();
+    const data = props.data || context;
     const consumer = <Component {...getProps({ ...props, data })} />;
 
     return !props.data ? (
@@ -43,9 +46,28 @@ export function makeStoreProps<
       D extends GenericData,
       P = PropsWithStore<D, Omit<R, 'records'>>
     >(props: PropsWithMappedStore<D, P, Extract<K, keyof P>>) {
+      const { records, propMapping } = props;
+      const { superior, paths } = useDataStructure();
+
       const getProps = usePropsGenerator();
       const data = useGenerateData();
+      const uid = useSymbolId();
 
-      return <Component {...getProps({ ...props, data })} />;
+      const value = useMemo(
+        () => ({
+          uid: !records && propMapping?.records ? superior : uid,
+          paths:
+            records || !propMapping?.records
+              ? paths
+              : [...paths, propMapping.records],
+        }),
+        [superior, uid, paths, records, propMapping?.records]
+      );
+
+      return (
+        <DataStructureContext.Provider value={value}>
+          <Component {...getProps({ ...props, data })} />
+        </DataStructureContext.Provider>
+      );
     };
 }
