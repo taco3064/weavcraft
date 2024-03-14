@@ -19,7 +19,6 @@ import type {
   GenericData,
   MappableProps,
   SlotElement,
-  StructureState,
   ValueTypeMapping,
 } from './GenerateDataProps.types';
 
@@ -41,34 +40,38 @@ export const DataStructureContext = createContext<
 >(undefined);
 
 //* Zustand
-const useStructure = create<StructureState>(() => {
+const useStructure = create(() => {
   let structure: DataStructure = {};
 
-  function getDataType(value: any): DataValue {
+  function getDataType(value: any): DataValue | undefined {
     if (value instanceof Date) {
       return 'date';
     }
 
     if (Array.isArray(value) && value.length) {
-      const type = getDataType(value[0]).replace('[]', '');
+      const type = getDataType(value[0])?.replace('[]', '');
 
-      return value.every((v) => getDataType(v) === type)
+      return type && value.every((v) => getDataType(v) === type)
         ? `${type as Exclude<DataValue, `${string}[]`>}[]`
-        : 'undefined[]';
+        : undefined;
     }
 
     const { [typeof value as keyof ValueTypeMapping]: type } = VALUE_TYPE_MAP;
 
-    return type || 'undefined';
+    return type || undefined;
   }
 
   return {
-    get: () => structure,
+    get: (): DataStructure => structure,
 
-    set: (uid, paths, value) =>
-      _set(structure, [uid, ...paths], getDataType(value)),
+    set: (uid: symbol, paths: string[], value?: any) => {
+      const type = getDataType(value);
 
-    destroy: (uid, paths) => {
+      if (type) {
+        _set(structure, [uid, ...paths], type);
+      }
+    },
+    destroy: (uid: symbol, paths?: string[]) => {
       if (paths?.length) {
         structure = _omit(structure, [uid, ...paths]) as DataStructure;
       } else {
@@ -135,17 +138,16 @@ export function usePropsGetter<D extends GenericData>() {
   >({ data, propMapping, ...props }: P & MappableProps<D>) {
     return Object.entries(propMapping || {}).reduce((result, [key, path]) => {
       const propValue = _get(props, key);
+      const dataValue = _get(data, path as string);
 
-      if (propValue === undefined) {
-        const dataValue = _get(data, path as string);
-
+      //* - The prop value must be undefined
+      if (propValue === undefined && dataValue !== undefined) {
         set(superior, [...paths, key], dataValue);
+
+        return { ...result, [key]: dataValue };
       }
 
-      return {
-        ...result,
-        [key]: _get(result, key) || _get(data, path as string),
-      };
+      return { ...result, [key]: propValue };
     }, props) as R;
   };
 }

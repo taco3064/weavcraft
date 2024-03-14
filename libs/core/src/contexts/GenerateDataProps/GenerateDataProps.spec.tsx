@@ -6,8 +6,10 @@ import { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
 
 import {
   ComponentDataContext,
+  DataStructureContext,
   useComponentData,
   useComponentSlot,
+  useDataStructure,
   usePropsGetter,
   useSymbolId,
 } from './GenerateDataProps.hooks';
@@ -211,6 +213,27 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       const { Slot, getSlotProps } = result.current;
 
       return render(Slot ? <Slot {...getSlotProps(data)} /> : <>none</>);
+    }
+  });
+
+  describe('useDataStructure', () => {
+    it('should return correct values', () => {
+      const { result } = renderHook(() => useDataStructure(), {
+        wrapper: TestProvider,
+      });
+
+      expect(result.current).toEqual({ superior: uid, paths });
+    });
+
+    const uid = Symbol('uid');
+    const paths = ['foo', 'bar'];
+
+    function TestProvider({ children }: { children: ReactNode }) {
+      return (
+        <DataStructureContext.Provider value={{ uid, paths }}>
+          {children}
+        </DataStructureContext.Provider>
+      );
     }
   });
 

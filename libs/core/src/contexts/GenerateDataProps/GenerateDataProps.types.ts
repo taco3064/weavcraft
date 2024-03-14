@@ -10,12 +10,12 @@ type TypeMapping = {
   date: Date;
   number: number;
   string: string;
-  undefined: undefined;
 };
 
 export interface GenericData {
   [key: string]:
     | null
+    | undefined
     | TypeMapping[keyof TypeMapping]
     | GenericData
     | GenericData[];
@@ -32,7 +32,7 @@ export type PropertyPath<
     : `${K}`
   : never;
 
-//* Generate Data Props
+//* Component Data
 export interface MappableProps<D extends GenericData, P = {}> {
   data?: D;
   propMapping?: Partial<
@@ -49,7 +49,16 @@ export type PropsWithMappedData<
   K extends keyof P = keyof P
 > = P & MappableProps<D, Pick<P, K>>;
 
-//* Generate Store Props
+//* Component Slot
+export type SlotProps = Record<string, any> & {
+  onClick?: never | ((...args: any[]) => void);
+};
+
+export type SlotElement<
+  P = SlotProps & Omit<MappableProps<GenericData, SlotProps>, 'data'>
+> = ReactElement<P, JSXElementConstructor<P>>;
+
+//* Store Records
 export type StoreProps<D extends GenericData> = {
   records?: D[];
 };
@@ -67,25 +76,13 @@ export type PropsWithMappedStore<
   K extends keyof (P & StoreProps<D>) = 'records'
 > = PropsWithStore<D, P> & MappableStoreProps<D, Pick<P & StoreProps<D>, K>>;
 
-//* Generate Slot Props
-export type SlotProps = Record<string, any> & {
-  onClick?: never | ((...args: any[]) => void);
-};
-
-export type SlotElement<
-  P = SlotProps & Omit<MappableProps<GenericData, SlotProps>, 'data'>
-> = ReactElement<P, JSXElementConstructor<P>>;
-
 //* Custom Hooks
 type ValueType<
   T extends keyof TypeMapping,
   A extends 'arrayOf' | undefined = undefined
 > = `${T}${A extends 'arrayOf' ? '[]' : ''}`;
 
-export type ValueTypeMapping = {
-  [K in keyof TypeMapping]?: ValueType<K>;
-};
-
+export type ValueTypeMapping = { [K in keyof TypeMapping]?: ValueType<K> };
 export type DataValue = ValueType<keyof TypeMapping, 'arrayOf' | undefined>;
 
 export type DataStructureContextValue = {
@@ -96,9 +93,3 @@ export type DataStructureContextValue = {
 export interface DataStructure {
   [k: symbol]: Record<string, DataValue | DataStructure>;
 }
-
-export type StructureState = {
-  get: () => DataStructure;
-  set: (uid: symbol, paths: string[], value?: any) => void;
-  destroy: (uid: symbol, paths?: string[]) => void;
-};

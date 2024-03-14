@@ -52,21 +52,34 @@ export function makeStoreProps<
       const getProps = usePropsGetter();
       const data = useComponentData();
       const uid = useSymbolId();
+      const consumer = <Component {...getProps({ ...props, data })} />;
 
-      const value = useMemo(
-        () => ({
-          uid: !records && propMapping?.records ? superior : uid,
-          paths:
-            records || !propMapping?.records
-              ? paths
-              : [...paths, propMapping.records],
-        }),
-        [superior, uid, paths, records, propMapping?.records]
-      );
+      const value = useMemo(() => {
+        if (records) {
+          /**
+           * ? If there are records: (Root Case)
+           * * - Generate a new uid
+           * * - Leave paths empty
+           */
+          return { uid, paths: [] };
+        } else if (propMapping?.records) {
+          /**
+           * ? Else If the propMapping is defined: (Leaf Case)
+           * * - Use the parent uid
+           * * - Append 'propMapping.records' to paths
+           */
+          return { uid: superior, paths: [...paths, propMapping.records] };
+        }
 
-      return (
+        //* - Bypass
+        return null;
+      }, [superior, uid, paths, records, propMapping?.records]);
+
+      return !value ? (
+        consumer
+      ) : (
         <DataStructureContext.Provider value={value}>
-          <Component {...getProps({ ...props, data })} />
+          {consumer}
         </DataStructureContext.Provider>
       );
     };
