@@ -2,9 +2,13 @@ import { fireEvent, render, renderHook } from '@testing-library/react';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
+import { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
 import { useGenerateSlotProps } from './GenerateDataProps.hooks';
-import { withGenerateDataProps } from './GenerateDataProps';
-import type { GenericData, SlotElement } from './GenerateDataProps.types';
+import type {
+  GenericData,
+  PropsWithMappedStore,
+  SlotElement,
+} from './GenerateDataProps.types';
 
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
   describe('withGenerateDataProps', () => {
@@ -55,6 +59,68 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
         </div>
       )
     );
+  });
+
+  describe('makeStoreProps', () => {
+    it('should pass correct props to the wrapped component', () => {
+      const { getByTestId } = render(<WrappedDummies records={records} />);
+      const spans = getByTestId('dummies').querySelectorAll('span');
+
+      expect(spans).toHaveLength(records.length);
+
+      spans.forEach((span, i) => {
+        expect(span).toHaveTextContent(records[i].name);
+      });
+    });
+
+    it('should pass correct records to the wrapped component with propMapping', () => {
+      const { getByTestId } = render(
+        <WrappedDummy data={{ override: records }}>
+          <WrappedDummies propMapping={{ records: 'override' }} />
+        </WrappedDummy>
+      );
+
+      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
+        records.length
+      );
+    });
+
+    it('should pass the original props', () => {
+      const override = [...records, { name: 'John Doe' }];
+
+      const { getByTestId } = render(
+        <WrappedDummy data={{ override }}>
+          <WrappedDummies
+            records={records}
+            propMapping={{ records: 'override' }}
+          />
+        </WrappedDummy>
+      );
+
+      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
+        records.length
+      );
+    });
+
+    const WrappedDummy = withGenerateDataProps(
+      (props: { children?: ReactNode }) => (
+        <div data-testid="dummy">{props.children}</div>
+      )
+    );
+
+    const WrappedDummies = makeStoreProps<
+      PropsWithMappedStore<{ name: string }>
+    >()(function Dummy({ records }) {
+      return (
+        <div data-testid="dummies">
+          {records?.map(({ name }, i) => (
+            <span key={i}>{name}</span>
+          ))}
+        </div>
+      );
+    });
+
+    const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
   });
 
   describe('useGenerateSlotProps', () => {

@@ -49,10 +49,9 @@ export type StoreProps<D extends GenericData> = {
   records?: D[];
 };
 
-type MappableStoreProps<D extends GenericData, P extends StoreProps<D>> = Pick<
-  MappableProps<D, P>,
-  'propMapping'
->;
+type MappableStoreProps<D extends GenericData, P extends StoreProps<D>> = {
+  propMapping?: Partial<Record<NonCallbackProps<P>, string>>;
+};
 
 export type PropsWithStore<D extends GenericData, P = {}> = P &
   StoreProps<Extract<D, GenericData>>;
