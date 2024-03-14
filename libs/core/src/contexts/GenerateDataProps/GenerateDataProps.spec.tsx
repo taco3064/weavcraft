@@ -222,7 +222,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
         wrapper: TestProvider,
       });
 
-      expect(result.current).toEqual({ superior: uid, paths });
+      expect(result.current).toEqual({ root: uid, paths });
     });
 
     const uid = Symbol('uid');

@@ -121,15 +121,15 @@ export function useDataStructure() {
   const newId = useSymbolId();
 
   return {
-    superior: uid || newId,
+    root: uid || newId,
     paths: useMemo(() => paths || [], [paths]),
   };
 }
 
 export function usePropsGetter<D extends GenericData>() {
-  const { superior, paths } = useDataStructure();
+  const { root, paths } = useDataStructure();
   const { set, destroy } = useStructure();
-  const destroyRef = useRef(() => destroy(superior, paths));
+  const destroyRef = useRef(() => destroy(root, paths));
 
   useEffect(() => destroyRef.current, [destroyRef]);
 
@@ -143,7 +143,7 @@ export function usePropsGetter<D extends GenericData>() {
 
       //* - The prop value must be undefined
       if (propValue === undefined && dataValue !== undefined) {
-        set(superior, [...paths, key], dataValue);
+        set(root, [...paths, key], dataValue);
 
         return { ...result, [key]: dataValue };
       }

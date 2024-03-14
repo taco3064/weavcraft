@@ -47,7 +47,7 @@ export function makeStoreProps<
       P = PropsWithStore<D, Omit<R, 'records'>>
     >(props: PropsWithMappedStore<D, P, Extract<K, keyof P>>) {
       const { records, propMapping } = props;
-      const { superior, paths } = useDataStructure();
+      const { root, paths } = useDataStructure();
 
       const getProps = usePropsGetter();
       const data = useComponentData();
@@ -65,15 +65,15 @@ export function makeStoreProps<
         } else if (propMapping?.records) {
           /**
            * ? Else If the propMapping is defined: (Leaf Case)
-           * * - Use the parent uid
+           * * - Use the root uid
            * * - Append 'propMapping.records' to paths
            */
-          return { uid: superior, paths: [...paths, propMapping.records] };
+          return { uid: root, paths: [...paths, propMapping.records] };
         }
 
         //* - Bypass
         return null;
-      }, [superior, uid, paths, records, propMapping?.records]);
+      }, [root, uid, paths, records, propMapping?.records]);
 
       return !value ? (
         consumer
