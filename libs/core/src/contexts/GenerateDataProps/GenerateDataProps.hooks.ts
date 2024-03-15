@@ -2,13 +2,14 @@ import _get from 'lodash/get';
 import _omit from 'lodash/omit';
 import _set from 'lodash/set';
 import { create } from 'zustand';
-import { useEffect, useRef } from 'react';
 
 import {
   createContext,
   useContext,
+  useEffect,
   useId,
   useMemo,
+  useRef,
   type ComponentType,
 } from 'react';
 
@@ -29,15 +30,6 @@ const VALUE_TYPE_MAP: ValueTypeMapping = {
   number: 'number',
   string: 'string',
 };
-
-//* - Context
-export const ComponentDataContext = createContext<GenericData | undefined>(
-  undefined
-);
-
-export const DataStructureContext = createContext<
-  DataStructureContextValue | undefined
->(undefined);
 
 //* - Zustand
 const useStructure = create(() => {
@@ -81,8 +73,27 @@ const useStructure = create(() => {
   };
 });
 
+//* - Context
+export const ComponentDataContext = createContext<GenericData | undefined>(
+  undefined
+);
+
+export const DataStructureContext = createContext<
+  DataStructureContextValue | undefined
+>(undefined);
+
 //* - Custom Hooks
 export function useSymbolId() {
+  /**
+   * ! 這個做法可以產生一個唯一的 Symbol ID
+   * ! 並且確保在重新渲染時不會改變
+   *
+   * ? 但是後續如果牽扯到資料設定的話，會導致從後端取得的資料設定與此結構對不上
+   *
+   * * 預計在 StoreProps 增加 structure uid 的設定
+   * * 並在渲染期間將 structure uid 傳入到這個 hook 中
+   * * 後續透過 Symbol.describe 取得進行比對
+   */
   const id = useId();
 
   return useMemo(() => Symbol(id), [id]);

@@ -5,7 +5,7 @@ import * as Comp from './components';
  * * - Card (Layout)
  * * - Drawer (Layout)
  * * - Form (Layout)
- * * - Step (Interaction)
+ * * - Step (Layout)
  * * - Tabs (Layout)
  */
 

@@ -4,6 +4,7 @@ import type { Property } from 'csstype';
 
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
+import { useUrlValidation } from '../../hooks';
 import { withGenerateDataProps } from '../../contexts';
 import type { FabProps, MappablePropNames } from './Fab.types';
 
@@ -16,6 +17,7 @@ export default withGenerateDataProps<FabProps, MappablePropNames>(function Fab({
   ...props
 }) {
   const [cssPosition, setCssPosition] = useState<Property.Position>('fixed');
+  const isHrefValid = useUrlValidation(href);
 
   return (
     <PortalContainer
@@ -27,7 +29,7 @@ export default withGenerateDataProps<FabProps, MappablePropNames>(function Fab({
     >
       <MuiFab
         {...props}
-        {...(href && {
+        {...(isHrefValid && {
           LinkComponent: 'a',
           href,
         })}

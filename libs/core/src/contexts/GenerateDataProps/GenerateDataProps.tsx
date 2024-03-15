@@ -64,7 +64,7 @@ export function makeStoreProps<
           return { uid, paths: [] };
         } else if (propMapping?.records) {
           /**
-           * ? Else If the propMapping is defined: (Leaf Case)
+           * ? If the propMapping is defined: (Leaf Case)
            * * - Use the root uid
            * * - Append 'propMapping.records' to paths
            */
