@@ -22,7 +22,7 @@ import type {
   ValueTypeMapping,
 } from './GenerateDataProps.types';
 
-//* Variables
+//* - Variables
 const VALUE_TYPE_MAP: ValueTypeMapping = {
   bigint: 'bigint',
   boolean: 'boolean',
@@ -30,7 +30,7 @@ const VALUE_TYPE_MAP: ValueTypeMapping = {
   string: 'string',
 };
 
-//* Context
+//* - Context
 export const ComponentDataContext = createContext<GenericData | undefined>(
   undefined
 );
@@ -39,7 +39,7 @@ export const DataStructureContext = createContext<
   DataStructureContextValue | undefined
 >(undefined);
 
-//* Zustand
+//* - Zustand
 const useStructure = create(() => {
   let structure: DataStructure = {};
 
@@ -81,7 +81,7 @@ const useStructure = create(() => {
   };
 });
 
-//* Custom Hooks
+//* - Custom Hooks
 export function useSymbolId() {
   const id = useId();
 

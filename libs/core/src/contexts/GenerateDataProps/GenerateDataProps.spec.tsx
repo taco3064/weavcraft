@@ -21,7 +21,7 @@ import type {
 } from './GenerateDataProps.types';
 
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
-  //* HOC
+  //* - HOC
   describe('withGenerateDataProps', () => {
     it('should pass correct props to the wrapped component', () => {
       const value = 'Tom White';
@@ -134,7 +134,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
     const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
   });
 
-  //* Custom Hooks
+  //* - Custom Hooks
   describe('useComponentData', () => {
     it('should return data from ComponentDataContext', () => {
       const { result } = renderHook(() => useComponentData(), {

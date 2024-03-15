@@ -32,7 +32,7 @@ export type PropertyPath<
     : `${K}`
   : never;
 
-//* Component Data
+//* - Component Data
 export interface MappableProps<D extends GenericData, P = {}> {
   data?: D;
   propMapping?: Partial<
@@ -49,7 +49,7 @@ export type PropsWithMappedData<
   K extends keyof P = keyof P
 > = P & MappableProps<D, Pick<P, K>>;
 
-//* Component Slot
+//* - Component Slot
 export type SlotProps = Record<string, any> & {
   onClick?: never | ((...args: any[]) => void);
 };
@@ -58,7 +58,7 @@ export type SlotElement<
   P = SlotProps & Omit<MappableProps<GenericData, SlotProps>, 'data'>
 > = ReactElement<P, JSXElementConstructor<P>>;
 
-//* Store Records
+//* - Store Records
 export type StoreProps<D extends GenericData> = {
   records?: D[];
 };
@@ -76,7 +76,7 @@ export type PropsWithMappedStore<
   K extends keyof (P & StoreProps<D>) = 'records'
 > = PropsWithStore<D, P> & MappableStoreProps<D, Pick<P & StoreProps<D>, K>>;
 
-//* Custom Hooks
+//* - Custom Hooks
 type ValueType<
   T extends keyof TypeMapping,
   A extends 'arrayOf' | undefined = undefined

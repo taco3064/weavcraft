@@ -23,13 +23,13 @@ export type ListProps<
   D,
   MuiListProps &
     BaseListProps & {
-      //* Subheader
+      //* - Subheader
       icon?: Pick<IconProps<D>, 'code' | 'color'>;
       action?: ReactNode;
       disableSubheaderSticky?: boolean;
       disableSubheaderGutters?: boolean;
 
-      //* ListItem
+      //* - ListItem
       itemAction?: SlotElement;
       itemIndicator?: SlotElement;
       itemVariant?: ListItemProps<D, V>['variant'];

@@ -1,5 +1,14 @@
 import * as Comp from './components';
 
+/**
+ * TODO: Need to add the following components
+ * * - Card (Layout)
+ * * - Drawer (Layout)
+ * * - Form (Layout)
+ * * - Step (Interaction)
+ * * - Tabs (Layout)
+ */
+
 export const Display = {
   Avatar: Comp.Avatar,
   Badge: Comp.Badge,
@@ -17,13 +26,6 @@ export const Layout = {
   Divider: Comp.Divider,
   Popover: Comp.Popover,
   Toolbar: Comp.Toolbar,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Card
-   * * - Drawer
-   * * - Form
-   */
 };
 
 export const Collection = {
@@ -31,11 +33,6 @@ export const Collection = {
   List: Comp.List,
   AvatarGroup: Comp.AvatarGroup,
   ImageList: Comp.ImageList,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Step
-   */
 };
 
 export const Interaction = {

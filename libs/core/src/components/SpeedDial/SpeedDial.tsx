@@ -9,7 +9,7 @@ import { makeStoreProps, type GenericData } from '../../contexts';
 
 import type { Origin, PositionSplit, SpeedDialProps } from './SpeedDial.types';
 
-//* Config
+//* - Config
 const ORIGIN: Origin = {
   'bottom-left': {
     direction: 'up',
@@ -29,7 +29,7 @@ const ORIGIN: Origin = {
   },
 };
 
-//* Components
+//* - Components
 const withStoreProps = makeStoreProps<SpeedDialProps>();
 
 export default withStoreProps(function SpeedDial<D extends GenericData>({

@@ -16,7 +16,7 @@ import type {
   PropsWithStore,
 } from './GenerateDataProps.types';
 
-//* HOC
+//* - HOC
 export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
   Component: ComponentType<P>
 ) =>

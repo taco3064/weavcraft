@@ -39,7 +39,7 @@ export type ControlValue<
   >
 > = T extends 'multiple' ? V[] : V;
 
-//* Prop Types
+//* - Prop Types
 export interface GroupProps<
   T extends ControlVariant,
   P extends ControlProps<GenericData>

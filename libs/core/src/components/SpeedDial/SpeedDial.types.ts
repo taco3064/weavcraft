@@ -9,7 +9,7 @@ import type {
   TooltipPlacement,
 } from '../SpeedDialAction';
 
-//* Component Props
+//* - Component Props
 type MuiSpeedDialProps = Pick<ComponentProps<typeof MuiSpeedDial>, 'direction'>;
 
 export type SpeedDialProps<D extends GenericData = {}> = PropsWithStore<
@@ -25,7 +25,7 @@ export type SpeedDialProps<D extends GenericData = {}> = PropsWithStore<
   }
 >;
 
-//* Variables
+//* - Variables
 type Direction = MuiSpeedDialProps['direction'];
 
 type PositionOrigin<K extends 'vertical' | 'horizontal'> = K extends 'vertical'
