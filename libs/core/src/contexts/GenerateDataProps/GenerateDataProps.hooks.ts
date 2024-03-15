@@ -1,53 +1,114 @@
 import _get from 'lodash/get';
-import { createContext, useContext, type ComponentType } from 'react';
+import _omit from 'lodash/omit';
+import _set from 'lodash/set';
+import { create } from 'zustand';
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  type ComponentType,
+} from 'react';
 
 import type {
-  GenerateStoreWrappedProps,
+  DataStructure,
+  DataStructureContextValue,
+  DataValue,
   GenericData,
   MappableProps,
   SlotElement,
-  StoreProps,
+  ValueTypeMapping,
 } from './GenerateDataProps.types';
 
-//* Methods
-export function getProps<D extends GenericData, P extends MappableProps<D>>({
-  data,
-  propMapping,
-  ...props
-}: P) {
-  return Object.entries(propMapping || {}).reduce(
-    (result, [key, path]) => ({
-      ...result,
-      [key]: _get(result, key) || _get(data, path as string),
-    }),
-    { ...props } as Omit<P, 'data' | 'propMapping'>
-  );
-}
+//* - Variables
+const VALUE_TYPE_MAP: ValueTypeMapping = {
+  bigint: 'bigint',
+  boolean: 'boolean',
+  number: 'number',
+  string: 'string',
+};
 
-//* Custom Hooks
-export const GenerateDataPropsContext = createContext<GenericData | undefined>(
+//* - Zustand
+const useStructure = create(() => {
+  let structure: DataStructure = {};
+
+  function getDataType(value: any): DataValue | undefined {
+    if (value instanceof Date) {
+      return 'date';
+    }
+
+    if (Array.isArray(value) && value.length) {
+      const type = getDataType(value[0])?.replace('[]', '');
+
+      return type && value.every((v) => getDataType(v) === type)
+        ? `${type as Exclude<DataValue, `${string}[]`>}[]`
+        : undefined;
+    }
+
+    const { [typeof value as keyof ValueTypeMapping]: type } = VALUE_TYPE_MAP;
+
+    return type || undefined;
+  }
+
+  return {
+    get: (): DataStructure => structure,
+
+    set: (uid: symbol, paths: string[], value?: any) => {
+      const type = getDataType(value);
+
+      if (type) {
+        _set(structure, [uid, ...paths], type);
+      }
+    },
+    destroy: (uid: symbol, paths?: string[]) => {
+      if (paths?.length) {
+        structure = _omit(structure, [uid, ...paths]) as DataStructure;
+      } else {
+        delete structure[uid];
+      }
+    },
+  };
+});
+
+//* - Context
+export const ComponentDataContext = createContext<GenericData | undefined>(
   undefined
 );
 
-export function useGenerateData<D extends GenericData>() {
-  return useContext(GenerateDataPropsContext) as D;
+export const DataStructureContext = createContext<
+  DataStructureContextValue | undefined
+>(undefined);
+
+//* - Custom Hooks
+export function useSymbolId() {
+  /**
+   * ! 這個做法可以產生一個唯一的 Symbol ID
+   * ! 並且確保在重新渲染時不會改變
+   *
+   * ? 但是後續如果牽扯到資料設定的話，會導致從後端取得的資料設定與此結構對不上
+   *
+   * * 預計在 StoreProps 增加 structure uid 的設定
+   * * 並在渲染期間將 structure uid 傳入到這個 hook 中
+   * * 後續透過 Symbol.describe 取得進行比對
+   */
+  const id = useId();
+
+  return useMemo(() => Symbol(id), [id]);
 }
 
-export function useGenerateStoreProps<
-  D extends GenericData,
-  P,
-  K extends keyof (P & StoreProps<D>) = 'records'
->(props: GenerateStoreWrappedProps<D, P, K>) {
-  const data = useGenerateData<D>();
-
-  return getProps({ ...props, data });
+export function useComponentData<D extends GenericData>() {
+  return useContext(ComponentDataContext) as D;
 }
 
-export function useGenerateSlotProps<D extends GenericData>(
+export function useComponentSlot<D extends GenericData>(
   action?: SlotElement,
   onItemToggle?: (item: D) => void
 ) {
   const { type: Slot, props } = action || {};
+  const getProps = usePropsGetter();
 
   return {
     Slot: Slot as ComponentType<typeof props> | undefined,
@@ -63,5 +124,42 @@ export function useGenerateSlotProps<D extends GenericData>(
           },
         }),
       } as typeof props),
+  };
+}
+
+export function useDataStructure() {
+  const { uid, paths } = useContext(DataStructureContext) || {};
+  const newId = useSymbolId();
+
+  return {
+    root: uid || newId,
+    paths: useMemo(() => paths || [], [paths]),
+  };
+}
+
+export function usePropsGetter<D extends GenericData>() {
+  const { root, paths } = useDataStructure();
+  const { set, destroy } = useStructure();
+  const destroyRef = useRef(() => destroy(root, paths));
+
+  useEffect(() => destroyRef.current, [destroyRef]);
+
+  return function <
+    P extends MappableProps<D>,
+    R = Omit<P, 'data' | 'propMapping'>
+  >({ data, propMapping, ...props }: P & MappableProps<D>) {
+    return Object.entries(propMapping || {}).reduce((result, [key, path]) => {
+      const propValue = _get(props, key);
+      const dataValue = _get(data, path as string);
+
+      //* - The prop value must be undefined
+      if (propValue === undefined && dataValue !== undefined) {
+        set(root, [...paths, key], dataValue);
+
+        return { ...result, [key]: dataValue };
+      }
+
+      return { ...result, [key]: propValue };
+    }, props) as R;
   };
 }

@@ -1,14 +1,12 @@
 import MuiChip from '@mui/material/Chip';
 import type { ComponentProps, ReactElement } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 
 type MuiChipProps = Pick<
   ComponentProps<typeof MuiChip>,
   'color' | 'disabled' | 'label' | 'size' | 'variant' | 'onDelete'
 >;
-
-export type MappablePropNames = keyof Pick<MuiChipProps, 'disabled' | 'label'>;
 
 export interface ChipProps extends Omit<MuiChipProps, 'onDelete'> {
   indicator?: ReactElement;
@@ -16,7 +14,9 @@ export interface ChipProps extends Omit<MuiChipProps, 'onDelete'> {
   onDelete?: <D extends GenericData>(data?: D) => void;
 }
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type MappablePropNames = keyof Pick<ChipProps, 'disabled' | 'label'>;
+
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   ChipProps,
   MappablePropNames

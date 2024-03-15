@@ -2,20 +2,26 @@ import { fireEvent, render, renderHook } from '@testing-library/react';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
-import { withGenerateDataProps } from './GenerateDataProps';
+import { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
 
 import {
-  useGenerateSlotProps,
-  useGenerateStoreProps,
+  ComponentDataContext,
+  DataStructureContext,
+  useComponentData,
+  useComponentSlot,
+  useDataStructure,
+  usePropsGetter,
+  useSymbolId,
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenerateStoreWrappedProps,
   GenericData,
+  PropsWithMappedStore,
   SlotElement,
 } from './GenerateDataProps.types';
 
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
+  //* - HOC
   describe('withGenerateDataProps', () => {
     it('should pass correct props to the wrapped component', () => {
       const value = 'Tom White';
@@ -41,7 +47,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       expect(getByTestId('dummy')).toHaveTextContent(value);
     });
 
-    it('should useGenerateData works correctly', () => {
+    it('should useComponentData works correctly', () => {
       const value = 'White';
 
       const { getByText } = render(
@@ -66,41 +72,90 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
     );
   });
 
-  describe('useGenerateStoreProps', () => {
-    it('should return correct store props', () => {
-      const data = {
-        key: 'dummy',
-        list: [{ name: 'Tom' }, { name: 'Johnny' }],
-      };
+  describe('makeStoreProps', () => {
+    it('should pass correct props to the wrapped component', () => {
+      const { getByTestId } = render(<WrappedDummies records={records} />);
+      const spans = getByTestId('dummies').querySelectorAll('span');
 
-      function Store(
-        props: GenerateStoreWrappedProps<
-          typeof data,
-          { title?: string },
-          'title'
-        >
-      ) {
-        const { records, title } = useGenerateStoreProps(props);
+      expect(spans).toHaveLength(records.length);
 
-        expect(records).toEqual(data.list);
-        expect(title).toBe(data.key);
+      spans.forEach((span, i) => {
+        expect(span).toHaveTextContent(records[i].name);
+      });
+    });
 
-        return null;
-      }
-
-      render(
-        <WrappedDummy data={data}>
-          <Store propMapping={{ title: 'key', records: 'list' }} />
+    it('should pass correct records to the wrapped component with propMapping', () => {
+      const { getByTestId } = render(
+        <WrappedDummy data={{ override: records }}>
+          <WrappedDummies propMapping={{ records: 'override' }} />
         </WrappedDummy>
+      );
+
+      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
+        records.length
+      );
+    });
+
+    it('should pass the original props', () => {
+      const override = [...records, { name: 'John Doe' }];
+
+      const { getByTestId } = render(
+        <WrappedDummy data={{ override }}>
+          <WrappedDummies
+            records={records}
+            propMapping={{ records: 'override' }}
+          />
+        </WrappedDummy>
+      );
+
+      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
+        records.length
       );
     });
 
     const WrappedDummy = withGenerateDataProps(
-      (props: { children?: ReactNode }) => <div>{props.children}</div>
+      (props: { children?: ReactNode }) => (
+        <div data-testid="dummy">{props.children}</div>
+      )
     );
+
+    const WrappedDummies = makeStoreProps<
+      PropsWithMappedStore<{ name: string }>
+    >()(function Dummy({ records }) {
+      return (
+        <div data-testid="dummies">
+          {records?.map(({ name }, i) => (
+            <span key={i}>{name}</span>
+          ))}
+        </div>
+      );
+    });
+
+    const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
   });
 
-  describe('useGenerateSlotProps', () => {
+  //* - Custom Hooks
+  describe('useComponentData', () => {
+    it('should return data from ComponentDataContext', () => {
+      const { result } = renderHook(() => useComponentData(), {
+        wrapper: TestProvider,
+      });
+
+      expect(result.current).toEqual(data);
+    });
+
+    const data = { foo: 'bar' };
+
+    function TestProvider({ children }: { children: ReactNode }) {
+      return (
+        <ComponentDataContext.Provider value={data}>
+          {children}
+        </ComponentDataContext.Provider>
+      );
+    }
+  });
+
+  describe('useComponentSlot', () => {
     it('should return correct slot element options', () => {
       const { getByTestId } = renderSlot(<WrappedDummy text="text" />, {
         name: 'any',
@@ -153,13 +208,70 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       data: D,
       onItemToggle?: (item: D) => void
     ) {
-      const { result } = renderHook(() =>
-        useGenerateSlotProps(slot, onItemToggle)
-      );
+      const { result } = renderHook(() => useComponentSlot(slot, onItemToggle));
 
       const { Slot, getSlotProps } = result.current;
 
       return render(Slot ? <Slot {...getSlotProps(data)} /> : <>none</>);
     }
+  });
+
+  describe('useDataStructure', () => {
+    it('should return correct values', () => {
+      const { result } = renderHook(() => useDataStructure(), {
+        wrapper: TestProvider,
+      });
+
+      expect(result.current).toEqual({ root: uid, paths });
+    });
+
+    const uid = Symbol('uid');
+    const paths = ['foo', 'bar'];
+
+    function TestProvider({ children }: { children: ReactNode }) {
+      return (
+        <DataStructureContext.Provider value={{ uid, paths }}>
+          {children}
+        </DataStructureContext.Provider>
+      );
+    }
+  });
+
+  describe('usePropsGetter', () => {
+    it('should return correct props', () => {
+      const { result } = renderHook(() => usePropsGetter(), {
+        wrapper: TestProvider,
+      });
+
+      expect(result.current({ data, propMapping })).toEqual({ name });
+    });
+
+    const name = 'Tom';
+    const data = { user: { name: 'Tom' } };
+    const propMapping = { name: 'user.name' };
+
+    function TestProvider({ children }: { children: ReactNode }) {
+      return (
+        <ComponentDataContext.Provider value={data}>
+          {children}
+        </ComponentDataContext.Provider>
+      );
+    }
+  });
+
+  describe('useSymbolId', () => {
+    it('should return a Symbol', () => {
+      const { result } = renderHook(() => useSymbolId());
+
+      expect(typeof result.current).toBe('symbol');
+    });
+
+    it('should not return a new Symbol when re-render', () => {
+      const { result, rerender } = renderHook(() => useSymbolId());
+      const symbol1 = result.current;
+      rerender();
+      const symbol2 = result.current;
+      expect(symbol1).toBe(symbol2);
+    });
   });
 });

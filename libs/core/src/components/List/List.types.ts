@@ -1,14 +1,9 @@
 import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
 
+import type { GenericData, PropsWithStore, SlotElement } from '../../contexts';
 import type { IconProps } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
-
-import type {
-  GenerateStoreWrappedProps,
-  GenericData,
-  SlotElement,
-} from '../../contexts';
 
 type MuiListProps = Pick<
   ComponentProps<typeof MuiList>,
@@ -22,19 +17,19 @@ type BaseListProps = {
 export type MappablePropNames = keyof BaseListProps;
 
 export type ListProps<
-  D extends GenericData,
-  V extends ListItemVariant
-> = GenerateStoreWrappedProps<
+  D extends GenericData = {},
+  V extends ListItemVariant = ListItemVariant
+> = PropsWithStore<
   D,
   MuiListProps &
     BaseListProps & {
-      //* Subheader
+      //* - Subheader
       icon?: Pick<IconProps<D>, 'code' | 'color'>;
       action?: ReactNode;
       disableSubheaderSticky?: boolean;
       disableSubheaderGutters?: boolean;
 
-      //* ListItem
+      //* - ListItem
       itemAction?: SlotElement;
       itemIndicator?: SlotElement;
       itemVariant?: ListItemProps<D, V>['variant'];
@@ -45,6 +40,5 @@ export type ListProps<
 
       onItemActionClick?: (item: D) => void;
       onItemIndicatorClick?: (item: D) => void;
-    },
-  MappablePropNames
+    }
 >;

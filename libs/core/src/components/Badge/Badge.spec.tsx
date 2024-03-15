@@ -16,10 +16,8 @@ describe('@weavcraft/core/components/Badge', () => {
     expect(getByTestId('Badge')).toHaveClass('MuiBadge-anchorOriginTopRight');
   });
 
-  it('renders with custom props', () => {
-    const { getByTestId } = render(
-      <Badge anchorHorizontal="left" anchorVertical="bottom" />
-    );
+  it('renders with anchorPosition prop', () => {
+    const { getByTestId } = render(<Badge anchorPosition="bottom-left" />);
 
     expect(getByTestId('Badge')).toHaveClass('MuiBadge-anchorOriginBottomLeft');
   });

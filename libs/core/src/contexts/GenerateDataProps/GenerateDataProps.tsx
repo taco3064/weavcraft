@@ -1,30 +1,86 @@
-import type { ComponentType } from 'react';
+import { useMemo, type ComponentType } from 'react';
 
 import {
-  GenerateDataPropsContext,
-  getProps,
-  useGenerateData,
+  DataStructureContext,
+  ComponentDataContext,
+  useDataStructure,
+  useComponentData,
+  usePropsGetter,
+  useSymbolId,
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenerateDataWrappedProps,
   GenericData,
+  PropsWithMappedData,
+  PropsWithMappedStore,
+  PropsWithStore,
 } from './GenerateDataProps.types';
 
-//* HOC
+//* - HOC
 export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
-  Target: ComponentType<P>
+  Component: ComponentType<P>
 ) =>
-  function ComponentWrapper<D extends GenericData>(
-    props: GenerateDataWrappedProps<D, P, K>
+  function GenerateDataWrapper<D extends GenericData>(
+    props: PropsWithMappedData<D, P, K>
   ) {
-    const generateData = useGenerateData<D>();
-    const data = props.data || generateData;
-    const componentProps = getProps({ ...props, data });
+    const getProps = usePropsGetter();
+    const context = useComponentData<D>();
+    const data = props.data || context;
+    const consumer = <Component {...getProps({ ...props, data })} />;
 
-    return (
-      <GenerateDataPropsContext.Provider value={data}>
-        <Target {...(componentProps as P & JSX.IntrinsicAttributes)} />
-      </GenerateDataPropsContext.Provider>
+    return !props.data ? (
+      consumer
+    ) : (
+      <ComponentDataContext.Provider value={data}>
+        {consumer}
+      </ComponentDataContext.Provider>
     );
   };
+
+export function makeStoreProps<
+  R extends PropsWithStore<{}>,
+  K extends keyof R = 'records'
+>() {
+  return (Component: ComponentType<R>) =>
+    function GenerateStoreWrapper<
+      D extends GenericData,
+      P = PropsWithStore<D, Omit<R, 'records'>>
+    >(props: PropsWithMappedStore<D, P, Extract<K, keyof P>>) {
+      const { records, propMapping } = props;
+      const { root, paths } = useDataStructure();
+
+      const getProps = usePropsGetter();
+      const data = useComponentData();
+      const uid = useSymbolId();
+      const consumer = <Component {...getProps({ ...props, data })} />;
+
+      const value = useMemo(() => {
+        if (records) {
+          /**
+           * ? If there are records: (Root Case)
+           * * - Generate a new uid
+           * * - Leave paths empty
+           */
+          return { uid, paths: [] };
+        } else if (propMapping?.records) {
+          /**
+           * ? If the propMapping is defined: (Leaf Case)
+           * * - Use the root uid
+           * * - Append 'propMapping.records' to paths
+           */
+          return { uid: root, paths: [...paths, propMapping.records] };
+        }
+
+        //* - Bypass
+        return null;
+      }, [root, uid, paths, records, propMapping?.records]);
+
+      return !value ? (
+        consumer
+      ) : (
+        <DataStructureContext.Provider value={value}>
+          {consumer}
+        </DataStructureContext.Provider>
+      );
+    };
+}

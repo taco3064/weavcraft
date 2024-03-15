@@ -1,5 +1,14 @@
 import * as Comp from './components';
 
+/**
+ * TODO: Need to add the following components
+ * * - Card (Layout)
+ * * - Drawer (Layout)
+ * * - Form (Layout)
+ * * - Step (Layout)
+ * * - Tabs (Layout)
+ */
+
 export const Display = {
   Avatar: Comp.Avatar,
   Badge: Comp.Badge,
@@ -12,60 +21,44 @@ export const Display = {
 export const Layout = {
   Accordion: Comp.Accordion,
   Collapse: Comp.Collapse,
+  Container: Comp.Container,
   Dialog: Comp.Dialog,
+  Divider: Comp.Divider,
+  Popover: Comp.Popover,
   Toolbar: Comp.Toolbar,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Card
-   * * - Container
-   * * - Divider (唯一一個不支援資料轉換 props 的元件)
-   * * - Drawer
-   * * - Form
-   * * - Popover
-   */
 };
 
 export const Collection = {
+  Grid: Comp.Grid,
+  List: Comp.List,
   AvatarGroup: Comp.AvatarGroup,
   ImageList: Comp.ImageList,
-  List: Comp.List,
-
-  /**
-   * TODO: Need to add the following components
-   * * - ButtonGroup
-   * * - Grid
-   * * - Menu
-   * * - SpeedDial
-   * * - Step
-   * * - ToggleButtonGroup
-   */
 };
 
 export const Interaction = {
-  SelectionControl: Comp.SelectionControl,
-
-  /**
-   * TODO: Need to add the following components
-   * * - Button
-   * * - Fab
-   * * - IconButton
-   * * - Link
-   * * - Slider
-   */
+  Button: Comp.Button,
+  ButtonGroup: Comp.ButtonGroup,
+  IconButton: Comp.IconButton,
+  Link: Comp.Link,
+  Fab: Comp.Fab,
+  Menu: Comp.Menu,
+  SpeedDial: Comp.SpeedDial,
+  Selection: Comp.Selection,
+  Slider: Comp.Slider,
 };
 
 export const Input = {
-  CheckboxGroup: Comp.CheckboxGroup,
-  RadioGroup: Comp.RadioGroup,
-  NumericField: Comp.NumericField,
-  NumericFormatField: Comp.NumericFormatField,
-  MultipleSelectField: Comp.MultipleSelectField,
-  SingleSelectField: Comp.SingleSelectField,
-  SwitchField: Comp.SwitchField,
   TextAreaField: Comp.TextAreaField,
   TextField: Comp.TextField,
+  NumericField: Comp.NumericField,
+  NumericFormatField: Comp.NumericFormatField,
+  SwitchField: Comp.SwitchField,
+  MultipleSelectField: Comp.MultipleSelectField,
+  SingleSelectField: Comp.SingleSelectField,
   TimePickerField: Comp.TimePickerField,
   DatePickerField: Comp.DatePickerField,
   DateTimePickerField: Comp.DateTimePickerField,
+  CheckboxGroup: Comp.CheckboxGroup,
+  RadioGroup: Comp.RadioGroup,
+  ToggleButtonGroup: Comp.ToggleButtonGroup,
 };

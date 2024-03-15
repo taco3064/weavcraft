@@ -19,12 +19,14 @@ type PropertyType<
   ? D[P]
   : never;
 
+export type ControlVariant = 'single' | 'multiple';
+
 export type ControlProps<D extends GenericData> = {
   value?: any;
 } & MappableProps<D, { value?: any }>;
 
 export type ControlValue<
-  T extends 'single' | 'multiple',
+  T extends ControlVariant,
   P extends ControlProps<GenericData>,
   V = NonNullable<
     PropertyType<
@@ -37,9 +39,9 @@ export type ControlValue<
   >
 > = T extends 'multiple' ? V[] : V;
 
-//* Prop Types
+//* - Prop Types
 export interface GroupProps<
-  T extends 'single' | 'multiple',
+  T extends ControlVariant,
   P extends ControlProps<GenericData>
 > extends StoreProps<NonNullable<P['data']>> {
   name?: string;
@@ -59,7 +61,7 @@ interface BaseOptionProps extends BaseListItemProps {
 }
 
 export interface BaseSelectFieldProps<
-  T extends 'single' | 'multiple',
+  T extends ControlVariant,
   D extends GenericData
 > extends GroupProps<T, BaseOptionProps & MappableProps<D, BaseOptionProps>> {
   optionIndicator?: SlotElement;

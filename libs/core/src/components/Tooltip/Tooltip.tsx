@@ -8,16 +8,15 @@ export default withGenerateDataProps<TooltipProps, MappablePropNames>(
     return (
       <MuiTooltip
         {...props}
-        {...(disabled && {
+        {...((disabled || !title) && {
           disableFocusListener: true,
           disableHoverListener: true,
           disableTouchListener: true,
         })}
-        data-testid="Tooltip"
+        PopperProps={{ 'data-testid': 'Tooltip' } as never}
         title={title || ''}
-        disableInteractive={disabled}
       >
-        <span data-testid="TooltipContent">{children}</span>
+        <span data-testid="TooltipToggle">{children}</span>
       </MuiTooltip>
     );
   }

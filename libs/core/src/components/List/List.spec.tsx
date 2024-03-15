@@ -1,6 +1,7 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
+import Collapse from '../Collapse';
 import List from './List';
 
 describe('@weavcraft/core/components/List', () => {
@@ -91,13 +92,13 @@ describe('@weavcraft/core/components/List', () => {
       <List
         records={records}
         itemAction={<button>Click me</button>}
+        onItemActionClick={onItemActionClick}
         itemProps={{
           propMapping: {
             primary: 'title',
             secondary: 'content',
           },
         }}
-        onItemActionClick={onItemActionClick}
       />
     );
 
@@ -112,6 +113,32 @@ describe('@weavcraft/core/components/List', () => {
     expect(onItemActionClick).toHaveBeenCalledTimes(records.length);
   });
 
+  it('should render sub content of items', () => {
+    const { getByText, getAllByTestId } = render(
+      <List
+        records={records}
+        itemAction={
+          <Collapse
+            toggle={<button>View</button>}
+            propMapping={{ children: 'content' }}
+          />
+        }
+        itemProps={{
+          propMapping: {
+            primary: 'title',
+          },
+        }}
+      />
+    );
+
+    getAllByTestId('CollapseToggle').forEach((toggle, i) => {
+      const { content } = records[i];
+
+      fireEvent.click(toggle);
+      expect(getByText(content)).toBeTruthy();
+    });
+  });
+
   const records = [
     {
       title: 'Brunch this weekend?',
@@ -122,13 +149,13 @@ describe('@weavcraft/core/components/List', () => {
     },
     {
       title: 'Summer BBQ',
-      icon: 'faGithub',
+      icon: 'faEdit',
       url: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
       content: 'Who wants to have a cookout this weekend?',
     },
     {
       title: 'Oui Oui',
-      icon: 'faGithub',
+      icon: 'faClose',
       url: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
       content: 'Do you have any Paris recs? Have you ever been?',
     },

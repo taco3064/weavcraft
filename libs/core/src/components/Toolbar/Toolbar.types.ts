@@ -2,7 +2,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import type { ComponentProps, ReactNode } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
 type MuiAppBarProps = Pick<
@@ -23,7 +23,7 @@ export interface ToolbarProps extends MuiAppBarProps, MuiToolbarProps {
 
 export type MappablePropNames = keyof Pick<ToolbarProps, 'icon' | 'title'>;
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   ToolbarProps,
   MappablePropNames

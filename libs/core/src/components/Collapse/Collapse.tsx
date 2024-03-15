@@ -1,27 +1,14 @@
 import MuiCollapse from '@mui/material/Collapse';
-import { createPortal } from 'react-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import PortalContainer from '../PortalContainer';
 import { withGenerateDataProps } from '../../contexts';
 import type { CollapseProps, MappablePropNames } from './Collapse.types';
 
 export default withGenerateDataProps<CollapseProps, MappablePropNames>(
   function Collapse({ children, containerId, toggle, ...props }) {
     const { type: Toggle, props: toggleProps } = toggle || {};
-    const [container, setContainer] = useState<HTMLElement>();
     const [expanded, setExpanded] = useState(false);
-
-    const collapse = (
-      <MuiCollapse {...props} data-testid="Collapse">
-        {!expanded ? null : children}
-      </MuiCollapse>
-    );
-
-    useEffect(() => {
-      if (containerId) {
-        setContainer(document.getElementById(containerId) || undefined);
-      }
-    }, [containerId]);
 
     return (
       <>
@@ -36,7 +23,11 @@ export default withGenerateDataProps<CollapseProps, MappablePropNames>(
           />
         )}
 
-        {!container ? collapse : createPortal(collapse, container)}
+        <PortalContainer id={containerId}>
+          <MuiCollapse {...props} data-testid="Collapse">
+            {!expanded ? null : children}
+          </MuiCollapse>
+        </PortalContainer>
       </>
     );
   }

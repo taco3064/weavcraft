@@ -5,14 +5,9 @@ import Collapse from './Collapse';
 
 describe('@weavcraft/core/components/Collapse', () => {
   it('renders without crashing', () => {
-    const { getByTestId, queryByText } = render(
-      <Collapse>
-        <div>content</div>
-      </Collapse>
-    );
+    const { getByTestId } = render(<Collapse />);
 
     expect(getByTestId('Collapse')).toBeTruthy();
-    expect(queryByText('content')).not.toBeTruthy();
   });
 
   it('renders the toggle and work with onClick successfully', () => {

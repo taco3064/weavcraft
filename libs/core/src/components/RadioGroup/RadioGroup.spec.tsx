@@ -23,7 +23,7 @@ describe('@weavcraft/core/components/RadioGroup', () => {
 
     const checked = baseElement.querySelectorAll('input[type="radio"]:checked');
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
+    expect(getAllByTestId('Selection')).toHaveLength(records.length);
     expect(checked).toHaveLength(1);
   });
 

@@ -1,20 +1,15 @@
 import MuiImageList from '@mui/material/ImageList';
 import type { ComponentProps } from 'react';
 
+import type { GenericData, PropsWithStore, SlotElement } from '../../contexts';
 import type { ImageListItemProps } from '../ImageListItem';
-
-import type {
-  GenerateStoreWrappedProps,
-  GenericData,
-  SlotElement,
-} from '../../contexts';
 
 type MuiImageListProps = Pick<
   ComponentProps<typeof MuiImageList>,
   'cols' | 'gap' | 'rowHeight' | 'variant'
 >;
 
-export type ImageListProps<D extends GenericData> = GenerateStoreWrappedProps<
+export type ImageListProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiImageListProps & {
     itemAction?: SlotElement;

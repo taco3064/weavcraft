@@ -3,16 +3,20 @@ import MuiChip from '@mui/material/Chip';
 import _get from 'lodash/get';
 
 import BaseField from '../BaseField';
-import { useGenerateStoreProps, type GenericData } from '../../contexts';
+import { makeStoreProps, type GenericData } from '../../contexts';
 import { useOptionsRender } from '../../hooks';
 import type { MultipleSelectFieldProps } from './MultipleSelectField.types';
 
-export default function MultipleSelectField<D extends GenericData>(
-  props: MultipleSelectFieldProps<D>
-) {
-  const { optionIndicator, optionProps, records, ...fieldProps } =
-    useGenerateStoreProps(props);
+const withStoreProps = makeStoreProps<MultipleSelectFieldProps>();
 
+export default withStoreProps(function MultipleSelectField<
+  D extends GenericData
+>({
+  optionIndicator,
+  optionProps,
+  records,
+  ...props
+}: MultipleSelectFieldProps<D>) {
   const propMapping = optionProps?.propMapping || {};
 
   const children = useOptionsRender({
@@ -21,11 +25,11 @@ export default function MultipleSelectField<D extends GenericData>(
     records,
   });
 
-  const selected = fieldProps.value || [];
+  const selected = props.value || [];
 
   return (
     <BaseField
-      {...fieldProps}
+      {...props}
       select
       value={selected}
       data-testid="MultipleSelectField"
@@ -63,4 +67,4 @@ export default function MultipleSelectField<D extends GenericData>(
       {children}
     </BaseField>
   );
-}
+});

@@ -2,18 +2,18 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
 
-import { withGenerateDataProps, useGenerateData } from '../../contexts';
+import { withGenerateDataProps, useComponentData } from '../../contexts';
 
 import type {
   MappablePropNames,
-  SelectionControlProps,
-  Variant,
-} from './SelectionControl.types';
+  SelectionProps,
+  SelectionVariant,
+} from './Selection.types';
 
 export default withGenerateDataProps<
-  SelectionControlProps<Variant>,
+  SelectionProps<SelectionVariant>,
   MappablePropNames
->(function SelectionControl({
+>(function Selection({
   label,
   labelPlacement,
   checked,
@@ -24,14 +24,14 @@ export default withGenerateDataProps<
   ...props
 }) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const data = useGenerateData();
+  const data = useComponentData();
 
   const control = (
     <Control
       {...props}
       {...{ disabled, required }}
       defaultChecked={checked}
-      data-testid="SelectionControl"
+      data-testid="Selection"
       onChange={(_e, checked) => onChange?.(checked, data)}
     />
   );

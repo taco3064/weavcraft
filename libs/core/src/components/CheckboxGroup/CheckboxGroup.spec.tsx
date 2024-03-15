@@ -27,7 +27,7 @@ describe('@weavcraft/core/components/CheckboxGroup', () => {
       'input[type="checkbox"]:checked'
     );
 
-    expect(getAllByTestId('SelectionControl')).toHaveLength(records.length);
+    expect(getAllByTestId('Selection')).toHaveLength(records.length);
 
     expect(checked).toHaveLength(
       records.filter(({ selected }) => selected).length

@@ -1,18 +1,17 @@
-export { withGenerateDataProps } from './GenerateDataProps';
+export { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
 
 export {
-  getProps,
-  useGenerateData,
-  useGenerateSlotProps,
-  useGenerateStoreProps,
+  useComponentData,
+  useComponentSlot,
+  usePropsGetter,
 } from './GenerateDataProps.hooks';
 
 export type {
-  GenerateDataWrappedProps,
-  GenerateStoreWrappedProps,
   GenericData,
   MappableProps,
   PropertyPath,
+  PropsWithMappedData,
+  PropsWithStore,
   SlotElement,
   SlotProps,
   StoreProps,

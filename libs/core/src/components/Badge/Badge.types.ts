@@ -1,7 +1,7 @@
 import MuiBadge from '@mui/material/Badge';
 import type { ComponentProps } from 'react';
 
-import type { GenerateDataWrappedProps, GenericData } from '../../contexts';
+import type { GenericData, PropsWithMappedData } from '../../contexts';
 
 type MuiBadgeProps = Pick<
   ComponentProps<typeof MuiBadge>,
@@ -15,15 +15,20 @@ type MuiBadgeProps = Pick<
   | 'variant'
 >;
 
-type BaseBadgeProps = Pick<MuiBadgeProps, 'badgeContent' | 'children' | 'max'>;
-export type MappablePropNames = keyof BaseBadgeProps;
+export type AnchorOrigin<
+  K extends keyof NonNullable<MuiBadgeProps['anchorOrigin']>
+> = NonNullable<MuiBadgeProps['anchorOrigin']>[K];
 
 export interface BadgeProps extends Omit<MuiBadgeProps, 'anchorOrigin'> {
-  anchorHorizontal?: NonNullable<MuiBadgeProps['anchorOrigin']>['horizontal'];
-  anchorVertical?: NonNullable<MuiBadgeProps['anchorOrigin']>['vertical'];
+  anchorPosition?: `${AnchorOrigin<'vertical'>}-${AnchorOrigin<'horizontal'>}`;
 }
 
-export type WrappedProps<D extends GenericData> = GenerateDataWrappedProps<
+export type MappablePropNames = keyof Pick<
+  BadgeProps,
+  'badgeContent' | 'children' | 'max'
+>;
+
+export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
   BadgeProps,
   MappablePropNames

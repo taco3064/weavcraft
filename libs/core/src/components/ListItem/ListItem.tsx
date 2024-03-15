@@ -4,7 +4,7 @@ import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
 
-import { useGenerateData, withGenerateDataProps } from '../../contexts';
+import { useComponentData, withGenerateDataProps } from '../../contexts';
 import { useUrlValidation } from '../../hooks';
 
 import type {
@@ -30,7 +30,7 @@ export default withGenerateDataProps<
   onItemClick,
   ...props
 }) {
-  const data = useGenerateData();
+  const data = useComponentData();
   const isHrefValid = useUrlValidation(href);
 
   const children = (
