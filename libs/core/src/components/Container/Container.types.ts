@@ -5,7 +5,7 @@ import type { GenericData, PropsWithMappedData } from '../../contexts';
 
 export type ContainerProps = Pick<
   ComponentProps<typeof MuiContainer>,
-  'children' | 'disableGutters' | 'fixed' | 'maxWidth'
+  'children' | 'disableGutters' | 'maxWidth'
 >;
 
 export type MappablePropNames = keyof Pick<ContainerProps, 'children'>;

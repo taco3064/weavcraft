@@ -5,7 +5,7 @@ import { withGenerateDataProps } from '../../contexts';
 import type { LinkProps, MappablePropNames } from './Link.types';
 
 export default withGenerateDataProps<LinkProps, MappablePropNames>(
-  function Link({ align, children, icon, ...props }) {
+  function Link({ align, icon, text, ...props }) {
     return (
       <MuiLink
         {...props}
@@ -23,7 +23,7 @@ export default withGenerateDataProps<LinkProps, MappablePropNames>(
         }
       >
         {icon && <Icon color="inherit" fontSize="inherit" code={icon} />}
-        {children}
+        {text}
       </MuiLink>
     );
   }

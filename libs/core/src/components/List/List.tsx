@@ -59,7 +59,9 @@ export default withStoreProps(function List<
                 gap={8}
                 marginRight="auto"
               >
-                {icon && <Icon {...icon} fontSize="inherit" />}
+                {icon && (
+                  <Icon code={icon} color="inherit" fontSize="inherit" />
+                )}
                 {title}
               </MuiTypography>
 

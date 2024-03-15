@@ -2,7 +2,7 @@ import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
 
 import type { GenericData, PropsWithStore, SlotElement } from '../../contexts';
-import type { IconProps } from '../Icon';
+import type { IconCode } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
 
 type MuiListProps = Pick<
@@ -24,7 +24,7 @@ export type ListProps<
   MuiListProps &
     BaseListProps & {
       //* - Subheader
-      icon?: Pick<IconProps<D>, 'code' | 'color'>;
+      icon?: IconCode;
       action?: ReactNode;
       disableSubheaderSticky?: boolean;
       disableSubheaderGutters?: boolean;

@@ -33,7 +33,7 @@ describe('@weavcraft/core/components/Link', () => {
   });
 
   it('renders with children', () => {
-    const { getByText } = render(<Link>Test</Link>);
+    const { getByText } = render(<Link text="Test" />);
 
     expect(getByText('Test')).toBeInTheDocument();
   });

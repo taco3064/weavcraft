@@ -5,7 +5,7 @@ import { withGenerateDataProps } from '../../contexts';
 import type { TypographyProps, MappablePropNames } from './Typography.types';
 
 export default withGenerateDataProps<TypographyProps, MappablePropNames>(
-  function Typography({ align, children, icon, ...props }) {
+  function Typography({ align, icon, text, ...props }) {
     return (
       <MuiTypography
         {...props}
@@ -23,7 +23,7 @@ export default withGenerateDataProps<TypographyProps, MappablePropNames>(
         }
       >
         {icon && <Icon color="inherit" fontSize="inherit" code={icon} />}
-        {children}
+        {text}
       </MuiTypography>
     );
   }

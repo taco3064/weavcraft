@@ -6,7 +6,6 @@ import * as Comp from './components';
  * * - Drawer (Layout)
  * * - Form (Layout)
  * * - Step (Layout)
- * * - Tabs (Layout)
  */
 
 export const Display = {
@@ -25,6 +24,7 @@ export const Layout = {
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
   Popover: Comp.Popover,
+  Tabs: Comp.Tabs,
   Toolbar: Comp.Toolbar,
 };
 

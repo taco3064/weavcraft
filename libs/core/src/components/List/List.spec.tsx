@@ -20,10 +20,7 @@ describe('@weavcraft/core/components/List', () => {
   });
 
   it('should render subheader by icon', () => {
-    const { getByTestId } = render(
-      <List icon={{ code: 'faGithub', color: 'primary' }} />
-    );
-
+    const { getByTestId } = render(<List icon="faGithub" />);
     const subheader = getByTestId('ListSubheader');
     const icon = getByTestId('Icon_faGithub');
 

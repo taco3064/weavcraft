@@ -7,17 +7,13 @@ import type { IconCode } from '../Icon';
 
 type MuiLinkProps = Pick<
   ComponentProps<typeof MuiLink>,
-  keyof Omit<BaseTypographyProps, 'icon'> | 'href' | 'underline'
+  keyof Omit<BaseTypographyProps, 'icon' | 'text'> | 'href' | 'underline'
 >;
 
-export interface LinkProps extends MuiLinkProps {
-  icon?: IconCode;
-}
+export type LinkProps = MuiLinkProps &
+  Pick<BaseTypographyProps, 'icon' | 'text'>;
 
-export type MappablePropNames = keyof Pick<
-  LinkProps,
-  'children' | 'icon' | 'href'
->;
+export type MappablePropNames = keyof Pick<LinkProps, 'icon' | 'href' | 'text'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
