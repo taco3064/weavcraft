@@ -19,14 +19,14 @@ export default withStoreProps(function List<
   D extends GenericData,
   V extends ListItemVariant
 >({
-  //* Subheader
+  //* - Subheader
   title,
   icon,
   action,
   disableSubheaderSticky,
   disableSubheaderGutters,
 
-  //* ListItem
+  //* - ListItem
   itemAction,
   itemIndicator,
   itemProps,
@@ -35,11 +35,9 @@ export default withStoreProps(function List<
   onItemActionClick,
   onItemIndicatorClick,
 
-  //* List
   ...props
 }: ListProps<D, V>) {
   const ItemAction = useComponentSlot(itemAction, onItemActionClick);
-
   const ItemIndicator = useComponentSlot(itemIndicator, onItemIndicatorClick);
 
   return (
