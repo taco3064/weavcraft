@@ -51,6 +51,7 @@
     "routing-controllers-openapi": "^4.0.0",
     "tslib": "^2.3.0",
     "zustand": "^4.5.2",
+    "tss-react": "^4.9.4",
     "tsyringe": "^4.8.0"
   },
   "devDependencies": {

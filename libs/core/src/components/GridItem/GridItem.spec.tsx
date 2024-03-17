@@ -17,4 +17,14 @@ describe('@weavcraft/core/components/GridItem', () => {
     expect(toolbar).toHaveTextContent('Test');
     expect(getByTestId('Icon_faGithub')).toBeInTheDocument();
   });
+
+  it('renders with children', () => {
+    const { getByTestId } = render(
+      <GridItem>
+        <div data-testid="test" />
+      </GridItem>
+    );
+
+    expect(getByTestId('test')).toBeInTheDocument();
+  });
 });

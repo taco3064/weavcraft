@@ -1,6 +1,7 @@
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import type { ComponentProps, ReactNode } from 'react';
+import type { Property } from 'csstype';
 
 import type { ContainerProps } from '../Container';
 import type { IconCode } from '../Icon';
@@ -33,7 +34,8 @@ export type TabsProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiTabsProps & {
     children?: ReactNode;
-    contentMaxWidth?: ContainerProps<D>['maxWidth'];
+    height?: Property.Height;
+    maxWidth?: ContainerProps<D>['maxWidth'];
     itemProps?: Pick<TabProps<D>, 'iconPosition' | 'propMapping'>;
   }
 >;

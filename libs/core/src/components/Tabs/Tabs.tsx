@@ -1,6 +1,5 @@
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
-import { styled } from '@mui/material/styles';
 
 import {
   Children,
@@ -12,6 +11,7 @@ import {
 
 import Container from '../Container';
 import Icon from '../Icon';
+import { LayoutWrapper } from '../../styles';
 import type { TabProps, TabsProps } from './Tabs.types';
 
 import {
@@ -22,21 +22,11 @@ import {
 
 const withStoreProps = makeStoreProps<TabsProps>();
 
-const Frame = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  flexWrap: 'nowrap',
-
-  '& > div[data-testid="Container"]': {
-    height: '100%',
-    overflow: 'hidden auto',
-  },
-});
-
 export default withStoreProps(function Tabs<D extends GenericData>({
   children,
-  contentMaxWidth,
+  height,
   itemProps,
+  maxWidth,
   records = [],
   ...props
 }: TabsProps<D>) {
@@ -53,40 +43,43 @@ export default withStoreProps(function Tabs<D extends GenericData>({
   }, [active, records.length]);
 
   return (
-    <Frame>
-      <MuiTabs
-        {...props}
-        allowScrollButtonsMobile
-        orientation="horizontal"
-        scrollButtons="auto"
-        variant="scrollable"
-        data-testid="Tabs"
-        value={active}
-        onChange={(_e, value) => setActive(value)}
-      >
-        {records?.map((item, i) => {
-          const { icon, ...tabProps } = getProps<TabProps<D>>({
-            ...itemProps,
-            data: item,
-          });
+    <LayoutWrapper
+      {...{ height, maxWidth }}
+      header={
+        <MuiTabs
+          {...props}
+          allowScrollButtonsMobile
+          orientation="horizontal"
+          scrollButtons="auto"
+          variant="scrollable"
+          data-testid="Tabs"
+          value={active}
+          onChange={(_e, value) => setActive(value)}
+        >
+          {records?.map((item, i) => {
+            const { icon, ...tabProps } = getProps<TabProps<D>>({
+              ...itemProps,
+              data: item,
+            });
 
-          return (
-            <MuiTab
-              {...tabProps}
-              data-testid="Tab"
-              key={i}
-              icon={<Icon />}
-              value={i}
-            />
-          );
-        })}
-      </MuiTabs>
-
+            return (
+              <MuiTab
+                {...tabProps}
+                data-testid="Tab"
+                key={i}
+                icon={<Icon />}
+                value={i}
+              />
+            );
+          })}
+        </MuiTabs>
+      }
+    >
       {!data || !child ? null : (
-        <Container data={data} maxWidth={contentMaxWidth}>
+        <Container data={data}>
           {!isValidElement(child) ? null : cloneElement(child)}
         </Container>
       )}
-    </Frame>
+    </LayoutWrapper>
   );
 });
