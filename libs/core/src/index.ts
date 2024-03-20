@@ -2,7 +2,6 @@ import * as Comp from './components';
 
 /**
  * TODO: Need to add the following components
- * * - Drawer (Layout)
  * * - Form (Layout)
  * * - Step (Layout)
  */
@@ -25,6 +24,7 @@ export const Layout = {
   Container: Comp.Container,
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
+  Drawer: Comp.Drawer,
   Grid: Comp.Grid,
   List: Comp.List,
   Popover: Comp.Popover,

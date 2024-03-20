@@ -6,7 +6,15 @@ import type { WidgetWrapperProps } from './MuiContainer.types';
 
 export const WidgetWrapper = withStyles(
   forwardRef<HTMLDivElement, WidgetWrapperProps>(function Container(
-    { children, footer, header, height = 'max-content', maxWidth, ...props },
+    {
+      children,
+      direction: _direction,
+      footer,
+      header,
+      height = 'max-content',
+      maxWidth,
+      ...props
+    },
     ref
   ) {
     return (
@@ -23,10 +31,10 @@ export const WidgetWrapper = withStyles(
       </MuiContainer>
     );
   }),
-  () => ({
+  (_theme, { direction = 'column' }) => ({
     root: {
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: direction,
       flexWrap: 'nowrap',
 
       '& > *:last-child': {

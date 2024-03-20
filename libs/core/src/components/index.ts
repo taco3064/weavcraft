@@ -13,6 +13,7 @@ export * from './DatePickerField';
 export * from './DateTimePickerField';
 export * from './Dialog';
 export * from './Divider';
+export * from './Drawer';
 export * from './Fab';
 export * from './Grid';
 export * from './Icon';
