@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@weavcraft/core": ["libs/core/src/index.ts"],
+      "@weavcraft/helpers": ["libs/helpers/src/index.ts"],
       "~web/*": ["apps/web/src/*"]
     }
   },
