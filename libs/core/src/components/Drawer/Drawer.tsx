@@ -47,8 +47,13 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
     const { classes } = useDrawerStyles({ breakpoint, open, width });
     const { closeIcon, direction } = ANCHOR_OPTIONS[anchor];
 
-    const toggle = !open ? null : (
-      <MuiIconButton color="inherit" onClick={() => setOpen(false)}>
+    const toggle = open ? null : (
+      <MuiIconButton
+        data-testid="DrawerToggle"
+        color="inherit"
+        className={classes.toggle}
+        onClick={() => setOpen(true)}
+      >
         <Icon className="Drawer-toggle" code={toggleIcon} />
 
         {headerProps.headerIcon && (
@@ -59,22 +64,26 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
 
     return (
       <WidgetWrapper
+        data-testid="DrawerContainer"
         direction={direction}
         maxWidth={false}
         sx={{ position: 'relative' }}
         header={
           <MuiDrawer
             {...{ anchor, open }}
+            data-testid="Drawer"
             variant="persistent"
             PaperProps={{ elevation, className: classes.paper }}
           >
             {open && (
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <WidgetWrapper
+                  data-testid="DrawerContent"
                   direction="column"
                   maxWidth={false}
                   header={
                     <MuiToolbar
+                      data-testid="DrawerHeader"
                       variant={headerProps.headerVariant}
                       style={{
                         display: 'flex',
@@ -87,6 +96,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
                       )}
 
                       <MuiIconButton
+                        data-testid="DrawerClose"
                         onClick={() => setOpen(false)}
                         {...(anchor === 'left' && {
                           style: { marginLeft: 'auto' },
@@ -105,6 +115,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
         }
       >
         <WidgetWrapper
+          data-testid="Content"
           direction="column"
           className={classes.content}
           maxWidth={false}
@@ -118,6 +129,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
             >
               <MuiToolbar
                 disableGutters
+                data-testid="ContentHeader"
                 variant="dense"
                 style={{ gap: 8, marginLeft: 'auto' }}
               >

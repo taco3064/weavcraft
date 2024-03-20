@@ -24,4 +24,23 @@ export const useDrawerStyles = makeStyles<DrawerStyleParams>({
       width: '100%',
     },
   },
+  toggle: {
+    '&:has(.Drawer-icon)': {
+      '& > .Drawer-icon': {
+        display: 'block',
+      },
+      '& > .Drawer-toggle': {
+        display: 'none',
+      },
+
+      '&:hover': {
+        '& > .Drawer-icon': {
+          display: 'none',
+        },
+        '& > .Drawer-toggle': {
+          display: 'block',
+        },
+      },
+    },
+  },
 }));
