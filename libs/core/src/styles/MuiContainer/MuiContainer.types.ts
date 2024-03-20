@@ -4,8 +4,8 @@ import type { Property } from 'csstype';
 
 type BaseContainerProps = ComponentProps<typeof MuiContainer>;
 
-export interface LayoutWrapperProps
-  extends Omit<BaseContainerProps, 'children'> {
+export interface WidgetWrapperProps
+  extends Omit<BaseContainerProps, 'children' | 'disableGutters' | 'style'> {
   children?: ReactElement | null;
   footer?: ReactElement | null;
   header?: ReactElement | null;

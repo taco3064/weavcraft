@@ -11,7 +11,7 @@ import {
 
 import Container from '../Container';
 import Icon from '../Icon';
-import { LayoutWrapper } from '../../styles';
+import { WidgetWrapper } from '../../styles';
 import type { TabProps, TabsProps } from './Tabs.types';
 
 import {
@@ -43,7 +43,7 @@ export default withStoreProps(function Tabs<D extends GenericData>({
   }, [active, records.length]);
 
   return (
-    <LayoutWrapper
+    <WidgetWrapper
       {...{ height, maxWidth }}
       header={
         <MuiTabs
@@ -80,6 +80,6 @@ export default withStoreProps(function Tabs<D extends GenericData>({
           {!isValidElement(child) ? null : cloneElement(child)}
         </Container>
       )}
-    </LayoutWrapper>
+    </WidgetWrapper>
   );
 });

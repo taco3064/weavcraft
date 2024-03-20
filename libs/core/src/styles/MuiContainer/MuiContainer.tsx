@@ -2,19 +2,11 @@ import MuiContainer from '@mui/material/Container';
 import { forwardRef } from 'react';
 import { withStyles } from 'tss-react/mui';
 
-import type { LayoutWrapperProps } from './MuiContainer.types';
+import type { WidgetWrapperProps } from './MuiContainer.types';
 
-export const LayoutWrapper = withStyles(
-  forwardRef<HTMLDivElement, LayoutWrapperProps>(function Container(
-    {
-      children,
-      disableGutters = false,
-      footer,
-      header,
-      height = 'max-content',
-      maxWidth,
-      ...props
-    },
+export const WidgetWrapper = withStyles(
+  forwardRef<HTMLDivElement, WidgetWrapperProps>(function Container(
+    { children, footer, header, height = 'max-content', maxWidth, ...props },
     ref
   ) {
     return (
@@ -43,5 +35,5 @@ export const LayoutWrapper = withStyles(
       },
     },
   }),
-  { name: 'LayoutWrapper' }
+  { name: 'WidgetWrapper' }
 );

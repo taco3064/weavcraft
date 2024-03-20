@@ -2,7 +2,6 @@ import * as Comp from './components';
 
 /**
  * TODO: Need to add the following components
- * * - Card (Layout)
  * * - Drawer (Layout)
  * * - Form (Layout)
  * * - Step (Layout)
@@ -10,29 +9,27 @@ import * as Comp from './components';
 
 export const Display = {
   Avatar: Comp.Avatar,
+  AvatarGroup: Comp.AvatarGroup,
   Badge: Comp.Badge,
   Chip: Comp.Chip,
   Icon: Comp.Icon,
+  ImageList: Comp.ImageList,
   Tooltip: Comp.Tooltip,
   Typography: Comp.Typography,
 };
 
 export const Layout = {
   Accordion: Comp.Accordion,
+  Card: Comp.Card,
   Collapse: Comp.Collapse,
   Container: Comp.Container,
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
+  Grid: Comp.Grid,
+  List: Comp.List,
   Popover: Comp.Popover,
   Tabs: Comp.Tabs,
   Toolbar: Comp.Toolbar,
-};
-
-export const Collection = {
-  Grid: Comp.Grid,
-  List: Comp.List,
-  AvatarGroup: Comp.AvatarGroup,
-  ImageList: Comp.ImageList,
 };
 
 export const Interaction = {
