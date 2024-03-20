@@ -7,7 +7,6 @@ import type { IconCode } from '../Icon';
 type MuiTypographyProps = Pick<
   ComponentProps<typeof MuiTypography>,
   | 'align'
-  | 'children'
   | 'color'
   | 'fontWeight'
   | 'gutterBottom'
@@ -19,12 +18,10 @@ type MuiTypographyProps = Pick<
 
 export interface TypographyProps extends MuiTypographyProps {
   icon?: IconCode;
+  text?: string;
 }
 
-export type MappablePropNames = keyof Pick<
-  TypographyProps,
-  'children' | 'icon'
->;
+export type MappablePropNames = keyof Pick<TypographyProps, 'icon' | 'text'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,

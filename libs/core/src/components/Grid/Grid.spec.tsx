@@ -1,8 +1,10 @@
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
+import Button from '../Button';
 import Container from '../Container';
 import Grid from './Grid';
+import Link from '../Link';
 
 describe('@weavcraft/core/components/Grid', () => {
   it('renders without crashing', () => {
@@ -58,6 +60,29 @@ describe('@weavcraft/core/components/Grid', () => {
       expect(item).toHaveTextContent(content);
       expect(getByTestId(`Icon_${icon}`)).toBeTruthy();
     });
+  });
+
+  it('should render unique items', () => {
+    const { getByTestId } = render(
+      <Grid
+        itemVariant="unique"
+        records={records}
+        itemProps={{
+          propMapping: {
+            icon: 'icon',
+            title: 'title',
+          },
+        }}
+      >
+        <Container propMapping={{ children: 'content' }} />
+        <Link propMapping={{ text: 'title' }} />
+        <Button propMapping={{ text: 'icon' }} />
+      </Grid>
+    );
+
+    expect(getByTestId('Container')).toHaveTextContent(records[0].content);
+    expect(getByTestId('Link')).toHaveTextContent(records[1].title);
+    expect(getByTestId('Button')).toHaveTextContent(records[2].icon);
   });
 
   const records = [

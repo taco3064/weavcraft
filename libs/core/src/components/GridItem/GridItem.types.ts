@@ -27,10 +27,7 @@ export interface GridItemProps
   rowSpacing?: RowSpacing;
 }
 
-export type MappablePropNames = keyof Pick<
-  GridItemProps,
-  'children' | 'icon' | 'title'
->;
+export type MappablePropNames = keyof Pick<GridItemProps, 'icon' | 'title'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,

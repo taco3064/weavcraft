@@ -32,8 +32,8 @@ describe('@weavcraft/core/components/Typography', () => {
     });
   });
 
-  it('renders with children', () => {
-    const { getByText } = render(<Typography>Test</Typography>);
+  it('renders with text', () => {
+    const { getByText } = render(<Typography text="Test" />);
 
     expect(getByText('Test')).toBeInTheDocument();
   });
