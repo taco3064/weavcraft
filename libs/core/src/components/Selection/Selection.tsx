@@ -28,7 +28,7 @@ export default withGenerateDataProps<
   ...props
 }: SelectionProps<SelectionVariant, D>) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const data = useComponentData<D>();
+  const { data } = useComponentData<D>();
 
   const control = (
     <Control

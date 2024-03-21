@@ -3,7 +3,6 @@ import type { ComponentProps } from 'react';
 
 import type { BaseTypographyProps } from '../Typography';
 import type { GenericData, PropsWithMappedData } from '../../contexts';
-import type { IconCode } from '../Icon';
 
 type MuiLinkProps = Pick<
   ComponentProps<typeof MuiLink>,

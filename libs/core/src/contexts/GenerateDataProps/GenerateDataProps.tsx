@@ -1,4 +1,4 @@
-import { useMemo, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 
 import {
   DataStructureContext,
@@ -24,22 +24,13 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGetter();
-    const context = useComponentData<D>();
-    const isDataPropProvided = Boolean(props.data);
+    const { type, data } = useComponentData<D>(props.data);
+    const consumer = <Component {...getProps({ ...props, data })} />;
 
-    const consumer = (
-      <Component
-        {...getProps({
-          ...props,
-          data: isDataPropProvided ? props.data : context,
-        })}
-      />
-    );
-
-    return !isDataPropProvided ? (
+    return type === 'context' ? (
       consumer
     ) : (
-      <ComponentDataContext.Provider value={props.data}>
+      <ComponentDataContext.Provider value={data}>
         {consumer}
       </ComponentDataContext.Provider>
     );
@@ -58,7 +49,7 @@ export function makeStoreProps<
       const { root, paths } = useDataStructure();
 
       const getProps = usePropsGetter();
-      const data = useComponentData();
+      const { data } = useComponentData();
       const uid = useSymbolId();
       const consumer = <Component {...getProps({ ...props, data })} />;
 

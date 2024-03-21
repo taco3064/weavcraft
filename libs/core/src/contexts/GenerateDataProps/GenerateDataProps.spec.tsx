@@ -141,7 +141,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
         wrapper: TestProvider,
       });
 
-      expect(result.current).toEqual(data);
+      expect(result.current).toEqual({ type: 'context', data });
     });
 
     const data = { foo: 'bar' };

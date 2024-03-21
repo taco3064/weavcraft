@@ -34,7 +34,7 @@ export default withGenerateDataProps<
   onItemClick,
   ...props
 }: ListItemProps<ListItemVariant, D>) {
-  const data = useComponentData<D>();
+  const { data } = useComponentData<D>();
   const isHrefValid = useUrlValidation(href);
 
   const children = (

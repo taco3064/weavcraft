@@ -15,7 +15,7 @@ export default withGenerateDataProps<ChipProps<any>, MappablePropNames>(
     onDelete,
     ...props
   }: ChipProps<D>) {
-    const data = useComponentData<D>();
+    const { data } = useComponentData<D>();
 
     return (
       <MuiChip

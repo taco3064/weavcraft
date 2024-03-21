@@ -27,6 +27,7 @@ export interface CardProps extends MuiContainerProps {
   component?: 'form';
   children?: ReactNode; //* Content
 
+  //* This prop is only used in <Form />
   onSubmit?: (e: FormEvent<HTMLFormElement>) => void;
 }
 

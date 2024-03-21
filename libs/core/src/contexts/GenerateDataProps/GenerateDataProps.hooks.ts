@@ -99,8 +99,13 @@ export function useSymbolId() {
   return useMemo(() => Symbol(id), [id]);
 }
 
-export function useComponentData<D extends GenericData>() {
-  return useContext(ComponentDataContext) as D;
+export function useComponentData<D extends GenericData>(propData?: D) {
+  const data = useContext(ComponentDataContext) as D;
+
+  return {
+    type: (propData ? 'props' : 'context') as 'props' | 'context',
+    data: propData || data,
+  };
 }
 
 export function useComponentSlot<D extends GenericData>(
