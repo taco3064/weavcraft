@@ -1,5 +1,5 @@
 import MuiContainer from '@mui/material/Container';
-import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { ComponentProps, FormEvent, ReactElement, ReactNode } from 'react';
 import type { Property } from 'csstype';
 
 import type { GenericData, PropsWithMappedData } from '../../contexts';
@@ -13,6 +13,10 @@ export interface CardProps extends MuiContainerProps {
   headerAction?: ReactElement;
   title?: string;
 
+  //* Footer
+  footerAction?: ReactNode;
+  footerJustify?: Property.JustifyContent;
+
   //* Media
   mediaSrc?: string;
   mediaType?: 'audio' | 'img' | 'video';
@@ -20,8 +24,10 @@ export interface CardProps extends MuiContainerProps {
   mediaWidth?: Property.Width;
   mediaPosition?: 'top' | 'bottom' | 'left' | 'right';
 
+  component?: 'form';
   children?: ReactNode; //* Content
-  footerAction?: ReactNode; //* Footer
+
+  onSubmit?: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 export type MappablePropNames = keyof Pick<
@@ -31,6 +37,6 @@ export type MappablePropNames = keyof Pick<
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  CardProps,
+  Omit<CardProps, 'component' | 'onSubmit'>,
   MappablePropNames
 >;

@@ -25,13 +25,21 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
   ) {
     const getProps = usePropsGetter();
     const context = useComponentData<D>();
-    const data = props.data || context;
-    const consumer = <Component {...getProps({ ...props, data })} />;
+    const isDataPropProvided = Boolean(props.data);
 
-    return !props.data ? (
+    const consumer = (
+      <Component
+        {...getProps({
+          ...props,
+          data: isDataPropProvided ? props.data : context,
+        })}
+      />
+    );
+
+    return !isDataPropProvided ? (
       consumer
     ) : (
-      <ComponentDataContext.Provider value={data}>
+      <ComponentDataContext.Provider value={props.data}>
         {consumer}
       </ComponentDataContext.Provider>
     );
