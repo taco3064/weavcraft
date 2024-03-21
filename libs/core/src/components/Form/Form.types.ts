@@ -17,6 +17,11 @@ type BaseFormProps = Pick<
   'avatar' | 'children' | 'description' | 'maxWidth' | 'title'
 >;
 
+/**
+ * ? Form Component Props Notes
+ * * - `action` and `actionJustify` are used in the `Stepper` component
+ * * - `children` is ReactNode, but it actually only allows the insertion of components related to `BaseField`
+ */
 export interface FormProps<D extends GenericData = {}>
   extends BaseFormProps,
     Pick<BaseFieldProps<any>, 'color' | 'size' | 'variant'> {

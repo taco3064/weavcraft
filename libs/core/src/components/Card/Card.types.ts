@@ -6,6 +6,10 @@ import type { GenericData, PropsWithMappedData } from '../../contexts';
 
 type MuiContainerProps = Pick<ComponentProps<typeof MuiContainer>, 'maxWidth'>;
 
+/**
+ * ? Card Component Props Notes
+ * * - `component` and `onSubmit` are used in the `Form` component
+ */
 export interface CardProps extends MuiContainerProps {
   //* Header
   avatar?: ReactElement;
