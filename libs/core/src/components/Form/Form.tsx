@@ -35,6 +35,7 @@ export default withGenerateDataProps<FormProps, MappablePropNames>(
     submitIcon = 'faCheck',
     variant,
     onSubmit,
+    onValidate,
     ...props
   }: FormProps<D>) {
     const { data, onChange } = useComponentData<D>();
@@ -66,11 +67,19 @@ export default withGenerateDataProps<FormProps, MappablePropNames>(
       );
     }, [data, stringify]);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      onChange(formdata);
-      onSubmit?.(formdata!);
+      try {
+        if ((await onValidate?.(formdata)) !== false) {
+          console.log('====');
+
+          onSubmit?.(formdata);
+          onChange(formdata);
+        }
+      } catch (err) {
+        console.warn('@weavcraft/core/Form Error:', err);
+      }
     };
 
     return (

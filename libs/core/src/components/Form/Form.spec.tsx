@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import Form from './Form';
@@ -88,7 +88,7 @@ describe('@weavcraft/core/components/Form', () => {
     expect(numeric.querySelector('input')).toHaveValue('2');
   });
 
-  it('calls onSubmit with form data', () => {
+  it('calls onSubmit with form data', async () => {
     const inputs = { field1: 'value1', field2: 2 };
     const onSubmit = jest.fn();
 
@@ -108,10 +108,33 @@ describe('@weavcraft/core/components/Form', () => {
     });
 
     fireEvent.click(getByTestId('FormSubmitButton'));
-    expect(onSubmit).toHaveBeenCalledWith(inputs);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(inputs));
   });
 
-  it('should reset form', () => {
+  it('should not calls onSubmit when onValidate returns false', async () => {
+    const data = { field1: 'value1', field2: 2 };
+    const onSubmit = jest.fn();
+
+    const { getByTestId } = render(
+      <Form data={data} onValidate={() => false} onSubmit={onSubmit}>
+        <TextField name="field1" />
+        <NumericField name="field2" />
+      </Form>
+    );
+
+    fireEvent.change(getByTestId('TextField').querySelector('input')!, {
+      target: { value: 'invalid2' },
+    });
+
+    fireEvent.change(getByTestId('NumericField').querySelector('input')!, {
+      target: { value: 3 },
+    });
+
+    fireEvent.click(getByTestId('FormSubmitButton'));
+    await waitFor(() => expect(onSubmit).not.toHaveBeenCalled());
+  });
+
+  it('should reset form', async () => {
     const onSubmit = jest.fn();
 
     const { getByTestId } = render(
@@ -131,10 +154,10 @@ describe('@weavcraft/core/components/Form', () => {
 
     fireEvent.click(getByTestId('FormResetButton'));
     fireEvent.click(getByTestId('FormSubmitButton'));
-    expect(onSubmit).toHaveBeenCalledWith({});
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith({}));
   });
 
-  it('should reset form with initial data', () => {
+  it('should reset form with initial data', async () => {
     const data = { field1: 'value1', field2: 2 };
     const onSubmit = jest.fn();
 
@@ -155,6 +178,6 @@ describe('@weavcraft/core/components/Form', () => {
 
     fireEvent.click(getByTestId('FormResetButton'));
     fireEvent.click(getByTestId('FormSubmitButton'));
-    expect(onSubmit).toHaveBeenCalledWith(data);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(data));
   });
 });

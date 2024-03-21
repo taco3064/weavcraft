@@ -23,6 +23,7 @@ export interface FormProps<D extends GenericData = {}>
   resetIcon?: IconCode;
   submitIcon?: IconCode;
   onSubmit?: (data: D) => void;
+  onValidate?: (data: D) => Promise<boolean> | boolean;
 }
 
 export type MappablePropNames = keyof Pick<FormProps, 'title' | 'description'>;
