@@ -1,4 +1,6 @@
 import type { Breakpoint } from '@mui/material/styles';
+import type { Property } from 'csstype';
+import type { ReactNode } from 'react';
 
 import type { BaseCardProps } from '../Card';
 import type { BaseFieldProps } from '../BaseField';
@@ -18,6 +20,8 @@ type BaseFormProps = Pick<
 export interface FormProps<D extends GenericData = {}>
   extends BaseFormProps,
     Pick<BaseFieldProps<any>, 'color' | 'size' | 'variant'> {
+  action?: ReactNode;
+  actionJustify?: Property.JustifyContent;
   breakpoint?: Exclude<Breakpoint, 'xs'>;
   fullWidthFields?: (PropertyPath<D> | string)[];
   resetIcon?: IconCode;
@@ -30,6 +34,6 @@ export type MappablePropNames = keyof Pick<FormProps, 'title' | 'description'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  FormProps<D>,
+  Omit<FormProps<D>, 'action' | 'actionJustify'>,
   MappablePropNames
 >;

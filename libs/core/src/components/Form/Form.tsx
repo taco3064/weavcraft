@@ -26,6 +26,8 @@ import {
 
 export default withGenerateDataProps<FormProps, MappablePropNames>(
   function Form<D extends GenericData>({
+    action,
+    actionJustify = 'center',
     breakpoint = 'sm',
     children,
     color,
@@ -72,8 +74,6 @@ export default withGenerateDataProps<FormProps, MappablePropNames>(
 
       try {
         if ((await onValidate?.(formdata)) !== false) {
-          console.log('====');
-
           onSubmit?.(formdata);
           onChange(formdata);
         }
@@ -86,28 +86,30 @@ export default withGenerateDataProps<FormProps, MappablePropNames>(
       <Card
         {...props}
         component="form"
-        footerJustify="center"
+        footerJustify={actionJustify}
         onSubmit={handleSubmit}
         footerAction={
-          <>
-            <MuiIconButton
-              data-testid="FormResetButton"
-              size="large"
-              color="default"
-              onClick={() => setKey(new Date().valueOf())}
-            >
-              <Icon code={resetIcon} />
-            </MuiIconButton>
+          action || (
+            <>
+              <MuiIconButton
+                data-testid="FormResetButton"
+                size="large"
+                color="default"
+                onClick={() => setKey(new Date().valueOf())}
+              >
+                <Icon code={resetIcon} />
+              </MuiIconButton>
 
-            <MuiIconButton
-              data-testid="FormSubmitButton"
-              size="large"
-              color="primary"
-              type="submit"
-            >
-              <Icon code={submitIcon} />
-            </MuiIconButton>
-          </>
+              <MuiIconButton
+                data-testid="FormSubmitButton"
+                size="large"
+                color="primary"
+                type="submit"
+              >
+                <Icon code={submitIcon} />
+              </MuiIconButton>
+            </>
+          )
         }
       >
         <MuiGrid
