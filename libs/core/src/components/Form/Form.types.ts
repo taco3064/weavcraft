@@ -1,6 +1,7 @@
 import type { Breakpoint } from '@mui/material/styles';
 
 import type { BaseCardProps } from '../Card';
+import type { BaseFieldProps } from '../BaseField';
 import type { IconCode } from '../Icon';
 
 import type {
@@ -14,7 +15,9 @@ type BaseFormProps = Pick<
   'avatar' | 'children' | 'description' | 'maxWidth' | 'title'
 >;
 
-export interface FormProps<D extends GenericData = {}> extends BaseFormProps {
+export interface FormProps<D extends GenericData = {}>
+  extends BaseFormProps,
+    Pick<BaseFieldProps<any>, 'color' | 'size' | 'variant'> {
   breakpoint?: Exclude<Breakpoint, 'xs'>;
   fullWidthFields?: (PropertyPath<D> | string)[];
   resetIcon?: IconCode;
