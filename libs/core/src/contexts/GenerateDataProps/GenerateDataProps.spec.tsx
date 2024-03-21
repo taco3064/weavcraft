@@ -1,4 +1,5 @@
-import { fireEvent, render, renderHook } from '@testing-library/react';
+import { act, fireEvent, render, renderHook } from '@testing-library/react';
+import { useState } from 'react';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
@@ -141,14 +142,23 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
         wrapper: TestProvider,
       });
 
-      expect(result.current).toEqual({ type: 'context', data });
+      const newData = { foo: 'changed' };
+      const { type, data, onChange } = result.current;
+
+      expect(type).toBe('context');
+      expect(data).toEqual(data);
+
+      act(() => onChange(newData));
+      expect(result.current.data).toEqual(newData);
     });
 
     const data = { foo: 'bar' };
 
     function TestProvider({ children }: { children: ReactNode }) {
+      const state = useState(data);
+
       return (
-        <ComponentDataContext.Provider value={data}>
+        <ComponentDataContext.Provider value={state}>
           {children}
         </ComponentDataContext.Provider>
       );
@@ -251,8 +261,10 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
     const propMapping = { name: 'user.name' };
 
     function TestProvider({ children }: { children: ReactNode }) {
+      const state = useState(data);
+
       return (
-        <ComponentDataContext.Provider value={data}>
+        <ComponentDataContext.Provider value={state}>
           {children}
         </ComponentDataContext.Provider>
       );

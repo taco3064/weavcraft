@@ -2,7 +2,6 @@ import * as Comp from './components';
 
 /**
  * TODO: Need to add the following components
- * * - Form (Layout)
  * * - Step (Layout)
  */
 
@@ -11,6 +10,7 @@ export const Display = {
   AvatarGroup: Comp.AvatarGroup,
   Badge: Comp.Badge,
   Chip: Comp.Chip,
+  Form: Comp.Form,
   Icon: Comp.Icon,
   ImageList: Comp.ImageList,
   Tooltip: Comp.Tooltip,

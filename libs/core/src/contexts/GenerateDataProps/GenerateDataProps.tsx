@@ -1,4 +1,4 @@
-import { useMemo, useState, type ComponentType } from 'react';
+import { useMemo, type ComponentType } from 'react';
 
 import {
   DataStructureContext,
@@ -24,13 +24,13 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGetter();
-    const { type, data } = useComponentData<D>(props.data);
+    const { type, data, onChange } = useComponentData<D>(props.data);
     const consumer = <Component {...getProps({ ...props, data })} />;
 
     return type === 'context' ? (
       consumer
     ) : (
-      <ComponentDataContext.Provider value={data}>
+      <ComponentDataContext.Provider value={[data, onChange]}>
         {consumer}
       </ComponentDataContext.Provider>
     );

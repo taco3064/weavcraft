@@ -10,6 +10,7 @@ import {
   useId,
   useMemo,
   useRef,
+  useState,
   type ComponentType,
 } from 'react';
 
@@ -74,9 +75,9 @@ const useStructure = create(() => {
 });
 
 //* - Context
-export const ComponentDataContext = createContext<GenericData | undefined>(
-  undefined
-);
+export const ComponentDataContext = createContext<
+  ReturnType<typeof useState<any>>
+>([undefined, () => undefined]);
 
 export const DataStructureContext = createContext<
   DataStructureContextValue | undefined
@@ -100,12 +101,24 @@ export function useSymbolId() {
 }
 
 export function useComponentData<D extends GenericData>(propData?: D) {
-  const data = useContext(ComponentDataContext) as D;
+  const dataState = useState<D>(propData!);
+  const type: 'props' | 'context' = propData ? 'props' : 'context';
 
-  return {
-    type: (propData ? 'props' : 'context') as 'props' | 'context',
-    data: propData || data,
-  };
+  const [data, setData] = useContext(ComponentDataContext) as ReturnType<
+    typeof useState<D>
+  >;
+
+  return type === 'props'
+    ? {
+        type,
+        data: propData!,
+        onChange: dataState[1],
+      }
+    : {
+        type,
+        data: data!,
+        onChange: setData,
+      };
 }
 
 export function useComponentSlot<D extends GenericData>(
