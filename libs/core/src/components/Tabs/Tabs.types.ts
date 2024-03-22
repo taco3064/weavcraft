@@ -30,6 +30,10 @@ export type TabProps<D extends GenericData> = PropsWithMappedData<
   'disabled' | 'icon' | 'label'
 >;
 
+/**
+ * ? Tabs Component Props Notes
+ * * - The element count of `children` should be equal to the element count of `records`
+ */
 export type TabsProps<D extends GenericData = {}> = PropsWithStore<
   D,
   MuiTabsProps & {

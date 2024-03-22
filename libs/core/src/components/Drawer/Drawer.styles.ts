@@ -3,9 +3,10 @@ import type { DrawerStyleParams } from './Drawer.types';
 
 export const useDrawerStyles = makeStyles<DrawerStyleParams>({
   name: 'Drawer',
-})((theme, { breakpoint, open, width }) => ({
+})((theme, { breakpoint, height, open, width }) => ({
   content: {
     marginLeft: open ? width : 0,
+    height,
     width: `calc(100% - ${open ? width : 0}px)`,
 
     transition: theme.transitions.create(['margin', 'width'], {

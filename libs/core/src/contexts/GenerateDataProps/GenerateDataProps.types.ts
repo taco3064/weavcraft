@@ -32,6 +32,15 @@ export type PropertyPath<
     : `${K}`
   : never;
 
+//* - Utility Prop Types
+type Capitalize<S extends string> = S extends `${infer T}${infer U}`
+  ? `${Uppercase<T>}${U}`
+  : never;
+
+export type PrefixProps<P, PX extends string> = {
+  [K in Extract<keyof P, string> as `${PX}${Capitalize<K>}`]?: P[K];
+};
+
 //* - Component Data
 export interface MappableProps<D extends GenericData, P = {}> {
   data?: D;

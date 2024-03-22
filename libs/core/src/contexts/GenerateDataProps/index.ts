@@ -9,6 +9,7 @@ export {
 export type {
   GenericData,
   MappableProps,
+  PrefixProps,
   PropertyPath,
   PropsWithMappedData,
   PropsWithStore,

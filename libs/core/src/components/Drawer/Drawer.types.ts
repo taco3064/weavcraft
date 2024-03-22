@@ -5,8 +5,13 @@ import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import type { Property } from 'csstype';
 
 import type { BaseToolbarProps } from '../Toolbar';
-import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
+
+import type {
+  GenericData,
+  PrefixProps,
+  PropsWithMappedData,
+} from '../../contexts';
 
 type MuiPaperProps = Pick<ComponentProps<typeof MuiPaper>, 'elevation'>;
 
@@ -18,22 +23,19 @@ type ToolbarProps = Pick<
 >;
 
 export interface DrawerProps
-  extends Omit<MuiDrawerProps, 'anchor'>,
-    MuiPaperProps {
+  extends MuiPaperProps,
+    Omit<MuiDrawerProps, 'anchor'>,
+    PrefixProps<ToolbarProps, 'header'> {
   anchor?: Extract<MuiDrawerProps['anchor'], 'left' | 'right'>;
   breakpoint?: Exclude<Breakpoint, 'xs'>;
   children?: ReactElement;
   content?: ReactElement;
-  title?: string;
-  width?: number;
-
   header?: ReactNode;
-  headerColor?: ToolbarProps['color'];
-  headerElevation?: ToolbarProps['elevation'];
   headerIcon?: IconCode;
-  headerTitle?: ToolbarProps['title'];
-  headerVariant?: ToolbarProps['variant'];
+  height?: Property.Height;
+  title?: string;
   toggleIcon?: IconCode;
+  width?: number;
 }
 
 export type AnchorOptions = Record<
@@ -45,7 +47,7 @@ export type AnchorOptions = Record<
 >;
 
 export interface DrawerStyleParams
-  extends Required<Pick<DrawerProps, 'breakpoint' | 'width'>> {
+  extends Required<Pick<DrawerProps, 'breakpoint' | 'height' | 'width'>> {
   open: boolean;
 }
 

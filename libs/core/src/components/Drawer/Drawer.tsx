@@ -37,6 +37,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
     children,
     content,
     elevation,
+    height = '100vh',
     title,
     toggleIcon = 'faBars',
     width = 320,
@@ -44,7 +45,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
   }) {
     const [open, setOpen] = useState(false);
 
-    const { classes } = useDrawerStyles({ breakpoint, open, width });
+    const { classes } = useDrawerStyles({ breakpoint, open, height, width });
     const { closeIcon, direction } = ANCHOR_OPTIONS[anchor];
 
     const toggle = open ? null : (
