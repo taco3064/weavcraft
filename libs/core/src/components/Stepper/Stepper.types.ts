@@ -1,4 +1,8 @@
-import type { ReactElement, ButtonHTMLAttributes } from 'react';
+import type {
+  ReactElement,
+  ButtonHTMLAttributes,
+  FunctionComponentElement,
+} from 'react';
 
 import Card, { type CardProps } from '../Card';
 import Form, { type FormProps } from '../Form';
@@ -14,19 +18,22 @@ export interface ButtonParams
     ButtonHTMLAttributes<HTMLButtonElement>,
     'disabled' | 'type' | 'onClick'
   > {
+  'data-testid': string;
   icon: Extract<IconCode, 'faAngleLeft' | 'faAngleRight' | 'faCheck'>;
   text?: string;
 }
 
 //* Component Props
+type CommonOmitProps = 'avatar' | 'description' | 'headerAction' | 'title';
+
 export type StepFormProps<D extends GenericData = {}> = Omit<
   FormProps<D>,
-  'data' | 'action' | 'actionJustify' | 'onSubmit'
+  CommonOmitProps | 'data' | 'action' | 'actionJustify' | 'onSubmit'
 >;
 
 export type StepCardProps<D extends GenericData = {}> = Omit<
   CardProps<D>,
-  'data' | 'footerAction' | 'footerJustify'
+  CommonOmitProps | 'data' | 'footerAction' | 'footerJustify'
 >;
 
 type StepProps<
@@ -35,13 +42,14 @@ type StepProps<
 > = PropsWithMappedData<
   D,
   {
-    variant: V;
+    variant?: V;
     label?: string;
 
-    children?: V extends 'form'
+    content?: V extends 'form'
       ? ReactElement<StepFormProps<D>, typeof Form>
       : ReactElement<StepCardProps<D>, typeof Card>;
-  }
+  },
+  'label'
 >;
 
 export interface StepperProps<D extends GenericData>

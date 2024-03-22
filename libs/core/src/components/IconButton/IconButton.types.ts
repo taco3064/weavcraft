@@ -10,6 +10,7 @@ type MuiIconButtonProps = Pick<
 >;
 
 export interface IconButtonProps extends MuiIconButtonProps {
+  'data-testid'?: string;
   href?: string;
   icon?: IconCode;
 }
@@ -21,6 +22,6 @@ export type MappablePropNames = keyof Pick<
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  IconButtonProps,
+  Omit<IconButtonProps, 'data-testid'>,
   MappablePropNames
 >;

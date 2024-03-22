@@ -11,9 +11,9 @@ export default withGenerateDataProps<IconButtonProps, MappablePropNames>(
 
     return (
       <MuiIconButton
+        data-testid="IconButton"
         {...props}
         {...(isHrefValid && { component: 'a', href })}
-        data-testid="IconButton"
       >
         {icon && <Icon fontSize="inherit" code={icon} />}
       </MuiIconButton>

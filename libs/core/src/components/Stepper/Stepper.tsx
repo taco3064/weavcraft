@@ -8,13 +8,17 @@ import Card from '../Card';
 import Form from '../Form';
 import StepperButton from './Stepper.button';
 import { WidgetWrapper } from '../../styles';
-import type { GenericData } from '../../contexts';
+import { usePropsGetter, type GenericData } from '../../contexts';
 
 import type {
   StepCardProps,
   StepFormProps,
   StepperProps,
 } from './Stepper.types';
+
+function isLastStep(active: number, items?: number) {
+  return active + 1 === (items || 0);
+}
 
 export default function Stepper<D extends GenericData>({
   data,
@@ -28,7 +32,7 @@ export default function Stepper<D extends GenericData>({
   const [active, setActive] = useState(0);
   const [stepData, setStepData] = useState<Partial<D>>(data || {});
 
-  const isLastStep = active + 1 === (items?.length || 0);
+  const getProps = usePropsGetter<D>();
   const isDone = active === items?.length;
 
   const handleDone = useMemo(
@@ -36,26 +40,24 @@ export default function Stepper<D extends GenericData>({
     [isDone, stepData, onDone]
   );
 
-  const getActions = (onNextStep?: () => void) => (
+  const getActions = (step: number, onNextStep?: () => void) => (
     <>
       <StepperButton
         data-testid="StepPrevButton"
-        disabled={active === 0}
+        disabled={step === 0}
         icon="faAngleLeft"
         text={prevButtonText}
-        onClick={() => setActive(Math.max(0, active - 1))}
+        onClick={() => setActive(Math.max(0, step - 1))}
       />
 
-      {active >= (items?.length || 0) ? null : (
-        <StepperButton
-          {...(isLastStep
-            ? { icon: 'faCheck', text: doneButtonText }
-            : { icon: 'faAngleRight', text: nextButtonText })}
-          data-testid="StepNextButton"
-          type="submit"
-          onClick={onNextStep}
-        />
-      )}
+      <StepperButton
+        {...(isLastStep(step, items?.length)
+          ? { icon: 'faCheck', text: doneButtonText }
+          : { icon: 'faAngleRight', text: nextButtonText })}
+        data-testid="StepNextButton"
+        type="submit"
+        onClick={onNextStep}
+      />
     </>
   );
 
@@ -69,31 +71,36 @@ export default function Stepper<D extends GenericData>({
 
   return (
     <WidgetWrapper maxWidth={maxWidth}>
-      <MuiStepper activeStep={active} orientation="vertical">
-        {items?.map(({ children, label, variant }, i) => {
-          const props = isValidElement(children) ? children.props : undefined;
+      <MuiStepper
+        data-testid="Stepper"
+        activeStep={active}
+        orientation="vertical"
+      >
+        {items?.map((item, i) => {
+          const { content, label, variant } = getProps({ ...item, data });
+          const props = isValidElement(content) ? content.props : undefined;
 
           return (
             <MuiStep key={i}>
-              <MuiStepLabel>{label}</MuiStepLabel>
+              <MuiStepLabel data-testid="StepLabel">{label}</MuiStepLabel>
 
-              <MuiStepContent>
+              <MuiStepContent data-testid="StepContent">
                 {variant === 'form' ? (
                   <Form
                     {...(props as StepFormProps)}
-                    action={getActions()}
+                    action={getActions(i)}
                     actionJustify="flex-start"
                     data={stepData}
                     onSubmit={(data) => {
                       setStepData({ ...stepData, ...data });
-                      setActive(active + 1);
+                      setActive(i + 1);
                     }}
                   />
                 ) : (
                   <Card
                     {...(props as StepCardProps)}
                     data={stepData}
-                    footerAction={getActions(() => setActive(active + 1))}
+                    footerAction={getActions(i, () => setActive(i + 1))}
                     footerJustify="flex-start"
                   />
                 )}
