@@ -4,7 +4,11 @@ import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
 
-import { useComponentData, withGenerateDataProps } from '../../contexts';
+import {
+  useComponentData,
+  withGenerateDataProps,
+  type GenericData,
+} from '../../contexts';
 import { useUrlValidation } from '../../hooks';
 
 import type {
@@ -14,9 +18,9 @@ import type {
 } from './ListItem.types';
 
 export default withGenerateDataProps<
-  ListItemProps<ListItemVariant>,
+  ListItemProps<ListItemVariant, any>,
   MappablePropNames
->(function ListItem({
+>(function ListItem<D extends GenericData>({
   action,
   disabled,
   href,
@@ -29,8 +33,8 @@ export default withGenerateDataProps<
   variant = 'item',
   onItemClick,
   ...props
-}) {
-  const data = useComponentData();
+}: ListItemProps<ListItemVariant, D>) {
+  const { data } = useComponentData<D>();
   const isHrefValid = useUrlValidation(href);
 
   const children = (

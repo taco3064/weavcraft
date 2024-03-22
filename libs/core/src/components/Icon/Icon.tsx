@@ -7,7 +7,7 @@ import { withGenerateDataProps } from '../../contexts';
 import type { IconProps, MappablePropNames } from './Icon.types';
 
 export default withGenerateDataProps<IconProps, MappablePropNames>(
-  function Icon({ code, ...props }) {
+  function Icon({ className, code, ...props }) {
     const options = useMemo(() => {
       const icon = _get(FaIcon, [code!, 'icon']);
 

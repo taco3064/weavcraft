@@ -35,9 +35,10 @@ export type ListProps<
       itemVariant?: ListItemProps<D, V>['variant'];
       itemProps?: Omit<
         ListItemProps<D, V>,
-        'data' | 'action' | 'indicator' | 'variant'
+        'data' | 'action' | 'indicator' | 'variant' | 'onItemClick'
       >;
 
+      onItemClick?: V extends 'button' ? (item: D) => void : undefined;
       onItemActionClick?: (item: D) => void;
       onItemIndicatorClick?: (item: D) => void;
     }

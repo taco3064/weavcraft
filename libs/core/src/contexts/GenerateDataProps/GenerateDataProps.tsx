@@ -24,14 +24,13 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGetter();
-    const context = useComponentData<D>();
-    const data = props.data || context;
+    const { type, data, onChange } = useComponentData<D>(props.data);
     const consumer = <Component {...getProps({ ...props, data })} />;
 
-    return !props.data ? (
+    return type === 'context' ? (
       consumer
     ) : (
-      <ComponentDataContext.Provider value={data}>
+      <ComponentDataContext.Provider value={[data, onChange]}>
         {consumer}
       </ComponentDataContext.Provider>
     );
@@ -50,7 +49,7 @@ export function makeStoreProps<
       const { root, paths } = useDataStructure();
 
       const getProps = usePropsGetter();
-      const data = useComponentData();
+      const { data } = useComponentData();
       const uid = useSymbolId();
       const consumer = <Component {...getProps({ ...props, data })} />;
 

@@ -13,25 +13,44 @@ describe('@weavcraft/core/components/Tabs', () => {
   });
 
   it('renders correct number of tabs', () => {
-    const { getAllByTestId } = render(<Tabs records={records} />);
+    const items = [{ label: 'Tab1' }, { label: 'Tab2' }];
+    const { getAllByTestId } = render(<Tabs items={items} />);
 
-    expect(getAllByTestId('Tab')).toHaveLength(records.length);
+    expect(getAllByTestId('Tab')).toHaveLength(items.length);
   });
 
   it('switches tabs correctly', () => {
+    const content = ['content1', 'content2'];
+
     const { getByTestId, getAllByTestId } = render(
-      <Tabs records={records}>
-        <Typography propMapping={{ text: 'content' }} />
-        <Button propMapping={{ text: 'content' }} />
-      </Tabs>
+      <Tabs
+        items={[
+          {
+            label: 'Tab1',
+            children: (
+              <Typography
+                data={{ content: content[0] }}
+                propMapping={{ text: 'content' }}
+              />
+            ),
+          },
+          {
+            label: 'Tab2',
+            children: (
+              <Button
+                data={{ label: content[1] }}
+                propMapping={{ text: 'label' }}
+              />
+            ),
+          },
+        ]}
+      />
     );
 
     const tabs = getAllByTestId('Tab');
 
-    expect(getByTestId('Typography')).toHaveTextContent(records[0].content);
+    expect(getByTestId('Typography')).toHaveTextContent(content[0]);
     fireEvent.click(tabs[1]);
-    expect(getByTestId('Button')).toHaveTextContent(records[1].content);
+    expect(getByTestId('Button')).toHaveTextContent(content[1]);
   });
-
-  const records = [{ content: 'content1' }, { content: 'content2' }];
 });

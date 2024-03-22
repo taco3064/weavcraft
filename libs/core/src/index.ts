@@ -1,17 +1,11 @@
 import * as Comp from './components';
 
-/**
- * TODO: Need to add the following components
- * * - Drawer (Layout)
- * * - Form (Layout)
- * * - Step (Layout)
- */
-
 export const Display = {
   Avatar: Comp.Avatar,
   AvatarGroup: Comp.AvatarGroup,
   Badge: Comp.Badge,
   Chip: Comp.Chip,
+  Form: Comp.Form,
   Icon: Comp.Icon,
   ImageList: Comp.ImageList,
   Tooltip: Comp.Tooltip,
@@ -25,9 +19,11 @@ export const Layout = {
   Container: Comp.Container,
   Dialog: Comp.Dialog,
   Divider: Comp.Divider,
+  Drawer: Comp.Drawer,
   Grid: Comp.Grid,
   List: Comp.List,
   Popover: Comp.Popover,
+  Stepper: Comp.Stepper,
   Tabs: Comp.Tabs,
   Toolbar: Comp.Toolbar,
 };

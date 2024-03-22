@@ -1,6 +1,7 @@
 import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { Property } from 'csstype';
 
 import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
@@ -17,7 +18,7 @@ type MuiToolbarProps = Pick<
 
 export interface ToolbarProps extends MuiAppBarProps, MuiToolbarProps {
   children?: ReactNode;
-  icon?: IconCode;
+  icon?: ReactElement | IconCode | null;
   title?: string;
 }
 
@@ -25,6 +26,6 @@ export type MappablePropNames = keyof Pick<ToolbarProps, 'icon' | 'title'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  ToolbarProps,
+  Omit<ToolbarProps, 'icon'> & { icon?: IconCode },
   MappablePropNames
 >;

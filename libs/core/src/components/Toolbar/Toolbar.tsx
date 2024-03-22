@@ -1,6 +1,7 @@
 import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import MuiTypography from '@mui/material/Typography';
+import { isValidElement } from 'react';
 
 import Icon from '../Icon';
 import { withGenerateDataProps } from '../../contexts';
@@ -25,10 +26,15 @@ export default withGenerateDataProps<ToolbarProps, MappablePropNames>(
       >
         <MuiToolbar
           data-testid="Toolbar"
-          style={{ gap: 8 }}
+          style={{ display: 'flex', gap: 8 }}
           {...{ disableGutters, variant }}
         >
-          {icon && <Icon code={icon} />}
+          {typeof icon === 'string' ? (
+            <Icon code={icon} />
+          ) : isValidElement(icon) ? (
+            icon
+          ) : null}
+
           {title && <MuiTypography variant="h6">{title}</MuiTypography>}
 
           {children}

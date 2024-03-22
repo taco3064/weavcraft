@@ -8,16 +8,17 @@ type MuiChipProps = Pick<
   'color' | 'disabled' | 'label' | 'size' | 'variant' | 'onDelete'
 >;
 
-export interface ChipProps extends Omit<MuiChipProps, 'onDelete'> {
+export interface ChipProps<D extends GenericData>
+  extends Omit<MuiChipProps, 'onDelete'> {
   indicator?: ReactElement;
-  onClick?: <D extends GenericData>(data?: D) => void;
-  onDelete?: <D extends GenericData>(data?: D) => void;
+  onClick?: (data?: D) => void;
+  onDelete?: (data?: D) => void;
 }
 
-export type MappablePropNames = keyof Pick<ChipProps, 'disabled' | 'label'>;
+export type MappablePropNames = keyof Pick<ChipProps<{}>, 'disabled' | 'label'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  ChipProps,
+  ChipProps<D>,
   MappablePropNames
 >;

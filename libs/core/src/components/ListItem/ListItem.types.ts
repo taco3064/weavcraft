@@ -22,7 +22,7 @@ type BasePropName = Extract<
   keyof MuiListItemButtonProps
 >;
 
-export interface ListItemProps<V extends ListItemVariant>
+export interface ListItemProps<V extends ListItemVariant, D extends GenericData>
   extends BaseListItemProps,
     Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
   href?: V extends 'link' ? string : undefined;
@@ -35,13 +35,11 @@ export interface ListItemProps<V extends ListItemVariant>
   indicator?: ReactElement;
   variant?: V;
 
-  onItemClick?: V extends 'button'
-    ? <D extends GenericData>(data?: D) => void
-    : undefined;
+  onItemClick?: V extends 'button' ? (data?: D) => void : undefined;
 }
 
 export type MappablePropNames = keyof Pick<
-  ListItemProps<ListItemVariant>,
+  ListItemProps<ListItemVariant, {}>,
   | BasePropName
   | 'disabled'
   | 'href'
@@ -55,4 +53,4 @@ export type MappablePropNames = keyof Pick<
 export type WrappedProps<
   D extends GenericData,
   V extends ListItemVariant
-> = PropsWithMappedData<D, ListItemProps<V>, MappablePropNames>;
+> = PropsWithMappedData<D, ListItemProps<V, D>, MappablePropNames>;

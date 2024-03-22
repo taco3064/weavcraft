@@ -11,9 +11,9 @@ import type { CardProps, MappablePropNames } from './Card.types';
 
 export default withGenerateDataProps<CardProps, MappablePropNames>(
   function Card({
-    maxWidth,
     children,
-    footerAction,
+    component,
+    maxWidth,
 
     //* Header
     avatar,
@@ -21,12 +21,18 @@ export default withGenerateDataProps<CardProps, MappablePropNames>(
     headerAction,
     title,
 
+    //* Footer
+    footerAction,
+    footerJustify,
+
     //* Media
     mediaHeight,
     mediaPosition = 'top',
     mediaSrc,
     mediaType,
     mediaWidth,
+
+    onSubmit,
   }) {
     const isHeaderVisible = [avatar, description, headerAction, title].some(
       Boolean
@@ -44,7 +50,13 @@ export default withGenerateDataProps<CardProps, MappablePropNames>(
       );
 
     return (
-      <WidgetWrapper maxWidth={maxWidth}>
+      <WidgetWrapper
+        maxWidth={maxWidth}
+        {...(component === 'form' && {
+          component: 'form',
+          onSubmit: onSubmit as never,
+        })}
+      >
         <MuiCard
           data-testid="Card"
           sx={{
@@ -78,7 +90,10 @@ export default withGenerateDataProps<CardProps, MappablePropNames>(
             {mediaPosition === 'bottom' ? media : null}
 
             {!footerAction ? null : (
-              <MuiCardActions data-testid="CardActions">
+              <MuiCardActions
+                data-testid="CardActions"
+                style={{ justifyContent: footerJustify }}
+              >
                 {footerAction}
               </MuiCardActions>
             )}

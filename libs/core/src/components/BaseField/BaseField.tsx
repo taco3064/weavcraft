@@ -16,7 +16,7 @@ export default function BaseField<V, C extends ElementType<any>>({
     <MuiTextField
       fullWidth
       {...props}
-      value={value || ''}
+      defaultValue={value || ''}
       onChange={(e) => onChange?.(e.target.value as V, props.name)}
       InputProps={
         {

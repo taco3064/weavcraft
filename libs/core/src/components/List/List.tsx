@@ -32,6 +32,8 @@ export default withStoreProps(function List<
   itemProps,
   itemVariant,
   records = [],
+
+  onItemClick,
   onItemActionClick,
   onItemIndicatorClick,
 
@@ -76,6 +78,7 @@ export default withStoreProps(function List<
       {records.map((item, i) => (
         <ListItem
           {...itemProps}
+          {...(itemVariant === 'button' && { onItemClick })}
           key={i}
           variant={itemVariant || 'item'}
           data={item}

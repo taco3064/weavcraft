@@ -25,13 +25,15 @@ export type MappablePropNames = keyof Omit<
   'color' | 'labelPlacement' | 'size'
 >;
 
-export interface SelectionProps<V extends SelectionVariant>
-  extends BaseSelectionProps {
+export interface SelectionProps<
+  V extends SelectionVariant,
+  D extends GenericData
+> extends BaseSelectionProps {
   variant?: V;
-  onChange?: (checked: boolean, data?: GenericData) => void;
+  onChange?: (checked: boolean, data?: D) => void;
 }
 
 export type WrappedProps<
   V extends SelectionVariant,
   D extends GenericData
-> = PropsWithMappedData<D, SelectionProps<V>, MappablePropNames>;
+> = PropsWithMappedData<D, SelectionProps<V, D>, MappablePropNames>;

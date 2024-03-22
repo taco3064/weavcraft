@@ -6,33 +6,49 @@ import type { WidgetWrapperProps } from './MuiContainer.types';
 
 export const WidgetWrapper = withStyles(
   forwardRef<HTMLDivElement, WidgetWrapperProps>(function Container(
-    { children, footer, header, height = 'max-content', maxWidth, ...props },
+    {
+      children,
+      classes: { content: contentClassName, ...classes } = {},
+      direction: _d,
+      header,
+      height = 'max-content',
+      maxWidth,
+      ...props
+    },
     ref
   ) {
     return (
       <MuiContainer
         {...props}
-        disableGutters
         ref={ref}
+        disableGutters
+        classes={classes}
         maxWidth={maxWidth}
-        style={{ height }}
       >
         {header}
-        {children}
-        {footer}
+
+        <MuiContainer
+          disableGutters
+          className={contentClassName}
+          maxWidth={false}
+        >
+          {children}
+        </MuiContainer>
       </MuiContainer>
     );
   }),
-  () => ({
+  (_theme, { direction = 'column', height }) => ({
     root: {
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: direction,
       flexWrap: 'nowrap',
-
-      '& > *:last-child': {
-        height: '100%',
-        overflow: 'hidden auto',
-      },
+      height,
+    },
+    content: {
+      display: 'flex',
+      flexDirection: 'column' as never,
+      height: '100%',
+      overflow: 'hidden auto',
     },
   }),
   { name: 'WidgetWrapper' }

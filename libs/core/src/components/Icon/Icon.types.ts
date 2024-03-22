@@ -14,7 +14,7 @@ type FortawesomeCode<T> = {
 
 type MuiIconProps = Pick<
   ComponentProps<typeof MuiSvgIcon>,
-  'color' | 'fontSize'
+  'className' | 'color' | 'fontSize'
 >;
 
 export type IconCode = FortawesomeCode<typeof FaIcon>;
@@ -27,6 +27,6 @@ export type MappablePropNames = keyof Pick<IconProps, 'code'>;
 
 export type WrappedProps<D extends GenericData> = PropsWithMappedData<
   D,
-  IconProps,
+  Omit<IconProps, 'className'>,
   MappablePropNames
 >;

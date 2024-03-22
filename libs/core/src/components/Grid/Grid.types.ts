@@ -11,6 +11,10 @@ type MuiGridProps = Pick<
 
 export type ItemVariant = 'common' | 'unique';
 
+/**
+ * ? Grid Component Props Notes
+ * * - `itemVariant` is used to define the template of children
+ */
 export type GridProps<
   D extends GenericData = {},
   V extends ItemVariant = 'common'

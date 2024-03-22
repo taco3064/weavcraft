@@ -9,10 +9,10 @@ const SwitchInput = forwardRef<HTMLInputElement, SwitchInputProps>(
   ({ color, size, ...props }, ref) => (
     <MuiFormControlLabel
       {...props}
+      data-testid="SwitchInput"
       inputRef={ref}
       labelPlacement="start"
       style={{ display: 'flex' }}
-      data-testid="SwitchInput"
       control={
         <MuiSwitch
           {...{ color, size }}
@@ -27,6 +27,7 @@ const SwitchInput = forwardRef<HTMLInputElement, SwitchInputProps>(
 export default function SwitchField({
   label,
   placeholder,
+  value,
   onChange,
   ...props
 }: SwitchFieldProps) {
@@ -41,6 +42,7 @@ export default function SwitchField({
         inputComponent: SwitchInput,
         inputProps: {
           label: placeholder || label || <>&nbsp;</>,
+          checked: value,
           color: props.color,
           size: props.size,
           onChange: (_e, checked) => onChange?.(checked, props.name),

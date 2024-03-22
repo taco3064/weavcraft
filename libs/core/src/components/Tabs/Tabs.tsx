@@ -12,35 +12,25 @@ import {
 import Container from '../Container';
 import Icon from '../Icon';
 import { WidgetWrapper } from '../../styles';
+import { usePropsGetter } from '../../contexts';
 import type { TabProps, TabsProps } from './Tabs.types';
 
-import {
-  makeStoreProps,
-  usePropsGetter,
-  type GenericData,
-} from '../../contexts';
-
-const withStoreProps = makeStoreProps<TabsProps>();
-
-export default withStoreProps(function Tabs<D extends GenericData>({
-  children,
-  height,
-  itemProps,
+export default function Tabs({
   maxWidth,
-  records = [],
+  height = '100vh',
+  items,
+  tabIconPosition,
   ...props
-}: TabsProps<D>) {
+}: TabsProps) {
   const [active, setActive] = useState(0);
+  const getProps = usePropsGetter();
+  const children = items?.map(getProps<TabProps>);
 
-  const getProps = usePropsGetter<D>();
-  const child = Children.toArray(children)[active];
-  const data = records[active];
+  const activeChild = { ...children?.[active], data: items?.[active].data };
 
   useEffect(() => {
-    if (active >= records.length) {
-      setActive(0);
-    }
-  }, [active, records.length]);
+    setActive(0);
+  }, [items?.length]);
 
   return (
     <WidgetWrapper
@@ -56,30 +46,25 @@ export default withStoreProps(function Tabs<D extends GenericData>({
           value={active}
           onChange={(_e, value) => setActive(value)}
         >
-          {records?.map((item, i) => {
-            const { icon, ...tabProps } = getProps<TabProps<D>>({
-              ...itemProps,
-              data: item,
-            });
-
-            return (
-              <MuiTab
-                {...tabProps}
-                data-testid="Tab"
-                key={i}
-                icon={<Icon />}
-                value={i}
-              />
-            );
-          })}
+          {children?.map(({ children: _c, icon, ...tabProps }, i) => (
+            <MuiTab
+              {...tabProps}
+              data-testid="Tab"
+              key={i}
+              icon={!icon ? undefined : <Icon code={icon} />}
+              value={i}
+            />
+          ))}
         </MuiTabs>
       }
     >
-      {!data || !child ? null : (
-        <Container data={data}>
-          {!isValidElement(child) ? null : cloneElement(child)}
+      {!activeChild ? null : (
+        <Container maxWidth={false} data={activeChild.data}>
+          {Children.map(activeChild.children, (child, i) =>
+            !isValidElement(child) ? null : cloneElement(child, { key: i })
+          )}
         </Container>
       )}
     </WidgetWrapper>
   );
-});
+}

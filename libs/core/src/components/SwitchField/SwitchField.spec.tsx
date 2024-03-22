@@ -52,12 +52,17 @@ describe('@weavcraft/core/components/SwitchField', () => {
     const mockOnChange = jest.fn();
 
     const { getByTestId } = render(
-      <SwitchField label="Test" name="testName" onChange={mockOnChange} />
+      <SwitchField
+        label="Test"
+        name="testName"
+        value={true}
+        onChange={mockOnChange}
+      />
     );
 
     const switchInput = getByTestId('SwitchInput');
 
     fireEvent.click(switchInput);
-    expect(mockOnChange).toHaveBeenCalledWith(expect.anything(), 'testName');
+    expect(mockOnChange).toHaveBeenCalledWith(false, 'testName');
   });
 });
