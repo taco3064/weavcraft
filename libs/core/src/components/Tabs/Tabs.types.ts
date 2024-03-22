@@ -3,13 +3,13 @@ import MuiTabs from '@mui/material/Tabs';
 import type { ComponentProps, ReactNode } from 'react';
 import type { Property } from 'csstype';
 
-import type { ContainerProps } from '../Container';
 import type { IconCode } from '../Icon';
+import type { WidgetWrapperProps } from '../../styles';
 
 import type {
   GenericData,
+  PrefixProps,
   PropsWithMappedData,
-  PropsWithStore,
 } from '../../contexts';
 
 type MuiTabProps = Pick<
@@ -22,24 +22,18 @@ type MuiTabsProps = Pick<
   'centered' | 'indicatorColor' | 'textColor'
 >;
 
-export type TabProps<D extends GenericData> = PropsWithMappedData<
+export type TabProps<D extends GenericData = {}> = PropsWithMappedData<
   D,
-  MuiTabProps & {
-    icon?: IconCode;
-  },
-  'disabled' | 'icon' | 'label'
->;
-
-/**
- * ? Tabs Component Props Notes
- * * - The element count of `children` should be equal to the element count of `records`
- */
-export type TabsProps<D extends GenericData = {}> = PropsWithStore<
-  D,
-  MuiTabsProps & {
+  Omit<MuiTabProps, 'iconPosition'> & {
     children?: ReactNode;
-    height?: Property.Height;
-    maxWidth?: ContainerProps<D>['maxWidth'];
-    itemProps?: Pick<TabProps<D>, 'iconPosition' | 'propMapping'>;
+    icon?: IconCode;
   }
 >;
+
+export interface TabsProps
+  extends MuiTabsProps,
+    Pick<WidgetWrapperProps, 'maxWidth'>,
+    PrefixProps<Pick<MuiTabProps, 'iconPosition'>, 'tab'> {
+  height?: Property.Height;
+  items?: TabProps[];
+}

@@ -119,6 +119,7 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
           data-testid="Content"
           direction="column"
           className={classes.content}
+          height="100%"
           maxWidth={false}
           header={
             <Toolbar

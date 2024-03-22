@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 
 import Drawer from './Drawer';
 
-describe('@weavcraft/core/components/Card', () => {
+describe('@weavcraft/core/components/Drawer', () => {
   it('renders successfully', () => {
     const { getByTestId, queryByTestId } = render(<Drawer />);
 

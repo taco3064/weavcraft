@@ -1,10 +1,5 @@
 import * as Comp from './components';
 
-/**
- * TODO: Need to add the following components
- * * - Step (Layout)
- */
-
 export const Display = {
   Avatar: Comp.Avatar,
   AvatarGroup: Comp.AvatarGroup,
@@ -28,6 +23,7 @@ export const Layout = {
   Grid: Comp.Grid,
   List: Comp.List,
   Popover: Comp.Popover,
+  Stepper: Comp.Stepper,
   Tabs: Comp.Tabs,
   Toolbar: Comp.Toolbar,
 };

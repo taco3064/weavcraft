@@ -32,6 +32,7 @@ export * from './Selection';
 export * from './SingleSelectField';
 export * from './Slider';
 export * from './SpeedDial';
+export * from './Stepper';
 export * from './SwitchField';
 export * from './Tabs';
 export * from './TextAreaField';
