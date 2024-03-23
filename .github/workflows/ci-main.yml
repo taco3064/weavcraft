@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: actions
     using: 'node20'
-    strategy:
-      matrix:
-        node-version: [20.x]
 
     steps:
       - name: Checkout
@@ -21,12 +18,6 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GIT_TOKEN }}
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
 
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         id: 'setSHAs'
