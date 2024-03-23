@@ -1,0 +1,25 @@
+name: CI main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci-with-nx:
+    runs-on: ubuntu-latest
+
+    steps:
+       - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run NX lint, test, and tsc
+        run: npx nx affected --target=lint,tsc,test --base=origin/main
