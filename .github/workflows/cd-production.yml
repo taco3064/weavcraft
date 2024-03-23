@@ -39,7 +39,7 @@ jobs:
       - name: Update Version
         run: |
           npx standard-version --skip.tag
-          git push origin HEAD:main HEAD:production -f
+          git push origin HEAD:production -f
 
   release-tag:
     needs: standard-version
