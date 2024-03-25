@@ -1,8 +1,4 @@
-import type {
-  ReactElement,
-  ButtonHTMLAttributes,
-  FunctionComponentElement,
-} from 'react';
+import type { ReactElement, ButtonHTMLAttributes } from 'react';
 
 import Card, { type CardProps } from '../Card';
 import Form, { type FormProps } from '../Form';
