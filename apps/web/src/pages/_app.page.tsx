@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import type { AppProps as NextAppProps } from 'next/app';
 
 import type { NextPageWithLayout } from '~web/hocs';
+import '~web/locales';
 
 export default function App({
   Component,
