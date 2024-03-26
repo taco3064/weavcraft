@@ -10,6 +10,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "@typescript-eslint/ban-types": "off",
         "@next/next/no-html-link-for-pages": ["error", "apps/web/pages"],
         "@nx/enforce-module-boundaries": [
           "error",

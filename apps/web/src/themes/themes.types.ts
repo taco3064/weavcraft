@@ -3,7 +3,12 @@ import type { ReactNode } from 'react';
 
 import * as Palettes from './palettes';
 
+type PalettePayload = {
+  id: string;
+  palette: PaletteOptions;
+};
+
 export interface ThemeProviderProps {
   children: ReactNode;
-  palette?: PaletteOptions | keyof typeof Palettes;
+  palette?: PalettePayload | keyof typeof Palettes;
 }
