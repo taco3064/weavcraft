@@ -26,11 +26,7 @@ export default function MainLayoutSubheader({
           underline="none"
           variant="h6"
         >
-          <SvgIcon
-            inheritViewBox
-            component={Logo}
-            style={{ fontSize: '2.5rem' }}
-          />
+          <SvgIcon inheritViewBox className={classes.logo} component={Logo} />
           Weavcraft
         </Link>
 

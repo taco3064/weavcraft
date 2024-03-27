@@ -1,9 +1,7 @@
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +14,6 @@ export default function MainLayoutHeader({
   open,
   onMenuOpen,
 }: MainLayoutHeaderProps) {
-  const { t } = useTranslation();
   const { classes } = useHeaderStyles({ open });
 
   return (
@@ -30,12 +27,12 @@ export default function MainLayoutHeader({
         <Slide direction="left" in={!open}>
           <Toolbar disableGutters variant="dense">
             <SwitchIconButton
-              hoveredIcon={<Display.Icon code="faBars" />}
+              hoveredIcon={<Display.Icon code="faBars" fontSize="medium" />}
               icon={
                 <SvgIcon
                   inheritViewBox
+                  className={classes.logo}
                   component={Logo}
-                  style={{ fontSize: '2.5rem' }}
                 />
               }
               onClick={onMenuOpen}
@@ -54,11 +51,11 @@ export default function MainLayoutHeader({
           </Toolbar>
         </Slide>
 
-        <Tooltip title={t('app:lbl-language')}>
-          <IconButton style={{ marginLeft: 'auto' }}>
-            <Display.Icon code="faLanguage" />
-          </IconButton>
-        </Tooltip>
+        <Toolbar
+          disableGutters
+          variant="dense"
+          className={classes.right}
+        ></Toolbar>
       </Toolbar>
     </AppBar>
   );

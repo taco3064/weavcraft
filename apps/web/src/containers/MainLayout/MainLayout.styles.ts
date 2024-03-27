@@ -1,6 +1,8 @@
 import { makeStyles } from 'tss-react/mui';
 import type { StyleParams } from './MainLayout.types';
 
+const logoSize = '2.5rem';
+
 export const useHeaderStyles = makeStyles<Pick<StyleParams, 'open'>>({
   name: 'MainLayoutHeader',
 })((theme, { open }) => ({
@@ -20,6 +22,12 @@ export const useHeaderStyles = makeStyles<Pick<StyleParams, 'open'>>({
       marginTop: theme.spacing(open ? 1.5 : 0),
     },
   },
+  logo: {
+    fontSize: logoSize,
+  },
+  right: {
+    marginLeft: 'auto',
+  },
 }));
 
 export const useSubheaderStyles = makeStyles({ name: 'MainLayoutSubheader' })(
@@ -30,6 +38,9 @@ export const useSubheaderStyles = makeStyles({ name: 'MainLayoutSubheader' })(
       '& > *': {
         height: theme.spacing(8),
       },
+    },
+    logo: {
+      fontSize: logoSize,
     },
   })
 );

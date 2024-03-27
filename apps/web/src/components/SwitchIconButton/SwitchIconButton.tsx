@@ -20,12 +20,14 @@ export default forwardRef<HTMLButtonElement, SwitchIconButtonProps>(
       <IconButton {...props} ref={ref} className={cx(root, className)}>
         {!isValidElement(icon)
           ? icon
-          : cloneElement(icon, { className: classes.icon })}
+          : cloneElement(icon, {
+              className: cx(icon.props.className, classes.icon),
+            })}
 
         {!isValidElement(hoveredIcon)
           ? hoveredIcon
           : cloneElement(hoveredIcon, {
-              className: classes.hoveredIcon,
+              className: cx(hoveredIcon.props.className, classes.hoveredIcon),
             })}
       </IconButton>
     );
