@@ -1,23 +1,25 @@
 import 'reflect-metadata';
 import { server } from './server';
+import { LoggerHelper } from './common/helpers/logger.helper';
 
 async function main() {
   const { httpServer } = await server();
 
   const closeProcesses = async (code = 1) => {
     httpServer.close(() => {
-      console.info('Server closed');
+      LoggerHelper.log.info('Server closed');
     });
     process.exit(code);
   };
 
   const successHandler = () => {
-    console.info('SIGTERM received');
+    LoggerHelper.log.info('SIGTERM received');
     closeProcesses(0);
   };
 
   const failureHandler = (error: any) => {
-    console.error(error);
+    LoggerHelper.log.error('Uncaught Exception');
+    LoggerHelper.log.error(error);
     closeProcesses(1);
   };
 

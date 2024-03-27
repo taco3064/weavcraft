@@ -52,6 +52,9 @@
     "tslib": "^2.3.0",
     "tss-react": "^4.9.4",
     "tsyringe": "^4.8.0",
+    "zustand": "^4.5.2",
+    "winston": "^3.12.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
