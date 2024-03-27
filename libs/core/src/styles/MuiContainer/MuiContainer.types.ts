@@ -1,5 +1,5 @@
 import MuiContainer from '@mui/material/Container';
-import type { ComponentProps, ReactElement } from 'react';
+import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import type { Property } from 'csstype';
 
 type BaseContainerProps = ComponentProps<typeof MuiContainer>;
@@ -9,7 +9,7 @@ export interface WidgetWrapperProps
     BaseContainerProps,
     'children' | 'classes' | 'disableGutters' | 'style'
   > {
-  children?: ReactElement | null;
+  children?: ReactNode;
   direction?: Property.FlexDirection;
   header?: ReactElement | null;
   height?: Property.Height;

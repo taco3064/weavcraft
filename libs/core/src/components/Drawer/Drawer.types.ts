@@ -28,7 +28,7 @@ export interface DrawerProps
     PrefixProps<ToolbarProps, 'header'> {
   anchor?: Extract<MuiDrawerProps['anchor'], 'left' | 'right'>;
   breakpoint?: Exclude<Breakpoint, 'xs'>;
-  children?: ReactElement;
+  children?: ReactNode;
   content?: ReactElement;
   header?: ReactNode;
   headerIcon?: IconCode;

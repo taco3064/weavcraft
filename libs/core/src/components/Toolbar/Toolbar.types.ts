@@ -1,7 +1,6 @@
 import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
-import type { Property } from 'csstype';
 
 import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';

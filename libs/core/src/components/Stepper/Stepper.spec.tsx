@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import Card from '../Card';
@@ -37,7 +37,7 @@ describe('@weavcraft/core/components/Stepper', () => {
   });
 
   it('should render the form step', () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId } = render(
       <Stepper
         items={[
           {

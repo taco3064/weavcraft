@@ -91,7 +91,7 @@ describe('@weavcraft/core/components/ToggleButtonGroup', () => {
 
     const buttons = getAllByTestId('ToggleButton');
 
-    Array.from({ length: max }).map(() => {
+    Array.from({ length: max }).forEach(() => {
       const [button] = buttons.splice(
         Math.floor(Math.random() * buttons.length),
         1
