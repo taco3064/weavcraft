@@ -1,12 +1,18 @@
 import 'reflect-metadata';
 import configs from './configs';
-import { TsyringeAdapter, iocAdapter } from './iocAdapter';
+import { iocAdapter } from './iocAdapter';
 import { RoutingControllersOptions, useContainer } from 'routing-controllers';
 import * as _indexControllers from './controllers';
 import { initKoaApp } from './koaApp';
 import { HttpLogger } from './common/helpers/logger.helper';
+import { INJECT_MONGO_CLIENT_DEMO } from '@weavcraft/modules';
+import { DemoDbMongoClient } from './common/database/mongodb/testDB';
 
 export async function server() {
+  const demoMgoClient = iocAdapter.container.resolve<DemoDbMongoClient>(
+    INJECT_MONGO_CLIENT_DEMO
+  );
+  await demoMgoClient.initialize();
   const controllers = Object.values(_indexControllers).values();
 
   const routingControllerOptions: RoutingControllersOptions = {
