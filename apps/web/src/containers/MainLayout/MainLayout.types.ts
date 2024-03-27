@@ -6,6 +6,15 @@ export type StyleParams = {
   open: boolean;
 };
 
+export interface MainLayoutHeaderProps {
+  open: boolean;
+  onMenuOpen: () => void;
+}
+
+export interface MainLayoutSubheaderProps {
+  onMenuClose: () => void;
+}
+
 export interface MainLayoutProps {
   children: ReactNode;
 }

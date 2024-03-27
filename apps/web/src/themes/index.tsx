@@ -11,7 +11,7 @@ import type { ThemeProviderProps } from './themes.types';
 export default function ThemeProvider({
   children,
   palette = (global.localStorage?.getItem('palette') ||
-    Object.keys(Palettes)[0]) as keyof typeof Palettes,
+    'WEAVCRAFT') as keyof typeof Palettes,
 }: ThemeProviderProps) {
   const { cache, theme } = useMemo(
     () => ({

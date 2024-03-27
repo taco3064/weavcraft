@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initReactI18next } from 'react-i18next';
 
 import ThemeProvider from '~web/themes';
-import resources from '~web/locales';
+import resources from '@alienfast/i18next-loader?relativePathAsNamespace=true!~web/locales';
 import { NotistackProvider } from '~web/contexts';
 import type { AppProps, MakePerPageLayout } from './_app.types';
 
@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/images/favicon.ico" />
+        <link rel="icon" href="/imgs/favicon.ico" />
         <title>Weavcraft</title>
       </Head>
 

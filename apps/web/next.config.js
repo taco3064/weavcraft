@@ -35,10 +35,6 @@ const nextConfig = {
             test: /\.svg$/,
             use: ['@svgr/webpack'],
           },
-          {
-            test: /locales/,
-            loader: '@alienfast/i18next-loader',
-          },
         ],
       },
       plugins: [
