@@ -17,6 +17,13 @@ Transition.displayName = 'Transition';
 
 //* Default Component Styles
 export const components: ThemeOptions['components'] = {
+  MuiCssBaseline: {
+    styleOverrides: {
+      body: {
+        overflow: 'hidden auto',
+      },
+    },
+  },
   MuiAppBar: {
     defaultProps: {
       position: 'sticky',
@@ -119,6 +126,19 @@ export const components: ThemeOptions['components'] = {
     styleOverrides: {
       root: {
         borderRadius: 12,
+      },
+    },
+  },
+  MuiSvgIcon: {
+    styleOverrides: {
+      fontSizeLarge: {
+        fontSize: '1.5rem',
+      },
+      fontSizeMedium: {
+        fontSize: '1.2rem',
+      },
+      fontSizeSmall: {
+        fontSize: '1rem',
       },
     },
   },

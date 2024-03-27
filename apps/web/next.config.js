@@ -19,7 +19,7 @@ const nextConfig = {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true,
   },
-  webpack: ({ plugins, ...config }, context) => {
+  webpack: ({ module, plugins, ...config }, context) => {
     //* 取得 App 支援的 Languages
     const languages = fs
       .readdirSync(path.resolve(__dirname, './src/locales'))
@@ -27,6 +27,20 @@ const nextConfig = {
 
     return {
       ...config,
+      module: {
+        ...module,
+        rules: [
+          ...module.rules,
+          {
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
+          },
+          {
+            test: /locales/,
+            loader: '@alienfast/i18next-loader',
+          },
+        ],
+      },
       plugins: [
         ...plugins,
         new DefinePlugin({

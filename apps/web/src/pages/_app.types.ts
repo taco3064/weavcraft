@@ -9,7 +9,7 @@ type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export type PerPageLayoutHoc = <P = {}>(
+export type MakePerPageLayout = <P = {}>(
   Layout: ComponentType<{ children: ReactNode }>
 ) => <InitialProps = P>(
   Page: NextPageWithLayout<P, InitialProps>

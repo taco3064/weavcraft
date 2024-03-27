@@ -8,4 +8,11 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/web',
+  globals: {
+    __WEBPACK_DEFINE__: {
+      ENV: 'development',
+      LANGUAGES: ['en', 'zh'],
+      VERSION: '0.0.1',
+    },
+  },
 };
