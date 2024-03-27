@@ -1,5 +1,6 @@
 import { ClassConstructor, IocAdapter } from 'routing-controllers';
 import { DependencyContainer, container } from 'tsyringe';
+import { IocLogger } from './common/helpers/logger.helper';
 
 export class TsyringeAdapter implements IocAdapter {
   container: DependencyContainer;
@@ -10,7 +11,7 @@ export class TsyringeAdapter implements IocAdapter {
   }
 
   init() {
-    console.info('[IOC] Initial DependencyContainer')
+    IocLogger.log.info('Initial DependencyContainer');
   }
 
   get<T>(someClass: ClassConstructor<T>): T {
@@ -18,3 +19,5 @@ export class TsyringeAdapter implements IocAdapter {
     return childContainer.resolve<T>(someClass);
   }
 }
+
+export const iocAdapter = new TsyringeAdapter();
