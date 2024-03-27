@@ -17,6 +17,7 @@
     "paths": {
       "@weavcraft/core": ["libs/core/src/index.ts"],
       "@weavcraft/helpers": ["libs/helpers/src/index.ts"],
+      "@weavcraft/modules": ["libs/modules/src/index.ts"],
       "@weavcraft/repos": ["libs/repos/src/index.ts"],
       "~web/*": ["apps/web/src/*"]
     }
