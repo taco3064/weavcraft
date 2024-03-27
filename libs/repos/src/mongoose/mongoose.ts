@@ -4,7 +4,7 @@ import { WinstonHelper } from '@weavcraft/helpers';
 
 const mongoLogger = new WinstonHelper('mongo', { context: 'DB' });
 
-export class BaseMonogoClient {
+export class BaseMongoClient {
   connection: Connection;
   protected mongoose: Mongoose = new Mongoose();
   private options?: ConnectOptions = {

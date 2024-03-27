@@ -11,7 +11,7 @@ export type TestData = {
   id: string;
 } & Test;
 
-export const testSchema = new Schema<Test>({
+export const testSchema = new Schema<TestData>({
   value: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
