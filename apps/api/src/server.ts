@@ -23,7 +23,7 @@ export async function server() {
 
   const app = initKoaApp(routingControllerOptions, true);
 
-  const { host, port } = configs.app;
+  const { host, port } = configs.cfgs.app;
 
   const httpServer = app.listen(port, host, () => {
     HttpLogger.log.info(`http://${host}:${port}`);
