@@ -1,9 +1,8 @@
 import AppBar from '@mui/material/AppBar';
-import Slide from '@mui/material/Slide';
+import Fade from '@mui/material/Fade';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
 import { Display } from '@weavcraft/core';
-import { useTranslation } from 'react-i18next';
 
 import Logo from '~web/assets/imgs/icon.svg';
 import { Link, SwitchIconButton } from '~web/components';
@@ -24,10 +23,12 @@ export default function MainLayoutHeader({
       elevation={1}
     >
       <Toolbar>
-        <Slide direction="left" in={!open}>
+        <Fade in={!open}>
           <Toolbar disableGutters variant="dense">
             <SwitchIconButton
-              hoveredIcon={<Display.Icon code="faBars" fontSize="medium" />}
+              hoveredIcon={
+                <Display.Icon code="faBars" color="primary" fontSize="medium" />
+              }
               icon={
                 <SvgIcon
                   inheritViewBox
@@ -41,7 +42,6 @@ export default function MainLayoutHeader({
             <Link
               color="text.primary"
               fontFamily="comic sans MS"
-              fontWeight="bolder"
               href="/"
               underline="none"
               variant="h6"
@@ -49,7 +49,7 @@ export default function MainLayoutHeader({
               Weavcraft
             </Link>
           </Toolbar>
-        </Slide>
+        </Fade>
 
         <Toolbar
           disableGutters

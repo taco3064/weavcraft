@@ -9,10 +9,13 @@ export const useHeaderStyles = makeStyles<Pick<StyleParams, 'open'>>({
   root: {
     display: 'flex',
 
-    transition: theme.transitions.create(['borderRadius', 'height', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+    transition: theme.transitions.create(
+      ['border-radius', 'height', 'margin'],
+      {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }
+    ),
     '& > *': {
       height: theme.spacing(8),
     },

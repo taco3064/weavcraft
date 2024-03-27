@@ -20,7 +20,6 @@ export default function MainLayoutSubheader({
         <Link
           color="text.primary"
           fontFamily="comic sans MS"
-          fontWeight="bolder"
           href="/"
           marginRight="auto"
           underline="none"
