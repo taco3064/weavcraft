@@ -1,58 +1,37 @@
 import { makeStyles } from 'tss-react/mui';
 import type { StyleParams } from './MainLayout.types';
 
-const logoSize = '2.5rem';
-
-export const useHeaderStyles = makeStyles<Pick<StyleParams, 'open'>>({
-  name: 'MainLayoutHeader',
-})((theme, { open }) => ({
-  root: {
-    display: 'flex',
-
-    transition: theme.transitions.create(
-      ['border-radius', 'height', 'margin'],
-      {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }
-    ),
-    '& > *': {
-      height: theme.spacing(8),
-    },
-    [theme.breakpoints.up('md')]: {
-      borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-      height: theme.spacing(open ? 6.5 : 8),
-      marginTop: theme.spacing(open ? 1.5 : 0),
-    },
-  },
-  logo: {
-    fontSize: logoSize,
-  },
-  right: {
-    marginLeft: 'auto',
-  },
-}));
-
-export const useSubheaderStyles = makeStyles({ name: 'MainLayoutSubheader' })(
-  (theme) => ({
-    root: {
-      background: 'inherit',
-
-      '& > *': {
-        height: theme.spacing(8),
-      },
-    },
-    logo: {
-      fontSize: logoSize,
-    },
-  })
-);
-
 export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
     const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
 
     return {
+      logo: {
+        fontSize: '2.5rem',
+      },
+      header: {
+        display: 'flex',
+
+        transition: theme.transitions.create(
+          ['border-radius', 'height', 'margin'],
+          {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }
+        ),
+        [theme.breakpoints.up('md')]: {
+          borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
+          height: theme.spacing(open ? 6.5 : 8),
+          marginTop: theme.spacing(open ? 1.5 : 0),
+        },
+        '& > *': {
+          height: theme.spacing(8),
+
+          '& > [role="status"]': {
+            marginLeft: 'auto',
+          },
+        },
+      },
       content: {
         display: 'flex',
         flexDirection: 'column',
@@ -73,11 +52,21 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         maxWidth: '100%',
         width: drawerWidth,
         borderRadius: theme.spacing(0, 4, 4, 0),
-      },
-      list: {
-        background: 'inherit',
-        height: '100%',
-        overflow: 'hidden auto',
+
+        '& > [role="navigation"]': {
+          background: 'inherit',
+          height: '100%',
+          overflow: 'hidden auto',
+
+          '& > *[role="heading"]': {
+            background: 'inherit',
+            height: theme.spacing(8),
+
+            '& > *:last-child': {
+              marginLeft: 'auto',
+            },
+          },
+        },
       },
     };
   }
