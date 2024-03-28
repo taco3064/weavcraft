@@ -1,10 +1,10 @@
 import { Display } from '@weavcraft/core';
 
 import Logo from '~web/assets/imgs/icon.svg';
-import type { DefaultProps } from './MainLayout.types';
+import type { DefaultProps, NavItem } from './MainLayout.types';
 import type { MenuItem } from '~web/components';
 
-export const defaultProps: DefaultProps = {
+export const DEFAULT_PROPS: DefaultProps = {
   logo: {
     inheritViewBox: true,
     component: Logo,
@@ -17,7 +17,35 @@ export const defaultProps: DefaultProps = {
   },
 };
 
-export const userMenuItems: MenuItem<{ auth?: boolean }>[] = [
+export const NAV_ITEMS: NavItem[] = [
+  {
+    icon: 'faLightbulb',
+    id: 'inspiration',
+    href: '/inspiration-wall',
+  },
+  {
+    icon: 'faPalette',
+    id: 'themes',
+    href: '/themes',
+  },
+  {
+    icon: 'faPuzzlePiece',
+    id: 'widgets',
+    href: '/widgets',
+  },
+  {
+    icon: 'faNewspaper',
+    id: 'pages',
+    href: '/pages',
+  },
+  {
+    icon: 'faGlobe',
+    id: 'websites',
+    href: '/websites',
+  },
+];
+
+export const USER_MENU_ITEMS: MenuItem<{ auth?: boolean }>[] = [
   {
     auth: true,
     indicator: <Display.Icon code="faUser" />,

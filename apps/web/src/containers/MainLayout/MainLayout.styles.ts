@@ -83,6 +83,16 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           },
         },
       },
+      icon: {
+        justifyContent: 'center',
+      },
+      description: {
+        whiteSpace: 'pre-line',
+        display: '-webkit-box',
+        overflow: 'hidden',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 2,
+      },
     };
   }
 );

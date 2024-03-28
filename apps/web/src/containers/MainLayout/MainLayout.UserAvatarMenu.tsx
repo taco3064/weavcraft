@@ -1,12 +1,11 @@
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import { Display } from '@weavcraft/core';
-import { Trans } from 'react-i18next';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
+import { USER_MENU_ITEMS } from './MainLayout.const';
 import { useMenuStyles } from './MainLayout.styles';
-import { userMenuItems } from './MainLayout.const';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 
 export default function UserAvatarMenu({
@@ -38,7 +37,7 @@ export default function UserAvatarMenu({
         open={open}
         title="app:ttl-user-options"
         indicator={<Display.Icon code="faTerminal" />}
-        items={userMenuItems.map((item) =>
+        items={USER_MENU_ITEMS.map((item) =>
           item.auth !== false && !onSignOut ? null : item
         )}
         onClose={() => setOpen(false)}

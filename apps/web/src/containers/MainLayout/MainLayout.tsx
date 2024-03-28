@@ -5,18 +5,23 @@ import Drawer from '@mui/material/Drawer';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
+import NextLink from 'next/link';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
+import { Trans } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
+import { DEFAULT_PROPS, NAV_ITEMS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { defaultProps } from './MainLayout.const';
 import { useLayoutStyles } from './MainLayout.styles';
 import type { MainLayoutProps } from './MainLayout.types';
 
@@ -24,7 +29,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
   const { classes } = useLayoutStyles({ open });
-  const logo = <SvgIcon {...defaultProps.logo} className={classes.logo} />;
+  const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
 
   useEffect(() => {
     setOpen(false);
@@ -43,7 +48,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   onClick={() => setOpen(true)}
                 />
 
-                <Link {...defaultProps.homeLink}>Weavcraft</Link>
+                <Link {...DEFAULT_PROPS.homeLink}>Weavcraft</Link>
               </Toolbar>
             </Fade>
 
@@ -76,7 +81,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     role="heading"
                     component={Toolbar}
                   >
-                    <Link {...defaultProps.homeLink}>
+                    <Link {...DEFAULT_PROPS.homeLink}>
                       {logo}
                       Weavcraft
                     </Link>
@@ -89,7 +94,35 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <Divider />
                 </>
               }
-            ></List>
+            >
+              {NAV_ITEMS.map(({ icon, id, href }) => (
+                <ListItemButton
+                  LinkComponent={NextLink}
+                  key={id}
+                  href={href}
+                  selected={pathname === href}
+                >
+                  <ListItemIcon className={classes.icon}>
+                    <Display.Icon fontSize="large" color="info" code={icon} />
+                  </ListItemIcon>
+
+                  <ListItemText
+                    primary={<Trans i18nKey={`app:ttl-nav-items.${id}`} />}
+                    secondary={<Trans i18nKey={`app:msg-nav-items.${id}`} />}
+                    primaryTypographyProps={{
+                      variant: 'subtitle1',
+                      color: 'primary',
+                      fontWeight: 'bolder',
+                    }}
+                    secondaryTypographyProps={{
+                      variant: 'caption',
+                      color: 'text.secondary',
+                      className: classes.description,
+                    }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
           </ClickAwayListener>
         )}
       </Drawer>
