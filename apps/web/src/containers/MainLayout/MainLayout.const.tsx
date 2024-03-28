@@ -9,10 +9,9 @@ export const DEFAULT_PROPS: DefaultProps = {
     inheritViewBox: true,
     component: Logo,
   },
-  homeLink: {
+  title: {
     color: 'text.primary',
     fontFamily: ['Monaco', 'comic sans MS'],
-    href: '/',
     variant: 'h6',
   },
 };

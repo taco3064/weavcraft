@@ -13,6 +13,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
 import { Trans } from 'react-i18next';
@@ -49,7 +50,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   onClick={() => setOpen(true)}
                 />
 
-                <Link {...DEFAULT_PROPS.homeLink}>Weavcraft</Link>
+                <Link {...DEFAULT_PROPS.title} href="/">
+                  Weavcraft
+                </Link>
               </Toolbar>
             </Fade>
 
@@ -82,10 +85,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     role="heading"
                     component={Toolbar}
                   >
-                    <Link {...DEFAULT_PROPS.homeLink}>
+                    <Typography {...DEFAULT_PROPS.title}>
                       {logo}
                       Weavcraft
-                    </Link>
+                    </Typography>
 
                     <IconButton onClick={() => setOpen(false)}>
                       <Display.Icon code="faAngleLeft" />
