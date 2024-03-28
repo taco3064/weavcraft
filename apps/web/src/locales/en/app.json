@@ -1,3 +1,10 @@
 {
-  "lbl-language": "Language"
+  "btn-close": "Close",
+  "btn-signin": "Sign In",
+  "btn-signout": "Sign Out",
+  "lbl-language": "Language",
+  "lbl-analytics": "Analytics",
+  "lbl-settings": "Settings",
+  "lbl-user-profile": "User Profile",
+  "ttl-user-options": "User Options"
 }

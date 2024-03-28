@@ -1,5 +1,5 @@
 import type { Breakpoint } from '@mui/material/styles';
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 
 import type { LinkProps } from '~web/components';
@@ -9,14 +9,15 @@ export type StyleParams = {
   open: boolean;
 };
 
-export interface MainLayoutSubheaderProps {
-  logo: ReactElement;
-  onMenuClose: () => void;
-}
-export type ChildrenProps = {
+export type DefaultProps = {
   logo: SvgIconProps;
   homeLink: LinkProps;
 };
+
+export interface UserAvatarMenuProps {
+  onSignIn?: () => void;
+  onSignOut?: () => void;
+}
 
 export interface MainLayoutProps {
   children: ReactNode;

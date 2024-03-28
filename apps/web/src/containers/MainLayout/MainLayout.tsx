@@ -13,32 +13,18 @@ import { Display } from '@weavcraft/core';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import Logo from '~web/assets/imgs/icon.svg';
+import NotificationBell from './MainLayout.NotificationBell';
+import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { Link, SwitchIconButton } from '~web/components';
+import { defaultProps } from './MainLayout.const';
 import { useLayoutStyles } from './MainLayout.styles';
-import type { ChildrenProps, MainLayoutProps } from './MainLayout.types';
+import type { MainLayoutProps } from './MainLayout.types';
 
-//* Define the props for the children
-const childrenProps: ChildrenProps = {
-  logo: {
-    inheritViewBox: true,
-    component: Logo,
-  },
-  homeLink: {
-    color: 'text.primary',
-    fontFamily: 'comic sans MS',
-    href: '/',
-    underline: 'none',
-    variant: 'h6',
-  },
-};
-
-//* Components
 export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
   const { classes } = useLayoutStyles({ open });
-  const logo = <SvgIcon {...childrenProps.logo} className={classes.logo} />;
+  const logo = <SvgIcon {...defaultProps.logo} className={classes.logo} />;
 
   useEffect(() => {
     setOpen(false);
@@ -57,11 +43,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   onClick={() => setOpen(true)}
                 />
 
-                <Link {...childrenProps.homeLink}>Weavcraft</Link>
+                <Link {...defaultProps.homeLink}>Weavcraft</Link>
               </Toolbar>
             </Fade>
 
-            <Toolbar disableGutters role="status" variant="dense"></Toolbar>
+            <Toolbar disableGutters role="status" variant="dense">
+              <NotificationBell />
+              <UserAvatarMenu />
+            </Toolbar>
           </Toolbar>
         </AppBar>
 
@@ -87,7 +76,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     role="heading"
                     component={Toolbar}
                   >
-                    <Link {...childrenProps.homeLink}>
+                    <Link {...defaultProps.homeLink}>
                       {logo}
                       Weavcraft
                     </Link>

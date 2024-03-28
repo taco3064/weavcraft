@@ -30,6 +30,7 @@ export const components: ThemeOptions['components'] = {
     },
     styleOverrides: {
       root: {
+        justifyContent: 'center',
         userSelect: 'none',
       },
     },
@@ -57,6 +58,25 @@ export const components: ThemeOptions['components'] = {
       paperFullScreen: {
         borderRadius: 0,
       },
+    },
+  },
+  MuiDialogContent: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: theme.spacing(1.5, 3),
+      }),
+    },
+  },
+  MuiDialogTitle: {
+    defaultProps: {
+      color: 'text.primary',
+      fontWeight: 'bolder',
+    },
+    styleOverrides: {
+      root: ({ theme }) => ({
+        height: theme.spacing(8),
+        padding: theme.spacing(1.5, 3),
+      }),
     },
   },
   MuiFilledInput: {
@@ -91,14 +111,10 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
-  MuiMenu: {
-    styleOverrides: {
-      paper: {
-        borderRadius: 12,
-      },
-    },
-  },
   MuiLink: {
+    defaultProps: {
+      underline: 'none',
+    },
     styleOverrides: {
       root: {
         '&:disabled': {
@@ -120,6 +136,13 @@ export const components: ThemeOptions['components'] = {
       root: ({ theme }) => ({
         gap: theme.spacing(1),
       }),
+    },
+  },
+  MuiMenu: {
+    styleOverrides: {
+      paper: {
+        borderRadius: 12,
+      },
     },
   },
   MuiOutlinedInput: {
@@ -152,6 +175,7 @@ export const components: ThemeOptions['components'] = {
   MuiToolbar: {
     styleOverrides: {
       root: {
+        alignItems: 'center',
         gap: 8,
       },
     },
