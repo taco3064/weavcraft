@@ -2,7 +2,7 @@ import { Display } from '@weavcraft/core';
 
 import Logo from '~web/assets/imgs/icon.svg';
 import type { DefaultProps, NavItem } from './MainLayout.types';
-import type { MenuItem } from '~web/components';
+import type { MenuItemOptions } from '~web/components';
 
 export const DEFAULT_PROPS: DefaultProps = {
   logo: {
@@ -11,7 +11,7 @@ export const DEFAULT_PROPS: DefaultProps = {
   },
   homeLink: {
     color: 'text.primary',
-    fontFamily: 'comic sans MS',
+    fontFamily: ['Monaco', 'comic sans MS'],
     href: '/',
     variant: 'h6',
   },
@@ -20,8 +20,8 @@ export const DEFAULT_PROPS: DefaultProps = {
 export const NAV_ITEMS: NavItem[] = [
   {
     icon: 'faLightbulb',
-    id: 'inspiration',
-    href: '/inspiration-wall',
+    id: 'gallery',
+    href: '/gallery',
   },
   {
     icon: 'faPalette',
@@ -45,7 +45,7 @@ export const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-export const USER_MENU_ITEMS: MenuItem<{ auth?: boolean }>[] = [
+export const USER_MENU_ITEMS: MenuItemOptions<{ auth?: boolean }>[] = [
   {
     auth: true,
     indicator: <Display.Icon code="faUser" />,
@@ -69,6 +69,13 @@ export const USER_MENU_ITEMS: MenuItem<{ auth?: boolean }>[] = [
     auth: false,
     indicator: <Display.Icon code="faArrowRightToBracket" />,
     label: 'app:btn-signin',
+    items: [
+      {
+        auth: false,
+        indicator: <Display.Icon code="faGoogle" />,
+        label: 'app:btn-signin-google',
+      },
+    ],
   },
   {
     auth: true,

@@ -25,6 +25,9 @@ export default function ThemeProvider({
         components,
         palette:
           typeof palette === 'string' ? Palettes[palette] : palette.palette,
+        typography: {
+          fontFamily: '"Verdana", "微軟雅黑"',
+        },
       }),
     }),
     [palette]

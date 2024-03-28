@@ -36,8 +36,8 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         ),
         [theme.breakpoints.up('md')]: {
           borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-          height: theme.spacing(open ? 6.5 : 8),
-          marginTop: theme.spacing(open ? 1.5 : 0),
+          height: theme.spacing(open ? 6 : 8),
+          margin: theme.spacing(open ? 1 : 0, 0),
         },
         '& > *': {
           height: theme.spacing(8),
@@ -83,15 +83,23 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           },
         },
       },
-      icon: {
+      avatar: {
         justifyContent: 'center',
+
+        '& > *': {
+          color: `${theme.palette.secondary.contrastText} !important`,
+          background: `${theme.palette.secondary.main} !important`,
+        },
       },
       description: {
         whiteSpace: 'pre-line',
         display: '-webkit-box',
         overflow: 'hidden',
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: 2,
+
+        '&:not(:hover)': {
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+        },
       },
     };
   }

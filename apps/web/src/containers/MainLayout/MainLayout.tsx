@@ -1,4 +1,5 @@
 import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -6,7 +7,7 @@ import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
@@ -102,9 +103,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   href={href}
                   selected={pathname === href}
                 >
-                  <ListItemIcon className={classes.icon}>
-                    <Display.Icon fontSize="large" color="info" code={icon} />
-                  </ListItemIcon>
+                  <ListItemAvatar className={classes.avatar}>
+                    <Avatar>
+                      <Display.Icon fontSize="large" code={icon} />
+                    </Avatar>
+                  </ListItemAvatar>
 
                   <ListItemText
                     primary={<Trans i18nKey={`app:ttl-nav-items.${id}`} />}
