@@ -25,11 +25,12 @@ export default function UserSettings() {
   useEffect(() => {
     const hashId = asPath.split('#')[1] as AccordionId;
 
-    setExpanded(
-      (ACCORDIONS.find(({ id }) => id === hashId)?.id ||
-        'settings') as AccordionId
-    );
-  }, [asPath]);
+    const expanded = (ACCORDIONS.find(
+      ({ id, auth }) => id === hashId && (!auth || isAuthenticated)
+    )?.id || 'settings') as AccordionId;
+
+    setExpanded(expanded);
+  }, [isAuthenticated, asPath]);
 
   return (
     <Container disableGutters maxWidth="sm">
