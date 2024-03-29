@@ -30,7 +30,7 @@ export const ACCORDIONS: Accordions = [
 
 export const SIGNIN_OPTIONS: MenuItemOptions[] = SIGNIN_METHODS.map(
   (method) => ({
-    label: `app:btn-signin-with-${method}`,
+    label: `btn-signin-with-${method}`,
     indicator: (
       <Display.Icon
         code={

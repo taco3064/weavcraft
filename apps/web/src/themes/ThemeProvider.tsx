@@ -4,14 +4,13 @@ import createEmotionCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { useMemo } from 'react';
 
-import * as Palettes from './palettes';
+import * as PALETTES from './palettes';
 import { components } from './components';
 import type { ThemeProviderProps } from './themes.types';
 
 export default function ThemeProvider({
   children,
-  palette = (global.localStorage?.getItem('palette') ||
-    'WEAVCRAFT') as keyof typeof Palettes,
+  palette = 'WEAVCRAFT',
 }: ThemeProviderProps) {
   const { cache, theme } = useMemo(
     () => ({
@@ -24,7 +23,7 @@ export default function ThemeProvider({
       theme: MuiStyle.createTheme({
         components,
         palette:
-          typeof palette === 'string' ? Palettes[palette] : palette.palette,
+          typeof palette === 'string' ? PALETTES[palette] : palette.palette,
         typography: {
           fontFamily: '"Verdana", "微軟雅黑"',
         },

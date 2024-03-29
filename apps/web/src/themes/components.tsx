@@ -123,9 +123,9 @@ export const components: ThemeOptions['components'] = {
       disableUnderline: true,
     },
     styleOverrides: {
-      root: {
-        borderRadius: 12,
-      },
+      root: ({ theme }) => ({
+        borderRadius: theme.spacing(1),
+      }),
     },
   },
   MuiIcon: {
@@ -216,8 +216,7 @@ export const components: ThemeOptions['components'] = {
   },
   MuiTextField: {
     defaultProps: {
-      fullWidth: true,
-      margin: 'none',
+      margin: 'normal',
       variant: 'filled',
     },
   },

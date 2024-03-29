@@ -1,6 +1,7 @@
 {
   "btn-cancel": "Cancel",
   "btn-close": "Close",
+  "btn-delete-account": "Delete Account",
   "btn-signin": "Sign In",
   "btn-signin-with-google": "Sign In with Google",
   "btn-signout": "Sign Out",
@@ -9,6 +10,7 @@
   "lbl-language": "Language",
   "lbl-profile": "User Profile",
   "lbl-settings": "Settings",
+  "lbl-theme": "Theme Style",
   "ttl-user-options": "User Options",
   "msg-nav-items": {
     "gallery": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community.",
@@ -16,6 +18,14 @@
     "themes": "Customize the look and feel of your website with a variety of pre-designed themes and styles.",
     "websites": "View, manage, and customize your personal websites, including URL settings, and theme selection.",
     "widgets": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
+  },
+  "opt-language": {
+    "en": "English",
+    "zh": "繁體中文"
+  },
+  "opt-theme": {
+    "SPARKLING_CHAMPAGNE": "Sparkling Champagne",
+    "WEAVCRAFT": "Default Theme"
   },
   "ttl-nav-items": {
     "gallery": "Craft Gallery",

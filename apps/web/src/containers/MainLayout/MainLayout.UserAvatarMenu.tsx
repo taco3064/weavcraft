@@ -16,9 +16,9 @@ export default function UserAvatarMenu() {
   const { classes } = useMenuStyles({ isAuthenticated });
 
   const handleItemClick = (label: string) => {
-    if (label === 'app:btn-signout') {
+    if (label === 'btn-signout') {
       signout();
-    } else if (label.startsWith('app:btn-signin-with-')) {
+    } else if (label.startsWith('btn-signin-with-')) {
       signin(label.replace(/^.+-/, '') as SigninMethod);
     }
 
@@ -33,7 +33,7 @@ export default function UserAvatarMenu() {
 
       <MenuDialog
         open={open}
-        title="app:ttl-user-options"
+        title="ttl-user-options"
         indicator={<Display.Icon code="faTerminal" />}
         onClose={() => setOpen(false)}
         onItemClick={handleItemClick}
@@ -44,11 +44,11 @@ export default function UserAvatarMenu() {
           isAuthenticated
             ? {
                 indicator: <Display.Icon code="faArrowRightFromBracket" />,
-                label: 'app:btn-signout',
+                label: 'btn-signout',
               }
             : {
                 indicator: <Display.Icon code="faArrowRightToBracket" />,
-                label: 'app:btn-signin',
+                label: 'btn-signin',
                 items: SIGNIN_OPTIONS,
               },
         ]}

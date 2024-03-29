@@ -1,28 +1,15 @@
 import Head from 'next/head';
-import i18n from 'i18next';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { initReactI18next } from 'react-i18next';
+import { appWithTranslation, useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 
 import ThemeProvider from '~web/themes';
-import resources from '@alienfast/i18next-loader?relativePathAsNamespace=true!~web/locales';
 import { NotistackProvider } from '~web/contexts';
+import { useSettings } from '~web/hooks';
 import type { AppProps, MakePerPageLayout } from './_app.types';
 
 //* Base Configs
 const client = new QueryClient();
-
-i18n.use(initReactI18next).init({
-  keySeparator: '.',
-  resources,
-  lng: global.localStorage?.getItem('lng') || __WEBPACK_DEFINE__.LANGUAGES[0],
-  fallbackLng: {
-    default: __WEBPACK_DEFINE__.LANGUAGES,
-  },
-  interpolation: {
-    escapeValue: false,
-    formatSeparator: ',',
-  },
-});
 
 //* HOCs
 export const makePerPageLayout: MakePerPageLayout = (Layout) => (Page) => {
@@ -32,8 +19,14 @@ export const makePerPageLayout: MakePerPageLayout = (Layout) => (Page) => {
 };
 
 //* Custom App Component
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  const { i18n } = useTranslation();
+  const { language, palette } = useSettings();
   const getLayout = Component.getLayout || ((page) => page);
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+  }, [i18n, language]);
 
   return (
     <>
@@ -43,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <QueryClientProvider client={client}>
-        <ThemeProvider>
+        <ThemeProvider palette={palette}>
           <NotistackProvider>
             {getLayout(<Component {...pageProps} />)}
           </NotistackProvider>
@@ -52,3 +45,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+export default appWithTranslation(App, { i18n: __WEBPACK_DEFINE__.I18N });

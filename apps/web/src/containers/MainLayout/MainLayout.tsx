@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
 import { Suspense, useEffect, useState } from 'react';
-import { Trans } from 'react-i18next';
+import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 import NotificationBell from './MainLayout.NotificationBell';
@@ -116,8 +116,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </ListItemAvatar>
 
                   <ListItemText
-                    primary={<Trans i18nKey={`app:ttl-nav-items.${id}`} />}
-                    secondary={<Trans i18nKey={`app:msg-nav-items.${id}`} />}
+                    primary={<Trans i18nKey={`ttl-nav-items.${id}`} />}
+                    secondary={<Trans i18nKey={`msg-nav-items.${id}`} />}
                     primaryTypographyProps={{
                       variant: 'subtitle1',
                       color: 'primary',

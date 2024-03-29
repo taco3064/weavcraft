@@ -6,57 +6,76 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import { Display } from '@weavcraft/core';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
 import { ACCORDIONS, SIGNIN_OPTIONS } from './UserSettings.const';
 import { useAuth, type SigninMethod } from '~web/hooks';
 import { useExpanded } from './UserSettings.hooks';
+import { useMainStyles } from './UserSettings.styles';
 
 export default function UserSettings() {
   const { isAuthenticated, signin, signout } = useAuth();
+  const { classes } = useMainStyles();
 
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useExpanded(isAuthenticated);
 
   return (
-    <Container disableGutters maxWidth="sm">
-      {ACCORDIONS.map(({ Component, id, icon, auth }) =>
-        auth && !isAuthenticated ? null : (
-          <Accordion
-            key={id}
-            expanded={expanded === id}
-            onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
-          >
-            <AccordionSummary expandIcon={<Display.Icon code="faAngleDown" />}>
-              <Display.Icon color="primary" code={icon} />
-              <Trans i18nKey={`app:lbl-${id}`} />
-            </AccordionSummary>
+    <Container disableGutters maxWidth="sm" className={classes.root}>
+      <Container disableGutters maxWidth={false}>
+        {ACCORDIONS.map(({ Component, id, icon, auth }) =>
+          auth && !isAuthenticated ? null : (
+            <Accordion
+              key={id}
+              expanded={expanded === id}
+              onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
+            >
+              <AccordionSummary
+                expandIcon={<Display.Icon code="faAngleDown" />}
+              >
+                <Display.Icon color="primary" code={icon} />
+                <Trans i18nKey={`lbl-${id}`} />
+              </AccordionSummary>
 
-            <Divider />
+              <Divider />
 
-            <AccordionDetails>
-              <Component />
-            </AccordionDetails>
+              <AccordionDetails className={classes.root}>
+                <Component />
+              </AccordionDetails>
 
-            <AccordionActions id={id} />
-          </Accordion>
-        )
-      )}
+              <AccordionActions id={id} />
+            </Accordion>
+          )
+        )}
+      </Container>
 
-      <Divider sx={{ marginY: 2 }} />
+      <Divider />
 
       {isAuthenticated ? (
-        <Button
-          fullWidth
-          variant="outlined"
-          color="error"
-          size="large"
-          onClick={signout}
-        >
-          <Trans i18nKey="app:btn-signout" />
-        </Button>
+        <>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            size="large"
+            startIcon={<Display.Icon code="faArrowRightFromBracket" />}
+            onClick={signout}
+          >
+            <Trans i18nKey="btn-signout" />
+          </Button>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            color="error"
+            size="large"
+            startIcon={<Display.Icon code="faUserSlash" />}
+          >
+            <Trans i18nKey="btn-delete-account" />
+          </Button>
+        </>
       ) : (
         <>
           <Button
@@ -64,14 +83,15 @@ export default function UserSettings() {
             variant="contained"
             color="primary"
             size="large"
+            startIcon={<Display.Icon code="faArrowRightToBracket" />}
             onClick={() => setOpen(true)}
           >
-            <Trans i18nKey="app:btn-signin" />
+            <Trans i18nKey="btn-signin" />
           </Button>
 
           <MenuDialog
             open={open}
-            title="app:btn-signin"
+            title="btn-signin"
             indicator={<Display.Icon code="faArrowRightToBracket" />}
             items={SIGNIN_OPTIONS}
             onClose={() => setOpen(false)}
