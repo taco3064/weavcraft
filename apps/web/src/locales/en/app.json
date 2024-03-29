@@ -1,12 +1,14 @@
 {
+  "btn-cancel": "Cancel",
   "btn-close": "Close",
   "btn-signin": "Sign In",
-  "btn-signin-google": "Sign In with Google",
+  "btn-signin-with-google": "Sign In with Google",
   "btn-signout": "Sign Out",
-  "lbl-language": "Language",
+  "btn-update": "Update",
   "lbl-analytics": "Analytics",
+  "lbl-language": "Language",
+  "lbl-profile": "User Profile",
   "lbl-settings": "Settings",
-  "lbl-user-profile": "User Profile",
   "ttl-user-options": "User Options",
   "msg-nav-items": {
     "gallery": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community.",

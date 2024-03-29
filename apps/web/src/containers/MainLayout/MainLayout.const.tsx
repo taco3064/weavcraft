@@ -1,6 +1,7 @@
 import { Display } from '@weavcraft/core';
 
 import Logo from '~web/assets/imgs/icon.svg';
+import { SETTINGS } from '../UserSettings';
 import type { DefaultProps, NavItem } from './MainLayout.types';
 import type { MenuItemOptions } from '~web/components';
 
@@ -45,40 +46,11 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const USER_MENU_ITEMS: MenuItemOptions<{ auth?: boolean }>[] = [
-  {
-    auth: true,
-    indicator: <Display.Icon code="faUser" />,
-    label: 'app:lbl-user-profile',
-    href: '/profile',
-  },
-  {
-    auth: true,
-    indicator: <Display.Icon code="faChartLine" />,
-    label: 'app:lbl-analytics',
-    href: '/analytics',
-  },
-  {
-    auth: false,
-    indicator: <Display.Icon code="faGear" />,
-    label: 'app:lbl-settings',
-    href: '/settings',
-  },
+  ...SETTINGS.map(({ id, icon, auth }) => ({
+    auth,
+    indicator: <Display.Icon code={icon} />,
+    label: `app:lbl-${id}`,
+    href: `/user-settings#${id}`,
+  })),
   'divider',
-  {
-    auth: false,
-    indicator: <Display.Icon code="faArrowRightToBracket" />,
-    label: 'app:btn-signin',
-    items: [
-      {
-        auth: false,
-        indicator: <Display.Icon code="faGoogle" />,
-        label: 'app:btn-signin-google',
-      },
-    ],
-  },
-  {
-    auth: true,
-    indicator: <Display.Icon code="faArrowRightFromBracket" />,
-    label: 'app:btn-signout',
-  },
 ];

@@ -46,7 +46,7 @@ export const WEAVCRAFT: PaletteOptions = {
   },
   text: {
     primary: '#fff',
-    secondary: '#ddd',
+    secondary: '#ccc',
     disabled: 'rgba(255, 255, 255, 0.5)',
   },
 };

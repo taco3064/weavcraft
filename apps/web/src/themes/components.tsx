@@ -23,6 +23,34 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
+  MuiAccordion: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        // borderRadius: theme.spacing(2),
+
+        '&.Mui-expanded': {
+          borderRadius: `${theme.spacing(2)} !important`,
+        },
+      }),
+    },
+  },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '&.Mui-expanded > .MuiAccordionSummary-content': {
+          color: theme.palette.text.primary,
+        },
+      }),
+      content: ({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        color: theme.palette.text.disabled,
+        fontSize: theme.typography.subtitle1.fontSize,
+        fontWeight: 600,
+        gap: theme.spacing(1),
+      }),
+    },
+  },
   MuiAppBar: {
     defaultProps: {
       position: 'sticky',

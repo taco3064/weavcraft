@@ -20,11 +20,6 @@ export type NavItem = {
   href: string;
 };
 
-export interface UserAvatarMenuProps {
-  onSignIn?: () => void;
-  onSignOut?: () => void;
-}
-
 export interface MainLayoutProps {
   children: ReactNode;
 }

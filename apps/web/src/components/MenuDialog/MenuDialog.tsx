@@ -31,15 +31,17 @@ export default function MenuDialog({
   onClose,
   onItemClick,
 }: MenuDialogProps) {
-  const [subProps, setSubProps] =
-    useState<Pick<MenuDialogProps, 'items' | 'title'>>();
   const { classes } = useDialogStyles();
+
+  const [subProps, setSubProps] =
+    useState<Pick<MenuDialogProps, 'items' | 'title' | 'indicator'>>();
 
   return (
     <>
       {!subProps?.items?.length ? null : (
         <MenuDialog
           TransitionComponent={SubTransition}
+          indicator={subProps.indicator}
           items={subProps.items}
           open={Boolean(subProps.items.length)}
           title={subProps.title}
@@ -81,7 +83,11 @@ export default function MenuDialog({
                       className={classes.item}
                       onClick={() => {
                         if (subItems?.length) {
-                          setSubProps({ title: label, items: subItems });
+                          setSubProps({
+                            indicator,
+                            title: label,
+                            items: subItems,
+                          });
                         } else {
                           onItemClick?.(label);
                           onClose();

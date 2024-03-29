@@ -5,9 +5,10 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
@@ -16,8 +17,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
+import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import NotificationBell from './MainLayout.NotificationBell';
@@ -58,12 +59,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
             <Toolbar disableGutters role="status" variant="dense">
               <NotificationBell />
-              <UserAvatarMenu />
+              {pathname !== '/user-settings' && <UserAvatarMenu />}
             </Toolbar>
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth={false}>{children}</Container>
+        <Suspense fallback={<LinearProgress />}>
+          <Container maxWidth={false}>{children}</Container>
+        </Suspense>
       </Container>
 
       <Drawer
