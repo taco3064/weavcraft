@@ -13,7 +13,7 @@ export default function UserAvatarMenu() {
   const [open, setOpen] = useState(false);
 
   const { isAuthenticated, signin, signout } = useAuth();
-  const { classes } = useMenuStyles();
+  const { classes } = useMenuStyles({ isAuthenticated });
 
   const handleItemClick = (label: string) => {
     if (label === 'app:btn-signout') {
@@ -27,18 +27,16 @@ export default function UserAvatarMenu() {
 
   return (
     <>
-      <IconButton size="large" onClick={() => setOpen(true)}>
-        {!isAuthenticated ? (
-          <Display.Icon code="faUser" />
-        ) : (
-          <Avatar className={classes.thumb} />
-        )}
+      <IconButton size="large" sx={{ p: 0 }} onClick={() => setOpen(true)}>
+        <Avatar className={classes.thumb} />
       </IconButton>
 
       <MenuDialog
         open={open}
         title="app:ttl-user-options"
         indicator={<Display.Icon code="faTerminal" />}
+        onClose={() => setOpen(false)}
+        onItemClick={handleItemClick}
         items={[
           ...USER_MENU_ITEMS.map((item) =>
             item.auth !== false && !isAuthenticated ? null : item
@@ -54,8 +52,6 @@ export default function UserAvatarMenu() {
                 items: SIGNIN_OPTIONS,
               },
         ]}
-        onClose={() => setOpen(false)}
-        onItemClick={handleItemClick}
       />
     </>
   );

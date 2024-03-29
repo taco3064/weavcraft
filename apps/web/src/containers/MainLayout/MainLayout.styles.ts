@@ -1,20 +1,21 @@
 import { makeStyles } from 'tss-react/mui';
 import type { StyleParams } from './MainLayout.types';
 
-export const useMenuStyles = makeStyles({ name: 'UserAvatarMenu' })(
-  (theme) => ({
-    thumb: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-    content: {
-      padding: 0,
-    },
-    item: {
-      padding: theme.spacing(1.5, 3),
-    },
-  })
-);
+export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
+  name: 'UserAvatarMenu',
+})((theme, { isAuthenticated }) => ({
+  thumb: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    filter: `brightness(${isAuthenticated ? 1 : 0.6})`,
+  },
+  content: {
+    padding: 0,
+  },
+  item: {
+    padding: theme.spacing(1.5, 3),
+  },
+}));
 
 export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
