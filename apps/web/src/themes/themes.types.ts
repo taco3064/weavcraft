@@ -8,7 +8,9 @@ type PalettePayload = {
   palette: PaletteOptions;
 };
 
+export type PaletteCode = keyof typeof Palettes;
+
 export interface ThemeProviderProps {
   children: ReactNode;
-  palette?: PalettePayload | keyof typeof Palettes;
+  palette?: PalettePayload | PaletteCode;
 }

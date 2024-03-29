@@ -3,6 +3,15 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web",
   "projectType": "application",
-  "targets": {},
+  "targets": {
+    "tsc": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "tsc --noEmit -p apps/web/tsconfig.json"
+        ]
+      }
+    }
+  },
   "tags": []
 }

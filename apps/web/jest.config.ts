@@ -7,8 +7,8 @@ export default {
   globals: {
     __WEBPACK_DEFINE__: {
       ENV: 'development',
-      LANGUAGES: ['en', 'zh'],
       VERSION: '0.0.1',
+      I18N: { defaultLocale: 'en', locales: ['en', 'zh'] },
     },
   },
   moduleNameMapper: {

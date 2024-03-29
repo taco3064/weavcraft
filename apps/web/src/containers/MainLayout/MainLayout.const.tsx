@@ -49,7 +49,7 @@ export const USER_MENU_ITEMS: MenuItemOptions<{ auth?: boolean }>[] = [
   ...SETTINGS.map(({ id, icon, auth }) => ({
     auth,
     indicator: <Display.Icon code={icon} />,
-    label: `app:lbl-${id}`,
+    label: `lbl-${id}`,
     href: `/user-settings#${id}`,
   })),
   'divider',

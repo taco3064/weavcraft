@@ -9,7 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
-import { Trans } from 'react-i18next';
+import { Trans } from 'next-i18next';
 import { Fragment, forwardRef, useState } from 'react';
 
 import { useDialogStyles } from './MenuDialog.styles';
@@ -114,7 +114,7 @@ export default function MenuDialog({
             size="large"
             onClick={onClose}
           >
-            <Trans i18nKey="app:btn-close" />
+            <Trans i18nKey="btn-close" />
           </Button>
         </DialogActions>
       </Dialog>

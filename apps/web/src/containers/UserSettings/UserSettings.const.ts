@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import { Display, type IconCode } from '@weavcraft/core';
 
 import { SIGNIN_METHODS } from '~web/hooks';
 import type { Accordions } from './UserSettings.types';
@@ -28,18 +27,8 @@ export const ACCORDIONS: Accordions = [
   },
 ];
 
-export const SIGNIN_OPTIONS: MenuItemOptions[] = SIGNIN_METHODS.map(
-  (method) => ({
-    label: `app:btn-signin-with-${method}`,
-    indicator: (
-      <Display.Icon
-        code={
-          `fa${method.replace(
-            /^./,
-            method.charAt(0).toUpperCase()
-          )}` as IconCode
-        }
-      />
-    ),
-  })
-);
+export const SIGNIN_OPTIONS: Exclude<MenuItemOptions, 'divider'>[] =
+  SIGNIN_METHODS.map((method) => ({
+    label: `btn-signin-with-${method}`,
+    indicator: `fa${method.replace(/^./, method.charAt(0).toUpperCase())}`,
+  }));
