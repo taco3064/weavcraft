@@ -3,7 +3,7 @@ import { Trans } from 'next-i18next';
 import { createPortal } from 'react-dom';
 
 export default function Profile() {
-  const container = global.document?.getElementById('profile');
+  const container = global.document?.getElementById('actions-profile');
 
   return (
     <>

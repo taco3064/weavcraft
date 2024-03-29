@@ -29,11 +29,14 @@ export default function UserSettings() {
           auth && !isAuthenticated ? null : (
             <Accordion
               key={id}
+              id={id}
               expanded={expanded === id}
               onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
             >
               <AccordionSummary
-                expandIcon={<Display.Icon code="faAngleDown" />}
+                expandIcon={
+                  expanded === id ? null : <Display.Icon code="faAngleDown" />
+                }
               >
                 <Display.Icon color="primary" code={icon} />
                 <Trans i18nKey={`lbl-${id}`} />
@@ -45,7 +48,7 @@ export default function UserSettings() {
                 <Component />
               </AccordionDetails>
 
-              <AccordionActions id={id} />
+              <AccordionActions id={`actions-${id}`} />
             </Accordion>
           )
         )}

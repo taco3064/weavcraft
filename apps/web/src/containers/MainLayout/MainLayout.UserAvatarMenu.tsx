@@ -1,6 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import { Display } from '@weavcraft/core';
+import { Display, type IconCode } from '@weavcraft/core';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
@@ -49,7 +49,12 @@ export default function UserAvatarMenu() {
             : {
                 indicator: <Display.Icon code="faArrowRightToBracket" />,
                 label: 'btn-signin',
-                items: SIGNIN_OPTIONS,
+                items: SIGNIN_OPTIONS.map(({ indicator, ...options }) => ({
+                  ...options,
+                  ...(typeof indicator === 'string' && {
+                    indicator: <Display.Icon code={indicator as IconCode} />,
+                  }),
+                })),
               },
         ]}
       />
