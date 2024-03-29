@@ -1,21 +1,24 @@
 import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
+import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import NotificationBell from './MainLayout.NotificationBell';
@@ -48,18 +51,22 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   onClick={() => setOpen(true)}
                 />
 
-                <Link {...DEFAULT_PROPS.homeLink}>Weavcraft</Link>
+                <Link {...DEFAULT_PROPS.title} href="/">
+                  Weavcraft
+                </Link>
               </Toolbar>
             </Fade>
 
             <Toolbar disableGutters role="status" variant="dense">
               <NotificationBell />
-              <UserAvatarMenu />
+              {pathname !== '/user-settings' && <UserAvatarMenu />}
             </Toolbar>
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth={false}>{children}</Container>
+        <Suspense fallback={<LinearProgress />}>
+          <Container maxWidth={false}>{children}</Container>
+        </Suspense>
       </Container>
 
       <Drawer
@@ -81,10 +88,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     role="heading"
                     component={Toolbar}
                   >
-                    <Link {...DEFAULT_PROPS.homeLink}>
+                    <Typography {...DEFAULT_PROPS.title}>
                       {logo}
                       Weavcraft
-                    </Link>
+                    </Typography>
 
                     <IconButton onClick={() => setOpen(false)}>
                       <Display.Icon code="faAngleLeft" />
@@ -102,9 +109,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   href={href}
                   selected={pathname === href}
                 >
-                  <ListItemIcon className={classes.icon}>
-                    <Display.Icon fontSize="large" color="info" code={icon} />
-                  </ListItemIcon>
+                  <ListItemAvatar className={classes.avatar}>
+                    <Avatar>
+                      <Display.Icon fontSize="large" code={icon} />
+                    </Avatar>
+                  </ListItemAvatar>
 
                   <ListItemText
                     primary={<Trans i18nKey={`app:ttl-nav-items.${id}`} />}

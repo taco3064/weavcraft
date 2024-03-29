@@ -1,20 +1,21 @@
 import { makeStyles } from 'tss-react/mui';
 import type { StyleParams } from './MainLayout.types';
 
-export const useMenuStyles = makeStyles({ name: 'UserAvatarMenu' })(
-  (theme) => ({
-    thumb: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-    },
-    content: {
-      padding: 0,
-    },
-    item: {
-      padding: theme.spacing(1.5, 3),
-    },
-  })
-);
+export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
+  name: 'UserAvatarMenu',
+})((theme, { isAuthenticated }) => ({
+  thumb: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    filter: `brightness(${isAuthenticated ? 1 : 0.6})`,
+  },
+  content: {
+    padding: 0,
+  },
+  item: {
+    padding: theme.spacing(1.5, 3),
+  },
+}));
 
 export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
@@ -36,8 +37,8 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         ),
         [theme.breakpoints.up('md')]: {
           borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-          height: theme.spacing(open ? 6.5 : 8),
-          marginTop: theme.spacing(open ? 1.5 : 0),
+          height: theme.spacing(open ? 6 : 8),
+          margin: theme.spacing(open ? 1 : 0, 0),
         },
         '& > *': {
           height: theme.spacing(8),
@@ -83,15 +84,23 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           },
         },
       },
-      icon: {
+      avatar: {
         justifyContent: 'center',
+
+        '& > *': {
+          color: `${theme.palette.secondary.contrastText} !important`,
+          background: `${theme.palette.secondary.main} !important`,
+        },
       },
       description: {
         whiteSpace: 'pre-line',
         display: '-webkit-box',
         overflow: 'hidden',
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: 2,
+
+        '&:not(:hover)': {
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2,
+        },
       },
     };
   }

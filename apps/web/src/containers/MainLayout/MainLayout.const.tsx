@@ -1,18 +1,18 @@
 import { Display } from '@weavcraft/core';
 
 import Logo from '~web/assets/imgs/icon.svg';
+import { SETTINGS } from '../UserSettings';
 import type { DefaultProps, NavItem } from './MainLayout.types';
-import type { MenuItem } from '~web/components';
+import type { MenuItemOptions } from '~web/components';
 
 export const DEFAULT_PROPS: DefaultProps = {
   logo: {
     inheritViewBox: true,
     component: Logo,
   },
-  homeLink: {
+  title: {
     color: 'text.primary',
-    fontFamily: 'comic sans MS',
-    href: '/',
+    fontFamily: ['Monaco', 'comic sans MS'],
     variant: 'h6',
   },
 };
@@ -20,8 +20,8 @@ export const DEFAULT_PROPS: DefaultProps = {
 export const NAV_ITEMS: NavItem[] = [
   {
     icon: 'faLightbulb',
-    id: 'inspiration',
-    href: '/inspiration-wall',
+    id: 'gallery',
+    href: '/gallery',
   },
   {
     icon: 'faPalette',
@@ -45,34 +45,12 @@ export const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-export const USER_MENU_ITEMS: MenuItem<{ auth?: boolean }>[] = [
-  {
-    auth: true,
-    indicator: <Display.Icon code="faUser" />,
-    label: 'app:lbl-user-profile',
-    href: '/profile',
-  },
-  {
-    auth: true,
-    indicator: <Display.Icon code="faChartLine" />,
-    label: 'app:lbl-analytics',
-    href: '/analytics',
-  },
-  {
-    auth: false,
-    indicator: <Display.Icon code="faGear" />,
-    label: 'app:lbl-settings',
-    href: '/settings',
-  },
+export const USER_MENU_ITEMS: MenuItemOptions<{ auth?: boolean }>[] = [
+  ...SETTINGS.map(({ id, icon, auth }) => ({
+    auth,
+    indicator: <Display.Icon code={icon} />,
+    label: `app:lbl-${id}`,
+    href: `/user-settings#${id}`,
+  })),
   'divider',
-  {
-    auth: false,
-    indicator: <Display.Icon code="faArrowRightToBracket" />,
-    label: 'app:btn-signin',
-  },
-  {
-    auth: true,
-    indicator: <Display.Icon code="faArrowRightFromBracket" />,
-    label: 'app:btn-signout',
-  },
 ];

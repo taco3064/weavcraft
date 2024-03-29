@@ -4,24 +4,51 @@ import type { ThemeOptions } from '@mui/material/styles';
 import type { TransitionProps } from '@mui/material/transitions';
 
 //* Dialog Transition
-const Transition = forwardRef(
-  (
-    props: TransitionProps & {
-      children: ReactElement;
-    },
-    ref: React.Ref<unknown>
-  ) => <Slide direction="up" ref={ref} {...props} />
-);
-
-Transition.displayName = 'Transition';
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 //* Default Component Styles
 export const components: ThemeOptions['components'] = {
   MuiCssBaseline: {
     styleOverrides: {
       body: {
+        fontFamily: 'Verdana',
         overflow: 'hidden auto',
       },
+    },
+  },
+  MuiAccordion: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        // borderRadius: theme.spacing(2),
+
+        '&.Mui-expanded': {
+          borderRadius: `${theme.spacing(2)} !important`,
+        },
+      }),
+    },
+  },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '&.Mui-expanded > .MuiAccordionSummary-content': {
+          color: theme.palette.text.primary,
+        },
+      }),
+      content: ({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        color: theme.palette.text.disabled,
+        fontSize: theme.typography.subtitle1.fontSize,
+        fontWeight: 600,
+        gap: theme.spacing(1),
+      }),
     },
   },
   MuiAppBar: {
@@ -76,6 +103,8 @@ export const components: ThemeOptions['components'] = {
       root: ({ theme }) => ({
         height: theme.spacing(8),
         padding: theme.spacing(1.5, 3),
+        userSelect: 'none',
+        borderBottom: `1px solid ${theme.palette.divider}`,
       }),
     },
   },
@@ -116,12 +145,22 @@ export const components: ThemeOptions['components'] = {
       underline: 'none',
     },
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+        fontWeight: 500,
+
+        '&:hover': {
+          filter: 'brightness(1.2)',
+          fontWeight: 600,
+        },
         '&:disabled': {
           pointerEvents: 'none !important',
           textDecoration: 'none !important',
         },
-      },
+      }),
     },
   },
   MuiList: {
