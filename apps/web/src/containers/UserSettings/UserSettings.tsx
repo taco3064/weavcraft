@@ -7,30 +7,18 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import { Display } from '@weavcraft/core';
 import { Trans } from 'react-i18next';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
 import { ACCORDIONS, SIGNIN_OPTIONS } from './UserSettings.const';
 import { useAuth, type SigninMethod } from '~web/hooks';
-import type { AccordionId } from './UserSettings.types';
+import { useExpanded } from './UserSettings.hooks';
 
 export default function UserSettings() {
-  const { pathname, asPath, replace } = useRouter();
   const { isAuthenticated, signin, signout } = useAuth();
 
-  const [expanded, setExpanded] = useState<AccordionId>();
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const hashId = asPath.split('#')[1] as AccordionId;
-
-    const expanded = (ACCORDIONS.find(
-      ({ id, auth }) => id === hashId && (!auth || isAuthenticated)
-    )?.id || 'settings') as AccordionId;
-
-    setExpanded(expanded);
-  }, [isAuthenticated, asPath]);
+  const [expanded, setExpanded] = useExpanded(isAuthenticated);
 
   return (
     <Container disableGutters maxWidth="sm">
@@ -38,14 +26,8 @@ export default function UserSettings() {
         auth && !isAuthenticated ? null : (
           <Accordion
             key={id}
-            id={id}
             expanded={expanded === id}
-            onChange={(_e, isExpanded) => {
-              if (isExpanded) {
-                replace(pathname, `${pathname}#${id}`);
-                setExpanded(id);
-              }
-            }}
+            onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
           >
             <AccordionSummary expandIcon={<Display.Icon code="faAngleDown" />}>
               <Display.Icon color="primary" code={icon} />
@@ -58,7 +40,7 @@ export default function UserSettings() {
               <Component />
             </AccordionDetails>
 
-            <AccordionActions id={`actions-${id}`} />
+            <AccordionActions id={id} />
           </Accordion>
         )
       )}

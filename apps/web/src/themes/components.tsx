@@ -34,6 +34,16 @@ export const components: ThemeOptions['components'] = {
       }),
     },
   },
+  MuiAccordionActions: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        padding: 0,
+        '&:has(*)': {
+          padding: theme.spacing(1),
+        },
+      }),
+    },
+  },
   MuiAccordionSummary: {
     styleOverrides: {
       root: ({ theme }) => ({
