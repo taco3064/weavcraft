@@ -1,12 +1,13 @@
 import type { DialogProps } from '@mui/material/Dialog';
 import type { ReactElement, ReactNode } from 'react';
 import type { TransitionProps } from '@mui/material/transitions';
+import type { UrlObject } from 'url';
 
 export type MenuItemOptions<P = {}> = P &
   (
     | 'divider'
     | {
-        href?: string;
+        href?: string | UrlObject;
         indicator?: ReactNode;
         label: string;
         items?: (null | false | undefined | MenuItemOptions<P>)[];
@@ -24,5 +25,5 @@ export interface MenuDialogProps
   open: boolean;
   title?: string;
   onClose: () => void;
-  onItemClick?: (e: string) => void;
+  onItemClick?: (e: string, index: number) => void;
 }

@@ -1,6 +1,4 @@
-import { createContext, createRef, useContext, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { createContext, createRef, useContext } from 'react';
 
 import { PALETTES, type PaletteCode } from '~web/themes';
 import type {
@@ -29,13 +27,4 @@ export function useAppSettings() {
     setLanguage: setterRef.current?.setLanguage,
     setPalette: setterRef.current?.setPalette,
   };
-}
-
-export function useTranslationSyncEffect() {
-  const { i18n } = useTranslation();
-  const { locale } = useRouter();
-
-  useEffect(() => {
-    i18n.changeLanguage(locale);
-  }, [i18n, locale]);
 }

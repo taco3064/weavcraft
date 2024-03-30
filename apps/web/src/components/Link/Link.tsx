@@ -5,11 +5,11 @@ import { forwardRef } from 'react';
 import type { LinkProps } from './Link.types';
 
 export default forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { children, href, ...props },
+  { children, ...props },
   ref
 ) {
   return (
-    <MuiLink {...props} ref={ref} href={href as string} component={NextLink}>
+    <MuiLink {...props} ref={ref} component={NextLink}>
       {children}
     </MuiLink>
   );

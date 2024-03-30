@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
-
 import { useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 import NotistackProvider from '../Notistack';
 import ThemeProvider from '~web/themes';
@@ -23,6 +23,7 @@ const client = new QueryClient();
 export default function AppProviderManager({
   children,
 }: AppProviderManagerProps) {
+  const { i18n } = useTranslation();
   const { locale, locales, pathname, query, asPath, replace } = useRouter();
   const setterRef = useRef<SetterFns>();
 
@@ -44,17 +45,20 @@ export default function AppProviderManager({
   useImperativeHandle(
     setterRef,
     () => ({
-      setLanguage: (language: LanguageCode) =>
-        replace({ pathname, query }, asPath, {
+      setLanguage: async (language: LanguageCode) => {
+        await replace({ pathname, query }, asPath, {
           shallow: true,
           locale: language,
-        }),
+        });
+
+        i18n.changeLanguage(language);
+      },
       setPalette: (palette: PaletteCode) => {
         Cookies.set('palette', palette);
         setPalette(palette);
       },
     }),
-    [asPath, pathname, query, replace]
+    [asPath, i18n, pathname, query, replace]
   );
 
   return (

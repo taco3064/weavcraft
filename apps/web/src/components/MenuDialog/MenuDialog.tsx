@@ -67,7 +67,7 @@ export default function MenuDialog({
         <DialogContent className={classes.content}>
           {open && (
             <MenuList>
-              {items.map((item) => {
+              {items.map((item, i) => {
                 if (!item) {
                   return null;
                 } else if (item === 'divider') {
@@ -89,7 +89,7 @@ export default function MenuDialog({
                             items: subItems,
                           });
                         } else {
-                          onItemClick?.(label);
+                          onItemClick?.(label, i);
                           onClose();
                         }
                       }}
