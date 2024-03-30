@@ -2,8 +2,6 @@ import type { AppProps as NextAppProps } from 'next/app';
 import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 
-import type { LanguageCode } from '~web/hooks';
-
 type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   P,
   InitialProps
@@ -19,5 +17,4 @@ export type MakePerPageLayout = <P = {}>(
 
 export type AppProps = NextAppProps & {
   Component: NextPageWithLayout;
-  language: LanguageCode;
 };

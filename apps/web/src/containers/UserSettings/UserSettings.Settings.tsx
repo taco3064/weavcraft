@@ -6,13 +6,15 @@ import TextField from '@mui/material/TextField';
 import { Trans } from 'next-i18next';
 
 import { PALETTES } from '~web/themes';
-import { useSettings } from '~web/hooks';
+import { useAppSettings } from '~web/contexts';
 import { useSettingsStyles } from './UserSettings.styles';
-import type { LanguageCode, PaletteCode } from '~web/hooks';
+import type { LanguageCode, PaletteCode } from '~web/contexts';
 
 export default function Settings() {
-  const { language, palette, setLanguage, setPalette } = useSettings();
   const { classes } = useSettingsStyles();
+
+  const { language, languages, palette, setLanguage, setPalette } =
+    useAppSettings();
 
   return (
     <>
@@ -21,9 +23,9 @@ export default function Settings() {
         select
         label={<Trans i18nKey="lbl-language" />}
         value={language}
-        onChange={(e) => setLanguage(e.target.value as LanguageCode)}
+        onChange={(e) => setLanguage?.(e.target.value as LanguageCode)}
       >
-        {__WEBPACK_DEFINE__.I18N.locales.map((value) => (
+        {languages.map((value) => (
           <MenuItem key={value} value={value}>
             <Trans i18nKey={`opt-language.${value}`} />
           </MenuItem>
@@ -35,7 +37,7 @@ export default function Settings() {
         select
         label={<Trans i18nKey="lbl-theme" />}
         value={palette}
-        onChange={(e) => setPalette(e.target.value as PaletteCode)}
+        onChange={(e) => setPalette?.(e.target.value as PaletteCode)}
         SelectProps={{
           renderValue: (value) => <Trans i18nKey={`opt-theme.${value}`} />,
         }}

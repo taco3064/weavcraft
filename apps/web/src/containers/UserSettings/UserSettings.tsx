@@ -5,8 +5,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
-import { Display } from '@weavcraft/core';
-import { Trans, useTranslation } from 'next-i18next';
+import { Display, type IconCode } from '@weavcraft/core';
+import { Trans } from 'next-i18next';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
@@ -96,9 +96,14 @@ export default function UserSettings() {
             open={open}
             title="btn-signin"
             indicator={<Display.Icon code="faArrowRightToBracket" />}
-            items={SIGNIN_OPTIONS}
             onClose={() => setOpen(false)}
             onItemClick={(e) => signin(e.replace(/^.+-/, '') as SigninMethod)}
+            items={SIGNIN_OPTIONS.map(({ indicator, ...options }) => ({
+              ...options,
+              ...(typeof indicator === 'string' && {
+                indicator: <Display.Icon code={indicator as IconCode} />,
+              }),
+            }))}
           />
         </>
       )}
