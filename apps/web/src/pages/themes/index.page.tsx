@@ -1,19 +1,16 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps } from 'next';
 
+import ThemeGroupPage from './[group].page';
 import { I18N_USER_CONFIG } from '~web/contexts';
-import { MainLayout } from '~web/containers';
-import { makePerPageLayout } from './_app.page';
 
-export default makePerPageLayout(MainLayout)(function IndexPage() {
-  return <>Index</>;
-});
+export default ThemeGroupPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
     ...(await serverSideTranslations(
       locale || I18N_USER_CONFIG.i18n.defaultLocale,
-      ['common'],
+      ['common', 'themes'],
       I18N_USER_CONFIG
     )),
   },

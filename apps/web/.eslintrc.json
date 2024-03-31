@@ -12,7 +12,22 @@
       "rules": {
         "@typescript-eslint/ban-types": "off",
         "@next/next/no-html-link-for-pages": ["error", "apps/web/pages"],
-        "@nx/enforce-module-boundaries": "off"
+        "@nx/enforce-module-boundaries": "off",
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react-i18next",
+                "message": "Please change to use 'next-i18next'."
+              },
+              {
+                "name": "i18next",
+                "message": "Please change to use 'next-i18next'."
+              }
+            ]
+          }
+        ]
       }
     },
     {

@@ -12,13 +12,8 @@
   "lbl-settings": "Settings",
   "lbl-theme": "Theme Style",
   "ttl-user-options": "User Options",
-  "msg-nav-items": {
-    "gallery": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community.",
-    "pages": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements.",
-    "themes": "Customize the look and feel of your website with a variety of pre-designed themes and styles.",
-    "websites": "View, manage, and customize your personal websites, including URL settings, and theme selection.",
-    "widgets": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
-  },
+  "ttl-user-settings": "User Settings",
+  "ttl-weavcraft": "Weavcraft",
   "opt-language": {
     "en": "English",
     "zh": "繁體中文"
@@ -27,11 +22,26 @@
     "SPARKLING_CHAMPAGNE": "Sparkling Champagne",
     "WEAVCRAFT": "Default Theme"
   },
-  "ttl-nav-items": {
-    "gallery": "Craft Gallery",
-    "pages": "Web Page Editor",
-    "themes": "Theme Styles",
-    "websites": "Websites",
-    "widgets": "Widget Storage"
+  "ttl-breadcrumbs": {
+    "gallery": {
+      "label": "Craft Gallery",
+      "description": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community."
+    },
+    "pages": {
+      "label": "Web Page Editor",
+      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
+    },
+    "themes": {
+      "label": "Theme Styles",
+      "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
+    },
+    "websites": {
+      "label": "Websites",
+      "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
+    },
+    "widgets": {
+      "label": "Widget Storage",
+      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
+    }
   }
 }

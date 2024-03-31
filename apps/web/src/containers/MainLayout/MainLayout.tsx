@@ -52,7 +52,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 />
 
                 <Link {...DEFAULT_PROPS.title} href="/">
-                  Weavcraft
+                  <Trans i18nKey="ttl-weavcraft" />
                 </Link>
               </Toolbar>
             </Fade>
@@ -90,7 +90,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   >
                     <Typography {...DEFAULT_PROPS.title}>
                       {logo}
-                      Weavcraft
+                      <Trans i18nKey="ttl-weavcraft" />
                     </Typography>
 
                     <IconButton onClick={() => setOpen(false)}>
@@ -116,8 +116,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </ListItemAvatar>
 
                   <ListItemText
-                    primary={<Trans i18nKey={`ttl-nav-items.${id}`} />}
-                    secondary={<Trans i18nKey={`msg-nav-items.${id}`} />}
+                    primary={<Trans i18nKey={`ttl-breadcrumbs.${id}.label`} />}
+                    secondary={
+                      <Trans i18nKey={`ttl-breadcrumbs.${id}.description`} />
+                    }
                     primaryTypographyProps={{
                       variant: 'subtitle1',
                       color: 'primary',
