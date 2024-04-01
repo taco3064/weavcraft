@@ -58,7 +58,7 @@ export default function Breadcrumbs({
         className={classes.root}
         disableGutters={disableGutters}
       >
-        <IconButton color="primary" onClick={back}>
+        <IconButton color="secondary" onClick={back}>
           <Display.Icon code="faArrowLeft" />
         </IconButton>
 

@@ -1,15 +1,15 @@
 import type { ToolbarProps } from '@mui/material/Toolbar';
-import type { UrlObject } from 'url';
+import type { Href, PortalContainerEl } from '~web/components';
 
 export interface Breadcrumb {
   label: string;
-  href?: string | UrlObject;
+  href?: Href;
 }
 
 export interface BreadcrumbsProps extends Pick<ToolbarProps, 'disableGutters'> {
   currentBreadcrumbLabel?: string;
   currentPageTitle: string;
-  onToolbarMount?: (toolbar: HTMLDivElement | null) => void;
+  onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
 
   onCatchAllRoutesTransform?: (
     name: string,

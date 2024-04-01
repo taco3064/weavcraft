@@ -122,7 +122,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     }
                     primaryTypographyProps={{
                       variant: 'subtitle1',
-                      color: 'primary',
+                      color: 'secondary',
                       fontWeight: 'bolder',
                     }}
                     secondaryTypographyProps={{

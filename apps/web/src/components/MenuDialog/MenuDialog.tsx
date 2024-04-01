@@ -94,7 +94,7 @@ export default function MenuDialog({
                         }
                       }}
                     >
-                      <Typography variant="subtitle1" color="text.secondary">
+                      <Typography variant="subtitle1" color="text.primary">
                         {indicator}
                         <Trans i18nKey={label} />
                       </Typography>

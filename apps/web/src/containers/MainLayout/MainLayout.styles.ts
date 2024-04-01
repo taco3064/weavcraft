@@ -88,8 +88,8 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         justifyContent: 'center',
 
         '& > *': {
-          color: `${theme.palette.secondary.contrastText} !important`,
-          background: `${theme.palette.secondary.main} !important`,
+          color: `${theme.palette.primary.contrastText} !important`,
+          background: `${theme.palette.primary.main} !important`,
         },
       },
       description: {

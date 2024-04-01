@@ -104,7 +104,7 @@ export const components: ThemeOptions['components'] = {
   },
   MuiDialogTitle: {
     defaultProps: {
-      color: 'text.primary',
+      color: 'secondary',
       fontWeight: 'bolder',
     },
     styleOverrides: {

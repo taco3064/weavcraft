@@ -10,7 +10,7 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
 
   return (
     <>
-      <Breadcrumbs currentPageTitle={t('ttl-user-settings')} />
+      <Breadcrumbs disableGutters currentPageTitle={t('ttl-user-settings')} />
       <UserSettings />
     </>
   );

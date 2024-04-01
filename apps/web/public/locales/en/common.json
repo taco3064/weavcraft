@@ -1,7 +1,10 @@
 {
+  "btn-add-group": "Add Folder",
   "btn-cancel": "Cancel",
+  "btn-clear-filter": "Clear Filter",
   "btn-close": "Close",
   "btn-delete-account": "Delete Account",
+  "btn-search": "Search",
   "btn-signin": "Sign In",
   "btn-signin-with-google": "Sign In with Google",
   "btn-signout": "Sign Out",
@@ -11,9 +14,13 @@
   "lbl-profile": "User Profile",
   "lbl-settings": "Settings",
   "lbl-theme": "Theme Style",
+  "msg-filter-placeholder": "Enter the search keyword...",
   "ttl-user-options": "User Options",
   "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
+  "btn-add-item": {
+    "themes": "Create Theme"
+  },
   "opt-language": {
     "en": "English",
     "zh": "繁體中文"

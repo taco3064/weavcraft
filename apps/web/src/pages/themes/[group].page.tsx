@@ -1,15 +1,15 @@
-import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps } from 'next';
 
-import { Breadcrumbs, MainLayout } from '~web/containers';
+import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
 import { I18N_USER_CONFIG, makePerPageLayout } from '~web/contexts';
+import type { PortalContainerEl } from '~web/components';
 
 export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
-  const [toolbarEl, setToolbarEl] = useState<HTMLDivElement | null>(null);
+  const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
   const { t } = useTranslation();
   const { query } = useRouter();
@@ -33,7 +33,14 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
         }}
       />
 
-      {toolbarEl && createPortal(<>Theme Styles</>, toolbarEl)}
+      <HierarchyList
+        disableGroup={false}
+        disableGutters
+        disablePublish
+        category="themes"
+        maxWidth="md"
+        toolbarEl={toolbarEl}
+      />
     </>
   );
 });
