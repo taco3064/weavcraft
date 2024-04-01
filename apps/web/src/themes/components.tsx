@@ -1,17 +1,15 @@
 import Slide from '@mui/material/Slide';
-import { ReactElement, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import type { ThemeOptions } from '@mui/material/styles';
-import type { TransitionProps } from '@mui/material/transitions';
+
+import type { TransitionProps } from './types';
 
 //* Dialog Transition
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
+
+Transition.displayName = 'Transition';
 
 //* Default Component Styles
 export const components: ThemeOptions['components'] = {

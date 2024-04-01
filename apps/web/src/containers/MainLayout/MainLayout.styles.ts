@@ -37,8 +37,8 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         ),
         [theme.breakpoints.up('md')]: {
           borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-          height: theme.spacing(open ? 6 : 8),
-          margin: theme.spacing(open ? 1 : 0, 0),
+          height: theme.spacing(open ? 4 : 8),
+          margin: theme.spacing(open ? 2 : 0, 0),
         },
         '& > *': {
           height: theme.spacing(8),

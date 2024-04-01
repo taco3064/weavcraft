@@ -2,17 +2,8 @@ import Head from 'next/head';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 
 import { AppProviderManager } from '~web/contexts';
-import { I18N_USER_CONFIG } from '~web/contexts';
-import type { AppProps, MakePerPageLayout } from './_app.types';
+import { I18N_USER_CONFIG, type AppProps } from '~web/contexts';
 
-//* HOCs
-export const makePerPageLayout: MakePerPageLayout = (Layout) => (Page) => {
-  Page.getLayout = (page) => <Layout>{page}</Layout>;
-
-  return Page;
-};
-
-//* Custom App Component
 function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
   const { t } = useTranslation();
