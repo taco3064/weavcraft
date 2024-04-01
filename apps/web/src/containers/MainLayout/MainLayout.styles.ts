@@ -20,6 +20,9 @@ export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
 export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
     const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
+    const nextWidth =
+      theme.breakpoints.keys[theme.breakpoints.keys.indexOf(maxWidth) + 1] ||
+      'xl';
 
     return {
       logo: {
@@ -67,8 +70,14 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
       drawer: {
         maxWidth: '100%',
         width: drawerWidth,
-        borderRadius: theme.spacing(0, 4, 4, 0),
+        borderRadius: 0,
 
+        [theme.breakpoints.up(nextWidth)]: {
+          borderRadius: theme.spacing(0, 4, 4, 0),
+        },
+        [theme.breakpoints.down(nextWidth)]: {
+          width: '100%',
+        },
         '& > [role="navigation"]': {
           background: 'inherit',
           height: '100%',
