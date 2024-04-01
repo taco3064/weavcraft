@@ -1,5 +1,6 @@
 {
   "btn-add-group": "Add Folder",
+  "btn-add-item": "Create {{category}}",
   "btn-cancel": "Cancel",
   "btn-clear-filter": "Clear Filter",
   "btn-close": "Close",
@@ -10,6 +11,7 @@
   "btn-signout": "Sign Out",
   "btn-update": "Update",
   "lbl-analytics": "Analytics",
+  "lbl-description": "Description",
   "lbl-language": "Language",
   "lbl-profile": "User Profile",
   "lbl-settings": "Settings",
@@ -18,8 +20,9 @@
   "ttl-user-options": "User Options",
   "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
-  "btn-add-item": {
-    "themes": "Create Theme"
+  "lbl-hierarchy-name": {
+    "group": "Folder Name",
+    "item": "{{category}} Name"
   },
   "opt-language": {
     "en": "English",

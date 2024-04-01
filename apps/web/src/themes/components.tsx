@@ -109,6 +109,7 @@ export const components: ThemeOptions['components'] = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        justifyContent: 'center',
         height: theme.spacing(8),
         padding: theme.spacing(1.5, 3),
         userSelect: 'none',

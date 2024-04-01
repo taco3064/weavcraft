@@ -1,4 +1,5 @@
 import Collapse from '@mui/material/Collapse';
+import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -10,12 +11,12 @@ import { nanoid } from 'nanoid';
 import { useState, type FormEventHandler } from 'react';
 
 import { useFilterStyles } from './HierarchyList.styles';
-import type { FilterProps } from './HierarchyList.types';
+import type { CollapseFilterProps } from './HierarchyList.types';
 
-export default function HierarchyFilter({
+export default function CollapseFilter({
   containerEl,
   onSearch,
-}: FilterProps) {
+}: CollapseFilterProps) {
   const [renderKey, setRenderKey] = useState(nanoid());
   const [open, setOpen] = useState(false);
 
@@ -43,8 +44,8 @@ export default function HierarchyFilter({
       {createPortal(
         <Collapse
           key={renderKey}
+          classes={{ root: classes.root, wrapperInner: classes.inner }}
           in={open}
-          className={classes.root}
           component="form"
           onSubmit={handleSubmit}
         >
@@ -65,7 +66,7 @@ export default function HierarchyFilter({
                         setRenderKey(nanoid());
                       }}
                     >
-                      <Display.Icon code="faXmark" />
+                      <Display.Icon code="faXmark" color="disabled" />
                     </IconButton>
                   </Tooltip>
                 </InputAdornment>

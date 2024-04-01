@@ -16,6 +16,16 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
         duration: theme.transitions.duration.short,
       }),
     },
+    inner: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: theme.spacing(1),
+
+      '& > *': {
+        margin: 0,
+      },
+    },
     input: {
       borderRadius: `${theme.spacing(2.5)} / 50%`,
 

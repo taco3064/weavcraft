@@ -1,5 +1,6 @@
 {
   "btn-add-group": "新增資料夾",
+  "btn-add-item": "新增{{category}}",
   "btn-cancel": "取消",
   "btn-clear-filter": "清除搜尋",
   "btn-close": "關閉",
@@ -10,6 +11,7 @@
   "btn-signout": "登出",
   "btn-update": "更新",
   "lbl-analytics": "統計資訊",
+  "lbl-description": "相關說明",
   "lbl-language": "偏好語言",
   "lbl-profile": "個人資訊",
   "lbl-settings": "設定",
@@ -18,8 +20,9 @@
   "ttl-user-options": "用戶選項",
   "ttl-user-settings": "用戶設定",
   "ttl-weavcraft": "Weavcraft",
-  "btn-add-item": {
-    "themes": "新增主題"
+  "lbl-hierarchy-name": {
+    "group": "資料夾名稱",
+    "item": "{{category}}名稱"
   },
   "opt-language": {
     "en": "English",
