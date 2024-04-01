@@ -1,14 +1,8 @@
-export type Notification = {
-  id: string;
-  title: string;
-  type: 'like' | 'comment';
-  read: boolean;
-  date: string;
-  sender: string;
-};
+import type * as WeavcraftTypes from '@weavcraft/types';
 
-export type Notifications = {
-  total: number;
-  unread: number;
+export type Notification = Omit<WeavcraftTypes.Notification<string>, 'userid'>;
+
+export interface Notifications
+  extends Omit<WeavcraftTypes.Notifications<string>, 'items'> {
   items: Notification[];
-};
+}
