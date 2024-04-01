@@ -92,12 +92,19 @@ export const components: ThemeOptions['components'] = {
       {
         props: { component: DialogActions },
         style: ({ theme }) => ({
+          display: 'flex',
+          gap: 0,
           padding: 0,
+
           '& > *:first-child': {
             borderRadius: theme.spacing(0, 0, 0, 2),
           },
           '& > *:last-child': {
             borderRadius: theme.spacing(0, 0, 2, 0),
+          },
+          '& > *': {
+            margin: '0 !important',
+            height: theme.spacing(6),
           },
         }),
       },
@@ -117,11 +124,22 @@ export const components: ThemeOptions['components'] = {
     },
   },
   MuiDialogContent: {
+    defaultProps: {
+      dividers: true,
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         padding: theme.spacing(1.5, 3),
       }),
     },
+    variants: [
+      {
+        props: { dividers: true },
+        style: {
+          borderBottom: 0,
+        },
+      },
+    ],
   },
   MuiDialogTitle: {
     defaultProps: {
@@ -134,7 +152,6 @@ export const components: ThemeOptions['components'] = {
         height: theme.spacing(8),
         padding: theme.spacing(1.5, 3),
         userSelect: 'none',
-        borderBottom: `1px solid ${theme.palette.divider}`,
       }),
     },
   },

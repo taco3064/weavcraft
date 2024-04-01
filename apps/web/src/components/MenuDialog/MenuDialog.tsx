@@ -110,7 +110,7 @@ export default function MenuDialog({
         <DialogActions>
           <Button
             fullWidth
-            variant="outlined"
+            variant="contained"
             color="inherit"
             size="large"
             startIcon={<Display.Icon code="faClose" />}

@@ -85,7 +85,7 @@ export default function UpsertModal({
         component={DialogActions}
         fullWidth
         size="large"
-        variant="outlined"
+        variant="contained"
         onClick={onClose}
       >
         <Button
@@ -97,7 +97,6 @@ export default function UpsertModal({
         </Button>
 
         <Button
-          variant="contained"
           color="secondary"
           type="submit"
           startIcon={<Display.Icon code="faCheck" />}
