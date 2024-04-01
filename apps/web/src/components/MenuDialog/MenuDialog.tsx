@@ -9,6 +9,7 @@ import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
+import { Display } from '@weavcraft/core';
 import { Trans } from 'next-i18next';
 import { Fragment, forwardRef, useState } from 'react';
 
@@ -109,9 +110,10 @@ export default function MenuDialog({
         <DialogActions>
           <Button
             fullWidth
-            variant="contained"
+            variant="outlined"
             color="inherit"
             size="large"
+            startIcon={<Display.Icon code="faClose" />}
             onClick={onClose}
           >
             <Trans i18nKey="btn-close" />

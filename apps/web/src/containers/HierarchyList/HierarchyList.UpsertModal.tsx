@@ -81,22 +81,30 @@ export default function UpsertModal({
         />
       </DialogContent>
 
-      <DialogActions disableSpacing>
-        <ButtonGroup
-          fullWidth
-          size="large"
-          variant="contained"
-          onClick={onClose}
+      <ButtonGroup
+        component={DialogActions}
+        fullWidth
+        size="large"
+        variant="outlined"
+        onClick={onClose}
+      >
+        <Button
+          color="inherit"
+          startIcon={<Display.Icon code="faClose" />}
+          onClick={() => setHierarchy(undefined)}
         >
-          <Button color="inherit" onClick={() => setHierarchy(undefined)}>
-            <Trans i18nKey="btn-cancel" />
-          </Button>
+          <Trans i18nKey="btn-cancel" />
+        </Button>
 
-          <Button color="secondary" type="submit">
-            <Trans i18nKey="btn-confirm" />
-          </Button>
-        </ButtonGroup>
-      </DialogActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          type="submit"
+          startIcon={<Display.Icon code="faCheck" />}
+        >
+          <Trans i18nKey="btn-confirm" />
+        </Button>
+      </ButtonGroup>
     </Dialog>
   );
 }

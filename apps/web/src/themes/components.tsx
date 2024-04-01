@@ -1,3 +1,4 @@
+import DialogActions from '@mui/material/DialogActions';
 import Slide from '@mui/material/Slide';
 import { forwardRef } from 'react';
 import type { ThemeOptions } from '@mui/material/styles';
@@ -86,14 +87,30 @@ export const components: ThemeOptions['components'] = {
       }),
     },
   },
+  MuiButtonGroup: {
+    variants: [
+      {
+        props: { component: DialogActions },
+        style: ({ theme }) => ({
+          padding: 0,
+          '& > *:first-child': {
+            borderRadius: theme.spacing(0, 0, 0, 2),
+          },
+          '& > *:last-child': {
+            borderRadius: theme.spacing(0, 0, 2, 0),
+          },
+        }),
+      },
+    ],
+  },
   MuiDialog: {
     defaultProps: {
       TransitionComponent: Transition,
     },
     styleOverrides: {
-      paper: {
-        borderRadius: 16,
-      },
+      paper: ({ theme }) => ({
+        borderRadius: theme.spacing(2),
+      }),
       paperFullScreen: {
         borderRadius: 0,
       },
