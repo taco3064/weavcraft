@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { i18n, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { I18N_USER_CONFIG, makePerPageLayout } from '~web/contexts';
+import { makePerPageLayout } from '~web/contexts';
 import type { PortalContainerEl } from '~web/components';
 
 export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
@@ -45,12 +45,17 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
   );
 });
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(
-      locale || I18N_USER_CONFIG.i18n.defaultLocale,
-      ['common', 'themes'],
-      I18N_USER_CONFIG
-    )),
-  },
-});
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  if (__WEBPACK_DEFINE__.ENV === 'development') {
+    await i18n?.reloadResources();
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(
+        locale || __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
+        ['common', 'themes']
+      )),
+    },
+  };
+};

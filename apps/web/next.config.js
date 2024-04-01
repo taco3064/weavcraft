@@ -1,20 +1,13 @@
-const fs = require('fs');
-const path = require('path');
 const { DefinePlugin } = require('webpack');
 const { composePlugins, withNx } = require('@nx/next');
 
 //* 取得 App 支援的 Languages
-const languages = fs.readdirSync(path.resolve(__dirname, './public/locales'));
+const { i18n } = require('./next-i18next.config');
 const { version } = require('../../package.json');
-
-const i18n = {
-  defaultLocale: languages[0],
-  locales: languages,
-};
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
- **/
+ */
 const nextConfig = {
   i18n,
   pageExtensions: ['page.tsx'],
@@ -43,8 +36,11 @@ const nextConfig = {
       ...plugins,
       new DefinePlugin({
         '__WEBPACK_DEFINE__.ENV': JSON.stringify(context.buildId),
-        '__WEBPACK_DEFINE__.I18N': JSON.stringify(i18n),
         '__WEBPACK_DEFINE__.VERSION': JSON.stringify(version),
+
+        '__WEBPACK_DEFINE__.DEFAULT_LANGUAGE': JSON.stringify(
+          i18n.defaultLocale
+        ),
       }),
     ],
   }),

@@ -12,7 +12,7 @@ declare module '@alienfast/i18next-loader?relativePathAsNamespace=true!*' {
 }
 
 declare const __WEBPACK_DEFINE__: {
+  DEFAULT_LANGUAGE: string;
   ENV: 'development' | 'production';
-  I18N: { defaultLocale: 'en'; locales: ('en' | 'zh')[] };
   VERSION: string;
 };

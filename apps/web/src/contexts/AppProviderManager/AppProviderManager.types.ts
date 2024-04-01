@@ -13,7 +13,7 @@ type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
 
 //* Variables
 export { PaletteCode };
-export type LanguageCode = (typeof __WEBPACK_DEFINE__.I18N)['locales'][number];
+export type LanguageCode = string;
 
 //* Methods
 export type SetterFns = {

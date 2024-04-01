@@ -75,10 +75,14 @@ export const components: ThemeOptions['components'] = {
       root: {
         borderRadius: 12,
         userSelect: 'none',
+
+        '&:hover': {
+          filter: 'brightness(1.2)',
+        },
       },
       containedInherit: ({ theme }) => ({
-        background: theme.palette.common.white,
-        color: theme.palette.getContrastText(theme.palette.common.white),
+        background: theme.palette.text.disabled,
+        color: theme.palette.getContrastText(theme.palette.text.disabled),
       }),
     },
   },

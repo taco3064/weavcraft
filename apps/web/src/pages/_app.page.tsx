@@ -1,8 +1,10 @@
 import Head from 'next/head';
-import { appWithTranslation, useTranslation } from 'next-i18next';
+import { appWithTranslation, i18n, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetServerSideProps } from 'next';
 
 import { AppProviderManager } from '~web/contexts';
-import { I18N_USER_CONFIG, type AppProps } from '~web/contexts';
+import type { AppProps } from '~web/contexts';
 
 function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
@@ -22,4 +24,19 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default appWithTranslation(App, I18N_USER_CONFIG);
+export default appWithTranslation(App);
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  if (__WEBPACK_DEFINE__.ENV === 'development') {
+    await i18n?.reloadResources();
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(
+        locale || __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
+        ['common']
+      )),
+    },
+  };
+};

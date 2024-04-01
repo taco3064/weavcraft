@@ -20,9 +20,9 @@ import type {
 
 //* Custom Hooks
 export const AppSettingsContext = createContext<AppSettingsContextValue>({
-  language: __WEBPACK_DEFINE__.I18N.defaultLocale,
+  language: __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
   palette: 'WEAVCRAFT',
-  languages: __WEBPACK_DEFINE__.I18N.locales,
+  languages: [__WEBPACK_DEFINE__.DEFAULT_LANGUAGE],
   palettes: Object.keys(PALETTES) as PaletteCode[],
   setterRef: createRef<SetterFns>(),
 });

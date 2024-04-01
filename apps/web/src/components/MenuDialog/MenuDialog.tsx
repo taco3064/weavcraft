@@ -110,7 +110,7 @@ export default function MenuDialog({
           <Button
             fullWidth
             variant="contained"
-            color="secondary"
+            color="inherit"
             size="large"
             onClick={onClose}
           >

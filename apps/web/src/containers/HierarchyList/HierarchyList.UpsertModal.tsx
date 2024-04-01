@@ -1,3 +1,5 @@
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -31,9 +33,7 @@ export default function UpsertModal({
   };
 
   useEffect(() => {
-    if (data) {
-      setHierarchy(data);
-    }
+    setHierarchy(data);
   }, [data]);
 
   return (
@@ -41,7 +41,7 @@ export default function UpsertModal({
       fullWidth
       maxWidth="xs"
       open={Boolean(hierarchy)}
-      onClose={() => setHierarchy(undefined)}
+      onClose={onClose}
       PaperProps={{
         component: 'form',
         onSubmit: handleSubmit,
@@ -61,22 +61,42 @@ export default function UpsertModal({
           required
           color="secondary"
           name="title"
-          label={t(`lbl-hierarchy-name.${data?.type}`, {
-            category: categoryLabel,
-          })}
+          label={
+            <Trans
+              i18nKey={`lbl-hierarchy-name.${data?.type}`}
+              values={{
+                category: categoryLabel,
+              }}
+            />
+          }
         />
 
         <TextField
           fullWidth
           multiline
           rows={3}
-          maxRows={3}
+          color="secondary"
           name="description"
-          label={t('lbl-description')}
+          label={<Trans i18nKey="lbl-description" />}
         />
       </DialogContent>
 
-      <DialogActions>Actions</DialogActions>
+      <DialogActions disableSpacing>
+        <ButtonGroup
+          fullWidth
+          size="large"
+          variant="contained"
+          onClick={onClose}
+        >
+          <Button color="inherit" onClick={() => setHierarchy(undefined)}>
+            <Trans i18nKey="btn-cancel" />
+          </Button>
+
+          <Button color="secondary" type="submit">
+            <Trans i18nKey="btn-confirm" />
+          </Button>
+        </ButtonGroup>
+      </DialogActions>
     </Dialog>
   );
 }
