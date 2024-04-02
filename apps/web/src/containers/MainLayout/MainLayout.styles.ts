@@ -32,10 +32,11 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         display: 'flex',
         borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
         height: theme.spacing(open ? 4 : 8),
-        margin: theme.spacing(open ? 2 : 0, 0),
+        top: theme.spacing(open ? 2 : 0),
+        marginBottom: theme.spacing(open ? 4 : 0),
 
         transition: theme.transitions.create(
-          ['border-radius', 'height', 'margin'],
+          ['border-radius', 'height', 'margin', 'top'],
           {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,

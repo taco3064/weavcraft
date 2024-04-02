@@ -35,8 +35,9 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
       <HierarchyList
         disableGroup={false}
         disableGutters
-        disablePublish
+        disablePublish={false}
         category="themes"
+        icon="faPalette"
         maxWidth="md"
         toolbarEl={toolbarEl}
       />

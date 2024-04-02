@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import _set from 'lodash/set';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useEffect, useState, type FormEventHandler } from 'react';
@@ -25,11 +26,19 @@ export default function UpsertModal({
   const [hierarchy, setHierarchy] = useState<UpsertedData>();
 
   const { t } = useTranslation();
-  const mode: MutationMode = data?._id ? 'update' : 'create';
   const categoryLabel = t(`ttl-breadcrumbs.${data?.category}.label`);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+
+    if (data) {
+      const formdata = new FormData(e.currentTarget);
+      const mode: MutationMode = data?._id ? 'update' : 'create';
+      const upserted: UpsertedData = { ...data };
+
+      formdata.forEach((value, key) => _set(upserted, key, value));
+      console.log(mode, upserted);
+    }
   };
 
   useEffect(() => {
@@ -61,6 +70,7 @@ export default function UpsertModal({
           required
           color="secondary"
           name="title"
+          defaultValue={data?.title}
           label={
             <Trans
               i18nKey={`lbl-hierarchy-name.${data?.type}`}
@@ -77,6 +87,7 @@ export default function UpsertModal({
           rows={3}
           color="secondary"
           name="description"
+          defaultValue={data?.description}
           label={<Trans i18nKey="lbl-description" />}
         />
       </DialogContent>
@@ -86,12 +97,14 @@ export default function UpsertModal({
         fullWidth
         size="large"
         variant="contained"
-        onClick={onClose}
       >
         <Button
           color="inherit"
           startIcon={<Display.Icon code="faClose" />}
-          onClick={() => setHierarchy(undefined)}
+          onClick={() => {
+            setHierarchy(undefined);
+            onClose();
+          }}
         >
           <Trans i18nKey="btn-cancel" />
         </Button>

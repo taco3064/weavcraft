@@ -65,7 +65,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </AppBar>
 
         <Suspense fallback={<LinearProgress />}>
-          <Container component="main" className={classes.page} maxWidth={false}>
+          <Container component="main" className={classes.page} maxWidth="md">
             {children}
           </Container>
         </Suspense>

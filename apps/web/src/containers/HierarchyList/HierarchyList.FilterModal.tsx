@@ -8,7 +8,6 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
-import { nanoid } from 'nanoid';
 import { useState, type FormEventHandler } from 'react';
 
 import { useFilterStyles } from './HierarchyList.styles';
@@ -16,9 +15,10 @@ import type { FilterModalProps } from './HierarchyList.types';
 
 export default function FilterModal({
   containerEl,
+  renderKey,
+  values,
   onSearch,
 }: FilterModalProps) {
-  const [renderKey, setRenderKey] = useState(nanoid());
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
@@ -31,6 +31,7 @@ export default function FilterModal({
     setOpen(false);
 
     onSearch({
+      ...values,
       keyword: formData.get('keyword')?.toString().trim() || undefined,
     });
   };
@@ -38,7 +39,7 @@ export default function FilterModal({
   return !containerEl ? null : (
     <>
       <Tooltip title={<Trans i18nKey="btn-search" />}>
-        <IconButton color="secondary" onClick={() => setOpen(!open)}>
+        <IconButton color="primary" onClick={() => setOpen(!open)}>
           <Display.Icon code="faSearch" />
         </IconButton>
       </Tooltip>
@@ -65,21 +66,22 @@ export default function FilterModal({
             margin="none"
             name="keyword"
             placeholder={t('msg-filter-placeholder')}
+            defaultValue={values?.keyword || ''}
             InputProps={{ className: classes.input }}
           />
         </DialogContent>
 
         <Divider />
 
-        <DialogActions className={classes.actions}>
+        <DialogActions>
           <Button
             variant="contained"
             size="large"
             color="error"
             startIcon={<Display.Icon code="faXmark" />}
             onClick={() => {
-              onSearch({});
-              setRenderKey(nanoid());
+              setOpen(false);
+              onSearch({ ...values, keyword: undefined });
             }}
           >
             <Trans i18nKey="btn-clear" />
@@ -88,7 +90,7 @@ export default function FilterModal({
           <Button
             variant="contained"
             size="large"
-            color="primary"
+            color="secondary"
             startIcon={<Display.Icon code="faSearch" />}
             type="submit"
           >

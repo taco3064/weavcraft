@@ -1,7 +1,9 @@
 import type { Collection } from './common';
 
 export type SearchHierarchyParams = {
+  category: string;
   keyword?: string;
+  superior?: string;
 };
 
 export interface HierarchyData<U> extends Collection<U> {

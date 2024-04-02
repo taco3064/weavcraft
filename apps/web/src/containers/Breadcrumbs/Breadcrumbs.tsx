@@ -19,7 +19,7 @@ import type { BreadcrumbsProps } from './Breadcrumbs.types';
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
-  stickyTop = 76,
+  stickyTop = 88,
   onCatchAllRoutesTransform,
   onToolbarMount,
 }: BreadcrumbsProps) {
@@ -55,7 +55,7 @@ export default function Breadcrumbs({
       />
 
       <AppBar position="sticky" variant="outlined" className={classes.root}>
-        <Toolbar variant="dense">
+        <Toolbar role="toolbar" variant="dense">
           <IconButton color="secondary" onClick={back}>
             <Display.Icon code="faArrowLeft" />
           </IconButton>
@@ -75,9 +75,15 @@ export default function Breadcrumbs({
               },
             }}
           >
-            {breadcrumbs.map(({ label, href }, i) =>
-              !href || i === breadcrumbs.length - 1 ? (
-                <Typography key={i} variant="subtitle2" color="text.disabled">
+            {breadcrumbs.map(({ label, href }, i) => {
+              const isLast = i === breadcrumbs.length - 1;
+
+              return !href || isLast ? (
+                <Typography
+                  key={i}
+                  variant="subtitle2"
+                  color={isLast ? 'secondary' : 'text.disabled'}
+                >
                   {label}
                 </Typography>
               ) : (
@@ -89,8 +95,8 @@ export default function Breadcrumbs({
                 >
                   {label}
                 </Link>
-              )
-            )}
+              );
+            })}
           </MuiBreadcrumbs>
 
           {!onToolbarMount ? null : (

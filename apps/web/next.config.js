@@ -20,6 +20,12 @@ const nextConfig = {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true,
   },
+  rewrites: async () => [
+    {
+      source: '/api/:path*',
+      destination: 'http://127.0.0.1:4000/:path*',
+    },
+  ],
   webpack: ({ module, plugins, ...config }) => ({
     ...config,
     module: {

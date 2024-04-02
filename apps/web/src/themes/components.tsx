@@ -60,6 +60,17 @@ export const components: ThemeOptions['components'] = {
       }),
     },
   },
+  MuiAlert: {
+    styleOverrides: {
+      action: {
+        alignItems: 'center',
+      },
+      icon: ({ theme }) => ({
+        fontSize: theme.typography.h4.fontSize,
+        alignItems: 'center',
+      }),
+    },
+  },
   MuiAppBar: {
     defaultProps: {
       position: 'sticky',
@@ -177,23 +188,6 @@ export const components: ThemeOptions['components'] = {
   MuiIcon: {
     defaultProps: {
       baseClassName: 'material-icons-outlined',
-    },
-  },
-  MuiImageListItem: {
-    styleOverrides: {
-      root: {
-        borderRadius: 16,
-      },
-    },
-  },
-  MuiImageListItemBar: {
-    styleOverrides: {
-      positionTop: {
-        borderRadius: '16px 16px 0 0',
-      },
-      positionBottom: {
-        borderRadius: '0 0 16px 16px',
-      },
     },
   },
   MuiLink: {

@@ -6,27 +6,39 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
       display: 'flex',
       flexDirection: 'column',
       gap: theme.spacing(1.5),
-      background: 'none',
+      padding: theme.spacing(2, 0),
 
       '& > *': {
-        padding: '0 !important',
+        padding: `${theme.spacing(0, 1)} !important`,
       },
       '& input, & button': {
         borderRadius: `${theme.spacing(2.5)} / 50%`,
       },
-    },
-    actions: {
-      justifyContent: 'space-between',
     },
     input: {
       borderRadius: `${theme.spacing(2.5)} / 50%`,
 
       '& > input': {
         padding: theme.spacing(1.5, 2.5),
+      },
+    },
+  })
+);
 
-        '&:hover, &:focus': {
-          background: `${theme.palette.background.paper} !important`,
-        },
+export const useItemStyles = makeStyles({ name: 'HierarchyListItem' })(
+  (theme) => ({
+    card: {
+      borderRadius: theme.spacing(2),
+    },
+    description: {
+      whiteSpace: 'pre-line',
+      display: '-webkit-box',
+      overflow: 'hidden',
+      minHeight: theme.spacing(5),
+
+      '&:not(:hover)': {
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 2,
       },
     },
   })
