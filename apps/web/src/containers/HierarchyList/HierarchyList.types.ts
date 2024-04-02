@@ -12,7 +12,7 @@ export type UpsertedData = Pick<HierarchyData<string>, 'category' | 'type'> &
     'category' | 'type'
   >;
 
-export interface CollapseFilterProps {
+export interface FilterModalProps {
   containerEl: PortalContainerEl;
   onSearch: (e: SearchHierarchyParams) => void;
 }

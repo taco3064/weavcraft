@@ -7,7 +7,7 @@ import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import CollapseFilter from './HierarchyList.CollapseFilter';
+import FilterModal from './HierarchyList.FilterModal';
 import UpsertModal from './HierarchyList.UpsertModal';
 import { PortalToolbar, type PortalContainerEl } from '~web/components';
 import { useHierarchyStyles } from './HierarchyList.styles';
@@ -72,7 +72,7 @@ export default function HierarchyList({
 
         <Divider flexItem orientation="vertical" />
 
-        <CollapseFilter containerEl={filterEl} onSearch={setParams} />
+        <FilterModal containerEl={filterEl} onSearch={setParams} />
       </PortalToolbar>
 
       <Toolbar ref={setFilterEl} variant="dense" className={classes.filter} />

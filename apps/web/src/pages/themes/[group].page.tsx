@@ -18,7 +18,6 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
   return (
     <>
       <Breadcrumbs
-        disableGutters
         currentBreadcrumbLabel={group}
         currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
         onToolbarMount={setToolbarEl}

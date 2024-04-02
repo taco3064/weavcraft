@@ -70,6 +70,15 @@ export const components: ThemeOptions['components'] = {
         userSelect: 'none',
       },
     },
+    variants: [
+      {
+        props: { variant: 'outlined' },
+        style: ({ theme }) => ({
+          background: theme.palette.background.paper,
+          borderRadius: `${theme.spacing(2.5)} / 50%`,
+        }),
+      },
+    ],
   },
   MuiButton: {
     styleOverrides: {

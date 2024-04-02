@@ -1,4 +1,3 @@
-import type { ToolbarProps } from '@mui/material/Toolbar';
 import type { Href, PortalContainerEl } from '~web/components';
 
 export interface Breadcrumb {
@@ -6,9 +5,10 @@ export interface Breadcrumb {
   href?: Href;
 }
 
-export interface BreadcrumbsProps extends Pick<ToolbarProps, 'disableGutters'> {
+export interface BreadcrumbsProps {
   currentBreadcrumbLabel?: string;
   currentPageTitle: string;
+  stickyTop?: number;
   onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
 
   onCatchAllRoutesTransform?: (

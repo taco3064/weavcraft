@@ -2,7 +2,7 @@
   "btn-add-group": "新增資料夾",
   "btn-add-item": "新增{{category}}",
   "btn-cancel": "取消",
-  "btn-clear-filter": "清除搜尋",
+  "btn-clear": "清除",
   "btn-close": "關閉",
   "btn-confirm": "確認",
   "btn-delete-account": "刪除帳戶",
