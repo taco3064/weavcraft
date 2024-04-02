@@ -4,16 +4,7 @@ export default {
   displayName: 'web',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   preset: '../../jest.preset.js',
-  globals: {
-    __WEBPACK_DEFINE__: {
-      ENV: 'development',
-      VERSION: '0.0.1',
-      I18N: { defaultLocale: 'en', locales: ['en', 'zh'] },
-    },
-  },
   moduleNameMapper: {
-    '@alienfast/i18next-loader\\?relativePathAsNamespace=true!\\~web/locales':
-      '<rootDir>/src/locales/index.ts',
     '^~web/assets/(.*)': '<rootDir>/src/assets/$1',
   },
   transform: {

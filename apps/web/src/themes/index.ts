@@ -1,3 +1,3 @@
-export { default } from './ThemeProvider';
 export * as PALETTES from './palettes';
-export type { PaletteCode } from './themes.types';
+export { components } from './components';
+export type { PaletteCode } from './types';

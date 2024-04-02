@@ -11,8 +11,9 @@ declare module '@alienfast/i18next-loader?relativePathAsNamespace=true!*' {
   export default contents;
 }
 
-declare const __WEBPACK_DEFINE__: {
-  ENV: 'development' | 'production';
-  I18N: { defaultLocale: 'en'; locales: ('en' | 'zh')[] };
-  VERSION: string;
-};
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NEXT_PUBLIC_DEFAULT_LANGUAGE: string;
+    NEXT_PUBLIC_VERSION: string;
+  }
+}

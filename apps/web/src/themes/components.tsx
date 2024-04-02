@@ -1,17 +1,16 @@
+import DialogActions from '@mui/material/DialogActions';
 import Slide from '@mui/material/Slide';
-import { ReactElement, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import type { ThemeOptions } from '@mui/material/styles';
-import type { TransitionProps } from '@mui/material/transitions';
+
+import type { TransitionProps } from './types';
 
 //* Dialog Transition
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & {
-    children: ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
+
+Transition.displayName = 'Transition';
 
 //* Default Component Styles
 export const components: ThemeOptions['components'] = {
@@ -61,6 +60,17 @@ export const components: ThemeOptions['components'] = {
       }),
     },
   },
+  MuiAlert: {
+    styleOverrides: {
+      action: {
+        alignItems: 'center',
+      },
+      icon: ({ theme }) => ({
+        fontSize: theme.typography.h4.fontSize,
+        alignItems: 'center',
+      }),
+    },
+  },
   MuiAppBar: {
     defaultProps: {
       position: 'sticky',
@@ -71,50 +81,97 @@ export const components: ThemeOptions['components'] = {
         userSelect: 'none',
       },
     },
+    variants: [
+      {
+        props: { variant: 'outlined' },
+        style: ({ theme }) => ({
+          background: theme.palette.background.paper,
+          borderRadius: `${theme.spacing(2.5)} / 50%`,
+        }),
+      },
+    ],
   },
   MuiButton: {
     styleOverrides: {
       root: {
         borderRadius: 12,
         userSelect: 'none',
+
+        '&:hover': {
+          filter: 'brightness(1.2)',
+        },
       },
       containedInherit: ({ theme }) => ({
-        background: theme.palette.common.white,
-        color: theme.palette.getContrastText(theme.palette.common.white),
+        background: theme.palette.text.disabled,
+        color: theme.palette.getContrastText(theme.palette.text.disabled),
       }),
     },
+  },
+  MuiButtonGroup: {
+    variants: [
+      {
+        props: { component: DialogActions },
+        style: ({ theme }) => ({
+          display: 'flex',
+          gap: 0,
+          padding: 0,
+
+          '& > *:first-child': {
+            borderRadius: theme.spacing(0, 0, 0, 2),
+          },
+          '& > *:last-child': {
+            borderRadius: theme.spacing(0, 0, 2, 0),
+          },
+          '& > *': {
+            margin: '0 !important',
+            height: theme.spacing(6),
+          },
+        }),
+      },
+    ],
   },
   MuiDialog: {
     defaultProps: {
       TransitionComponent: Transition,
     },
     styleOverrides: {
-      paper: {
-        borderRadius: 16,
-      },
+      paper: ({ theme }) => ({
+        borderRadius: theme.spacing(2),
+      }),
       paperFullScreen: {
         borderRadius: 0,
       },
     },
   },
   MuiDialogContent: {
+    defaultProps: {
+      dividers: true,
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         padding: theme.spacing(1.5, 3),
       }),
     },
+    variants: [
+      {
+        props: { dividers: true },
+        style: {
+          borderBottom: 0,
+        },
+      },
+    ],
   },
   MuiDialogTitle: {
     defaultProps: {
-      color: 'text.primary',
+      color: 'secondary',
       fontWeight: 'bolder',
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        justifyContent: 'center',
         height: theme.spacing(8),
         padding: theme.spacing(1.5, 3),
         userSelect: 'none',
-        borderBottom: `1px solid ${theme.palette.divider}`,
       }),
     },
   },
@@ -131,23 +188,6 @@ export const components: ThemeOptions['components'] = {
   MuiIcon: {
     defaultProps: {
       baseClassName: 'material-icons-outlined',
-    },
-  },
-  MuiImageListItem: {
-    styleOverrides: {
-      root: {
-        borderRadius: 16,
-      },
-    },
-  },
-  MuiImageListItemBar: {
-    styleOverrides: {
-      positionTop: {
-        borderRadius: '16px 16px 0 0',
-      },
-      positionBottom: {
-        borderRadius: '0 0 16px 16px',
-      },
     },
   },
   MuiLink: {

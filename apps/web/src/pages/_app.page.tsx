@@ -1,18 +1,11 @@
 import Head from 'next/head';
-import { appWithTranslation, useTranslation } from 'next-i18next';
+import { appWithTranslation, i18n, useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetServerSideProps } from 'next';
 
 import { AppProviderManager } from '~web/contexts';
-import { I18N_USER_CONFIG } from '~web/contexts';
-import type { AppProps, MakePerPageLayout } from './_app.types';
+import type { AppProps } from '~web/contexts';
 
-//* HOCs
-export const makePerPageLayout: MakePerPageLayout = (Layout) => (Page) => {
-  Page.getLayout = (page) => <Layout>{page}</Layout>;
-
-  return Page;
-};
-
-//* Custom App Component
 function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page);
   const { t } = useTranslation();
@@ -31,4 +24,20 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default appWithTranslation(App, I18N_USER_CONFIG);
+export default appWithTranslation(App);
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+
+  if (process.env.NODE_ENV === 'development') {
+    await i18n?.reloadResources();
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
+        'common',
+      ])),
+    },
+  };
+};

@@ -1,3 +1,4 @@
+import AppBar from '@mui/material/AppBar';
 import Head from 'next/head';
 import IconButton from '@mui/material/IconButton';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
@@ -18,7 +19,7 @@ import type { BreadcrumbsProps } from './Breadcrumbs.types';
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
-  disableGutters,
+  stickyTop = 88,
   onCatchAllRoutesTransform,
   onToolbarMount,
 }: BreadcrumbsProps) {
@@ -27,7 +28,7 @@ export default function Breadcrumbs({
   const { t } = useTranslation();
   const { back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
-  const { classes } = useBreadcrumbsStyles();
+  const { classes } = useBreadcrumbsStyles({ stickyTop });
 
   const breadcrumbs = useBreadcrumbs({
     currentBreadcrumbLabel,
@@ -53,57 +54,61 @@ export default function Breadcrumbs({
           }))}
       />
 
-      <Toolbar
-        variant="dense"
-        className={classes.root}
-        disableGutters={disableGutters}
-      >
-        <IconButton color="primary" onClick={back}>
-          <Display.Icon code="faArrowLeft" />
-        </IconButton>
+      <AppBar position="sticky" variant="outlined" className={classes.root}>
+        <Toolbar role="toolbar" variant="dense">
+          <IconButton color="secondary" onClick={back}>
+            <Display.Icon code="faArrowLeft" />
+          </IconButton>
 
-        <MuiBreadcrumbs
-          separator="›"
-          itemsBeforeCollapse={0}
-          maxItems={maxItems}
-          slotProps={{
-            collapsedIcon: {
-              onClick: (e) => {
-                e.stopPropagation();
-                e.preventDefault();
+          <MuiBreadcrumbs
+            separator="›"
+            itemsBeforeCollapse={0}
+            maxItems={maxItems}
+            slotProps={{
+              collapsedIcon: {
+                onClick: (e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
 
-                setOpen(true);
+                  setOpen(true);
+                },
               },
-            },
-          }}
-        >
-          {breadcrumbs.map(({ label, href }, i) =>
-            !href || i === breadcrumbs.length - 1 ? (
-              <Typography key={i} variant="subtitle2" color="text.disabled">
-                {label}
-              </Typography>
-            ) : (
-              <Link
-                key={i}
-                href={href}
-                variant="subtitle2"
-                color="text.secondary"
-              >
-                {label}
-              </Link>
-            )
-          )}
-        </MuiBreadcrumbs>
+            }}
+          >
+            {breadcrumbs.map(({ label, href }, i) => {
+              const isLast = i === breadcrumbs.length - 1;
 
-        {!onToolbarMount ? null : (
-          <Toolbar
-            ref={onToolbarMount}
-            disableGutters
-            variant="dense"
-            className={classes.right}
-          />
-        )}
-      </Toolbar>
+              return !href || isLast ? (
+                <Typography
+                  key={i}
+                  variant="subtitle2"
+                  color={isLast ? 'secondary' : 'text.disabled'}
+                >
+                  {label}
+                </Typography>
+              ) : (
+                <Link
+                  key={i}
+                  href={href}
+                  variant="subtitle2"
+                  color="text.secondary"
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </MuiBreadcrumbs>
+
+          {!onToolbarMount ? null : (
+            <Toolbar
+              ref={onToolbarMount}
+              disableGutters
+              variant="dense"
+              className={classes.right}
+            />
+          )}
+        </Toolbar>
+      </AppBar>
     </>
   );
 }

@@ -1,16 +1,15 @@
-import { createPortal } from 'react-dom';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { i18n, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
-import { I18N_USER_CONFIG } from '~web/contexts';
-import { Breadcrumbs, MainLayout } from '~web/containers';
-import { makePerPageLayout } from '../_app.page';
+import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
+import { makePerPageLayout } from '~web/contexts';
+import type { PortalContainerEl } from '~web/components';
 
 export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
-  const [toolbarEl, setToolbarEl] = useState<HTMLDivElement | null>(null);
+  const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
   const { t } = useTranslation();
   const { query } = useRouter();
@@ -19,7 +18,6 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
   return (
     <>
       <Breadcrumbs
-        disableGutters
         currentBreadcrumbLabel={group}
         currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
         onToolbarMount={setToolbarEl}
@@ -34,17 +32,32 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
         }}
       />
 
-      {toolbarEl && createPortal(<>Theme Styles</>, toolbarEl)}
+      <HierarchyList
+        disableGroup={false}
+        disableGutters
+        disablePublish={false}
+        category="themes"
+        icon="faPalette"
+        maxWidth="md"
+        toolbarEl={toolbarEl}
+      />
     </>
   );
 });
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(
-      locale || I18N_USER_CONFIG.i18n.defaultLocale,
-      ['common', 'themes'],
-      I18N_USER_CONFIG
-    )),
-  },
-});
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+
+  if (process.env.NODE_ENV === 'development') {
+    await i18n?.reloadResources();
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
+        'common',
+        'themes',
+      ])),
+    },
+  };
+};

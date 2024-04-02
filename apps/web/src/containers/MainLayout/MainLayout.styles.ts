@@ -20,6 +20,9 @@ export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
 export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
     const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
+    const nextWidth =
+      theme.breakpoints.keys[theme.breakpoints.keys.indexOf(maxWidth) + 1] ||
+      'xl';
 
     return {
       logo: {
@@ -27,19 +30,18 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
       },
       header: {
         display: 'flex',
+        borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
+        height: theme.spacing(open ? 4 : 8),
+        top: theme.spacing(open ? 2 : 0),
+        marginBottom: theme.spacing(open ? 4 : 0),
 
         transition: theme.transitions.create(
-          ['border-radius', 'height', 'margin'],
+          ['border-radius', 'height', 'margin', 'top'],
           {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }
         ),
-        [theme.breakpoints.up('md')]: {
-          borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-          height: theme.spacing(open ? 6 : 8),
-          margin: theme.spacing(open ? 1 : 0, 0),
-        },
         '& > *': {
           height: theme.spacing(8),
 
@@ -64,32 +66,46 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           width: '100%',
         },
       },
+      page: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1.5),
+        marginTop: theme.spacing(2),
+      },
       drawer: {
         maxWidth: '100%',
         width: drawerWidth,
-        borderRadius: theme.spacing(0, 4, 4, 0),
+        borderRadius: 0,
 
+        [theme.breakpoints.up(nextWidth)]: {
+          borderRadius: theme.spacing(0, 4, 4, 0),
+        },
+        [theme.breakpoints.down(nextWidth)]: {
+          width: '100%',
+        },
         '& > [role="navigation"]': {
           background: 'inherit',
           height: '100%',
           overflow: 'hidden auto',
 
+          '& > *': {
+            gap: 0,
+          },
           '& > *[role="heading"]': {
+            display: 'flex',
             background: 'inherit',
             height: theme.spacing(8),
-
-            '& > *:last-child': {
-              marginLeft: 'auto',
-            },
+            alignItems: 'center',
           },
         },
       },
       avatar: {
-        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center',
 
         '& > *': {
-          color: `${theme.palette.secondary.contrastText} !important`,
-          background: `${theme.palette.secondary.main} !important`,
+          color: `${theme.palette.primary.contrastText} !important`,
+          background: `${theme.palette.primary.main} !important`,
         },
       },
       description: {
