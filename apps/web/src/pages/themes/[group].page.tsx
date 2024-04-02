@@ -46,16 +46,18 @@ export default makePerPageLayout(MainLayout)(function ThemeGroupsPage() {
 });
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  if (__WEBPACK_DEFINE__.ENV === 'development') {
+  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+
+  if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();
   }
 
   return {
     props: {
-      ...(await serverSideTranslations(
-        locale || __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
-        ['common', 'themes']
-      )),
+      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
+        'common',
+        'themes',
+      ])),
     },
   };
 };

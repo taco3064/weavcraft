@@ -27,16 +27,17 @@ function App({ Component, pageProps }: AppProps) {
 export default appWithTranslation(App);
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  if (__WEBPACK_DEFINE__.ENV === 'development') {
+  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+
+  if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();
   }
 
   return {
     props: {
-      ...(await serverSideTranslations(
-        locale || __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
-        ['common']
-      )),
+      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
+        'common',
+      ])),
     },
   };
 };

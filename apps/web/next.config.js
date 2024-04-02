@@ -20,7 +20,7 @@ const nextConfig = {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true,
   },
-  webpack: ({ module, plugins, ...config }, context) => ({
+  webpack: ({ module, plugins, ...config }) => ({
     ...config,
     module: {
       ...module,
@@ -35,10 +35,8 @@ const nextConfig = {
     plugins: [
       ...plugins,
       new DefinePlugin({
-        '__WEBPACK_DEFINE__.ENV': JSON.stringify(context.buildId),
-        '__WEBPACK_DEFINE__.VERSION': JSON.stringify(version),
-
-        '__WEBPACK_DEFINE__.DEFAULT_LANGUAGE': JSON.stringify(
+        'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
+        'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
           i18n.defaultLocale
         ),
       }),

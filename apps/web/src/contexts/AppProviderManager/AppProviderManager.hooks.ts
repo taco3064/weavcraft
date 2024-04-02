@@ -18,11 +18,13 @@ import type {
   SetterFns,
 } from './AppProviderManager.types';
 
+const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+
 //* Custom Hooks
 export const AppSettingsContext = createContext<AppSettingsContextValue>({
-  language: __WEBPACK_DEFINE__.DEFAULT_LANGUAGE,
+  language: NEXT_PUBLIC_DEFAULT_LANGUAGE,
+  languages: [NEXT_PUBLIC_DEFAULT_LANGUAGE],
   palette: 'WEAVCRAFT',
-  languages: [__WEBPACK_DEFINE__.DEFAULT_LANGUAGE],
   palettes: Object.keys(PALETTES) as PaletteCode[],
   setterRef: createRef<SetterFns>(),
 });

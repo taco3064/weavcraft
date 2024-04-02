@@ -9,12 +9,12 @@ import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Display } from '@weavcraft/core';
 import { Suspense, useEffect, useState } from 'react';
@@ -83,15 +83,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
               role="navigation"
               subheader={
                 <>
-                  <ListSubheader
-                    disableGutters
-                    role="heading"
-                    component={Toolbar}
-                  >
-                    <Typography {...DEFAULT_PROPS.title}>
-                      {logo}
-                      <Trans i18nKey="ttl-weavcraft" />
-                    </Typography>
+                  <ListSubheader role="heading">
+                    <ListItemIcon>{logo}</ListItemIcon>
+
+                    <ListItemText
+                      primaryTypographyProps={DEFAULT_PROPS.title}
+                      primary={<Trans i18nKey="ttl-weavcraft" />}
+                      secondaryTypographyProps={{
+                        variant: 'caption',
+                        color: 'text.secondary',
+                      }}
+                      secondary={process.env.NEXT_PUBLIC_VERSION}
+                    />
 
                     <IconButton onClick={() => setOpen(false)}>
                       <Display.Icon code="faAngleLeft" />

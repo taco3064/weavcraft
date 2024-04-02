@@ -1,1 +1,1 @@
-export type { HierarchyData } from './hierarchy.types';
+export type { HierarchyData, SearchHierarchyParams } from './hierarchy.types';

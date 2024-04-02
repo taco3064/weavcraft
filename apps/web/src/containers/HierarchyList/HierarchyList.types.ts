@@ -1,8 +1,7 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { IconCode } from '@weavcraft/core';
-import type { SearchHierarchyParams } from '@weavcraft/types';
 
-import type { HierarchyData } from '~web/services';
+import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { PortalContainerEl } from '~web/components';
 
 export type MutationMode = 'create' | 'update' | 'delete';

@@ -30,6 +30,9 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
       },
       header: {
         display: 'flex',
+        borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
+        height: theme.spacing(open ? 4 : 8),
+        margin: theme.spacing(open ? 2 : 0, 0),
 
         transition: theme.transitions.create(
           ['border-radius', 'height', 'margin'],
@@ -38,11 +41,6 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
             duration: theme.transitions.duration.leavingScreen,
           }
         ),
-        [theme.breakpoints.up('md')]: {
-          borderRadius: open ? theme.spacing(4, 0, 0, 4) : 0,
-          height: theme.spacing(open ? 4 : 8),
-          margin: theme.spacing(open ? 2 : 0, 0),
-        },
         '& > *': {
           height: theme.spacing(8),
 
@@ -83,18 +81,20 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           height: '100%',
           overflow: 'hidden auto',
 
+          '& > *': {
+            gap: 0,
+          },
           '& > *[role="heading"]': {
+            display: 'flex',
             background: 'inherit',
             height: theme.spacing(8),
-
-            '& > *:last-child': {
-              marginLeft: 'auto',
-            },
+            alignItems: 'center',
           },
         },
       },
       avatar: {
-        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center',
 
         '& > *': {
           color: `${theme.palette.primary.contrastText} !important`,
