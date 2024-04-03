@@ -6,11 +6,7 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
       display: 'flex',
       flexDirection: 'column',
       gap: theme.spacing(1.5),
-      padding: theme.spacing(2, 0),
 
-      '& > *': {
-        padding: `${theme.spacing(0, 1)} !important`,
-      },
       '& input, & button': {
         borderRadius: `${theme.spacing(2.5)} / 50%`,
       },

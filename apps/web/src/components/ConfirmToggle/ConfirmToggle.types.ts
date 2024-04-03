@@ -3,7 +3,7 @@ import type { ForwardedRef, ReactElement, ReactNode } from 'react';
 
 export interface ConfirmToggleProps extends Pick<AlertProps, 'severity'> {
   message: ReactNode;
-  title?: ReactNode;
+  subject?: ReactNode;
   toggle: ReactElement<{
     ref?: ForwardedRef<HTMLButtonElement>;
     onClick: () => void;

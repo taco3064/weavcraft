@@ -1,14 +1,16 @@
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import Divider from '@mui/material/Divider';
+import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
-import { useState, type FormEventHandler } from 'react';
+import { useState, useTransition, type FormEvent } from 'react';
 
 import { useFilterStyles } from './HierarchyList.styles';
 import type { FilterModalProps } from './HierarchyList.types';
@@ -20,20 +22,21 @@ export default function FilterModal({
   onSearch,
 }: FilterModalProps) {
   const [open, setOpen] = useState(false);
+  const [, startTransition] = useTransition();
 
   const { t } = useTranslation();
   const { classes } = useFilterStyles();
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    const formData = new FormData(e.currentTarget);
+  const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e?.currentTarget);
+    const keyword = formData.get('keyword')?.toString().trim() || undefined;
 
-    e.preventDefault();
+    e?.preventDefault();
     setOpen(false);
 
-    onSearch({
-      ...values,
-      keyword: formData.get('keyword')?.toString().trim() || undefined,
-    });
+    if (values.keyword !== keyword) {
+      startTransition(() => onSearch({ ...values, keyword }));
+    }
   };
 
   return !containerEl ? null : (
@@ -46,7 +49,6 @@ export default function FilterModal({
 
       <Dialog
         fullWidth
-        keepMounted
         maxWidth="xs"
         open={open}
         onClose={() => setOpen(false)}
@@ -57,7 +59,16 @@ export default function FilterModal({
           onSubmit: handleSubmit,
         }}
       >
-        <DialogContent dividers={false}>
+        <DialogTitle>
+          <Display.Icon code="faSearch" />
+
+          <Trans
+            i18nKey="ttl-hierarchy-search"
+            values={{ name: t(`ttl-breadcrumbs.${values.category}.label`) }}
+          />
+        </DialogTitle>
+
+        <DialogContent>
           <TextField
             autoFocus
             fullWidth
@@ -67,36 +78,41 @@ export default function FilterModal({
             name="keyword"
             placeholder={t('msg-filter-placeholder')}
             defaultValue={values?.keyword || ''}
-            InputProps={{ className: classes.input }}
+            InputProps={{
+              className: classes.input,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => handleSubmit()}>
+                    <Display.Icon code="faUndo" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
 
-        <Divider />
-
-        <DialogActions>
+        <ButtonGroup
+          fullWidth
+          variant="contained"
+          size="large"
+          component={DialogActions}
+        >
           <Button
-            variant="contained"
-            size="large"
-            color="error"
-            startIcon={<Display.Icon code="faXmark" />}
-            onClick={() => {
-              setOpen(false);
-              onSearch({ ...values, keyword: undefined });
-            }}
+            color="inherit"
+            startIcon={<Display.Icon code="faClose" />}
+            onClick={() => setOpen(false)}
           >
-            <Trans i18nKey="btn-clear" />
+            <Trans i18nKey="btn-cancel" />
           </Button>
 
           <Button
-            variant="contained"
-            size="large"
             color="secondary"
-            startIcon={<Display.Icon code="faSearch" />}
+            startIcon={<Display.Icon code="faFilter" />}
             type="submit"
           >
-            <Trans i18nKey="btn-search" />
+            <Trans i18nKey="btn-filter" />
           </Button>
-        </DialogActions>
+        </ButtonGroup>
       </Dialog>
     </>
   );

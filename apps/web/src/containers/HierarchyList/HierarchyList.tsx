@@ -14,20 +14,11 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import FilterModal from './HierarchyList.FilterModal';
 import HierarchyListItem from './HierarchyList.Item';
 import UpsertModal from './HierarchyList.UpsertModal';
+import { PortalToolbar, type PortalContainerEl } from '~web/components';
 import { getHierarchyData, type SearchHierarchyParams } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
-
-import {
-  ConfirmToggle,
-  PortalToolbar,
-  type PortalContainerEl,
-} from '~web/components';
-
-import type {
-  HierarchyListProps,
-  UpsertModalProps,
-} from './HierarchyList.types';
+import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 
 export default function HierarchyList({
   category,
@@ -35,6 +26,7 @@ export default function HierarchyList({
   disableGutters = false,
   disablePublish = false,
   icon,
+  initialData,
   maxWidth = false,
   superior,
   toolbarEl,
@@ -45,9 +37,7 @@ export default function HierarchyList({
   const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
 
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
-
-  const [upserted, setUpserted] =
-    useState<Pick<UpsertModalProps, 'data' | 'icon' | 'title'>>();
+  const [upserted, setUpserted] = useState<UpsertedState>();
 
   const [params, setParams] = useState<SearchHierarchyParams>({
     category,
@@ -59,6 +49,7 @@ export default function HierarchyList({
   const categoryLabel = t(`ttl-breadcrumbs.${category}.label`);
 
   const { data } = useSuspenseQuery({
+    ...(!params.keyword && { initialData }),
     queryKey: [params],
     queryFn: getHierarchyData,
   });
@@ -76,8 +67,6 @@ export default function HierarchyList({
       },
     })
   );
-
-  console.log(data);
 
   return (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
@@ -133,62 +122,16 @@ export default function HierarchyList({
       <Slide in direction="up" key={renderKey} timeout={800}>
         <ImageList variant="masonry" cols={cols} gap={16}>
           <Dnd.DndContext sensors={sensors}>
-            {data?.map((item) => {
-              const isGroup = item.type === 'group';
-
-              const editTitle = isGroup
-                ? t('btn-edit-group')
-                : t('btn-edit-item', { category: categoryLabel });
-
-              return (
-                <HierarchyListItem
-                  key={item._id}
-                  data={item}
-                  icon={icon}
-                  actions={
-                    <>
-                      <Tooltip title={editTitle}>
-                        <IconButton
-                          color="primary"
-                          onClick={() =>
-                            setUpserted({
-                              data: item,
-                              icon: isGroup ? 'faFolder' : icon,
-                              title: editTitle,
-                            })
-                          }
-                        >
-                          <Display.Icon code="faEdit" />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Tooltip title={t('btn-delete')}>
-                        <ConfirmToggle
-                          title={t('ttl-delete-confirm')}
-                          message={t('msg-delete-confirm', {
-                            name: item.title,
-                          })}
-                          toggle={
-                            <IconButton color="primary">
-                              <Display.Icon code="faTrash" />
-                            </IconButton>
-                          }
-                          onConfirm={console.log}
-                        />
-                      </Tooltip>
-
-                      {disablePublish || isGroup ? null : (
-                        <Tooltip title={<Trans i18nKey="btn-publish" />}>
-                          <IconButton color="success">
-                            <Display.Icon code="faShare" />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </>
-                  }
-                />
-              );
-            })}
+            {data?.map((item) => (
+              <HierarchyListItem
+                {...{ disablePublish, icon }}
+                key={item._id}
+                data={item}
+                onDeleteConfirm={console.log}
+                onEditClick={setUpserted}
+                onPublishClick={disablePublish ? undefined : console.log}
+              />
+            ))}
           </Dnd.DndContext>
         </ImageList>
       </Slide>

@@ -1,6 +1,5 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { IconCode } from '@weavcraft/core';
-import type { ReactNode } from 'react';
 
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { PortalContainerEl } from '~web/components';
@@ -12,6 +11,8 @@ export type UpsertedData = Pick<HierarchyData<string>, 'category' | 'type'> &
     HierarchyData<string> | Partial<HierarchyData<undefined>>,
     'category' | 'type'
   >;
+
+export type UpsertedState = Pick<UpsertModalProps, 'data' | 'icon' | 'title'>;
 
 export interface FilterModalProps {
   containerEl: PortalContainerEl;
@@ -33,9 +34,11 @@ export interface UpsertModalProps {
 }
 
 export interface HierarchyListItemProps {
-  actions?: ReactNode;
   data: HierarchyData<string>;
   icon: IconCode;
+  onDeleteConfirm?: (e: HierarchyData<string>) => void;
+  onEditClick?: (e: UpsertedState) => void;
+  onPublishClick?: (e: HierarchyData<string>) => void;
 }
 
 export interface HierarchyListProps
@@ -44,6 +47,7 @@ export interface HierarchyListProps
   category: string;
   disableGroup?: boolean;
   disablePublish?: boolean;
+  initialData?: HierarchyData<string>[];
   superior?: string;
   toolbarEl?: PortalContainerEl;
   onMutationSuccess?: (mode: MutationMode, item: HierarchyData<string>) => void;

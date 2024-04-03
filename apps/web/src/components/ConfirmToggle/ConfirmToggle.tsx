@@ -10,7 +10,7 @@ import type { ConfirmToggleProps } from './ConfirmToggle.types';
 
 export default forwardRef<HTMLButtonElement, ConfirmToggleProps>(
   function ConfirmToggle(
-    { message, severity = 'warning', title, toggle, onConfirm },
+    { message, severity = 'warning', subject, toggle, onConfirm },
     ref
   ) {
     const { classes } = useToggleStyles();
@@ -34,7 +34,7 @@ export default forwardRef<HTMLButtonElement, ConfirmToggleProps>(
               </Button>
             }
           >
-            {title && <AlertTitle>{title}</AlertTitle>}
+            {subject && <AlertTitle>{subject}</AlertTitle>}
             {message}
           </Alert>
         </Dialog>

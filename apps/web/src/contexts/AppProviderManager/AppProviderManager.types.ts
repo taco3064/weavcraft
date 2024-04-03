@@ -31,6 +31,7 @@ export interface AppSettingsContextValue {
   setterRef: RefObject<SetterFns | undefined>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type MakePerPageLayout = <P = {}>(
   Layout: ComponentType<{ children: ReactNode }>
 ) => <InitialProps = P>(
