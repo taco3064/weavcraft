@@ -5,9 +5,12 @@ import type { HierarchyData, SearchHierarchyParams } from './hierarchy.types';
 
 export async function getHierarchyData({
   queryKey: [params],
-}: QueryFunctionContext<readonly [SearchHierarchyParams]>): Promise<
-  HierarchyData<string>[]
-> {
+}: Pick<
+  QueryFunctionContext<readonly [SearchHierarchyParams]>,
+  'queryKey'
+>): Promise<HierarchyData<string>[]> {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   try {
     const { data } = await axios.post<HierarchyData<string>[]>(
       '/api/hierarchy/search',
@@ -20,7 +23,7 @@ export async function getHierarchyData({
 
     switch (process.env.NODE_ENV) {
       case 'development': {
-        if (code === 'ECONNREFUSED' || response?.status === 404) {
+        if (code === 'ECONNREFUSED' || response?.status === 500) {
           return [
             ...Array.from({ length: 2 }).map<HierarchyData<string>>(
               (_el, i) => ({

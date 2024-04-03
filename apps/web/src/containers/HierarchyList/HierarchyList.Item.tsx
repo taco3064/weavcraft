@@ -3,31 +3,58 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
 import ImageListItem from '@mui/material/ImageListItem';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Display } from '@weavcraft/core';
+import { Trans, useTranslation } from 'next-i18next';
 
+import { ConfirmToggle, Link } from '~web/components';
+import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
 export default function HierarchyListItem({
-  actions,
+  cols,
   data,
+  disableDrag = false,
   icon,
+  onDeleteConfirm,
+  onEditClick,
+  onPublishClick,
 }: HierarchyListItemProps) {
-  const { classes } = useItemStyles();
-  const { type, title, description } = data;
+  const [dragRef, isDragging, dragProps] = useDraggable(data, disableDrag);
+  const [dropRef, isDropOver] = useDroppable(data, disableDrag);
+
+  const { t } = useTranslation();
+  const { classes } = useItemStyles({ cols, isDragging, isDropOver });
+
+  const isGroup = data.type === 'group';
+
+  const editTitle = isGroup
+    ? t('btn-edit-group')
+    : t('btn-edit-item', {
+        category: t(`ttl-breadcrumbs.${data.category}.label`),
+      });
 
   return (
-    <ImageListItem>
-      <Card className={classes.card}>
+    <ImageListItem ref={dropRef}>
+      <Card className={classes.card} {...dragProps}>
         <CardHeader
-          titleTypographyProps={{ variant: 'subtitle2' }}
-          title={title}
+          title={data.title}
+          titleTypographyProps={{
+            variant: 'subtitle2',
+            color: 'text.primary',
+            component: Link,
+            href: `/${data.category}/${
+              isGroup ? data._id : `detail/${data._id}`
+            }`,
+          }}
           avatar={
-            <Avatar>
+            <Avatar ref={dragRef} className={classes.dndToggle}>
               <Display.Icon
-                {...(type === 'group'
+                {...(isGroup
                   ? { code: 'faFolder', color: 'warning' }
                   : { code: icon, color: 'success' })}
               />
@@ -35,7 +62,7 @@ export default function HierarchyListItem({
           }
         />
 
-        {description && (
+        {data.description && (
           <CardContent>
             <Typography
               role="textbox"
@@ -43,12 +70,52 @@ export default function HierarchyListItem({
               color="text.secondary"
               className={classes.description}
             >
-              {description}
+              {data.description}
             </Typography>
           </CardContent>
         )}
 
-        <CardActions>{actions}</CardActions>
+        <CardActions>
+          {onEditClick && (
+            <Tooltip title={editTitle}>
+              <IconButton
+                color="primary"
+                onClick={() =>
+                  onEditClick({
+                    data,
+                    icon: isGroup ? 'faFolder' : icon,
+                    title: editTitle,
+                  })
+                }
+              >
+                <Display.Icon code="faEdit" />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {onDeleteConfirm && (
+            <Tooltip title={t('btn-delete')}>
+              <ConfirmToggle
+                subject={t('ttl-delete-confirm')}
+                message={t('msg-delete-confirm', { name: data.title })}
+                toggle={
+                  <IconButton color="primary">
+                    <Display.Icon code="faTrash" />
+                  </IconButton>
+                }
+                onConfirm={() => onDeleteConfirm(data)}
+              />
+            </Tooltip>
+          )}
+
+          {!onPublishClick || isGroup ? null : (
+            <Tooltip title={<Trans i18nKey="btn-publish" />}>
+              <IconButton color="success" onClick={() => onPublishClick(data)}>
+                <Display.Icon code="faShare" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </CardActions>
       </Card>
     </ImageListItem>
   );

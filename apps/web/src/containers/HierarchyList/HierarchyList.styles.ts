@@ -6,11 +6,7 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
       display: 'flex',
       flexDirection: 'column',
       gap: theme.spacing(1.5),
-      padding: theme.spacing(2, 0),
 
-      '& > *': {
-        padding: `${theme.spacing(0, 1)} !important`,
-      },
       '& input, & button': {
         borderRadius: `${theme.spacing(2.5)} / 50%`,
       },
@@ -25,24 +21,42 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
   })
 );
 
-export const useItemStyles = makeStyles({ name: 'HierarchyListItem' })(
-  (theme) => ({
-    card: {
-      borderRadius: theme.spacing(2),
-    },
-    description: {
-      whiteSpace: 'pre-line',
-      display: '-webkit-box',
-      overflow: 'hidden',
-      minHeight: theme.spacing(5),
+export const useItemStyles = makeStyles<{
+  cols: number;
+  isDragging: boolean;
+  isDropOver: boolean;
+}>({
+  name: 'HierarchyListItem',
+})((theme, { cols, isDragging, isDropOver }) => ({
+  card: {
+    borderRadius: theme.spacing(2),
 
-      '&:not(:hover)': {
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: 2,
-      },
+    ...(isDropOver && {
+      filter: `brightness(1.2)`,
+      opacity: '1 !important',
+    }),
+    ...(isDragging && {
+      position: 'fixed',
+      width: `${(100 / cols).toFixed(5)}%`,
+      maxWidth: theme.spacing(34),
+      zIndex: theme.zIndex.tooltip,
+    }),
+  },
+  dndToggle: {
+    cursor: 'grab',
+  },
+  description: {
+    whiteSpace: 'pre-line',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    minHeight: theme.spacing(5),
+
+    '&:not(:hover)': {
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
     },
-  })
-);
+  },
+}));
 
 export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
   (theme) => ({
@@ -55,6 +69,9 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       justifyContent: 'center',
       minHeight: 0,
       height: 'max-content',
+    },
+    mb: {
+      marginBottom: theme.spacing(6),
     },
   })
 );

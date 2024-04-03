@@ -190,6 +190,17 @@ export const components: ThemeOptions['components'] = {
       baseClassName: 'material-icons-outlined',
     },
   },
+  MuiIconButton: {
+    styleOverrides: {
+      root: {
+        userSelect: 'none',
+
+        '&:hover': {
+          filter: 'brightness(1.2)',
+        },
+      },
+    },
+  },
   MuiLink: {
     defaultProps: {
       underline: 'none',
