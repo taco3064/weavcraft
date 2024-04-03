@@ -21,24 +21,42 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
   })
 );
 
-export const useItemStyles = makeStyles({ name: 'HierarchyListItem' })(
-  (theme) => ({
-    card: {
-      borderRadius: theme.spacing(2),
-    },
-    description: {
-      whiteSpace: 'pre-line',
-      display: '-webkit-box',
-      overflow: 'hidden',
-      minHeight: theme.spacing(5),
+export const useItemStyles = makeStyles<{
+  cols: number;
+  isDragging: boolean;
+  isDropOver: boolean;
+}>({
+  name: 'HierarchyListItem',
+})((theme, { cols, isDragging, isDropOver }) => ({
+  card: {
+    borderRadius: theme.spacing(2),
 
-      '&:not(:hover)': {
-        WebkitBoxOrient: 'vertical',
-        WebkitLineClamp: 2,
-      },
+    ...(isDropOver && {
+      filter: `brightness(1.2)`,
+      opacity: '1 !important',
+    }),
+    ...(isDragging && {
+      position: 'fixed',
+      width: `${(100 / cols).toFixed(5)}%`,
+      maxWidth: theme.spacing(34),
+      zIndex: theme.zIndex.tooltip,
+    }),
+  },
+  dndToggle: {
+    cursor: 'grab',
+  },
+  description: {
+    whiteSpace: 'pre-line',
+    display: '-webkit-box',
+    overflow: 'hidden',
+    minHeight: theme.spacing(5),
+
+    '&:not(:hover)': {
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
     },
-  })
-);
+  },
+}));
 
 export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
   (theme) => ({
@@ -52,7 +70,7 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       minHeight: 0,
       height: 'max-content',
     },
-    list: {
+    mb: {
       marginBottom: theme.spacing(6),
     },
   })

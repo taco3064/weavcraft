@@ -34,7 +34,9 @@ export interface UpsertModalProps {
 }
 
 export interface HierarchyListItemProps {
+  cols: number;
   data: HierarchyData<string>;
+  disableDrag?: boolean;
   icon: IconCode;
   onDeleteConfirm?: (e: HierarchyData<string>) => void;
   onEditClick?: (e: UpsertedState) => void;

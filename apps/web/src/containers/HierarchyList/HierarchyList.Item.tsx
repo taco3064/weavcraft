@@ -11,30 +11,38 @@ import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
+import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
 export default function HierarchyListItem({
+  cols,
   data,
+  disableDrag = false,
   icon,
   onDeleteConfirm,
   onEditClick,
   onPublishClick,
 }: HierarchyListItemProps) {
+  const [dragRef, isDragging, dragProps] = useDraggable(data, disableDrag);
+  const [dropRef, isDropOver] = useDroppable(data, disableDrag);
+
   const { t } = useTranslation();
-  const { classes } = useItemStyles();
-  const { category, description, title, type } = data;
-  const isGroup = type === 'group';
+  const { classes } = useItemStyles({ cols, isDragging, isDropOver });
+
+  const isGroup = data.type === 'group';
 
   const editTitle = isGroup
     ? t('btn-edit-group')
-    : t('btn-edit-item', { category: t(`ttl-breadcrumbs.${category}.label`) });
+    : t('btn-edit-item', {
+        category: t(`ttl-breadcrumbs.${data.category}.label`),
+      });
 
   return (
-    <ImageListItem>
-      <Card className={classes.card}>
+    <ImageListItem ref={dropRef}>
+      <Card className={classes.card} {...dragProps}>
         <CardHeader
-          title={title}
+          title={data.title}
           titleTypographyProps={{
             variant: 'subtitle2',
             color: 'text.primary',
@@ -44,7 +52,7 @@ export default function HierarchyListItem({
             }`,
           }}
           avatar={
-            <Avatar>
+            <Avatar ref={dragRef} className={classes.dndToggle}>
               <Display.Icon
                 {...(isGroup
                   ? { code: 'faFolder', color: 'warning' }
@@ -54,7 +62,7 @@ export default function HierarchyListItem({
           }
         />
 
-        {description && (
+        {data.description && (
           <CardContent>
             <Typography
               role="textbox"
@@ -62,7 +70,7 @@ export default function HierarchyListItem({
               color="text.secondary"
               className={classes.description}
             >
-              {description}
+              {data.description}
             </Typography>
           </CardContent>
         )}
@@ -89,9 +97,7 @@ export default function HierarchyListItem({
             <Tooltip title={t('btn-delete')}>
               <ConfirmToggle
                 subject={t('ttl-delete-confirm')}
-                message={t('msg-delete-confirm', {
-                  name: title,
-                })}
+                message={t('msg-delete-confirm', { name: data.title })}
                 toggle={
                   <IconButton color="primary">
                     <Display.Icon code="faTrash" />

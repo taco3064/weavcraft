@@ -1,4 +1,3 @@
-import * as Dnd from '@dnd-kit/core';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -6,7 +5,9 @@ import ImageList from '@mui/material/ImageList';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { Display } from '@weavcraft/core';
+import { DndContext } from '@dnd-kit/core';
 import { Fragment, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'next-i18next';
 import { nanoid } from 'nanoid';
@@ -16,15 +17,17 @@ import FilterModal from './HierarchyList.FilterModal';
 import HierarchyListItem from './HierarchyList.Item';
 import UpsertModal from './HierarchyList.UpsertModal';
 import { PortalToolbar, type PortalContainerEl } from '~web/components';
-import { getHierarchyData, type SearchHierarchyParams } from '~web/services';
+import { getHierarchyData } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
+import { useDndContextProps } from './HierarchyList.hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
+import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 
 export default function HierarchyList({
   category,
-  disableGroup = false,
-  disableGutters = false,
+  disableGroup,
+  disableGutters,
   disablePublish = false,
   icon,
   initialData,
@@ -48,6 +51,7 @@ export default function HierarchyList({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
   const categoryLabel = t(`ttl-breadcrumbs.${category}.label`);
+  const contextProps = useDndContextProps();
 
   const { data } = useSuspenseQuery({
     ...(!params.keyword && { initialData }),
@@ -55,18 +59,18 @@ export default function HierarchyList({
     queryFn: getHierarchyData,
   });
 
-  const sensors = Dnd.useSensors(
-    Dnd.useSensor(Dnd.MouseSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    Dnd.useSensor(Dnd.TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5,
-      },
-    })
+  const records = useMemo(
+    () =>
+      data?.reduce<
+        Record<HierarchyData<string>['type'], HierarchyData<string>[]>
+      >(
+        (result, item) => ({
+          ...result,
+          [item.type]: [...result[item.type], item],
+        }),
+        { group: [], item: [] }
+      ),
+    [data]
   );
 
   return (
@@ -120,8 +124,8 @@ export default function HierarchyList({
         onUpsertSuccess={onMutationSuccess}
       />
 
-      <Dnd.DndContext key={renderKey} sensors={sensors}>
-        {['group', 'item'].map((type) => (
+      <DndContext {...contextProps} key={renderKey}>
+        {Object.entries(records).map(([type, data]) => (
           <Fragment key={type}>
             <Slide
               in
@@ -140,29 +144,45 @@ export default function HierarchyList({
             </Slide>
 
             <Slide in direction="up" timeout={type === 'group' ? 800 : 1200}>
-              <ImageList
-                variant="masonry"
-                className={classes.list}
-                cols={cols}
-                gap={16}
-              >
-                {data?.map((item) =>
-                  item.type !== type ? null : (
-                    <HierarchyListItem
-                      {...{ disablePublish, icon }}
-                      key={item._id}
-                      data={item}
-                      onDeleteConfirm={console.log}
-                      onEditClick={setUpserted}
-                      onPublishClick={disablePublish ? undefined : console.log}
-                    />
-                  )
-                )}
-              </ImageList>
+              {!data.length ? (
+                <Typography
+                  className={classes.mb}
+                  variant="h5"
+                  color="text.disabled"
+                  justifyContent="center"
+                >
+                  <Trans i18nKey="msg-no-data" />
+                </Typography>
+              ) : (
+                <ImageList
+                  variant="masonry"
+                  className={classes.mb}
+                  cols={cols}
+                  gap={16}
+                >
+                  {data.map((item) =>
+                    item.type !== type ? null : (
+                      <HierarchyListItem
+                        {...{ cols, icon }}
+                        key={item._id}
+                        data={item}
+                        disableDrag={
+                          records.group.length < (type === 'group' ? 2 : 1)
+                        }
+                        onDeleteConfirm={console.log}
+                        onEditClick={setUpserted}
+                        onPublishClick={
+                          disablePublish ? undefined : console.log
+                        }
+                      />
+                    )
+                  )}
+                </ImageList>
+              )}
             </Slide>
           </Fragment>
         ))}
-      </Dnd.DndContext>
+      </DndContext>
     </Container>
   );
 }
