@@ -19,7 +19,7 @@ import type { BreadcrumbsProps } from './Breadcrumbs.types';
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
-  stickyTop = 88,
+  stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
 }: BreadcrumbsProps) {
@@ -54,7 +54,7 @@ export default function Breadcrumbs({
           }))}
       />
 
-      <AppBar position="sticky" variant="outlined" className={classes.root}>
+      <AppBar position="sticky" elevation={0} className={classes.root}>
         <Toolbar role="toolbar" variant="dense">
           <IconButton color="secondary" onClick={back}>
             <Display.Icon code="faArrowLeft" />

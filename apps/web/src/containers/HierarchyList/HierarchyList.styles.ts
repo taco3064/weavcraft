@@ -52,5 +52,8 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       minHeight: 0,
       height: 'max-content',
     },
+    list: {
+      marginBottom: theme.spacing(6),
+    },
   })
 );

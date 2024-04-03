@@ -1,14 +1,15 @@
 import * as Dnd from '@dnd-kit/core';
 import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ImageList from '@mui/material/ImageList';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
+import { Fragment, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'next-i18next';
 import { nanoid } from 'nanoid';
-import { useMemo, useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import FilterModal from './HierarchyList.FilterModal';
@@ -119,22 +120,49 @@ export default function HierarchyList({
         onUpsertSuccess={onMutationSuccess}
       />
 
-      <Slide in direction="up" key={renderKey} timeout={800}>
-        <ImageList variant="masonry" cols={cols} gap={16}>
-          <Dnd.DndContext sensors={sensors}>
-            {data?.map((item) => (
-              <HierarchyListItem
-                {...{ disablePublish, icon }}
-                key={item._id}
-                data={item}
-                onDeleteConfirm={console.log}
-                onEditClick={setUpserted}
-                onPublishClick={disablePublish ? undefined : console.log}
-              />
-            ))}
-          </Dnd.DndContext>
-        </ImageList>
-      </Slide>
+      <Dnd.DndContext key={renderKey} sensors={sensors}>
+        {['group', 'item'].map((type) => (
+          <Fragment key={type}>
+            <Slide
+              in
+              direction={type === 'group' ? 'right' : 'left'}
+              timeout={600}
+            >
+              <Divider>
+                <Trans
+                  i18nKey={
+                    type === 'group'
+                      ? 'lbl-hierarchy-groups'
+                      : `ttl-breadcrumbs.${category}.label`
+                  }
+                />
+              </Divider>
+            </Slide>
+
+            <Slide in direction="up" timeout={type === 'group' ? 800 : 1200}>
+              <ImageList
+                variant="masonry"
+                className={classes.list}
+                cols={cols}
+                gap={16}
+              >
+                {data?.map((item) =>
+                  item.type !== type ? null : (
+                    <HierarchyListItem
+                      {...{ disablePublish, icon }}
+                      key={item._id}
+                      data={item}
+                      onDeleteConfirm={console.log}
+                      onEditClick={setUpserted}
+                      onPublishClick={disablePublish ? undefined : console.log}
+                    />
+                  )
+                )}
+              </ImageList>
+            </Slide>
+          </Fragment>
+        ))}
+      </Dnd.DndContext>
     </Container>
   );
 }
