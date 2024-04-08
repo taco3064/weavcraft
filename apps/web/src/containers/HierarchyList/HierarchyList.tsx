@@ -4,7 +4,7 @@ import ImageList from '@mui/material/ImageList';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import { DndContext } from '@dnd-kit/core';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useId, useMemo, useState } from 'react';
 import { Trans } from 'next-i18next';
 import { nanoid } from 'nanoid';
 
@@ -19,7 +19,8 @@ import { useHierarchyStyles } from './HierarchyList.styles';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 import type { PortalContainerEl } from '~web/components';
 
-export default function HierarchyList({
+export default function HierarchyList<P>({
+  PreviewComponent,
   category,
   disableGroup,
   disableGutters,
@@ -30,9 +31,9 @@ export default function HierarchyList({
   superior,
   toolbarEl,
   onMutationSuccess,
-}: HierarchyListProps) {
+}: HierarchyListProps<P>) {
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
-  const [upserted, setUpserted] = useState<UpsertedState>();
+  const [upserted, setUpserted] = useState<UpsertedState<P>>();
 
   const { classes } = useHierarchyStyles();
   const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
@@ -45,11 +46,12 @@ export default function HierarchyList({
     selecteds,
     onDataSelect,
     onParamsChange,
-  } = useHierarchyData({ category, initialData, superior });
+  } = useHierarchyData({ PreviewComponent, category, initialData, superior });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
-  const contextProps = useDndContextProps();
+  const ids = { group: useId(), item: useId() };
+  const contextProps = useDndContextProps(ids);
 
   return isLoading ? (
     <HierarchySkeleton {...{ cols, disableGutters, maxWidth }} />
@@ -108,6 +110,7 @@ export default function HierarchyList({
                 </Typography>
               ) : (
                 <ImageList
+                  id={ids[type as keyof typeof ids]}
                   variant="masonry"
                   className={classes.mb}
                   cols={cols}
@@ -116,10 +119,10 @@ export default function HierarchyList({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ cols, icon }}
+                        {...{ PreviewComponent, cols, icon }}
                         key={item._id}
                         data={item}
-                        disableDrag={group.length < (type === 'group' ? 2 : 1)}
+                        disableDrag={group.length < 1}
                         selected={selecteds.includes(item._id)}
                         onDeleteConfirm={console.log}
                         onEditClick={setUpserted}

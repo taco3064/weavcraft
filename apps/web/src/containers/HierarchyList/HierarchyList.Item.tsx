@@ -16,7 +16,8 @@ import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
-export default function HierarchyListItem({
+export default function HierarchyListItem<P>({
+  PreviewComponent,
   cols,
   data,
   disableDrag = false,
@@ -26,7 +27,7 @@ export default function HierarchyListItem({
   onEditClick,
   onPublishClick,
   onSelect,
-}: HierarchyListItemProps) {
+}: HierarchyListItemProps<P>) {
   const { t } = useTranslation();
   const { dragRef, isDragging, dragProps } = useDraggable(data, disableDrag);
   const { dropRef, isDropOver } = useDroppable(data, disableDrag);
@@ -77,6 +78,11 @@ export default function HierarchyListItem({
           }
         />
 
+        {PreviewComponent &&
+          data.type === 'item' &&
+          data.payload &&
+          !isDragging && <PreviewComponent payload={data.payload} />}
+
         {data.description && (
           <CardContent>
             <Typography
@@ -91,47 +97,52 @@ export default function HierarchyListItem({
           </CardContent>
         )}
 
-        <CardActions>
-          {onEditClick && (
-            <Tooltip title={editTitle}>
-              <IconButton
-                color="primary"
-                onClick={() =>
-                  onEditClick({
-                    data,
-                    icon: isGroup ? 'faFolder' : icon,
-                    title: editTitle,
-                  })
-                }
-              >
-                <Display.Icon code="faEdit" />
-              </IconButton>
-            </Tooltip>
-          )}
+        {!isDragging && (
+          <CardActions>
+            {onEditClick && (
+              <Tooltip title={editTitle}>
+                <IconButton
+                  color="primary"
+                  onClick={() =>
+                    onEditClick({
+                      data,
+                      icon: isGroup ? 'faFolder' : icon,
+                      title: editTitle,
+                    })
+                  }
+                >
+                  <Display.Icon code="faEdit" />
+                </IconButton>
+              </Tooltip>
+            )}
 
-          {onDeleteConfirm && (
-            <Tooltip title={t('btn-delete')}>
-              <ConfirmToggle
-                subject={t('ttl-delete-confirm')}
-                message={t('msg-delete-confirm', { name: data.title })}
-                toggle={
-                  <IconButton color="primary">
-                    <Display.Icon code="faTrash" />
-                  </IconButton>
-                }
-                onConfirm={() => onDeleteConfirm(data)}
-              />
-            </Tooltip>
-          )}
+            {onDeleteConfirm && (
+              <Tooltip title={t('btn-delete')}>
+                <ConfirmToggle
+                  subject={t('ttl-delete-confirm')}
+                  message={t('msg-delete-confirm', { name: data.title })}
+                  toggle={
+                    <IconButton color="primary">
+                      <Display.Icon code="faTrash" />
+                    </IconButton>
+                  }
+                  onConfirm={() => onDeleteConfirm(data)}
+                />
+              </Tooltip>
+            )}
 
-          {!onPublishClick || isGroup ? null : (
-            <Tooltip title={<Trans i18nKey="btn-publish" />}>
-              <IconButton color="success" onClick={() => onPublishClick(data)}>
-                <Display.Icon code="faShare" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </CardActions>
+            {!onPublishClick || isGroup ? null : (
+              <Tooltip title={<Trans i18nKey="btn-publish" />}>
+                <IconButton
+                  color="success"
+                  onClick={() => onPublishClick(data)}
+                >
+                  <Display.Icon code="faShare" />
+                </IconButton>
+              </Tooltip>
+            )}
+          </CardActions>
+        )}
       </Card>
     </ImageListItem>
   );

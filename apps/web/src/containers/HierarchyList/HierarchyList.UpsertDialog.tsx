@@ -16,14 +16,14 @@ import type {
   UpsertDialogProps,
 } from './HierarchyList.types';
 
-export default function UpsertDialog({
+export default function UpsertDialog<P>({
   data,
   icon,
   title,
   onClose,
   onSuccess,
-}: UpsertDialogProps) {
-  const [hierarchy, setHierarchy] = useState<UpsertedData>();
+}: UpsertDialogProps<P>) {
+  const [hierarchy, setHierarchy] = useState<UpsertedData<P>>();
 
   const { t } = useTranslation();
   const categoryLabel = t(`ttl-breadcrumbs.${data?.category}.label`);
@@ -34,7 +34,7 @@ export default function UpsertDialog({
     if (data) {
       const formdata = new FormData(e.currentTarget);
       const mode: MutationMode = data?._id ? 'update' : 'create';
-      const upserted: UpsertedData = { ...data };
+      const upserted: UpsertedData<P> = { ...data };
 
       formdata.forEach((value, key) => _set(upserted, key, value));
       console.log(mode, upserted);

@@ -4,9 +4,9 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
+import { PaletteDisplay, type PortalContainerEl } from '~web/components';
 import { getHierarchyData } from '~web/services';
 import { makePerPageLayout } from '~web/contexts';
-import type { PortalContainerEl } from '~web/components';
 import type { ThemesGroupProps } from './themes.types';
 
 export default makePerPageLayout<ThemesGroupProps>(MainLayout)(
@@ -33,6 +33,7 @@ export default makePerPageLayout<ThemesGroupProps>(MainLayout)(
 
         <HierarchyList
           {...{ initialData, toolbarEl }}
+          PreviewComponent={PaletteDisplay}
           category="themes"
           disableGroup={false}
           disableGutters
@@ -60,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       initialData: await getHierarchyData({
-        queryKey: [{ category: 'themes', superior: group }],
+        queryKey: [{ category: 'themes', superior: group, withPayload: true }],
       }),
 
       ...(group && { group }),

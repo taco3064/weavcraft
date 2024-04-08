@@ -16,9 +16,13 @@ Transition.displayName = 'Transition';
 export const components: ThemeOptions['components'] = {
   MuiCssBaseline: {
     styleOverrides: {
+      html: {
+        overflow: 'hidden !important',
+      },
       body: {
         fontFamily: 'Verdana',
         overflow: 'hidden auto',
+        maxHeight: '100vh',
       },
     },
   },

@@ -9,7 +9,7 @@ import { PortalToolbar } from '~web/components';
 import { useToolbarStyles } from './HierarchyList.styles';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
 
-export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
+export default forwardRef<HTMLDivElement, HierarchyToolbarProps<any>>(
   function HierarchyToolbar(
     {
       category,
