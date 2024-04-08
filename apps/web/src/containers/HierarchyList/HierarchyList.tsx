@@ -1,30 +1,26 @@
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ImageList from '@mui/material/ImageList';
 import Slide from '@mui/material/Slide';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { Display } from '@weavcraft/core';
 import { DndContext } from '@dnd-kit/core';
-import { Fragment, useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'next-i18next';
+import { Fragment, useId, useMemo, useState } from 'react';
+import { Trans } from 'next-i18next';
 import { nanoid } from 'nanoid';
-import { useSuspenseQuery } from '@tanstack/react-query';
 
-import FilterModal from './HierarchyList.FilterModal';
+import FilterToggle from './HierarchyList.FilterToggle';
 import HierarchyListItem from './HierarchyList.Item';
-import UpsertModal from './HierarchyList.UpsertModal';
-import { PortalToolbar, type PortalContainerEl } from '~web/components';
-import { getHierarchyData } from '~web/services';
+import HierarchySkeleton from './HierarchyList.Skeleton';
+import HierarchyToolbar from './HierarchyList.Toolbar';
+import UpsertDialog from './HierarchyList.UpsertDialog';
 import { useBreakpointMatches } from '~web/hooks';
-import { useDndContextProps } from './HierarchyList.hooks';
+import { useDndContextProps, useHierarchyData } from './HierarchyList.hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
-import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
+import type { PortalContainerEl } from '~web/components';
 
-export default function HierarchyList({
+export default function HierarchyList<P>({
+  PreviewComponent,
   category,
   disableGroup,
   disableGutters,
@@ -35,97 +31,56 @@ export default function HierarchyList({
   superior,
   toolbarEl,
   onMutationSuccess,
-}: HierarchyListProps) {
-  const { t } = useTranslation();
+}: HierarchyListProps<P>) {
+  const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
+  const [upserted, setUpserted] = useState<UpsertedState<P>>();
+
   const { classes } = useHierarchyStyles();
   const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
 
-  const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
-  const [upserted, setUpserted] = useState<UpsertedState>();
-
-  const [params, setParams] = useState<SearchHierarchyParams>({
-    category,
-    superior,
-  });
+  const {
+    group,
+    isLoading,
+    item,
+    params,
+    selecteds,
+    onDataSelect,
+    onParamsChange,
+  } = useHierarchyData({ PreviewComponent, category, initialData, superior });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
-  const categoryLabel = t(`ttl-breadcrumbs.${category}.label`);
-  const contextProps = useDndContextProps();
+  const ids = { group: useId(), item: useId() };
+  const contextProps = useDndContextProps(ids);
 
-  const { data } = useSuspenseQuery({
-    ...(!params.keyword && { initialData }),
-    queryKey: [params],
-    queryFn: getHierarchyData,
-  });
-
-  const records = useMemo(
-    () =>
-      data?.reduce<
-        Record<HierarchyData<string>['type'], HierarchyData<string>[]>
-      >(
-        (result, item) => ({
-          ...result,
-          [item.type]: [...result[item.type], item],
-        }),
-        { group: [], item: [] }
-      ),
-    [data]
-  );
-
-  return (
+  return isLoading ? (
+    <HierarchySkeleton {...{ cols, disableGutters, maxWidth }} />
+  ) : (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
-      <PortalToolbar variant="dense" containerEl={toolbarEl}>
-        {!disableGroup && (
-          <Tooltip title={<Trans i18nKey="btn-add-group" />}>
-            <IconButton
-              color="warning"
-              onClick={() =>
-                setUpserted({
-                  title: t('btn-add-group'),
-                  icon: 'faFolderPlus',
-                  data: { category, type: 'group' },
-                })
-              }
-            >
-              <Display.Icon code="faFolderPlus" />
-            </IconButton>
-          </Tooltip>
-        )}
-
-        <Tooltip title={t('btn-add-item', { category: categoryLabel })}>
-          <IconButton
-            color="primary"
-            onClick={() =>
-              setUpserted({
-                title: t('btn-add-item', { category: categoryLabel }),
-                icon: 'faPlus',
-                data: { category, type: 'item' },
-              })
-            }
-          >
-            <Display.Icon code="faPlus" />
-          </IconButton>
-        </Tooltip>
-
-        <FilterModal
+      <HierarchyToolbar
+        {...{ category, disableGroup, toolbarEl }}
+        ref={setFilterEl}
+        onAdd={setUpserted}
+        onMoveToSuperiorFolder={
+          !superior || !selecteds.length ? undefined : console.log
+        }
+      >
+        <FilterToggle
           containerEl={filterEl}
           renderKey={renderKey}
           values={params}
-          onSearch={setParams}
+          onSearch={onParamsChange}
         />
-      </PortalToolbar>
 
-      <Toolbar ref={setFilterEl} variant="dense" className={classes.filter} />
-
-      <UpsertModal
-        {...upserted}
-        onClose={() => setUpserted(undefined)}
-        onUpsertSuccess={onMutationSuccess}
-      />
+        <UpsertDialog
+          {...upserted}
+          onClose={() => setUpserted(undefined)}
+          onSuccess={onMutationSuccess}
+        />
+      </HierarchyToolbar>
 
       <DndContext {...contextProps} key={renderKey}>
-        {Object.entries(records).map(([type, data]) => (
+        {Object.entries({ group, item }).map(([type, data]) => (
           <Fragment key={type}>
             <Slide
               in
@@ -155,6 +110,7 @@ export default function HierarchyList({
                 </Typography>
               ) : (
                 <ImageList
+                  id={ids[type as keyof typeof ids]}
                   variant="masonry"
                   className={classes.mb}
                   cols={cols}
@@ -163,14 +119,14 @@ export default function HierarchyList({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ cols, icon }}
+                        {...{ PreviewComponent, cols, icon }}
                         key={item._id}
                         data={item}
-                        disableDrag={
-                          records.group.length < (type === 'group' ? 2 : 1)
-                        }
+                        disableDrag={group.length < 1}
+                        selected={selecteds.includes(item._id)}
                         onDeleteConfirm={console.log}
                         onEditClick={setUpserted}
+                        onSelect={!superior ? undefined : onDataSelect}
                         onPublishClick={
                           disablePublish ? undefined : console.log
                         }

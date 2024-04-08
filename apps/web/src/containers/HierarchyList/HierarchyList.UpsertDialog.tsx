@@ -13,17 +13,17 @@ import { useEffect, useState, type FormEventHandler } from 'react';
 import type {
   MutationMode,
   UpsertedData,
-  UpsertModalProps,
+  UpsertDialogProps,
 } from './HierarchyList.types';
 
-export default function UpsertModal({
+export default function UpsertDialog<P>({
   data,
   icon,
   title,
   onClose,
-  onUpsertSuccess,
-}: UpsertModalProps) {
-  const [hierarchy, setHierarchy] = useState<UpsertedData>();
+  onSuccess,
+}: UpsertDialogProps<P>) {
+  const [hierarchy, setHierarchy] = useState<UpsertedData<P>>();
 
   const { t } = useTranslation();
   const categoryLabel = t(`ttl-breadcrumbs.${data?.category}.label`);
@@ -34,7 +34,7 @@ export default function UpsertModal({
     if (data) {
       const formdata = new FormData(e.currentTarget);
       const mode: MutationMode = data?._id ? 'update' : 'create';
-      const upserted: UpsertedData = { ...data };
+      const upserted: UpsertedData<P> = { ...data };
 
       formdata.forEach((value, key) => _set(upserted, key, value));
       console.log(mode, upserted);

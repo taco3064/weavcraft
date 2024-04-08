@@ -21,6 +21,16 @@ export const useFilterStyles = makeStyles({ name: 'HierarchyFilter' })(
   })
 );
 
+export const useToolbarStyles = makeStyles({ name: 'HierarchyToolbar' })(
+  () => ({
+    filter: {
+      justifyContent: 'center',
+      minHeight: 0,
+      height: 'max-content',
+    },
+  })
+);
+
 export const useItemStyles = makeStyles<{
   cols: number;
   isDragging: boolean;
@@ -64,11 +74,6 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       display: 'flex',
       flexDirection: 'column',
       gap: theme.spacing(1.5),
-    },
-    filter: {
-      justifyContent: 'center',
-      minHeight: 0,
-      height: 'max-content',
     },
     mb: {
       marginBottom: theme.spacing(6),
