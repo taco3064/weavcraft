@@ -42,11 +42,7 @@ export default function HierarchyList({
     selecteds,
     onDataSelect,
     onParamsChange,
-  } = useHierarchyData({
-    category,
-    initialData,
-    superior,
-  });
+  } = useHierarchyData({ category, initialData, superior });
 
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
   const [upserted, setUpserted] = useState<UpsertedState>();
@@ -64,6 +60,9 @@ export default function HierarchyList({
         key={renderKey}
         ref={setFilterEl}
         onAdd={setUpserted}
+        onMoveToSuperiorFolder={
+          !superior || !selecteds.length ? undefined : console.log
+        }
       >
         <FilterToggle
           containerEl={filterEl}
@@ -125,7 +124,7 @@ export default function HierarchyList({
                         selected={selecteds.includes(item._id)}
                         onDeleteConfirm={console.log}
                         onEditClick={setUpserted}
-                        onSelect={onDataSelect}
+                        onSelect={!superior ? undefined : onDataSelect}
                         onPublishClick={
                           disablePublish ? undefined : console.log
                         }

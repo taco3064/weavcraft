@@ -11,7 +11,14 @@ import type { HierarchyToolbarProps } from './HierarchyList.types';
 
 export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
   function HierarchyToolbar(
-    { category, children, disableGroup, toolbarEl, onAdd },
+    {
+      category,
+      children,
+      disableGroup = false,
+      toolbarEl,
+      onAdd,
+      onMoveToSuperiorFolder,
+    },
     ref
   ) {
     const { t } = useTranslation();
@@ -22,6 +29,14 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
     return (
       <>
         <PortalToolbar variant="dense" containerEl={toolbarEl}>
+          {onMoveToSuperiorFolder && (
+            <Tooltip title={t('btn-move-to-superior-folder')}>
+              <IconButton color="warning" onClick={onMoveToSuperiorFolder}>
+                <Display.Icon code="faArrowUpFromBracket" />
+              </IconButton>
+            </Tooltip>
+          )}
+
           {!disableGroup && (
             <Tooltip title={<Trans i18nKey="btn-add-group" />}>
               <IconButton

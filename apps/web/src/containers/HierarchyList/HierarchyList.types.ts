@@ -49,6 +49,7 @@ export interface HierarchyToolbarProps
   extends Pick<HierarchyListProps, 'category' | 'disableGroup' | 'toolbarEl'> {
   children?: ReactNode;
   onAdd: (e: UpsertedState) => void;
+  onMoveToSuperiorFolder?: () => void;
 }
 
 export interface FilterToggleProps {

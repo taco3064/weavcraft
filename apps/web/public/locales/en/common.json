@@ -9,6 +9,7 @@
   "btn-edit-group": "Edit Folder",
   "btn-edit-item": "Edit {{category}}",
   "btn-filter": "Filter",
+  "btn-move-to-superior-folder": "Move To Superior Folder",
   "btn-publish": "Publish To Gallery",
   "btn-search": "Search",
   "btn-signin": "Sign In",
