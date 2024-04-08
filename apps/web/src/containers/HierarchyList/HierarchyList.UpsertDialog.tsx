@@ -13,16 +13,16 @@ import { useEffect, useState, type FormEventHandler } from 'react';
 import type {
   MutationMode,
   UpsertedData,
-  UpsertModalProps,
+  UpsertDialogProps,
 } from './HierarchyList.types';
 
-export default function UpsertModal({
+export default function UpsertDialog({
   data,
   icon,
   title,
   onClose,
   onUpsertSuccess,
-}: UpsertModalProps) {
+}: UpsertDialogProps) {
   const [hierarchy, setHierarchy] = useState<UpsertedData>();
 
   const { t } = useTranslation();

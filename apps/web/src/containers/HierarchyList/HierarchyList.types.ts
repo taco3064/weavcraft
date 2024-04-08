@@ -1,5 +1,6 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { IconCode } from '@weavcraft/core';
+import type { ReactNode } from 'react';
 
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { PortalContainerEl } from '~web/components';
@@ -12,16 +13,52 @@ export type UpsertedData = Pick<HierarchyData<string>, 'category' | 'type'> &
     'category' | 'type'
   >;
 
-export type UpsertedState = Pick<UpsertModalProps, 'data' | 'icon' | 'title'>;
+export type UpsertedState = Pick<UpsertDialogProps, 'data' | 'icon' | 'title'>;
 
-export interface FilterModalProps {
+//* Component Props
+type MuiContainerProps = Pick<ContainerProps, 'disableGutters' | 'maxWidth'>;
+
+export interface HierarchyListProps extends MuiContainerProps {
+  category: string;
+  disableGroup?: boolean;
+  disablePublish?: boolean;
+  icon: IconCode;
+  initialData?: HierarchyData<string>[];
+  superior?: string;
+  toolbarEl?: PortalContainerEl;
+  onMutationSuccess?: (mode: MutationMode, item: HierarchyData<string>) => void;
+}
+
+export interface HierarchyListSkeletonProps extends MuiContainerProps {
+  cols: number;
+}
+
+export interface HierarchyListItemProps
+  extends Pick<HierarchyListProps, 'icon'> {
+  cols: number;
+  data: HierarchyData<string>;
+  disableDrag?: boolean;
+  selected?: boolean;
+  onDeleteConfirm?: (e: HierarchyData<string>) => void;
+  onEditClick?: (e: UpsertedState) => void;
+  onPublishClick?: (e: HierarchyData<string>) => void;
+  onSelect?: (isSelected: boolean, data: HierarchyData<string>) => void;
+}
+
+export interface HierarchyToolbarProps
+  extends Pick<HierarchyListProps, 'category' | 'disableGroup' | 'toolbarEl'> {
+  children?: ReactNode;
+  onAdd: (e: UpsertedState) => void;
+}
+
+export interface FilterToggleProps {
   containerEl: PortalContainerEl;
   renderKey: string;
   values: SearchHierarchyParams;
   onSearch: (e: SearchHierarchyParams) => void;
 }
 
-export interface UpsertModalProps {
+export interface UpsertDialogProps {
   data?: UpsertedData;
   icon?: IconCode;
   title?: string;
@@ -31,26 +68,4 @@ export interface UpsertModalProps {
     mode: Extract<MutationMode, 'create' | 'update'>,
     item: HierarchyData<string>
   ) => void;
-}
-
-export interface HierarchyListItemProps {
-  cols: number;
-  data: HierarchyData<string>;
-  disableDrag?: boolean;
-  icon: IconCode;
-  onDeleteConfirm?: (e: HierarchyData<string>) => void;
-  onEditClick?: (e: UpsertedState) => void;
-  onPublishClick?: (e: HierarchyData<string>) => void;
-}
-
-export interface HierarchyListProps
-  extends Pick<ContainerProps, 'disableGutters' | 'maxWidth'>,
-    Pick<HierarchyListItemProps, 'icon'> {
-  category: string;
-  disableGroup?: boolean;
-  disablePublish?: boolean;
-  initialData?: HierarchyData<string>[];
-  superior?: string;
-  toolbarEl?: PortalContainerEl;
-  onMutationSuccess?: (mode: MutationMode, item: HierarchyData<string>) => void;
 }

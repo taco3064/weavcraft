@@ -10,19 +10,18 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
-import { useState, useTransition, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 
 import { useFilterStyles } from './HierarchyList.styles';
-import type { FilterModalProps } from './HierarchyList.types';
+import type { FilterToggleProps } from './HierarchyList.types';
 
-export default function FilterModal({
+export default function FilterToggle({
   containerEl,
   renderKey,
   values,
   onSearch,
-}: FilterModalProps) {
+}: FilterToggleProps) {
   const [open, setOpen] = useState(false);
-  const [, startTransition] = useTransition();
 
   const { t } = useTranslation();
   const { classes } = useFilterStyles();
@@ -35,7 +34,7 @@ export default function FilterModal({
     setOpen(false);
 
     if (values.keyword !== keyword) {
-      startTransition(() => onSearch({ ...values, keyword }));
+      onSearch({ ...values, keyword });
     }
   };
 

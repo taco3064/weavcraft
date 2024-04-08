@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,14 +21,15 @@ export default function HierarchyListItem({
   data,
   disableDrag = false,
   icon,
+  selected = false,
   onDeleteConfirm,
   onEditClick,
   onPublishClick,
+  onSelect,
 }: HierarchyListItemProps) {
-  const [dragRef, isDragging, dragProps] = useDraggable(data, disableDrag);
-  const [dropRef, isDropOver] = useDroppable(data, disableDrag);
-
   const { t } = useTranslation();
+  const { dragRef, isDragging, dragProps } = useDraggable(data, disableDrag);
+  const { dropRef, isDropOver } = useDroppable(data, disableDrag);
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
 
   const isGroup = data.type === 'group';
@@ -51,12 +53,25 @@ export default function HierarchyListItem({
               isGroup ? data._id : `detail/${data._id}`
             }`,
           }}
+          action={
+            !onSelect ? null : (
+              <Checkbox
+                size="large"
+                checked={selected}
+                color="secondary"
+                onChange={(e) => onSelect(e.target.checked, data)}
+              />
+            )
+          }
           avatar={
             <Avatar ref={dragRef} className={classes.dndToggle}>
               <Display.Icon
-                {...(isGroup
-                  ? { code: 'faFolder', color: 'warning' }
-                  : { code: icon, color: 'success' })}
+                {...(!isGroup
+                  ? { code: icon, color: 'success' }
+                  : {
+                      code: isDropOver ? 'faFolderOpen' : 'faFolder',
+                      color: 'warning',
+                    })}
               />
             </Avatar>
           }
