@@ -21,7 +21,7 @@ export default function UpsertDialog({
   icon,
   title,
   onClose,
-  onUpsertSuccess,
+  onSuccess,
 }: UpsertDialogProps) {
   const [hierarchy, setHierarchy] = useState<UpsertedData>();
 

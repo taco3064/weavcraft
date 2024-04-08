@@ -73,7 +73,7 @@ export default function HierarchyList({
         <UpsertDialog
           {...upserted}
           onClose={() => setUpserted(undefined)}
-          onUpsertSuccess={onMutationSuccess}
+          onSuccess={onMutationSuccess}
         />
       </HierarchyToolbar>
 

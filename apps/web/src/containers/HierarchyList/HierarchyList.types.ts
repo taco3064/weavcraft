@@ -66,7 +66,7 @@ export interface UpsertDialogProps {
   title?: string;
   onClose: () => void;
 
-  onUpsertSuccess?: (
+  onSuccess?: (
     mode: Extract<MutationMode, 'create' | 'update'>,
     item: HierarchyData<string>
   ) => void;
