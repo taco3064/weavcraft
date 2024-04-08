@@ -31,21 +31,21 @@ export default function HierarchyList({
   toolbarEl,
   onMutationSuccess,
 }: HierarchyListProps) {
+  const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
+  const [upserted, setUpserted] = useState<UpsertedState>();
+
   const { classes } = useHierarchyStyles();
   const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
 
   const {
     group,
-    item,
     isLoading,
+    item,
     params,
     selecteds,
     onDataSelect,
     onParamsChange,
   } = useHierarchyData({ category, initialData, superior });
-
-  const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
-  const [upserted, setUpserted] = useState<UpsertedState>();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
@@ -57,7 +57,6 @@ export default function HierarchyList({
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
       <HierarchyToolbar
         {...{ category, disableGroup, toolbarEl }}
-        key={renderKey}
         ref={setFilterEl}
         onAdd={setUpserted}
         onMoveToSuperiorFolder={

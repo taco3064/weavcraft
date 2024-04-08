@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { PortalContainerEl } from '~web/components';
 
+//* Variables
 export type MutationMode = 'create' | 'update' | 'delete';
 
 export type UpsertedData = Pick<HierarchyData<string>, 'category' | 'type'> &

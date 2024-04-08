@@ -83,6 +83,7 @@ export default function HierarchyListItem({
               role="textbox"
               variant="body2"
               color="text.secondary"
+              whiteSpace="pre-line"
               className={classes.description}
             >
               {data.description}

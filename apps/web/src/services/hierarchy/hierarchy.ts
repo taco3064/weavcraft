@@ -44,7 +44,7 @@ export async function getHierarchyData({
               _id: `${params.superior || ''}_3`,
               category: params.category,
               title: `${params.category} 3`,
-              description: `Description for ${params.category} 3, superior: ${params.superior}, category: ${params.category}`,
+              description: `Description for ${params.category} 3,\nsuperior: ${params.superior},\ncategory: ${params.category}`,
               type: 'item',
             },
           ];
