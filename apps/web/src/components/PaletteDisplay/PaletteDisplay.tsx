@@ -1,16 +1,24 @@
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Zoom from '@mui/material/Zoom';
+import _pick from 'lodash/pick';
 import { PieChart } from '@mui/x-charts';
 
 import { useDisplayStyles } from './PaletteDisplay.styles';
 import type { PaletteDisplayProps } from './PaletteDisplay.types';
 
 export default function PaletteDisplay({ payload }: PaletteDisplayProps) {
+  const { background } = payload;
   const { classes } = useDisplayStyles(payload);
 
-  const { background, primary, secondary, info, success, warning, error } =
-    payload;
+  const colors = _pick(payload, [
+    'secondary',
+    'info',
+    'success',
+    'warning',
+    'error',
+    'primary',
+  ]);
 
   return (
     <Zoom in timeout={600}>
@@ -38,14 +46,9 @@ export default function PaletteDisplay({ payload }: PaletteDisplayProps) {
               innerRadius: 20,
               cx: 140,
               cy: 140,
-              data: Object.entries({
-                secondary,
-                info,
-                success,
-                warning,
-                error,
-                primary,
-              }).map(([id, { main }]) => ({
+              valueFormatter: ({ id }) =>
+                colors[id as keyof typeof colors].main,
+              data: Object.entries(colors).map(([id, { main }]) => ({
                 id,
                 value: /^(primary|secondary)$/.test(id) ? 3 : 2,
                 label: id.replace(/^./, id.charAt(0).toUpperCase()),
