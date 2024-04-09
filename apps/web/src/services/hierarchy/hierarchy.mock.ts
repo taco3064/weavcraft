@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'development') {
           _id: `${prefix}i1`,
           category,
           title: `category ${prefix}i1`,
-          description: `Description for category ${prefix}i1`,
+          description: `Description for category ${prefix}i1.\nThis is a long description that should be truncated.`,
           type: 'item',
           ...(category === 'themes' &&
             withPayload && {

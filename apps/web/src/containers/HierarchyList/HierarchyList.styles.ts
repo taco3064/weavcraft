@@ -57,13 +57,14 @@ export const useItemStyles = makeStyles<{
   },
   description: {
     whiteSpace: 'pre-line',
-    display: '-webkit-box',
     overflow: 'hidden',
     minHeight: theme.spacing(5),
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
 
-    '&:not(:hover)': {
-      WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: 2,
+    '&:hover': {
+      display: 'block',
     },
   },
 }));

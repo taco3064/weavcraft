@@ -11,6 +11,7 @@ const { version } = require('../../package.json');
 const nextConfig = {
   i18n,
   pageExtensions: ['page.tsx'],
+  transpilePackages: ['@mui/x-charts'],
   nx: {
     // Set this to true if you would like to to use SVGR
     // See: https://github.com/gregberge/svgr

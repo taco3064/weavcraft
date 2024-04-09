@@ -6,11 +6,53 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
 })((theme, { background, divider, text }) => ({
   root: {
     position: 'relative',
-    height: theme.spacing(40),
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+
+    '& > *:not(.MuiGrid-root.MuiGrid-container)': {
+      position: 'absolute',
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
+      justifyContent: 'center',
+      left: '50%',
+      bottom: theme.spacing(-4),
+      transform: 'translateX(-50%)',
+
+      [theme.breakpoints.down('md')]: {
+        bottom: theme.spacing(-6),
+      },
+      '& > svg': {
+        width: '100% !important',
+
+        [theme.breakpoints.down('md')]: {
+          width: '80% !important',
+        },
+        '&:hover': {
+          animation: 'rotation 20s infinite linear',
+        },
+        '& > g': {
+          transform: 'translate(-5px, -5px)',
+        },
+        '@keyframes rotation': {
+          from: {
+            transform: 'rotate(0deg)',
+          },
+          to: {
+            transform: 'rotate(359deg)',
+          },
+        },
+      },
+    },
+  },
+  background: {
+    height: theme.spacing(34),
 
     [theme.breakpoints.down('md')]: {
       fontSize: '0.75em',
-      height: theme.spacing(32),
+      height: theme.spacing(28),
     },
     '& > *.MuiGrid-item': {
       display: 'flex',
@@ -32,30 +74,6 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
         borderLeft: `1px solid ${divider}`,
         color: text.secondary,
       },
-    },
-  },
-  colors: {
-    position: 'absolute',
-    height: 80,
-    width: '80%',
-    top: theme.spacing(10),
-    left: '50%',
-    transform: 'translateX(-50%)',
-    gap: theme.spacing(1),
-
-    [theme.breakpoints.down('md')]: {
-      top: theme.spacing(7),
-    },
-    '& > *': {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: theme.spacing(0.5, 1.5),
-      border: `1px solid ${divider}`,
-      borderRadius: `${theme.spacing(1.6)} / 50%`,
-      fontWeight: 500,
-      fontSize: '0.75em',
     },
   },
 }));

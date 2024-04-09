@@ -32,6 +32,7 @@ export default function HierarchyListItem<P>({
   const { dragRef, isDragging, dragProps } = useDraggable(data, disableDrag);
   const { dropRef, isDropOver } = useDroppable(data, disableDrag);
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
+  const { style, ...toggleProps } = dragProps;
 
   const isGroup = data.type === 'group';
 
@@ -43,7 +44,7 @@ export default function HierarchyListItem<P>({
 
   return (
     <ImageListItem ref={dropRef}>
-      <Card className={classes.card} {...dragProps}>
+      <Card className={classes.card} style={style}>
         <CardHeader
           title={data.title}
           titleTypographyProps={{
@@ -65,7 +66,11 @@ export default function HierarchyListItem<P>({
             )
           }
           avatar={
-            <Avatar ref={dragRef} className={classes.dndToggle}>
+            <Avatar
+              ref={dragRef}
+              className={classes.dndToggle}
+              {...toggleProps}
+            >
               <Display.Icon
                 {...(!isGroup
                   ? { code: icon, color: 'success' }
