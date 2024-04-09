@@ -5,12 +5,12 @@ import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
 import { PaletteDisplay, type PortalContainerEl } from '~web/components';
-import { getHierarchyData } from '~web/services';
+import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { makePerPageLayout } from '~web/contexts';
 import type { ThemesGroupProps } from './themes.types';
 
 export default makePerPageLayout<ThemesGroupProps>(MainLayout)(
-  function ThemeGroupsPage({ group, initialData }) {
+  function ThemeGroupsPage({ group, initialData, superiors }) {
     const { t } = useTranslation();
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
@@ -22,11 +22,10 @@ export default makePerPageLayout<ThemesGroupProps>(MainLayout)(
           onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
-              // TODO - Find all the superior groups and transform to breadcrumbs
-              return {
-                href: `/themes/${value}`,
-                label: value,
-              };
+              return superiors.map(({ _id, title }) => ({
+                href: `/themes/${_id}`,
+                label: title,
+              }));
             }
           }}
         />
@@ -63,6 +62,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       initialData: await getHierarchyData({
         queryKey: [{ category: 'themes', superior: group, withPayload: true }],
       }),
+
+      superiors: !group
+        ? []
+        : await getSuperiorHierarchies({
+            queryKey: [group],
+          }),
 
       ...(group && { group }),
       ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [

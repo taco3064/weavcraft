@@ -8,7 +8,14 @@ export type HierarchyData<U extends string | undefined, P = never> = Omit<
   'userid'
 >;
 
+export type SuperiorHierarchy = Pick<HierarchyData<string>, '_id' | 'title'>;
+
 export type GetHierarchyDataParams = Pick<
   QueryFunctionContext<readonly [SearchHierarchyParams]>,
+  'queryKey'
+>;
+
+export type GetSuperiorHierarchiesParams = Pick<
+  QueryFunctionContext<readonly [string]>,
   'queryKey'
 >;

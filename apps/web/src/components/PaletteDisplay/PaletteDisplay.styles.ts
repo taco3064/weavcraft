@@ -8,8 +8,8 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
     position: 'relative',
     height: theme.spacing(40),
 
-    [theme.breakpoints.only('xs')]: {
-      fontSize: '0.7em',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '0.75em',
       height: theme.spacing(32),
     },
     '& > *.MuiGrid-item': {
@@ -43,7 +43,7 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
     transform: 'translateX(-50%)',
     gap: theme.spacing(1),
 
-    [theme.breakpoints.only('xs')]: {
+    [theme.breakpoints.down('md')]: {
       top: theme.spacing(7),
     },
     '& > *': {
@@ -55,7 +55,7 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
       border: `1px solid ${divider}`,
       borderRadius: `${theme.spacing(1.6)} / 50%`,
       fontWeight: 500,
-      fontSize: '0.8em',
+      fontSize: '0.75em',
     },
   },
 }));

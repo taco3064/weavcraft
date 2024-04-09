@@ -10,34 +10,48 @@ if (process.env.NODE_ENV === 'development') {
   mock.onPost('/api/hierarchy/search').reply((config) => {
     const {
       category,
-      superior = '0',
+      superior = '',
       withPayload = false,
     } = JSON.parse(config.data) as SearchHierarchyParams;
+
+    const prefix = superior ? `${superior}-` : '';
 
     return [
       200,
       [
         ...Array.from({ length: Math.ceil(Math.random() * 3) }).map(
           (_el, i) => ({
-            _id: `${superior}-${i + 1}`,
+            _id: `${prefix}${i + 1}`,
             category,
-            title: `Group ${superior}-${i + 1}`,
-            description: `Description for Group ${superior}-${i + 1}`,
+            title: `Group ${prefix}${i + 1}`,
+            description: `Description for Group ${prefix}${i + 1}`,
             type: 'group',
           })
         ),
         {
-          _id: `${superior}-i1`,
+          _id: `${prefix}i1`,
           category,
-          title: `category ${superior}-3`,
-          description: `Description for category ${superior}-3`,
+          title: `category ${prefix}i1`,
+          description: `Description for category ${prefix}i1`,
           type: 'item',
           ...(category === 'themes' &&
             withPayload && {
-              payload: { ...getThemePalette(), id: `${superior}-3` },
+              payload: { ...getThemePalette(), id: `${prefix}i1` },
             }),
         },
       ],
+    ];
+  });
+
+  mock.onGet(/\/api\/hierarchy\/superiors\/\d+/).reply((config) => {
+    const id = config.url?.split('/').pop() as string;
+
+    return [
+      200,
+      id.split('-').map((_el, i, arr) => ({
+        _id: arr.slice(0, i + 1).join('-'),
+        title: `Group ${arr.slice(0, i + 1).join('-')}`,
+      })),
     ];
   });
 }

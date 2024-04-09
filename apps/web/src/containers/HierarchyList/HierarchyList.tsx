@@ -36,7 +36,7 @@ export default function HierarchyList<P>({
   const [upserted, setUpserted] = useState<UpsertedState<P>>();
 
   const { classes } = useHierarchyStyles();
-  const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
+  const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const {
     group,
