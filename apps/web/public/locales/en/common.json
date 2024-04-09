@@ -5,6 +5,7 @@
   "btn-clear": "Clear",
   "btn-close": "Close",
   "btn-confirm": "Confirm",
+  "btn-delete": "Delete",
   "btn-delete-account": "Delete Account",
   "btn-edit-group": "Edit Folder",
   "btn-edit-item": "Edit {{category}}",

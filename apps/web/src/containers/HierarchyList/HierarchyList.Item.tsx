@@ -122,22 +122,22 @@ export default function HierarchyListItem<P>({
             )}
 
             {onDeleteConfirm && (
-              <Tooltip title={t('btn-delete')}>
-                <ConfirmToggle
-                  subject={t('ttl-delete-confirm')}
-                  message={t('msg-delete-confirm', { name: data.title })}
-                  toggle={
+              <ConfirmToggle
+                subject={t('ttl-delete-confirm')}
+                message={t('msg-delete-confirm', { name: data.title })}
+                onConfirm={() => onDeleteConfirm(data)}
+                toggle={
+                  <Tooltip title={t('btn-delete')}>
                     <IconButton color="primary">
                       <Display.Icon code="faTrash" />
                     </IconButton>
-                  }
-                  onConfirm={() => onDeleteConfirm(data)}
-                />
-              </Tooltip>
+                  </Tooltip>
+                }
+              />
             )}
 
             {!onPublishClick || isGroup ? null : (
-              <Tooltip title={<Trans i18nKey="btn-publish" />}>
+              <Tooltip title={t('btn-publish')}>
                 <IconButton
                   color="success"
                   onClick={() => onPublishClick(data)}

@@ -76,7 +76,8 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       flexDirection: 'column',
       gap: theme.spacing(1.5),
     },
-    mb: {
+    list: {
+      height: 'max-content',
       marginBottom: theme.spacing(6),
     },
   })

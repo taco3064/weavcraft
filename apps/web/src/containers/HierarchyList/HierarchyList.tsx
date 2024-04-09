@@ -101,7 +101,7 @@ export default function HierarchyList<P>({
             <Slide in direction="up" timeout={type === 'group' ? 800 : 1200}>
               {!data.length ? (
                 <Typography
-                  className={classes.mb}
+                  className={classes.list}
                   variant="h5"
                   color="text.disabled"
                   justifyContent="center"
@@ -112,7 +112,7 @@ export default function HierarchyList<P>({
                 <ImageList
                   id={ids[type as keyof typeof ids]}
                   variant="masonry"
-                  className={classes.mb}
+                  className={classes.list}
                   cols={cols}
                   gap={16}
                 >

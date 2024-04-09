@@ -1,5 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import tc from 'tinycolor2';
 import type { ThemePalette } from '@weavcraft/types';
 
 import type { SearchHierarchyParams } from './hierarchy.types';
@@ -19,26 +20,36 @@ if (process.env.NODE_ENV === 'development') {
     return [
       200,
       [
-        ...Array.from({ length: Math.ceil(Math.random() * 3) }).map(
-          (_el, i) => ({
-            _id: `${prefix}${i + 1}`,
-            category,
-            title: `Group ${prefix}${i + 1}`,
-            description: `Description for Group ${prefix}${i + 1}`,
-            type: 'group',
-          })
+        ...Array.from({ length: Math.floor(Math.random() * 3) }).map(
+          (_el, i) => {
+            const id = `${prefix}${i + 1}`;
+
+            return {
+              _id: id,
+              category,
+              title: `Group ${id}`,
+              description: `Description for Group ${id}`,
+              type: 'group',
+            };
+          }
         ),
-        {
-          _id: `${prefix}i1`,
-          category,
-          title: `category ${prefix}i1`,
-          description: `Description for category ${prefix}i1.\nThis is a long description that should be truncated.`,
-          type: 'item',
-          ...(category === 'themes' &&
-            withPayload && {
-              payload: { ...getThemePalette(), id: `${prefix}i1` },
-            }),
-        },
+        ...Array.from({ length: Math.ceil(Math.random() * 6) }).map(
+          (_el, i) => {
+            const id = `${prefix}i${i + 1}`;
+
+            return {
+              _id: id,
+              category,
+              title: `${category} ${id}`,
+              description: `Description for ${category} ${id}.\nThis is a long description that should be truncated.`,
+              type: 'item',
+              // ...(category === 'themes' &&
+              //   withPayload && {
+              //     payload: { ...getThemePalette(), id },
+              //   }),
+            };
+          }
+        ),
       ],
     ];
   });
@@ -57,41 +68,40 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 function getThemePalette(): Omit<ThemePalette, 'id'> {
+  const bg = tc.random();
+
+  const colors = {
+    primary: tc.random(),
+    secondary: tc.random(),
+    info: tc.random(),
+    success: tc.random(),
+    warning: tc.random(),
+    error: tc.random(),
+  };
+
   return {
-    divider: 'rgba(255, 255, 255, 0.12)',
-    mode: 'dark',
+    divider: bg.clone().greyscale().toHexString(),
+    mode: bg.isDark() ? 'dark' : 'light',
     background: {
-      default: '#182954',
-      paper: '#1C263E',
+      default: bg.toHexString(),
+      paper: bg.clone().lighten(5).toHexString(),
     },
     text: {
-      primary: '#FFA785',
-      secondary: '#FFDFB2',
-      disabled: 'rgba(255, 255, 255, 0.5)',
+      primary: bg.clone().spin(180).toHexString(),
+      secondary: bg.clone().spin(120).toHexString(),
+      disabled: bg.clone().spin(60).toHexString(),
     },
-    primary: {
-      main: '#D24E30',
-      contrastText: '#FFF',
-    },
-    secondary: {
-      main: '#FFAB61',
-      contrastText: '#FFF',
-    },
-    info: {
-      main: '#4586E2',
-      contrastText: '#FFF',
-    },
-    success: {
-      main: '#72CC91',
-      contrastText: '#FFF',
-    },
-    warning: {
-      main: '#FFA33D',
-      contrastText: '#FFF',
-    },
-    error: {
-      main: '#FF6B6B',
-      contrastText: '#FFF',
-    },
+    ...(Object.fromEntries(
+      Object.entries(colors).map(([name, color]) => [
+        name,
+        {
+          main: color.toHexString(),
+          contrastText: color.spin(180).toHexString(),
+        },
+      ])
+    ) as Pick<
+      ThemePalette,
+      'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'
+    >),
   };
 }

@@ -62,13 +62,13 @@ export const useDisplayStyles = makeStyles<ThemePalette>({
       fontWeight: 600,
       fontSize: '1.125em',
 
-      '&:first-child': {
+      '&:first-of-type': {
         alignItems: 'flex-start',
         background: background.default,
         borderRight: `1px solid ${divider}`,
         color: text.primary,
       },
-      '&:last-child': {
+      '&:last-of-type': {
         alignItems: 'flex-end',
         background: background.paper,
         borderLeft: `1px solid ${divider}`,
