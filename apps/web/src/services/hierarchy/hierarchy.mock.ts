@@ -3,12 +3,29 @@ import axios from 'axios';
 import tc from 'tinycolor2';
 import type { ThemePalette } from '@weavcraft/types';
 
-import type { SearchHierarchyParams } from './hierarchy.types';
+import type { HierarchyData, SearchHierarchyParams } from './hierarchy.types';
 
-if (process.env.NODE_ENV === 'development') {
-  const mock = new MockAdapter(axios);
+const mock = new MockAdapter(axios);
 
-  mock.onPost('/api/hierarchy/search').reply((config) => {
+const baseURLs =
+  process.env.NODE_ENV === 'test' ? ['/mocks', '/api'] : ['/mocks'];
+
+baseURLs.forEach((baseURL) => {
+  mock
+    .onGet(new RegExp(`^${baseURL}/hierarchy/superiors/\\d+$`))
+    .reply((config) => {
+      const id = config.url?.split('/').pop() as string;
+
+      return [
+        200,
+        id.split('-').map((_el, i, arr) => ({
+          _id: arr.slice(0, i + 1).join('-'),
+          title: `Group ${arr.slice(0, i + 1).join('-')}`,
+        })),
+      ];
+    });
+
+  mock.onPost(`${baseURL}/hierarchy/search`).reply((config) => {
     const {
       category,
       superior = '',
@@ -16,56 +33,39 @@ if (process.env.NODE_ENV === 'development') {
     } = JSON.parse(config.data) as SearchHierarchyParams;
 
     const prefix = superior ? `${superior}-` : '';
+    const types = ['group', 'item'] as const;
 
-    return [
-      200,
-      [
-        ...Array.from({ length: Math.floor(Math.random() * 3) }).map(
+    const data: HierarchyData<string, any>[] = types
+      .map<HierarchyData<string, any>[]>((type) => {
+        const isGroup = type === 'group';
+
+        const length = Math[isGroup ? 'floor' : 'ceil'](Math.random() * 3);
+
+        return Array.from({ length }).map<HierarchyData<string, any>>(
           (_el, i) => {
-            const id = `${prefix}${i + 1}`;
+            const id = `${prefix}${isGroup ? '' : 'i'}${i + 1}`;
+            const name = isGroup ? 'Group' : category;
 
             return {
               _id: id,
               category,
-              title: `Group ${id}`,
-              description: `Description for Group ${id}`,
-              type: 'group',
+              title: `${name} ${id}`,
+              type,
+              description: `Description for ${name} ${id}.\nThis is a long description that should be truncated.`,
+              ...(!isGroup &&
+                category === 'themes' &&
+                withPayload && {
+                  payload: { ...getThemePalette(), id },
+                }),
             };
           }
-        ),
-        ...Array.from({ length: Math.ceil(Math.random() * 6) }).map(
-          (_el, i) => {
-            const id = `${prefix}i${i + 1}`;
+        );
+      })
+      .flat();
 
-            return {
-              _id: id,
-              category,
-              title: `${category} ${id}`,
-              description: `Description for ${category} ${id}.\nThis is a long description that should be truncated.`,
-              type: 'item',
-              // ...(category === 'themes' &&
-              //   withPayload && {
-              //     payload: { ...getThemePalette(), id },
-              //   }),
-            };
-          }
-        ),
-      ],
-    ];
+    return [200, data];
   });
-
-  mock.onGet(/\/api\/hierarchy\/superiors\/\d+/).reply((config) => {
-    const id = config.url?.split('/').pop() as string;
-
-    return [
-      200,
-      id.split('-').map((_el, i, arr) => ({
-        _id: arr.slice(0, i + 1).join('-'),
-        title: `Group ${arr.slice(0, i + 1).join('-')}`,
-      })),
-    ];
-  });
-}
+});
 
 function getThemePalette(): Omit<ThemePalette, 'id'> {
   const bg = tc.random();

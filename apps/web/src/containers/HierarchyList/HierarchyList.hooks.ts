@@ -104,9 +104,10 @@ export function useHierarchyData<P>({
   category,
   superior,
   initialData,
+  isInTutorial = false,
 }: Pick<
   HierarchyListProps<P>,
-  'PreviewComponent' | 'category' | 'superior' | 'initialData'
+  'PreviewComponent' | 'category' | 'superior' | 'initialData' | 'isInTutorial'
 >) {
   const [isPending, startTransition] = useTransition();
   const [selecteds, setSelecteds] = useState<string[]>([]);
@@ -119,7 +120,7 @@ export function useHierarchyData<P>({
 
   const { data = initialData || [], isLoading } = useQuery({
     enabled: Boolean(params.keyword?.trim()),
-    queryKey: [params],
+    queryKey: [params, isInTutorial],
     queryFn: getHierarchyData,
   });
 

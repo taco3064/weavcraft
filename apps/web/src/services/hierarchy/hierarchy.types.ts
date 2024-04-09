@@ -11,11 +11,11 @@ export type HierarchyData<U extends string | undefined, P = never> = Omit<
 export type SuperiorHierarchy = Pick<HierarchyData<string>, '_id' | 'title'>;
 
 export type GetHierarchyDataParams = Pick<
-  QueryFunctionContext<readonly [SearchHierarchyParams]>,
+  QueryFunctionContext<readonly [SearchHierarchyParams, boolean]>,
   'queryKey'
 >;
 
 export type GetSuperiorHierarchiesParams = Pick<
-  QueryFunctionContext<readonly [string]>,
+  QueryFunctionContext<readonly [string, boolean]>,
   'queryKey'
 >;

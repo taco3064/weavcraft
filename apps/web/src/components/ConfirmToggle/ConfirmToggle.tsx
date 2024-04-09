@@ -3,7 +3,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { Trans } from 'next-i18next';
-import { isValidElement, cloneElement, useState } from 'react';
+import { isValidElement, cloneElement, useState, type MouseEvent } from 'react';
 
 import { useToggleStyles } from './ConfirmToggle.styles';
 import type { ConfirmToggleProps } from './ConfirmToggle.types';
@@ -20,7 +20,13 @@ export default function ConfirmToggle({
 
   return !isValidElement(toggle) ? null : (
     <>
-      {cloneElement(toggle, { onClick: () => setOpen(true) })}
+      {cloneElement(toggle, {
+        onClick: (e: MouseEvent) => {
+          e.stopPropagation();
+          e.preventDefault();
+          setOpen(true);
+        },
+      })}
 
       <Dialog
         fullWidth

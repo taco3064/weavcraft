@@ -33,7 +33,11 @@ export function useBreadcrumbs({
           href: `/${paths.join('/')}`,
           label: isLast
             ? currentBreadcrumbLabel
-            : t(`ttl-breadcrumbs.${paths.join('.')}.label`),
+            : t(
+                `ttl-breadcrumbs.${paths
+                  .join('.')
+                  .replace(/^tutorials\./, '')}.label`
+              ),
         });
       }
 

@@ -27,6 +27,7 @@ export default function HierarchyList<P>({
   disablePublish = false,
   icon,
   initialData,
+  isInTutorial,
   maxWidth = false,
   superior,
   toolbarEl,
@@ -46,7 +47,13 @@ export default function HierarchyList<P>({
     selecteds,
     onDataSelect,
     onParamsChange,
-  } = useHierarchyData({ PreviewComponent, category, initialData, superior });
+  } = useHierarchyData({
+    PreviewComponent,
+    category,
+    initialData,
+    isInTutorial,
+    superior,
+  });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
@@ -58,7 +65,7 @@ export default function HierarchyList<P>({
   ) : (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
       <HierarchyToolbar
-        {...{ category, disableGroup, toolbarEl }}
+        {...{ category, disableGroup, isInTutorial, toolbarEl }}
         ref={setFilterEl}
         onAdd={setUpserted}
         onMoveToSuperiorFolder={
@@ -119,7 +126,7 @@ export default function HierarchyList<P>({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ PreviewComponent, cols, icon }}
+                        {...{ PreviewComponent, cols, icon, isInTutorial }}
                         key={item._id}
                         data={item}
                         disableDrag={group.length < 1}

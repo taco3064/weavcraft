@@ -9,7 +9,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Display } from '@weavcraft/core';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
 import { useDraggable, useDroppable } from './HierarchyList.hooks';
@@ -22,6 +22,7 @@ export default function HierarchyListItem<P>({
   data,
   disableDrag = false,
   icon,
+  isInTutorial,
   selected = false,
   onDeleteConfirm,
   onEditClick,
@@ -51,7 +52,7 @@ export default function HierarchyListItem<P>({
             variant: 'subtitle2',
             color: 'text.primary',
             component: Link,
-            href: `/${data.category}/${
+            href: `${isInTutorial ? '/tutorials' : ''}/${data.category}/${
               isGroup ? data._id : `detail/${data._id}`
             }`,
           }}
