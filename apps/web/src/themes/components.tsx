@@ -120,10 +120,10 @@ export const components: ThemeOptions['components'] = {
           gap: 0,
           padding: 0,
 
-          '& > *:first-child': {
+          '& > *:first-of-type': {
             borderRadius: theme.spacing(0, 0, 0, 2),
           },
-          '& > *:last-child': {
+          '& > *:last-of-type': {
             borderRadius: theme.spacing(0, 0, 2, 0),
           },
           '& > *': {

@@ -28,7 +28,7 @@ export default function HierarchySkeleton({
     <Container {...{ disableGutters, maxWidth }} className={cls1.root}>
       <LinearProgress />
 
-      <ImageList variant="masonry" className={cls1.mb} cols={cols} gap={16}>
+      <ImageList variant="masonry" className={cls1.list} cols={cols} gap={16}>
         {Array.from({ length: 6 }).map((_el, i) => (
           <ImageListItem key={i}>
             <Card className={cls2.card}>

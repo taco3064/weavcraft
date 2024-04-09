@@ -4,17 +4,19 @@ import Tooltip from '@mui/material/Tooltip';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { forwardRef } from 'react';
+import { useRouter } from 'next/router';
 
-import { PortalToolbar } from '~web/components';
+import { ConfirmToggle, Link, PortalToolbar } from '~web/components';
 import { useToolbarStyles } from './HierarchyList.styles';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
 
-export default forwardRef<HTMLDivElement, HierarchyToolbarProps<any>>(
+export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
   function HierarchyToolbar(
     {
       category,
       children,
       disableGroup = false,
+      isInTutorial,
       toolbarEl,
       onAdd,
       onMoveToSuperiorFolder,
@@ -22,6 +24,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps<any>>(
     ref
   ) {
     const { t } = useTranslation();
+    const { push } = useRouter();
     const { classes } = useToolbarStyles();
 
     const categoryLabel = t(`ttl-breadcrumbs.${category}.label`);
@@ -29,6 +32,27 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps<any>>(
     return (
       <>
         <PortalToolbar variant="dense" containerEl={toolbarEl}>
+          {!isInTutorial && (
+            <ConfirmToggle
+              severity="info"
+              subject={t('ttl-navigation-confirm')}
+              message={t('msg-tutorial-confirm', {
+                name: t(`ttl-breadcrumbs.${category}.label`),
+              })}
+              onConfirm={() => push(`/tutorials/${category}`)}
+              toggle={
+                <Tooltip title={t('btn-tutorial')}>
+                  <IconButton
+                    LinkComponent={Link}
+                    href={`/tutorials/${category}`}
+                  >
+                    <Display.Icon code="faCircleInfo" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+          )}
+
           {onMoveToSuperiorFolder && (
             <Tooltip title={t('btn-move-to-superior-folder')}>
               <IconButton color="warning" onClick={onMoveToSuperiorFolder}>

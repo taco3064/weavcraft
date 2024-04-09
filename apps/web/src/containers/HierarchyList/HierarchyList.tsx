@@ -27,6 +27,7 @@ export default function HierarchyList<P>({
   disablePublish = false,
   icon,
   initialData,
+  isInTutorial,
   maxWidth = false,
   superior,
   toolbarEl,
@@ -36,7 +37,7 @@ export default function HierarchyList<P>({
   const [upserted, setUpserted] = useState<UpsertedState<P>>();
 
   const { classes } = useHierarchyStyles();
-  const { matched: cols } = useBreakpointMatches({ xs: 2, md: 3 });
+  const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const {
     group,
@@ -46,7 +47,13 @@ export default function HierarchyList<P>({
     selecteds,
     onDataSelect,
     onParamsChange,
-  } = useHierarchyData({ PreviewComponent, category, initialData, superior });
+  } = useHierarchyData({
+    PreviewComponent,
+    category,
+    initialData,
+    isInTutorial,
+    superior,
+  });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [params]);
@@ -58,7 +65,7 @@ export default function HierarchyList<P>({
   ) : (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
       <HierarchyToolbar
-        {...{ category, disableGroup, toolbarEl }}
+        {...{ category, disableGroup, isInTutorial, toolbarEl }}
         ref={setFilterEl}
         onAdd={setUpserted}
         onMoveToSuperiorFolder={
@@ -101,7 +108,7 @@ export default function HierarchyList<P>({
             <Slide in direction="up" timeout={type === 'group' ? 800 : 1200}>
               {!data.length ? (
                 <Typography
-                  className={classes.mb}
+                  className={classes.list}
                   variant="h5"
                   color="text.disabled"
                   justifyContent="center"
@@ -112,14 +119,14 @@ export default function HierarchyList<P>({
                 <ImageList
                   id={ids[type as keyof typeof ids]}
                   variant="masonry"
-                  className={classes.mb}
+                  className={classes.list}
                   cols={cols}
                   gap={16}
                 >
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ PreviewComponent, cols, icon }}
+                        {...{ PreviewComponent, cols, icon, isInTutorial }}
                         key={item._id}
                         data={item}
                         disableDrag={group.length < 1}

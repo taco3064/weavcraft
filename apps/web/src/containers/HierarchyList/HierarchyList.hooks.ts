@@ -1,6 +1,6 @@
 import * as Dnd from '@dnd-kit/core';
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useEffect, useId, useMemo, useState, useTransition } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { getHierarchyData } from '~web/services';
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
@@ -104,9 +104,10 @@ export function useHierarchyData<P>({
   category,
   superior,
   initialData,
+  isInTutorial = false,
 }: Pick<
   HierarchyListProps<P>,
-  'PreviewComponent' | 'category' | 'superior' | 'initialData'
+  'PreviewComponent' | 'category' | 'superior' | 'initialData' | 'isInTutorial'
 >) {
   const [isPending, startTransition] = useTransition();
   const [selecteds, setSelecteds] = useState<string[]>([]);
@@ -117,9 +118,9 @@ export function useHierarchyData<P>({
     withPayload: Boolean(PreviewComponent),
   });
 
-  const { data, isLoading } = useSuspenseQuery({
-    ...(!params.keyword && { initialData }),
-    queryKey: [params],
+  const { data = initialData || [], isLoading } = useQuery({
+    enabled: Boolean(params.keyword?.trim()),
+    queryKey: [params, isInTutorial],
     queryFn: getHierarchyData,
   });
 
@@ -149,7 +150,7 @@ export function useHierarchyData<P>({
 
     ...useMemo(
       () =>
-        data?.reduce<
+        data.reduce<
           Record<HierarchyData<string, P>['type'], HierarchyData<string, P>[]>
         >(
           (result, item) => ({

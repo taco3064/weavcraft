@@ -1,6 +1,8 @@
-import type { HierarchyData } from '~web/services';
+import type { HierarchyData, SuperiorHierarchy } from '~web/services';
 
-export interface ThemesGroupProps {
+export interface ThemesPageProps {
   group?: string;
   initialData: HierarchyData<string>[];
+  isInTutorial: boolean;
+  superiors: SuperiorHierarchy[];
 }

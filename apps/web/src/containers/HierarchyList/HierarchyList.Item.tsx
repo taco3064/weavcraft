@@ -9,7 +9,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Display } from '@weavcraft/core';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
 import { useDraggable, useDroppable } from './HierarchyList.hooks';
@@ -22,6 +22,7 @@ export default function HierarchyListItem<P>({
   data,
   disableDrag = false,
   icon,
+  isInTutorial,
   selected = false,
   onDeleteConfirm,
   onEditClick,
@@ -32,6 +33,7 @@ export default function HierarchyListItem<P>({
   const { dragRef, isDragging, dragProps } = useDraggable(data, disableDrag);
   const { dropRef, isDropOver } = useDroppable(data, disableDrag);
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
+  const { style, ...toggleProps } = dragProps;
 
   const isGroup = data.type === 'group';
 
@@ -43,14 +45,14 @@ export default function HierarchyListItem<P>({
 
   return (
     <ImageListItem ref={dropRef}>
-      <Card className={classes.card} {...dragProps}>
+      <Card className={classes.card} style={style}>
         <CardHeader
           title={data.title}
           titleTypographyProps={{
             variant: 'subtitle2',
             color: 'text.primary',
             component: Link,
-            href: `/${data.category}/${
+            href: `${isInTutorial ? '/tutorials' : ''}/${data.category}/${
               isGroup ? data._id : `detail/${data._id}`
             }`,
           }}
@@ -65,7 +67,11 @@ export default function HierarchyListItem<P>({
             )
           }
           avatar={
-            <Avatar ref={dragRef} className={classes.dndToggle}>
+            <Avatar
+              ref={dragRef}
+              className={classes.dndToggle}
+              {...toggleProps}
+            >
               <Display.Icon
                 {...(!isGroup
                   ? { code: icon, color: 'success' }
@@ -117,22 +123,22 @@ export default function HierarchyListItem<P>({
             )}
 
             {onDeleteConfirm && (
-              <Tooltip title={t('btn-delete')}>
-                <ConfirmToggle
-                  subject={t('ttl-delete-confirm')}
-                  message={t('msg-delete-confirm', { name: data.title })}
-                  toggle={
+              <ConfirmToggle
+                subject={t('ttl-delete-confirm')}
+                message={t('msg-delete-confirm', { name: data.title })}
+                onConfirm={() => onDeleteConfirm(data)}
+                toggle={
+                  <Tooltip title={t('btn-delete')}>
                     <IconButton color="primary">
                       <Display.Icon code="faTrash" />
                     </IconButton>
-                  }
-                  onConfirm={() => onDeleteConfirm(data)}
-                />
-              </Tooltip>
+                  </Tooltip>
+                }
+              />
             )}
 
             {!onPublishClick || isGroup ? null : (
-              <Tooltip title={<Trans i18nKey="btn-publish" />}>
+              <Tooltip title={t('btn-publish')}>
                 <IconButton
                   color="success"
                   onClick={() => onPublishClick(data)}

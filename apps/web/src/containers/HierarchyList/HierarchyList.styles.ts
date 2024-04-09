@@ -57,13 +57,14 @@ export const useItemStyles = makeStyles<{
   },
   description: {
     whiteSpace: 'pre-line',
-    display: '-webkit-box',
     overflow: 'hidden',
     minHeight: theme.spacing(5),
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
 
-    '&:not(:hover)': {
-      WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: 2,
+    '&:hover': {
+      display: 'block',
     },
   },
 }));
@@ -75,7 +76,8 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       flexDirection: 'column',
       gap: theme.spacing(1.5),
     },
-    mb: {
+    list: {
+      height: 'max-content',
       marginBottom: theme.spacing(6),
     },
   })

@@ -5,6 +5,7 @@
   "btn-clear": "Clear",
   "btn-close": "Close",
   "btn-confirm": "Confirm",
+  "btn-delete": "Delete",
   "btn-delete-account": "Delete Account",
   "btn-edit-group": "Edit Folder",
   "btn-edit-item": "Edit {{category}}",
@@ -15,6 +16,7 @@
   "btn-signin": "Sign In",
   "btn-signin-with-google": "Sign In with Google",
   "btn-signout": "Sign Out",
+  "btn-tutorial": "Tutorial",
   "btn-update": "Update",
   "lbl-analytics": "Analytics",
   "lbl-description": "Description",
@@ -26,8 +28,10 @@
   "msg-delete-confirm": "Are you sure you want to delete {{name}}?",
   "msg-filter-placeholder": "Enter the search keyword...",
   "msg-no-data": "No data available.",
+  "msg-tutorial-confirm": "Are you sure you want to start the tutorial of {{name}}?",
   "ttl-delete-confirm": "Confirm Deletion",
   "ttl-hierarchy-search": "Search {{name}}",
+  "ttl-navigation-confirm": "Confirm Navigation",
   "ttl-user-options": "User Options",
   "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
@@ -55,6 +59,9 @@
     "themes": {
       "label": "Theme Styles",
       "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
+    },
+    "tutorials": {
+      "label": "Tutorials"
     },
     "websites": {
       "label": "Websites",
