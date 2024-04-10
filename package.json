@@ -93,6 +93,7 @@
     "@swc/plugin-emotion": "^2.5.67",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "14.0.0",
+    "@types/cookie": "^0.6.0",
     "@types/dotenv-flow": "^3.3.3",
     "@types/jest": "^29.4.0",
     "@types/js-cookie": "^3.0.6",
