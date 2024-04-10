@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { withConnRefusedCatch } from '../common';
 
 import type {
   GetHierarchyDataParams,
@@ -7,19 +8,7 @@ import type {
   SuperiorHierarchy,
 } from './hierarchy.types';
 
-export async function getHierarchyData<P = never>({
-  queryKey: [params, isInTutorial],
-}: GetHierarchyDataParams) {
-  const { data } = await axios.post<HierarchyData<string, P>[]>(
-    '/hierarchy/search',
-    params,
-    { baseURL: isInTutorial ? '/mocks' : '/api' }
-  );
-
-  return data;
-}
-
-export async function getSuperiorHierarchies({
+export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
   queryKey: [id, isInTutorial],
 }: GetSuperiorHierarchiesParams) {
   const { data } = await axios.get<SuperiorHierarchy[]>(
@@ -28,4 +17,18 @@ export async function getSuperiorHierarchies({
   );
 
   return data;
-}
+},
+[]);
+
+export const getHierarchyData = withConnRefusedCatch(async function <
+  P = never
+>({ queryKey: [params, isInTutorial] }: GetHierarchyDataParams) {
+  const { data } = await axios.post<HierarchyData<string, P>[]>(
+    '/hierarchy/search',
+    params,
+    { baseURL: isInTutorial ? '/mocks' : '/api' }
+  );
+
+  return data;
+},
+[]);
