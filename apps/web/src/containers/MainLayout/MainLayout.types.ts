@@ -15,6 +15,7 @@ export type DefaultProps = {
 };
 
 export type NavItem = {
+  auth?: true;
   icon: IconCode;
   id: string;
   href: string;
