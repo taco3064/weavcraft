@@ -115,6 +115,7 @@ export function useQueryVariables<P>({
   }, [PreviewComponent, category, superior]);
 
   return {
+    isFiltering: Boolean(params.keyword?.trim()),
     isLoading: isPending,
     params,
 

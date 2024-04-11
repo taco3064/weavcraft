@@ -33,6 +33,7 @@
   "msg-success-update": "更新{{name}}完成",
   "msg-tutorial-confirm": "是否要查看關於\"{{name}}\"的教學指南？",
   "ttl-delete-confirm": "刪除確認",
+  "ttl-filter-result": "查詢結果: {{type}}",
   "ttl-hierarchy-search": "搜尋{{name}}",
   "ttl-navigation-confirm": "即將離開當前頁面",
   "ttl-user-options": "用戶選項",

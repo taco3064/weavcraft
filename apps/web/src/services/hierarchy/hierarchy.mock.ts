@@ -36,16 +36,20 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       });
 
     mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
-      const params = JSON.parse(config.data) as SearchHierarchyParams;
       const store = await db.read().then(() => Object.values(db.data));
       const result: HierarchyData<string, any>[] = [];
 
+      const { keyword, ...params } = JSON.parse(
+        config.data
+      ) as SearchHierarchyParams;
+
       for (const data of store) {
-        const { category, superior } = data;
+        const { category, superior, title, description } = data;
 
         if (
           params.category === category &&
-          (params.superior || superior) === superior
+          ((!keyword && (params.superior || superior) === superior) ||
+            (keyword && `${title} ${description}`.includes(keyword)))
         ) {
           result.push({
             ...data,

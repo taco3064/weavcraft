@@ -49,11 +49,12 @@ export default function HierarchyList<P>({
   const { classes } = useHierarchyStyles();
   const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
-  const { params, onParamsChange, ...variables } = useQueryVariables({
-    PreviewComponent,
-    category,
-    superior,
-  });
+  const { isFiltering, params, onParamsChange, ...variables } =
+    useQueryVariables({
+      PreviewComponent,
+      category,
+      superior,
+    });
 
   const {
     data = initialData || [],
@@ -123,13 +124,13 @@ export default function HierarchyList<P>({
               timeout={600}
             >
               <Divider>
-                <Trans
-                  i18nKey={
+                {t(isFiltering ? 'ttl-filter-result' : '{{type}}', {
+                  type: t(
                     type === 'group'
                       ? 'lbl-hierarchy-groups'
                       : `ttl-breadcrumbs.${category}.label`
-                  }
-                />
+                  ),
+                })}
               </Divider>
             </Slide>
 

@@ -17,7 +17,7 @@ export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
     { baseURL: isInTutorial ? '/mocks' : '/api' }
   );
 
-  return data;
+  return data.reverse();
 },
 []);
 

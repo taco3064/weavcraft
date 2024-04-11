@@ -33,6 +33,7 @@
   "msg-success-update": "Successfully updated {{name}}.",
   "msg-tutorial-confirm": "Are you sure you want to start the tutorial of {{name}}?",
   "ttl-delete-confirm": "Confirm Deletion",
+  "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
   "ttl-navigation-confirm": "Confirm Navigation",
   "ttl-user-options": "User Options",
