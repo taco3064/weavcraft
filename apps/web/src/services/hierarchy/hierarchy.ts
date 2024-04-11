@@ -6,6 +6,7 @@ import type {
   GetSuperiorHierarchiesParams,
   HierarchyData,
   SuperiorHierarchy,
+  UpsertHierarchyInput,
 } from './hierarchy.types';
 
 export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
@@ -32,3 +33,15 @@ export const getHierarchyData = withConnRefusedCatch(async function <
   return data;
 },
 []);
+
+export const createHierarchyData = withConnRefusedCatch(
+  async ({ input, isInTutorial }: UpsertHierarchyInput) => {
+    const { data } = await axios.post<HierarchyData<string>>(
+      '/hierarchy/create',
+      input,
+      { baseURL: isInTutorial ? '/mocks' : '/api' }
+    );
+
+    return data;
+  }
+);

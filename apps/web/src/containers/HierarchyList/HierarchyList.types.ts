@@ -64,7 +64,7 @@ export interface HierarchyListItemProps<P>
 export interface HierarchyToolbarProps<P = any>
   extends Pick<
     HierarchyListProps<P>,
-    'category' | 'disableGroup' | 'isInTutorial' | 'toolbarEl'
+    'category' | 'disableGroup' | 'isInTutorial' | 'superior' | 'toolbarEl'
   > {
   children?: ReactNode;
   onAdd: (e: UpsertedState<P>) => void;
@@ -78,13 +78,14 @@ export interface FilterToggleProps {
   onSearch: (e: SearchHierarchyParams) => void;
 }
 
-export interface UpsertDialogProps<P> {
+export interface UpsertDialogProps<P>
+  extends Pick<HierarchyListProps<P>, 'isInTutorial'> {
   data?: UpsertedData<P>;
   icon?: IconCode;
   title?: string;
   onClose: () => void;
 
-  onSuccess?: (
+  onSuccess: (
     mode: Extract<MutationMode, 'create' | 'update'>,
     item: HierarchyData<string>
   ) => void;

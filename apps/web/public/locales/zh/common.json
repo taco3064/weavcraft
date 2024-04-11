@@ -27,6 +27,7 @@
   "lbl-theme": "主題樣式",
   "msg-delete-confirm": "確定要刪除{{name}}嗎？",
   "msg-filter-placeholder": "搜尋資料夾或項目...",
+  "msg-hierarchy-create-success": "新增{{name}}完成",
   "msg-no-data": "沒有資料",
   "msg-tutorial-confirm": "是否要查看關於\"{{name}}\"的教學指南？",
   "ttl-delete-confirm": "刪除確認",

@@ -47,6 +47,7 @@ export default function HierarchyList<P>({
     selecteds,
     onDataSelect,
     onParamsChange,
+    onRefetch,
   } = useHierarchyData({
     PreviewComponent,
     category,
@@ -65,7 +66,7 @@ export default function HierarchyList<P>({
   ) : (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
       <HierarchyToolbar
-        {...{ category, disableGroup, isInTutorial, toolbarEl }}
+        {...{ category, disableGroup, isInTutorial, superior, toolbarEl }}
         ref={setFilterEl}
         onAdd={setUpserted}
         onMoveToSuperiorFolder={
@@ -81,8 +82,12 @@ export default function HierarchyList<P>({
 
         <UpsertDialog
           {...upserted}
+          isInTutorial={isInTutorial}
           onClose={() => setUpserted(undefined)}
-          onSuccess={onMutationSuccess}
+          onSuccess={(...e) => {
+            onRefetch();
+            onMutationSuccess?.(...e);
+          }}
         />
       </HierarchyToolbar>
 

@@ -17,6 +17,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
       children,
       disableGroup = false,
       isInTutorial,
+      superior,
       toolbarEl,
       onAdd,
       onMoveToSuperiorFolder,
@@ -69,7 +70,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                   onAdd({
                     title: t('btn-add-group'),
                     icon: 'faFolderPlus',
-                    data: { category, type: 'group' },
+                    data: { category, superior, type: 'group' },
                   })
                 }
               >

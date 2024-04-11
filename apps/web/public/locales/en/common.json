@@ -27,6 +27,7 @@
   "lbl-theme": "Theme Style",
   "msg-delete-confirm": "Are you sure you want to delete {{name}}?",
   "msg-filter-placeholder": "Enter the search keyword...",
+  "msg-hierarchy-create-success": "Successfully created {{name}}.",
   "msg-no-data": "No data available.",
   "msg-tutorial-confirm": "Are you sure you want to start the tutorial of {{name}}?",
   "ttl-delete-confirm": "Confirm Deletion",

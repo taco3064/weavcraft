@@ -9,6 +9,10 @@ import _set from 'lodash/set';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useEffect, useState, type FormEventHandler } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+
+import { createHierarchyData } from '~web/services';
 
 import type {
   MutationMode,
@@ -19,6 +23,7 @@ import type {
 export default function UpsertDialog<P>({
   data,
   icon,
+  isInTutorial,
   title,
   onClose,
   onSuccess,
@@ -26,18 +31,39 @@ export default function UpsertDialog<P>({
   const [hierarchy, setHierarchy] = useState<UpsertedData<P>>();
 
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const categoryLabel = t(`ttl-breadcrumbs.${data?.category}.label`);
+
+  const mutation = {
+    create: useMutation({
+      mutationFn: createHierarchyData,
+      onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+      onSuccess: (data) => {
+        onClose();
+        onSuccess('create', data);
+
+        enqueueSnackbar(
+          t('msg-hierarchy-create-success', { name: data.title }),
+          { variant: 'success' }
+        );
+      },
+    }),
+    update: useMutation({
+      mutationFn: createHierarchyData,
+    }),
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     if (data) {
       const formdata = new FormData(e.currentTarget);
+      const input: UpsertedData<P> = { ...data };
       const mode: MutationMode = data?._id ? 'update' : 'create';
-      const upserted: UpsertedData<P> = { ...data };
+      const mutate = mutation[mode].mutate;
 
-      formdata.forEach((value, key) => _set(upserted, key, value));
-      console.log(mode, upserted);
+      formdata.forEach((value, key) => _set(input, key, value));
+      mutate({ input, isInTutorial } as Parameters<typeof mutate>[0]);
     }
   };
 

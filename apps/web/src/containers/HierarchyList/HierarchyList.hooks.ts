@@ -118,7 +118,11 @@ export function useHierarchyData<P>({
     withPayload: Boolean(PreviewComponent),
   });
 
-  const { data = initialData || [], isLoading } = useQuery({
+  const {
+    data = initialData || [],
+    isLoading,
+    refetch: onRefetch,
+  } = useQuery({
     enabled: Boolean(params.keyword?.trim()),
     queryKey: [params, isInTutorial],
     queryFn: getHierarchyData,
@@ -136,6 +140,8 @@ export function useHierarchyData<P>({
     isLoading: isPending || isLoading,
     params,
     selecteds,
+
+    onRefetch,
 
     onParamsChange: (e: SearchHierarchyParams) =>
       startTransition(() => setParams(e)),

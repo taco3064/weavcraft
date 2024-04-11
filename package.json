@@ -49,6 +49,7 @@
     "koa-bodyparser": "^4.4.1",
     "koa2-swagger-ui": "^5.10.0",
     "lodash": "^4.17.21",
+    "lowdb": "^7.0.1",
     "mongoose": "^8.2.3",
     "next": "14.0.4",
     "next-i18next": "^15.2.0",

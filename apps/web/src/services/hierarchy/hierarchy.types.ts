@@ -19,3 +19,8 @@ export type GetSuperiorHierarchiesParams = Pick<
   QueryFunctionContext<readonly [string, boolean]>,
   'queryKey'
 >;
+
+export type UpsertHierarchyInput<U extends string | undefined = undefined> = {
+  input: HierarchyData<U>;
+  isInTutorial?: boolean;
+};
