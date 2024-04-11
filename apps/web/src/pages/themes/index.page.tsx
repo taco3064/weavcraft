@@ -24,7 +24,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
               return superiors.map(({ _id, title }) => ({
-                href: `/themes/${_id}`,
+                href: `${isInTutorial ? '/tutorials' : ''}/themes/${_id}`,
                 label: title,
               }));
             }
