@@ -86,7 +86,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                 onAdd({
                   title: t('btn-add-item', { category: categoryLabel }),
                   icon: 'faPlus',
-                  data: { category, type: 'item' },
+                  data: { category, superior, type: 'item' },
                 })
               }
             >
