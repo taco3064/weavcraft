@@ -14,16 +14,17 @@ import { MAX_ITEMS } from './Breadcrumbs.const';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
 import { useBreakpointMatches } from '~web/hooks';
+import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
 
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
-  isInTutorial = false,
   stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
 }: BreadcrumbsProps) {
+  const isTutorialMode = useTutorialMode();
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
@@ -41,7 +42,7 @@ export default function Breadcrumbs({
     <>
       <Head>
         <title>{`${t('ttl-weavcraft')}${
-          !isInTutorial ? '' : ` ${t('ttl-breadcrumbs.tutorials.label')}`
+          !isTutorialMode ? '' : ` ${t('ttl-tutorial')}`
         } | ${currentPageTitle}`}</title>
       </Head>
 

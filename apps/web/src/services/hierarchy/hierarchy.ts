@@ -1,20 +1,21 @@
 import axios from 'axios';
 import { withConnRefusedCatch } from '../common';
 
+import type { QueryFunctionParams } from '../common';
+
 import type {
-  GetHierarchyDataParams,
-  GetSuperiorHierarchiesParams,
   HierarchyData,
   MutationtHierarchyInput,
+  SearchHierarchyParams,
   SuperiorHierarchy,
 } from './hierarchy.types';
 
 export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
-  queryKey: [id, isInTutorial],
-}: GetSuperiorHierarchiesParams) {
+  queryKey: [id, isTutorialMode],
+}: QueryFunctionParams<[string]>) {
   const { data } = await axios.get<SuperiorHierarchy[]>(
     `/hierarchy/superiors/${id}`,
-    { baseURL: isInTutorial ? '/mocks' : '/api' }
+    { baseURL: isTutorialMode ? '/mocks' : '/api' }
   );
 
   return data.reverse();
@@ -23,11 +24,13 @@ export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
 
 export const getHierarchyData = withConnRefusedCatch(async function <
   P = never
->({ queryKey: [params, isInTutorial] }: GetHierarchyDataParams) {
+>({
+  queryKey: [params, isTutorialMode],
+}: QueryFunctionParams<[SearchHierarchyParams]>) {
   const { data } = await axios.post<HierarchyData<string, P>[]>(
     '/hierarchy/search',
     params,
-    { baseURL: isInTutorial ? '/mocks' : '/api' }
+    { baseURL: isTutorialMode ? '/mocks' : '/api' }
   );
 
   return data;
@@ -35,11 +38,11 @@ export const getHierarchyData = withConnRefusedCatch(async function <
 []);
 
 export const createHierarchyData = withConnRefusedCatch(
-  async ({ input, isInTutorial }: MutationtHierarchyInput) => {
+  async ({ input, isTutorialMode }: MutationtHierarchyInput) => {
     const { data } = await axios.post<HierarchyData<string>>(
       '/hierarchy/create',
       input,
-      { baseURL: isInTutorial ? '/mocks' : '/api' }
+      { baseURL: isTutorialMode ? '/mocks' : '/api' }
     );
 
     return data;
@@ -47,11 +50,11 @@ export const createHierarchyData = withConnRefusedCatch(
 );
 
 export const updateHierarchyData = withConnRefusedCatch(
-  async ({ input, isInTutorial }: MutationtHierarchyInput) => {
+  async ({ input, isTutorialMode }: MutationtHierarchyInput) => {
     const { data } = await axios.post<HierarchyData<string>>(
       '/hierarchy/update',
       input,
-      { baseURL: isInTutorial ? '/mocks' : '/api' }
+      { baseURL: isTutorialMode ? '/mocks' : '/api' }
     );
 
     return data;
@@ -59,8 +62,8 @@ export const updateHierarchyData = withConnRefusedCatch(
 );
 
 export const deleteHierarchyData = withConnRefusedCatch(
-  ({ input, isInTutorial }: MutationtHierarchyInput) =>
+  ({ input, isTutorialMode }: MutationtHierarchyInput) =>
     axios.delete<void>(`/hierarchy/delete/${input._id}`, {
-      baseURL: isInTutorial ? '/mocks' : '/api',
+      baseURL: isTutorialMode ? '/mocks' : '/api',
     })
 );

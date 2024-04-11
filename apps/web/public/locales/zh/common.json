@@ -36,6 +36,7 @@
   "ttl-filter-result": "查詢結果: {{type}}",
   "ttl-hierarchy-search": "搜尋{{name}}",
   "ttl-navigation-confirm": "即將離開當前頁面",
+  "ttl-tutorial": "教學指南",
   "ttl-user-options": "用戶選項",
   "ttl-user-settings": "用戶設定",
   "ttl-weavcraft": "Weavcraft",
@@ -63,9 +64,6 @@
     "themes": {
       "label": "主題風格",
       "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性"
-    },
-    "tutorials": {
-      "label": "教學指南"
     },
     "websites": {
       "label": "個人網站",

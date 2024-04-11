@@ -36,6 +36,7 @@
   "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
   "ttl-navigation-confirm": "Confirm Navigation",
+  "ttl-tutorial": "Tutorial",
   "ttl-user-options": "User Options",
   "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
@@ -63,9 +64,6 @@
     "themes": {
       "label": "Theme Styles",
       "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
-    },
-    "tutorials": {
-      "label": "Tutorials"
     },
     "websites": {
       "label": "Websites",

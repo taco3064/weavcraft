@@ -14,6 +14,7 @@ import { useTranslation } from 'next-i18next';
 import { ConfirmToggle, Link } from '~web/components';
 import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
+import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
 export default function HierarchyListItem<P>({
@@ -22,7 +23,6 @@ export default function HierarchyListItem<P>({
   data,
   disableDrag = false,
   icon,
-  isInTutorial,
   selected = false,
   onDeleteConfirm,
   onEditClick,
@@ -35,6 +35,7 @@ export default function HierarchyListItem<P>({
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
   const { style, ...toggleProps } = dragProps;
 
+  const isTutorialMode = useTutorialMode();
   const isGroup = data.type === 'group';
 
   const editTitle = isGroup
@@ -52,9 +53,9 @@ export default function HierarchyListItem<P>({
             variant: 'subtitle2',
             color: 'text.primary',
             component: Link,
-            href: `${isInTutorial ? '/tutorials' : ''}/${data.category}/${
+            href: `/${data.category}/${
               isGroup ? data._id : `detail/${data._id}`
-            }`,
+            }${isTutorialMode ? '?tutorial' : ''}`,
           }}
           action={
             !onSelect ? null : (
@@ -139,12 +140,15 @@ export default function HierarchyListItem<P>({
 
             {!onPublishClick || isGroup ? null : (
               <Tooltip title={t('btn-publish')}>
-                <IconButton
-                  color="success"
-                  onClick={() => onPublishClick(data)}
-                >
-                  <Display.Icon code="faShare" />
-                </IconButton>
+                <span>
+                  <IconButton
+                    color="success"
+                    disabled={isTutorialMode}
+                    onClick={() => onPublishClick(data)}
+                  >
+                    <Display.Icon code="faShare" />
+                  </IconButton>
+                </span>
               </Tooltip>
             )}
           </CardActions>
