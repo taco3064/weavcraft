@@ -11,19 +11,21 @@ export function setupTutorialMock<T>(
   initialData: T,
   mockFn: (options: MockSetupOptions<T>) => void
 ) {
-  const db = new Low(new Memory<T>(), initialData);
-
-  mockFn({ db, mock });
+  mockFn({
+    mock,
+    db: new Low(new Memory<T>(), initialData),
+  });
 }
 
 export function setupTestMock<T>(
   initialData: T,
   mockFn: (options: MockSetupOptions<T>) => void
 ) {
-  const db = new Low(new Memory<T>(), initialData);
-
   if (process.env.NODE_ENV === 'test') {
-    mockFn({ db, mock });
+    mockFn({
+      mock,
+      db: new Low(new Memory<T>(), initialData),
+    });
   }
 }
 

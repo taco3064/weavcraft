@@ -64,16 +64,37 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
 
     mock.onPost(`${baseURL}/hierarchy/create`).reply(async (config) => {
       const input = {
-        ...(JSON.parse(config.data) as HierarchyData<string, any>),
+        ...(JSON.parse(config.data) as HierarchyData<undefined>),
         _id: nanoid(),
       };
 
       await db.update((store) => _set(store, input._id, input));
       await db.write();
 
-      console.log('>>>mock', input);
+      return [200, input];
+    });
+
+    mock.onPost(`${baseURL}/hierarchy/update`).reply(async (config) => {
+      const input = JSON.parse(config.data) as HierarchyData<string>;
+
+      await db.update((store) => _set(store, input._id, input));
+      await db.write();
 
       return [200, input];
     });
+
+    mock
+      .onDelete(new RegExp(`^${baseURL}/hierarchy/delete/.+$`))
+      .reply(async (config) => {
+        const id = config.url?.split('/').pop() as string;
+
+        await db.update((store) => {
+          delete store[id];
+        });
+
+        await db.write();
+
+        return [200];
+      });
   })
 );

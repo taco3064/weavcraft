@@ -12,7 +12,7 @@ import { useEffect, useState, type FormEventHandler } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 
-import { createHierarchyData } from '~web/services';
+import { createHierarchyData, updateHierarchyData } from '~web/services';
 
 import type {
   MutationMode,
@@ -42,14 +42,22 @@ export default function UpsertDialog<P>({
         onClose();
         onSuccess('create', data);
 
-        enqueueSnackbar(
-          t('msg-hierarchy-create-success', { name: data.title }),
-          { variant: 'success' }
-        );
+        enqueueSnackbar(t('msg-success-create', { name: data.title }), {
+          variant: 'success',
+        });
       },
     }),
     update: useMutation({
-      mutationFn: createHierarchyData,
+      mutationFn: updateHierarchyData,
+      onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+      onSuccess: (data) => {
+        onClose();
+        onSuccess('update', data);
+
+        enqueueSnackbar(t('msg-success-update', { name: data.title }), {
+          variant: 'success',
+        });
+      },
     }),
   };
 
@@ -58,12 +66,12 @@ export default function UpsertDialog<P>({
 
     if (data) {
       const formdata = new FormData(e.currentTarget);
-      const input: UpsertedData<P> = { ...data };
       const mode: MutationMode = data?._id ? 'update' : 'create';
       const mutate = mutation[mode].mutate;
+      const input = { ...data } as Parameters<typeof mutate>[0]['input'];
 
       formdata.forEach((value, key) => _set(input, key, value));
-      mutate({ input, isInTutorial } as Parameters<typeof mutate>[0]);
+      mutate({ input, isInTutorial });
     }
   };
 

@@ -20,7 +20,8 @@ export type GetSuperiorHierarchiesParams = Pick<
   'queryKey'
 >;
 
-export type UpsertHierarchyInput<U extends string | undefined = undefined> = {
-  input: HierarchyData<U>;
+export type MutationtHierarchyInput = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input: HierarchyData<string | undefined, any>;
   isInTutorial?: boolean;
 };
