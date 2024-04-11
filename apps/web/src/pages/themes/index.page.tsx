@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import { i18n, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -15,15 +16,22 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
     const { t } = useTranslation();
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
+    const { data = superiors } = useQuery({
+      enabled: Boolean(isInTutorial && group),
+      queryKey: [group as string, true],
+      queryFn: getSuperiorHierarchies,
+    });
+
     return (
       <>
         <Breadcrumbs
           currentBreadcrumbLabel={group}
           currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
+          isInTutorial={isInTutorial}
           onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
-              return superiors.map(({ _id, title }) => ({
+              return data.map(({ _id, title }) => ({
                 href: `${isInTutorial ? '/tutorials' : ''}/themes/${_id}`,
                 label: title,
               }));

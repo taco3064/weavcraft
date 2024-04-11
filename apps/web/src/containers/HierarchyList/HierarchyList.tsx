@@ -79,7 +79,7 @@ export default function HierarchyList<P>({
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const renderKey = useMemo(() => nanoid(), [params]);
+  const renderKey = useMemo(() => nanoid(), [isInTutorial, params]);
   const ids = { group: useId(), item: useId() };
   const contextProps = useDndContextProps(ids);
   const isLoading = [variables, query].some(({ isLoading }) => isLoading);
