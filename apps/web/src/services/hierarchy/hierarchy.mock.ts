@@ -1,107 +1,104 @@
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import tc from 'tinycolor2';
-import type { ThemePalette } from '@weavcraft/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import _set from 'lodash/set';
+import { nanoid } from 'nanoid';
 
-import type { HierarchyData, SearchHierarchyParams } from './hierarchy.types';
+import { getThemePalette } from '../configs';
+import { setupTestMock, setupTutorialMock } from '../common';
 
-const mock = new MockAdapter(axios);
+import type {
+  HierarchyData,
+  SearchHierarchyParams,
+  SuperiorHierarchy,
+} from './hierarchy.types';
 
-const baseURLs =
-  process.env.NODE_ENV === 'test' ? ['/mocks', '/api'] : ['/mocks'];
+const setup = {
+  '/api': setupTestMock,
+  '/mocks': setupTutorialMock,
+};
 
-baseURLs.forEach((baseURL) => {
-  mock
-    .onGet(new RegExp(`^${baseURL}/hierarchy/superiors/\\d+$`))
-    .reply((config) => {
-      const id = config.url?.split('/').pop() as string;
+Object.entries(setup).forEach(([baseURL, setupMock]) =>
+  setupMock<Record<string, HierarchyData<string, any>>>({}, ({ db, mock }) => {
+    mock
+      .onGet(new RegExp(`^${baseURL}/hierarchy/superiors/.+$`))
+      .reply(async (config) => {
+        const result: SuperiorHierarchy[] = [];
+        const store = await db.read().then(() => db.data);
+        let data = store[config.url?.split('/').pop() as string];
 
-      return [
-        200,
-        id.split('-').map((_el, i, arr) => ({
-          _id: arr.slice(0, i + 1).join('-'),
-          title: `Group ${arr.slice(0, i + 1).join('-')}`,
-        })),
-      ];
+        while (data) {
+          const { _id, title, superior } = data;
+
+          result.push({ _id, title });
+          data = store[superior as string];
+        }
+
+        return [200, result];
+      });
+
+    mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
+      const store = await db.read().then(() => Object.values(db.data));
+      const result: HierarchyData<string, any>[] = [];
+
+      const { keyword, ...params } = JSON.parse(
+        config.data
+      ) as SearchHierarchyParams;
+
+      for (const data of store) {
+        const { category, superior, title, description } = data;
+
+        if (
+          params.category === category &&
+          ((!keyword && (params.superior || superior) === superior) ||
+            (keyword && `${title} ${description}`.includes(keyword)))
+        ) {
+          result.push({
+            ...data,
+            ...(params.withPayload &&
+              category === 'themes' && {
+                payload: await getThemePalette({
+                  queryKey: [data._id, baseURL === '/mocks'],
+                }),
+              }),
+          });
+        }
+      }
+
+      return [200, result];
     });
 
-  mock.onPost(`${baseURL}/hierarchy/search`).reply((config) => {
-    const {
-      category,
-      superior = '',
-      withPayload = false,
-    } = JSON.parse(config.data) as SearchHierarchyParams;
+    mock.onPost(`${baseURL}/hierarchy/create`).reply(async (config) => {
+      const input = {
+        ...(JSON.parse(config.data) as HierarchyData<undefined>),
+        _id: nanoid(),
+      };
 
-    const prefix = superior ? `${superior}-` : '';
-    const types = ['group', 'item'] as const;
+      await db.update((store) => _set(store, input._id, input));
+      await db.write();
 
-    const data: HierarchyData<string, any>[] = types
-      .map<HierarchyData<string, any>[]>((type) => {
-        const isGroup = type === 'group';
+      return [200, input];
+    });
 
-        const length = Math[isGroup ? 'floor' : 'ceil'](Math.random() * 3);
+    mock.onPost(`${baseURL}/hierarchy/update`).reply(async (config) => {
+      const input = JSON.parse(config.data) as HierarchyData<string>;
 
-        return Array.from({ length }).map<HierarchyData<string, any>>(
-          (_el, i) => {
-            const id = `${prefix}${isGroup ? '' : 'i'}${i + 1}`;
-            const name = isGroup ? 'Group' : category;
+      await db.update((store) => _set(store, input._id, input));
+      await db.write();
 
-            return {
-              _id: id,
-              category,
-              title: `${name} ${id}`,
-              type,
-              description: `Description for ${name} ${id}.\nThis is a long description that should be truncated.`,
-              ...(!isGroup &&
-                category === 'themes' &&
-                withPayload && {
-                  payload: { ...getThemePalette(), id },
-                }),
-            };
-          }
-        );
-      })
-      .flat();
+      return [200, input];
+    });
 
-    return [200, data];
-  });
-});
+    mock
+      .onDelete(new RegExp(`^${baseURL}/hierarchy/delete/.+$`))
+      .reply(async (config) => {
+        const id = config.url?.split('/').pop() as string;
 
-function getThemePalette(): Omit<ThemePalette, 'id'> {
-  const bg = tc.random();
+        await db.update((store) => {
+          delete store[id];
+        });
 
-  const colors = {
-    primary: tc.random(),
-    secondary: tc.random(),
-    info: tc.random(),
-    success: tc.random(),
-    warning: tc.random(),
-    error: tc.random(),
-  };
+        await db.write();
 
-  return {
-    divider: bg.clone().greyscale().toHexString(),
-    mode: bg.isDark() ? 'dark' : 'light',
-    background: {
-      default: bg.toHexString(),
-      paper: bg.clone().lighten(5).toHexString(),
-    },
-    text: {
-      primary: bg.clone().spin(180).toHexString(),
-      secondary: bg.clone().spin(120).toHexString(),
-      disabled: bg.clone().spin(60).toHexString(),
-    },
-    ...(Object.fromEntries(
-      Object.entries(colors).map(([name, color]) => [
-        name,
-        {
-          main: color.toHexString(),
-          contrastText: color.spin(180).toHexString(),
-        },
-      ])
-    ) as Pick<
-      ThemePalette,
-      'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'
-    >),
-  };
-}
+        return [200];
+      });
+  })
+);

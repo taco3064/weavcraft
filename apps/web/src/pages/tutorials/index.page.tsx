@@ -10,7 +10,10 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
 
   return (
     <>
-      <Breadcrumbs currentPageTitle={t('ttl-breadcrumbs.tutorials.label')} />
+      <Breadcrumbs
+        isInTutorial
+        currentPageTitle={t('ttl-breadcrumbs.tutorials.label')}
+      />
       Tutorial List
     </>
   );

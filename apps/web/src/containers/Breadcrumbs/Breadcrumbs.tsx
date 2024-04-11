@@ -19,6 +19,7 @@ import type { BreadcrumbsProps } from './Breadcrumbs.types';
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
+  isInTutorial = false,
   stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
@@ -39,7 +40,9 @@ export default function Breadcrumbs({
   return (
     <>
       <Head>
-        <title>{`${t('ttl-weavcraft')} | ${currentPageTitle}`}</title>
+        <title>{`${t('ttl-weavcraft')}${
+          !isInTutorial ? '' : ` ${t('ttl-breadcrumbs.tutorials.label')}`
+        } | ${currentPageTitle}`}</title>
       </Head>
 
       <MenuDialog

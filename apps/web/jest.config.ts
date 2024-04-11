@@ -5,6 +5,7 @@ export default {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  transformIgnorePatterns: ['/node_modules/(?!lowdb)'],
   moduleNameMapper: {
     '^~web/assets/(.*)': '<rootDir>/src/assets/$1',
   },

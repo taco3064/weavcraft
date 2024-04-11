@@ -1,8 +1,6 @@
 import * as Dnd from '@dnd-kit/core';
-import { useEffect, useId, useMemo, useState, useTransition } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 
-import { getHierarchyData } from '~web/services';
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { HierarchyListProps } from './HierarchyList.types';
 
@@ -99,18 +97,12 @@ export function useDraggable<P>(
   };
 }
 
-export function useHierarchyData<P>({
+export function useQueryVariables<P>({
   PreviewComponent,
   category,
   superior,
-  initialData,
-  isInTutorial = false,
-}: Pick<
-  HierarchyListProps<P>,
-  'PreviewComponent' | 'category' | 'superior' | 'initialData' | 'isInTutorial'
->) {
+}: Pick<HierarchyListProps<P>, 'PreviewComponent' | 'category' | 'superior'>) {
   const [isPending, startTransition] = useTransition();
-  const [selecteds, setSelecteds] = useState<string[]>([]);
 
   const [params, setParams] = useState<SearchHierarchyParams>({
     category,
@@ -118,35 +110,29 @@ export function useHierarchyData<P>({
     withPayload: Boolean(PreviewComponent),
   });
 
-  const { data = initialData || [], isLoading } = useQuery({
-    enabled: Boolean(params.keyword?.trim()),
-    queryKey: [params, isInTutorial],
-    queryFn: getHierarchyData,
-  });
-
-  useEffect(() => {
-    setSelecteds([]);
-  }, [data]);
-
   useEffect(() => {
     setParams({ category, superior, withPayload: Boolean(PreviewComponent) });
   }, [PreviewComponent, category, superior]);
 
   return {
-    isLoading: isPending || isLoading,
+    isFiltering: Boolean(params.keyword?.trim()),
+    isLoading: isPending,
     params,
-    selecteds,
 
     onParamsChange: (e: SearchHierarchyParams) =>
       startTransition(() => setParams(e)),
+  };
+}
 
-    onDataSelect: (isSelected: boolean, data: HierarchyData<string, P>) => {
-      const set = new Set(selecteds);
+export function useDataStore<P>(data: HierarchyData<string, P>[]) {
+  const [selecteds, setSelecteds] = useState<string[]>([]);
 
-      set.delete(data._id);
-      isSelected && set.add(data._id);
-      setSelecteds(Array.from(set));
-    },
+  useEffect(() => {
+    setSelecteds([]);
+  }, [data]);
+
+  return {
+    selecteds,
 
     ...useMemo(
       () =>
@@ -161,5 +147,13 @@ export function useHierarchyData<P>({
         ),
       [data]
     ),
+
+    onDataSelect: (isSelected: boolean, data: HierarchyData<string, P>) => {
+      const set = new Set(selecteds);
+
+      set.delete(data._id);
+      isSelected && set.add(data._id);
+      setSelecteds(Array.from(set));
+    },
   };
 }

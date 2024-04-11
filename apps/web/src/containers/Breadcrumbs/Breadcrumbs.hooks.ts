@@ -8,7 +8,10 @@ export function useBreadcrumbs({
   currentPageTitle,
   currentBreadcrumbLabel = currentPageTitle,
   onCatchAllRoutesTransform,
-}: BreadcrumbsProps) {
+}: Pick<
+  BreadcrumbsProps,
+  'currentPageTitle' | 'currentBreadcrumbLabel' | 'onCatchAllRoutesTransform'
+>) {
   const { t } = useTranslation();
   const { pathname, query } = useRouter();
 

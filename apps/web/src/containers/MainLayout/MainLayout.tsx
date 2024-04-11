@@ -25,12 +25,14 @@ import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS, NAV_ITEMS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
+import { useAuth } from '~web/hooks';
 import { useLayoutStyles } from './MainLayout.styles';
 import type { MainLayoutProps } from './MainLayout.types';
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
+  const { isAuthenticated } = useAuth();
   const { classes } = useLayoutStyles({ open });
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
 
@@ -107,37 +109,44 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </>
               }
             >
-              {NAV_ITEMS.map(({ icon, id, href }) => (
-                <ListItemButton
-                  LinkComponent={NextLink}
-                  key={id}
-                  href={href}
-                  selected={pathname === href}
-                >
-                  <ListItemAvatar className={classes.avatar}>
-                    <Avatar>
-                      <Display.Icon fontSize="large" code={icon} />
-                    </Avatar>
-                  </ListItemAvatar>
+              {NAV_ITEMS.map(({ icon, id, href, auth = false }) => {
+                const url =
+                  isAuthenticated && auth ? href : `/tutorials${href}`;
 
-                  <ListItemText
-                    primary={<Trans i18nKey={`ttl-breadcrumbs.${id}.label`} />}
-                    secondary={
-                      <Trans i18nKey={`ttl-breadcrumbs.${id}.description`} />
-                    }
-                    primaryTypographyProps={{
-                      variant: 'subtitle1',
-                      color: 'secondary',
-                      fontWeight: 'bolder',
-                    }}
-                    secondaryTypographyProps={{
-                      variant: 'caption',
-                      color: 'text.secondary',
-                      className: classes.description,
-                    }}
-                  />
-                </ListItemButton>
-              ))}
+                return (
+                  <ListItemButton
+                    LinkComponent={NextLink}
+                    key={id}
+                    href={url}
+                    selected={pathname === url}
+                  >
+                    <ListItemAvatar className={classes.avatar}>
+                      <Avatar>
+                        <Display.Icon fontSize="large" code={icon} />
+                      </Avatar>
+                    </ListItemAvatar>
+
+                    <ListItemText
+                      primary={
+                        <Trans i18nKey={`ttl-breadcrumbs.${id}.label`} />
+                      }
+                      secondary={
+                        <Trans i18nKey={`ttl-breadcrumbs.${id}.description`} />
+                      }
+                      primaryTypographyProps={{
+                        variant: 'subtitle1',
+                        color: 'secondary',
+                        fontWeight: 'bolder',
+                      }}
+                      secondaryTypographyProps={{
+                        variant: 'caption',
+                        color: 'text.secondary',
+                        className: classes.description,
+                      }}
+                    />
+                  </ListItemButton>
+                );
+              })}
             </List>
           </ClickAwayListener>
         )}

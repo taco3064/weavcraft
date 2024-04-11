@@ -8,6 +8,7 @@ export interface Breadcrumb {
 export interface BreadcrumbsProps {
   currentBreadcrumbLabel?: string;
   currentPageTitle: string;
+  isInTutorial?: boolean;
   stickyTop?: number;
   onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
 

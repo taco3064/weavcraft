@@ -19,3 +19,9 @@ export type GetSuperiorHierarchiesParams = Pick<
   QueryFunctionContext<readonly [string, boolean]>,
   'queryKey'
 >;
+
+export type MutationtHierarchyInput = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input: HierarchyData<string | undefined, any>;
+  isInTutorial?: boolean;
+};

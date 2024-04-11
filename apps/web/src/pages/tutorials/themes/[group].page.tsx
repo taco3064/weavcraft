@@ -7,5 +7,5 @@ import {
 
 export default ThemeGroupsPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) =>
+export const getServerSideProps: GetServerSideProps = (context) =>
   getThemeGroupsServerSideProps(context, true);

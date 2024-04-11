@@ -1,5 +1,7 @@
+import cookie from 'cookie';
 import { i18n, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -14,16 +16,23 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
     const { t } = useTranslation();
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
+    const { data = superiors } = useQuery({
+      enabled: Boolean(isInTutorial && group),
+      queryKey: [group as string, true],
+      queryFn: getSuperiorHierarchies,
+    });
+
     return (
       <>
         <Breadcrumbs
           currentBreadcrumbLabel={group}
           currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
+          isInTutorial={isInTutorial}
           onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
-              return superiors.map(({ _id, title }) => ({
-                href: `/themes/${_id}`,
+              return data.map(({ _id, title }) => ({
+                href: `${isInTutorial ? '/tutorials' : ''}/themes/${_id}`,
                 label: title,
               }));
             }
@@ -47,36 +56,40 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
 );
 
 export const getServerSideProps = async (
-  { locale, query }: GetServerSidePropsContext,
+  { locale, query, req }: GetServerSidePropsContext,
   isInTutorial = false
 ) => {
   const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
+  const cookies = cookie.parse(req.headers.cookie || '');
   const group = typeof query.group === 'string' ? query.group : undefined;
 
   if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();
   }
 
-  return {
-    props: {
-      isInTutorial,
-
-      initialData: await getHierarchyData({
-        queryKey: [
-          { category: 'themes', superior: group, withPayload: true },
+  return !isInTutorial && !cookies['token']
+    ? //* Redirect to home page if not authenticated and not in tutorial mode
+      { redirect: { destination: '/', permanent: false } }
+    : {
+        props: {
           isInTutorial,
-        ],
-      }),
 
-      superiors: !group
-        ? []
-        : await getSuperiorHierarchies({ queryKey: [group, isInTutorial] }),
+          initialData: await getHierarchyData({
+            queryKey: [
+              { category: 'themes', superior: group, withPayload: true },
+              isInTutorial,
+            ],
+          }),
 
-      ...(group && { group }),
-      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
-        'common',
-        'themes',
-      ])),
-    },
-  };
+          superiors: !group
+            ? []
+            : await getSuperiorHierarchies({ queryKey: [group, isInTutorial] }),
+
+          ...(group && { group }),
+          ...(await serverSideTranslations(
+            locale || NEXT_PUBLIC_DEFAULT_LANGUAGE,
+            ['common', 'themes']
+          )),
+        },
+      };
 };

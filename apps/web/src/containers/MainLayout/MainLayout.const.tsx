@@ -27,21 +27,25 @@ export const NAV_ITEMS: NavItem[] = [
     icon: 'faPalette',
     id: 'themes',
     href: '/themes',
+    auth: true,
   },
   {
     icon: 'faPuzzlePiece',
     id: 'widgets',
     href: '/widgets',
+    auth: true,
   },
   {
     icon: 'faNewspaper',
     id: 'pages',
     href: '/pages',
+    auth: true,
   },
   {
     icon: 'faGlobe',
     id: 'websites',
     href: '/websites',
+    auth: true,
   },
 ];
 
