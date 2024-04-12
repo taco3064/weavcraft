@@ -22,12 +22,19 @@ const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
 
 //* Custom Hooks
 export const AppSettingsContext = createContext<AppSettingsContextValue>({
+  isTutorialMode: false,
   language: NEXT_PUBLIC_DEFAULT_LANGUAGE,
   languages: [NEXT_PUBLIC_DEFAULT_LANGUAGE],
   palette: 'WEAVCRAFT',
   palettes: Object.keys(PALETTES) as PaletteCode[],
   setterRef: createRef<SetterFns>(),
 });
+
+export function useTutorialMode() {
+  const { isTutorialMode } = useContext(AppSettingsContext);
+
+  return isTutorialMode;
+}
 
 export function useAppSettings() {
   const { language, languages, palette, palettes, setterRef } =

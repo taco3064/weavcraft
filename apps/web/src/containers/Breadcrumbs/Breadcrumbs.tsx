@@ -14,12 +14,12 @@ import { MAX_ITEMS } from './Breadcrumbs.const';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
 import { useBreakpointMatches } from '~web/hooks';
+import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
 
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
-  isInTutorial = false,
   stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
@@ -31,9 +31,13 @@ export default function Breadcrumbs({
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
   const { classes } = useBreadcrumbsStyles({ stickyTop });
 
+  const isTutorialMode = useTutorialMode();
+  const tutorialTitle = t('ttl-breadcrumbs.tutorial.label');
+
   const breadcrumbs = useBreadcrumbs({
     currentBreadcrumbLabel,
     currentPageTitle,
+    isTutorialMode,
     onCatchAllRoutesTransform,
   });
 
@@ -41,20 +45,16 @@ export default function Breadcrumbs({
     <>
       <Head>
         <title>{`${t('ttl-weavcraft')}${
-          !isInTutorial ? '' : ` ${t('ttl-breadcrumbs.tutorials.label')}`
+          !isTutorialMode || tutorialTitle === currentPageTitle
+            ? ''
+            : ` ${t('ttl-breadcrumbs.tutorial.label')}`
         } | ${currentPageTitle}`}</title>
       </Head>
 
       <MenuDialog
         open={open}
         onClose={() => setOpen(false)}
-        items={breadcrumbs
-          .slice(0, breadcrumbs.length - 1)
-          .reverse()
-          .map(({ label, href }) => ({
-            label,
-            href,
-          }))}
+        items={breadcrumbs.slice(0, breadcrumbs.length - 1).reverse()}
       />
 
       <AppBar position="sticky" elevation={0} className={classes.root}>

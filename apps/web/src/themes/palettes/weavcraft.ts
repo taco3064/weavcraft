@@ -42,7 +42,7 @@ export const WEAVCRAFT: PaletteOptions = {
     light: '#FF8589',
     main: '#FF595E',
     dark: '#FF333A',
-    contrastText: '#290001',
+    contrastText: '#FFEBEB',
   },
   text: {
     primary: '#F0F6F9',

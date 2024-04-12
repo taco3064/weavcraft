@@ -109,16 +109,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </>
               }
             >
-              {NAV_ITEMS.map(({ icon, id, href, auth = false }) => {
-                const url =
-                  isAuthenticated && auth ? href : `/tutorials${href}`;
-
-                return (
+              {NAV_ITEMS.map(({ icon, id, href, auth = false }) =>
+                auth && !isAuthenticated ? null : (
                   <ListItemButton
                     LinkComponent={NextLink}
                     key={id}
-                    href={url}
-                    selected={pathname === url}
+                    href={href}
+                    selected={pathname.startsWith(href)}
                   >
                     <ListItemAvatar className={classes.avatar}>
                       <Avatar>
@@ -145,8 +142,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                       }}
                     />
                   </ListItemButton>
-                );
-              })}
+                )
+              )}
             </List>
           </ClickAwayListener>
         )}

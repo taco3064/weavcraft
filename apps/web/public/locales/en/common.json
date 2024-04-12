@@ -64,8 +64,9 @@
       "label": "Theme Styles",
       "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
     },
-    "tutorials": {
-      "label": "Tutorials"
+    "tutorial": {
+      "label": "Tutorials",
+      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
     },
     "websites": {
       "label": "Websites",

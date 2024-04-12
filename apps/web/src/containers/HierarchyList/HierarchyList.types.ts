@@ -32,7 +32,6 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   disablePublish?: boolean;
   icon: IconCode;
   initialData?: HierarchyData<string, P>[];
-  isInTutorial: boolean;
   superior?: string;
   toolbarEl?: PortalContainerEl;
 
@@ -47,10 +46,7 @@ export interface HierarchyListSkeletonProps extends MuiContainerProps {
 }
 
 export interface HierarchyListItemProps<P>
-  extends Pick<
-    HierarchyListProps<P>,
-    'PreviewComponent' | 'icon' | 'isInTutorial'
-  > {
+  extends Pick<HierarchyListProps<P>, 'PreviewComponent' | 'icon'> {
   cols: number;
   data: HierarchyData<string, P>;
   disableDrag?: boolean;
@@ -64,7 +60,7 @@ export interface HierarchyListItemProps<P>
 export interface HierarchyToolbarProps<P = any>
   extends Pick<
     HierarchyListProps<P>,
-    'category' | 'disableGroup' | 'isInTutorial' | 'superior' | 'toolbarEl'
+    'category' | 'disableGroup' | 'superior' | 'toolbarEl'
   > {
   children?: ReactNode;
   onAdd: (e: UpsertedState<P>) => void;
@@ -78,8 +74,7 @@ export interface FilterToggleProps {
   onSearch: (e: SearchHierarchyParams) => void;
 }
 
-export interface UpsertDialogProps<P>
-  extends Pick<HierarchyListProps<P>, 'isInTutorial'> {
+export interface UpsertDialogProps<P> {
   data?: UpsertedData<P>;
   icon?: IconCode;
   title?: string;

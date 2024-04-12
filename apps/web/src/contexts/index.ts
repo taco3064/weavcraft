@@ -1,2 +1,2 @@
-export * from './Notistack';
 export * from './AppProviderManager';
+export * from './Notistack';

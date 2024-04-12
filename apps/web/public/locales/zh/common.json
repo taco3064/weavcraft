@@ -64,8 +64,9 @@
       "label": "主題風格",
       "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性"
     },
-    "tutorials": {
-      "label": "教學指南"
+    "tutorial": {
+      "label": "教學指南",
+      "description": "查看有關 Weavcraft 的教學指南，了解如何使用各種功能和工具"
     },
     "websites": {
       "label": "個人網站",

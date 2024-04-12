@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 
 import { ConfirmToggle, Link, PortalToolbar } from '~web/components';
 import { useToolbarStyles } from './HierarchyList.styles';
+import { useTutorialMode } from '~web/contexts';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
 
 export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
@@ -16,7 +17,6 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
       category,
       children,
       disableGroup = false,
-      isInTutorial,
       superior,
       toolbarEl,
       onAdd,
@@ -29,23 +29,24 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
     const { classes } = useToolbarStyles();
 
     const categoryLabel = t(`ttl-breadcrumbs.${category}.label`);
+    const isTutorialMode = useTutorialMode();
 
     return (
       <>
         <PortalToolbar variant="dense" containerEl={toolbarEl}>
-          {!isInTutorial && (
+          {!isTutorialMode && (
             <ConfirmToggle
               severity="info"
               subject={t('ttl-navigation-confirm')}
               message={t('msg-tutorial-confirm', {
                 name: t(`ttl-breadcrumbs.${category}.label`),
               })}
-              onConfirm={() => push(`/tutorials/${category}`)}
+              onConfirm={() => push(`/tutorial/${category}`)}
               toggle={
                 <Tooltip title={t('btn-tutorial')}>
                   <IconButton
                     LinkComponent={Link}
-                    href={`/tutorials/${category}`}
+                    href={`/tutorial/${category}`}
                   >
                     <Display.Icon code="faCircleInfo" />
                   </IconButton>

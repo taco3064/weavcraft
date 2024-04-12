@@ -1,14 +1,18 @@
 import Head from 'next/head';
 import { appWithTranslation, i18n, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
 
 import { AppProviderManager } from '~web/contexts';
 import type { AppProps } from '~web/contexts';
 
 function App({ Component, pageProps }: AppProps) {
-  const getLayout = Component.getLayout || ((page) => page);
+  const { asPath } = useRouter();
   const { t } = useTranslation();
+
+  const getLayout = Component.getLayout || ((page) => page);
+  const isTutorialMode = asPath.startsWith('/tutorial');
 
   return (
     <>
@@ -17,7 +21,7 @@ function App({ Component, pageProps }: AppProps) {
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager>
+      <AppProviderManager isTutorialMode={isTutorialMode}>
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
     </>
