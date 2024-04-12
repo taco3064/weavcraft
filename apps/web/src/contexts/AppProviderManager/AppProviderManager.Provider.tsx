@@ -60,8 +60,6 @@ export default function AppProviderManager({
     [asPath, i18n, pathname, query, replace, setPalette]
   );
 
-  console.log(isTutorialMode);
-
   return (
     <QueryClientProvider client={client}>
       <CacheProvider value={cache}>
