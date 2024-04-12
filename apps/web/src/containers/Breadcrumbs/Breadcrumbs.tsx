@@ -24,13 +24,15 @@ export default function Breadcrumbs({
   onCatchAllRoutesTransform,
   onToolbarMount,
 }: BreadcrumbsProps) {
-  const isTutorialMode = useTutorialMode();
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
   const { back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
   const { classes } = useBreadcrumbsStyles({ stickyTop });
+
+  const isTutorialMode = useTutorialMode();
+  const tutorialTitle = t('ttl-breadcrumbs.tutorial.label');
 
   const breadcrumbs = useBreadcrumbs({
     currentBreadcrumbLabel,
@@ -43,7 +45,9 @@ export default function Breadcrumbs({
     <>
       <Head>
         <title>{`${t('ttl-weavcraft')}${
-          !isTutorialMode ? '' : ` ${t('ttl-breadcrumbs.tutorial.label')}`
+          !isTutorialMode || tutorialTitle === currentPageTitle
+            ? ''
+            : ` ${t('ttl-breadcrumbs.tutorial.label')}`
         } | ${currentPageTitle}`}</title>
       </Head>
 

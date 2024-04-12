@@ -41,7 +41,7 @@ export function useBreadcrumbs({
 
         return result;
       },
-      !isTutorialMode
+      !isTutorialMode || pathname === '/tutorial'
         ? []
         : [{ href: '/tutorial', label: t('ttl-breadcrumbs.tutorial.label') }]
     );
