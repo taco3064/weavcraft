@@ -23,6 +23,7 @@ const client = new QueryClient();
 //* Provider Component
 export default function AppProviderManager({
   children,
+  isTutorialMode,
 }: AppProviderManagerProps) {
   const setterRef = useRef<SetterFns>();
 
@@ -32,13 +33,14 @@ export default function AppProviderManager({
 
   const context = useMemo<AppSettingsContextValue>(
     () => ({
+      isTutorialMode,
       language: locale as LanguageCode,
       languages: locales as LanguageCode[],
       palette,
       palettes: Object.keys(PALETTES) as PaletteCode[],
       setterRef,
     }),
-    [locale, locales, palette]
+    [isTutorialMode, locale, locales, palette]
   );
 
   //* Sync Setter Functions
@@ -57,6 +59,8 @@ export default function AppProviderManager({
     }),
     [asPath, i18n, pathname, query, replace, setPalette]
   );
+
+  console.log(isTutorialMode);
 
   return (
     <QueryClientProvider client={client}>

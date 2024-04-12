@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 
 import { createHierarchyData, updateHierarchyData } from '~web/services';
+import { useTutorialMode } from '~web/contexts';
 
 import type {
   MutationMode,
@@ -23,7 +24,6 @@ import type {
 export default function UpsertDialog<P>({
   data,
   icon,
-  isInTutorial,
   title,
   onClose,
   onSuccess,
@@ -32,6 +32,8 @@ export default function UpsertDialog<P>({
 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+
+  const isTutorialMode = useTutorialMode();
   const categoryLabel = t(`ttl-breadcrumbs.${data?.category}.label`);
 
   const mutation = {
@@ -71,7 +73,7 @@ export default function UpsertDialog<P>({
       const input = { ...data } as Parameters<typeof mutate>[0]['input'];
 
       formdata.forEach((value, key) => _set(input, key, value));
-      mutate({ input, isInTutorial });
+      mutate({ input, isTutorialMode });
     }
   };
 

@@ -23,6 +23,7 @@ export type SetterFns = {
 
 //* HOCs & Custom Hooks
 export interface AppSettingsContextValue {
+  readonly isTutorialMode: boolean;
   readonly language: LanguageCode;
   readonly palette: string;
   readonly languages: LanguageCode[];
@@ -41,6 +42,7 @@ export type MakePerPageLayout = <P = {}>(
 //* Component Props
 export interface AppProviderManagerProps {
   children: ReactNode;
+  isTutorialMode: boolean;
 }
 
 export type AppProps = NextAppProps & {

@@ -19,6 +19,11 @@ export const DEFAULT_PROPS: DefaultProps = {
 
 export const NAV_ITEMS: NavItem[] = [
   {
+    icon: 'faBookOpen',
+    id: 'tutorial',
+    href: '/tutorial',
+  },
+  {
     icon: 'faLightbulb',
     id: 'gallery',
     href: '/gallery',

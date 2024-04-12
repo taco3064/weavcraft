@@ -18,6 +18,7 @@ import UpsertDialog from './HierarchyList.UpsertDialog';
 import { deleteHierarchyData, getHierarchyData } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
+import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 import type { PortalContainerEl } from '~web/components';
 
@@ -35,12 +36,13 @@ export default function HierarchyList<P>({
   disablePublish = false,
   icon,
   initialData,
-  isInTutorial,
   maxWidth = false,
   superior,
   toolbarEl,
   onMutationSuccess,
 }: HierarchyListProps<P>) {
+  const isTutorialMode = useTutorialMode();
+
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
   const [upserted, setUpserted] = useState<UpsertedState<P>>();
 
@@ -62,7 +64,7 @@ export default function HierarchyList<P>({
     ...query
   } = useQuery({
     enabled: Boolean(params.keyword?.trim()),
-    queryKey: [params, isInTutorial],
+    queryKey: [params, isTutorialMode],
     queryFn: getHierarchyData,
   });
 
@@ -79,7 +81,7 @@ export default function HierarchyList<P>({
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const renderKey = useMemo(() => nanoid(), [isInTutorial, params]);
+  const renderKey = useMemo(() => nanoid(), [isTutorialMode, params]);
   const ids = { group: useId(), item: useId() };
   const contextProps = useDndContextProps(ids);
   const isLoading = [variables, query].some(({ isLoading }) => isLoading);
@@ -90,7 +92,7 @@ export default function HierarchyList<P>({
   ) : (
     <Container {...{ disableGutters, maxWidth }} className={classes.root}>
       <HierarchyToolbar
-        {...{ category, disableGroup, isInTutorial, superior, toolbarEl }}
+        {...{ category, disableGroup, isTutorialMode, superior, toolbarEl }}
         ref={setFilterEl}
         onAdd={setUpserted}
         onMoveToSuperiorFolder={
@@ -106,7 +108,6 @@ export default function HierarchyList<P>({
 
         <UpsertDialog
           {...upserted}
-          isInTutorial={isInTutorial}
           onClose={() => setUpserted(undefined)}
           onSuccess={(...e) => {
             onRefetch();
@@ -155,13 +156,13 @@ export default function HierarchyList<P>({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ PreviewComponent, cols, icon, isInTutorial }}
+                        {...{ PreviewComponent, cols, icon, isTutorialMode }}
                         key={item._id}
                         data={item}
                         disableDrag={group.length < 1}
                         selected={selecteds.includes(item._id)}
                         onDeleteConfirm={(input) =>
-                          onDelete({ input, isInTutorial })
+                          onDelete({ input, isTutorialMode })
                         }
                         onEditClick={setUpserted}
                         onSelect={!superior ? undefined : onDataSelect}
