@@ -64,6 +64,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         id: 'setSHAs'
         uses: nrwl/nx-set-shas@v3

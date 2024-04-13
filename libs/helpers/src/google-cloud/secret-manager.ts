@@ -3,7 +3,9 @@ import { WinstonHelper } from '../logger';
 
 const log = new WinstonHelper('helper', { context: 'SecretEnv' });
 
-export async function getSecretEnvironments(...names: readonly string[]) {
+export async function getSecretEnvironments<T extends readonly string[]>(
+  ...names: T
+) {
   const client = new SecretManagerServiceClient();
 
   try {
@@ -16,11 +18,10 @@ export async function getSecretEnvironments(...names: readonly string[]) {
         return [name, payload?.data?.toString()];
       })
     );
-    const result: Record<(typeof names)[number], string> =
-      Object.fromEntries(envs);
+    const result: Record<T[number], string> = Object.fromEntries(envs);
     return result;
   } catch (error) {
     log.logger.error(error);
-    return undefined;
+    return {};
   }
 }

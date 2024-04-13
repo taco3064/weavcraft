@@ -1,10 +1,10 @@
 import Head from 'next/head';
-import { appWithTranslation, i18n, useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
 
 import { AppProviderManager } from '~web/contexts';
+import { getServerSideTranslations } from './pages.utils';
 import type { AppProps } from '~web/contexts';
 
 function App({ Component, pageProps }: AppProps) {
@@ -30,18 +30,8 @@ function App({ Component, pageProps }: AppProps) {
 
 export default appWithTranslation(App);
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
-
-  if (process.env.NODE_ENV === 'development') {
-    await i18n?.reloadResources();
-  }
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
-        'common',
-      ])),
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps = async (ctx) => ({
+  props: {
+    ...(await getServerSideTranslations(ctx)),
+  },
+});

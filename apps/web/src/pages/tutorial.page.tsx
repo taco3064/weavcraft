@@ -1,8 +1,8 @@
-import { i18n, useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
+import { getServerSideTranslations } from './pages.utils';
 import { makePerPageLayout } from '~web/contexts';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
@@ -16,19 +16,8 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   );
 });
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
-
-  if (process.env.NODE_ENV === 'development') {
-    await i18n?.reloadResources();
-  }
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
-        'common',
-        'themes',
-      ])),
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps = async (ctx) => ({
+  props: {
+    ...(await getServerSideTranslations(ctx)),
+  },
+});

@@ -1,6 +1,4 @@
-import cookie from 'cookie';
-import { i18n, useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
@@ -8,16 +6,17 @@ import type { GetServerSideProps } from 'next';
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
 import { PaletteDisplay, type PortalContainerEl } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
+import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import type { ThemesPageProps } from './themes.types';
 
 export default makePerPageLayout<ThemesPageProps>(MainLayout)(
-  function ThemeGroupsPage({ group, initialData, superiors }) {
+  function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
     const { t } = useTranslation();
     const isTutorialMode = useTutorialMode();
 
-    const { data = superiors } = useQuery({
+    const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
       queryKey: [group as string, true],
       queryFn: getSuperiorHierarchies,
@@ -31,7 +30,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
-              return data.map(({ _id, title }) => ({
+              return superiors.map(({ _id, title }) => ({
                 href: `${isTutorialMode ? '/tutorial' : ''}/themes/${_id}`,
                 label: title,
               }));
@@ -55,33 +54,39 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
   }
 );
 
-export const getServerSideProps: GetServerSideProps<ThemesPageProps> = async ({
-  locale,
-  query,
-  req,
-}) => {
-  const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
-  const group = typeof query.group === 'string' ? query.group : undefined;
+export const getServerSideProps: GetServerSideProps<ThemesPageProps> = async (
+  ctx
+) => {
+  const group =
+    typeof ctx.query.group === 'string' ? ctx.query.group : undefined;
+  const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
 
-  if (process.env.NODE_ENV === 'development') {
-    await i18n?.reloadResources();
+  const initialSuperiors =
+    !group || isTutorialMode
+      ? []
+      : await getSuperiorHierarchies({ queryKey: [group] });
+
+  if (await isUserEnvStatus(ctx, 'unauth', 'nontutorial')) {
+    //* Redirect to home page if not authenticated and not in tutorial mode
+    return { redirect: { destination: '/', permanent: false } };
+  } else if (!isTutorialMode && group && !initialSuperiors.length) {
+    //* Redirect to 404 page if group does not exist
+    return { notFound: true };
   }
 
   return {
     props: {
-      initialData: await getHierarchyData({
-        queryKey: [{ category: 'themes', superior: group, withPayload: true }],
-      }),
-
-      superiors: !group
-        ? []
-        : await getSuperiorHierarchies({ queryKey: [group] }),
-
+      initialSuperiors,
       ...(group && { group }),
-      ...(await serverSideTranslations(locale || NEXT_PUBLIC_DEFAULT_LANGUAGE, [
-        'common',
-        'themes',
-      ])),
+      ...(await getServerSideTranslations(ctx, ['themes'])),
+
+      initialData: isTutorialMode
+        ? []
+        : await getHierarchyData({
+            queryKey: [
+              { category: 'themes', superior: group, withPayload: true },
+            ],
+          }),
     },
   };
 };

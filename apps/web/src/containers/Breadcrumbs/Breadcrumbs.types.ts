@@ -8,6 +8,7 @@ export interface Breadcrumb {
 export interface BreadcrumbsProps {
   currentBreadcrumbLabel?: string;
   currentPageTitle: string;
+  customBreadcrumbs?: Record<`/${string}`, 'nonLinkable' | 'hidden'>;
   stickyTop?: number;
   onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
 
@@ -20,7 +21,10 @@ export interface BreadcrumbsProps {
 export interface BreadcrumbsHookParams
   extends Pick<
     BreadcrumbsProps,
-    'currentPageTitle' | 'currentBreadcrumbLabel' | 'onCatchAllRoutesTransform'
+    | 'currentPageTitle'
+    | 'currentBreadcrumbLabel'
+    | 'customBreadcrumbs'
+    | 'onCatchAllRoutesTransform'
   > {
   isTutorialMode: boolean;
 }

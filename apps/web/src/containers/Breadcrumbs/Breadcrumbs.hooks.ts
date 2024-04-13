@@ -7,6 +7,7 @@ import type { Breadcrumb, BreadcrumbsHookParams } from './Breadcrumbs.types';
 export function useBreadcrumbs({
   currentPageTitle,
   currentBreadcrumbLabel = currentPageTitle,
+  customBreadcrumbs,
   isTutorialMode,
   onCatchAllRoutesTransform,
 }: BreadcrumbsHookParams) {
@@ -30,13 +31,20 @@ export function useBreadcrumbs({
           );
         } else {
           const paths = arr.slice(0, i + 1);
+          const href = `/${paths.join('/')}` as const;
+          const { [href]: status } = customBreadcrumbs || {};
 
-          result.push({
-            href: `${isTutorialMode ? '/tutorial' : ''}/${paths.join('/')}`,
-            label: isLast
-              ? currentBreadcrumbLabel
-              : t(`ttl-breadcrumbs.${paths.join('.')}.label`),
-          });
+          if (status !== 'hidden') {
+            result.push({
+              href:
+                status === 'nonLinkable'
+                  ? undefined
+                  : `${isTutorialMode ? '/tutorial' : ''}${href}`,
+              label: isLast
+                ? currentBreadcrumbLabel
+                : t(`ttl-breadcrumbs.${paths.join('.')}.label`),
+            });
+          }
         }
 
         return result;

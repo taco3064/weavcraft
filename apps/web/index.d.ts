@@ -14,6 +14,7 @@ declare module '@alienfast/i18next-loader?relativePathAsNamespace=true!*' {
 declare namespace NodeJS {
   interface ProcessEnv {
     NEXT_PUBLIC_DEFAULT_LANGUAGE: string;
+    NEXT_PUBLIC_TUTORIAL_TOKEN: string;
     NEXT_PUBLIC_VERSION: string;
   }
 }
