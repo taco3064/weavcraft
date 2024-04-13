@@ -35,6 +35,15 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
         return [200, result];
       });
 
+    mock
+      .onGet(new RegExp(`^${baseURL}/hierarchy/.+$`))
+      .reply(async (config) => {
+        const store = await db.read().then(() => db.data);
+        const data = store[config.url?.split('/').pop() as string];
+
+        return [200, data];
+      });
+
     mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
       const store = await db.read().then(() => Object.values(db.data));
       const result: HierarchyData<string, any>[] = [];

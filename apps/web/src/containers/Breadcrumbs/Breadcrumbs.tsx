@@ -20,6 +20,7 @@ import type { BreadcrumbsProps } from './Breadcrumbs.types';
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
+  customBreadcrumbs,
   stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
@@ -37,6 +38,7 @@ export default function Breadcrumbs({
   const breadcrumbs = useBreadcrumbs({
     currentBreadcrumbLabel,
     currentPageTitle,
+    customBreadcrumbs,
     isTutorialMode,
     onCatchAllRoutesTransform,
   });

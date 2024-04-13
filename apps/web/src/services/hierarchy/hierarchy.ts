@@ -22,6 +22,17 @@ export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
 },
 []);
 
+export const getHierarchyDataById = withConnRefusedCatch(
+  async ({ queryKey: [id, isTutorialMode] }: QueryFunctionParams<[string]>) => {
+    const { data } = await axios.get<HierarchyData<string>>(
+      `/hierarchy/${id}`,
+      { baseURL: isTutorialMode ? '/mocks' : '/api' }
+    );
+
+    return data;
+  }
+);
+
 export const getHierarchyData = withConnRefusedCatch(async function <
   P = never
 >({
