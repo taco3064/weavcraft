@@ -37,3 +37,16 @@ export abstract class HttpLogger {
     return this.wlog;
   }
 }
+
+export abstract class DbLogger {
+  protected static wlog: Logger;
+  static get log(): Logger {
+    if (!this.wlog) {
+      this.wlog = new WinstonHelper('api', {
+        context: 'DB',
+      }).logger;
+      return this.wlog;
+    }
+    return this.wlog;
+  }
+}
