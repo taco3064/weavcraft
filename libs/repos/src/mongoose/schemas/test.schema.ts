@@ -1,15 +1,6 @@
 import _ = require('lodash');
 import { Schema } from 'mongoose';
-import { UpdatedAtDocument, CreatedAtDocument } from '../common';
-
-export type Test = {
-  value: string;
-} & UpdatedAtDocument &
-  CreatedAtDocument;
-
-export type TestData = {
-  id: string;
-} & Test;
+import { TestData } from '@weavcraft/common';
 
 export const testSchema = new Schema<TestData>({
   value: { type: String, required: true },
