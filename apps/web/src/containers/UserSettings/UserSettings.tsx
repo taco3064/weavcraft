@@ -44,7 +44,7 @@ export default function UserSettings() {
 
               <Divider />
 
-              <AccordionDetails className={classes.root}>
+              <AccordionDetails className={classes.details}>
                 <Component />
               </AccordionDetails>
 

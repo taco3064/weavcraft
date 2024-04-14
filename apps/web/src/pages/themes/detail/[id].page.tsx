@@ -101,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<
       initialSuperiors,
       ...(initialHierarchy && { initialHierarchy }),
       ...(initialData && { initialData }),
-      ...(await getServerSideTranslations(ctx, ['themes'])),
+      ...(await getServerSideTranslations(ctx, 'themes')),
     },
   };
 };

@@ -7,6 +7,11 @@ export const useMainStyles = makeStyles({ name: 'UserSettings' })((theme) => ({
     gap: theme.spacing(2),
     marginTop: theme.spacing(3),
   },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+  },
 }));
 
 export const useSettingsStyles = makeStyles({ name: 'Settings' })((theme) => ({

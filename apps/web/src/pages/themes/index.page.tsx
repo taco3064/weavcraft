@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<ThemesPageProps> = async (
     props: {
       initialSuperiors,
       ...(group && { group }),
-      ...(await getServerSideTranslations(ctx, ['themes'])),
+      ...(await getServerSideTranslations(ctx, 'themes')),
 
       initialData: isTutorialMode
         ? []
