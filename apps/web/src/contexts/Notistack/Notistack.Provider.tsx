@@ -2,7 +2,7 @@ import * as Notistack from 'notistack';
 import { Display } from '@weavcraft/core';
 import { forwardRef } from 'react';
 
-import MaterialDesignContent from './Notistack.content';
+import MaterialDesignContent from './Notistack.Content';
 import { useProviderStyles } from './Notistack.styles';
 import type { NotistackProviderProps } from './Notistack.types';
 

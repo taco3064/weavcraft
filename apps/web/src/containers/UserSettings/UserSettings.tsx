@@ -5,10 +5,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
-import dynamic from 'next/dynamic';
 import { Display } from '@weavcraft/core';
 import { Trans } from 'next-i18next';
-import { useState, type ComponentType } from 'react';
+import { lazy, useState, type ComponentType } from 'react';
 
 import { MenuDialog } from '~web/components';
 import { useAuth, SIGNIN_OPTIONS, USER_SETTINGS } from '~web/hooks';
@@ -17,9 +16,9 @@ import { useMainStyles } from './UserSettings.styles';
 import type { SigninMethod, UserSettingId } from '~web/hooks';
 
 const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
-  analytics: dynamic(() => import('./UserSettings.Analytics')),
-  profile: dynamic(() => import('./UserSettings.Profile')),
-  settings: dynamic(() => import('./UserSettings.Settings')),
+  analytics: lazy(() => import('./UserSettings.Analytics')),
+  profile: lazy(() => import('./UserSettings.Profile')),
+  settings: lazy(() => import('./UserSettings.Settings')),
 };
 
 export default function UserSettings() {

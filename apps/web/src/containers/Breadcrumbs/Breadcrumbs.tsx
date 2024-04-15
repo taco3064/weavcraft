@@ -10,12 +10,17 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog, Link } from '~web/components';
-import { MAX_ITEMS } from './Breadcrumbs.const';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
-import { useBreakpointMatches } from '~web/hooks';
+import { useBreakpointMatches, type BreakpointValues } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
+
+const MAX_ITEMS: BreakpointValues<number> = {
+  xs: 3,
+  md: 5,
+  lg: 8,
+};
 
 export default function Breadcrumbs({
   currentBreadcrumbLabel,
