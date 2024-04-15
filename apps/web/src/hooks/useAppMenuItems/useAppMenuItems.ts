@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { NAV_ITEMS } from './useSystemMenuItems.const';
-import type { MenuItemOptions } from '../useAuth';
-import type { NavItem } from './useSystemMenuItems.types';
+import { NAV_ITEMS } from './useAppMenuItems.const';
+import type { MenuItemOptions, NavItem } from './useAppMenuItems.types';
 
 export function useAppNavItems() {
   const { i18n } = useTranslation();

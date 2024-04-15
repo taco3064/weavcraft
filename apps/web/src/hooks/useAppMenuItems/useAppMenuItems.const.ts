@@ -1,5 +1,10 @@
-import type { MenuItemOptions } from '../useAuth';
-import type { NavItems, UserSettings } from './useSystemMenuItems.types';
+import { SIGNIN_METHODS } from './useAppMenuItems.types';
+
+import type {
+  MenuItemOptions,
+  NavItems,
+  UserSettings,
+} from './useAppMenuItems.types';
 
 export const NAV_ITEMS: NavItems = {
   gallery: {
@@ -25,6 +30,14 @@ export const NAV_ITEMS: NavItems = {
     icon: 'faPuzzlePiece',
   },
 };
+
+export { SIGNIN_METHODS };
+
+export const SIGNIN_OPTIONS: Exclude<MenuItemOptions, 'divider'>[] =
+  SIGNIN_METHODS.map((method) => ({
+    label: `btn-signin-with-${method}`,
+    indicator: `fa${method.replace(/^./, method.charAt(0).toUpperCase())}`,
+  }));
 
 export const USER_SETTINGS: UserSettings = [
   {
