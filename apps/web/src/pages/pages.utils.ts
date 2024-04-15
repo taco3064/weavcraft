@@ -24,7 +24,7 @@ export async function isUserEnvStatus(
 
 export async function getServerSideTranslations(
   { locale }: GetServerSidePropsContext,
-  ns: string[] = []
+  ...ns: string[]
 ) {
   if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();

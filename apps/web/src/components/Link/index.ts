@@ -1,2 +1,2 @@
 export { default, default as Link } from './Link';
-export type { Href, LinkProps } from './Link.types';
+export type { LinkProps } from './Link.types';

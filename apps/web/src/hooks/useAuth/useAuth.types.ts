@@ -1,5 +1,4 @@
-export const SIGNIN_METHODS = ['google'] as const;
-export type SigninMethod = (typeof SIGNIN_METHODS)[number];
+import type { SigninMethod } from '../useAppMenuItems';
 
 export interface AuthState {
   isAuthenticated: boolean;

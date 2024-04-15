@@ -66,12 +66,6 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           width: '100%',
         },
       },
-      page: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: theme.spacing(1.5),
-        marginTop: theme.spacing(2),
-      },
       drawer: {
         maxWidth: '100%',
         width: drawerWidth,

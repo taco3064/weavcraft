@@ -21,20 +21,34 @@ import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
 
+import Logo from '~web/assets/imgs/icon.svg';
 import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
-import { DEFAULT_PROPS, NAV_ITEMS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { useAuth } from '~web/hooks';
+import { useAuth, useAppNavItems } from '~web/hooks';
 import { useLayoutStyles } from './MainLayout.styles';
-import type { MainLayoutProps } from './MainLayout.types';
+import type { DefaultProps, MainLayoutProps } from './MainLayout.types';
+
+const DEFAULT_PROPS: DefaultProps = {
+  logo: {
+    inheritViewBox: true,
+    component: Logo,
+  },
+  title: {
+    color: 'text.primary',
+    fontFamily: ['Monaco', 'comic sans MS'],
+    variant: 'h6',
+  },
+};
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false);
   const { pathname } = useRouter();
   const { isAuthenticated } = useAuth();
   const { classes } = useLayoutStyles({ open });
+
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
+  const navItems = useAppNavItems();
 
   useEffect(() => {
     setOpen(false);
@@ -66,11 +80,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </Toolbar>
         </AppBar>
 
-        <Suspense fallback={<LinearProgress />}>
-          <Container component="main" className={classes.page} maxWidth="md">
-            {children}
-          </Container>
-        </Suspense>
+        <Suspense fallback={<LinearProgress />}>{children}</Suspense>
       </Container>
 
       <Drawer
@@ -109,11 +119,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </>
               }
             >
-              {NAV_ITEMS.map(({ icon, id, href, auth = false }) =>
+              {navItems.map(({ icon, label, href, auth = false }) =>
                 auth && !isAuthenticated ? null : (
                   <ListItemButton
                     LinkComponent={NextLink}
-                    key={id}
+                    key={label}
                     href={href}
                     selected={pathname.startsWith(href)}
                   >
@@ -124,12 +134,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     </ListItemAvatar>
 
                     <ListItemText
-                      primary={
-                        <Trans i18nKey={`ttl-breadcrumbs.${id}.label`} />
-                      }
-                      secondary={
-                        <Trans i18nKey={`ttl-breadcrumbs.${id}.description`} />
-                      }
+                      primary={<Trans i18nKey={`${label}.label`} />}
+                      secondary={<Trans i18nKey={`${label}.description`} />}
                       primaryTypographyProps={{
                         variant: 'subtitle1',
                         color: 'secondary',

@@ -12,11 +12,11 @@
   "btn-filter": "Filter",
   "btn-move-to-superior-folder": "Move To Superior Folder",
   "btn-publish": "Publish To Gallery",
+  "btn-sandbox-mode": "Sandbox Mode",
   "btn-search": "Search",
   "btn-signin": "Sign In",
   "btn-signin-with-google": "Sign In with Google",
   "btn-signout": "Sign Out",
-  "btn-tutorial": "Tutorial",
   "btn-update": "Update",
   "lbl-analytics": "Analytics",
   "lbl-description": "Description",
@@ -28,10 +28,11 @@
   "msg-delete-confirm": "Are you sure you want to delete {{name}}?",
   "msg-filter-placeholder": "Enter the search keyword...",
   "msg-no-data": "No data available.",
+  "msg-sandbox-confirm": "Are you sure you want to start the sandbox mode of {{name}}?",
+  "msg-sandbox-mode-description": "Sandbox mode allows you to test the functionality of the website without affecting the live version.",
   "msg-success-create": "Successfully created {{name}}.",
   "msg-success-delete": "Successfully deleted {{name}}.",
   "msg-success-update": "Successfully updated {{name}}.",
-  "msg-tutorial-confirm": "Are you sure you want to start the tutorial of {{name}}?",
   "ttl-delete-confirm": "Confirm Deletion",
   "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
@@ -52,29 +53,29 @@
     "WEAVCRAFT": "Default Theme"
   },
   "ttl-breadcrumbs": {
+    "tutorial": {
+      "label": "Tutorials",
+      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
+    },
     "gallery": {
       "label": "Craft Gallery",
       "description": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community."
-    },
-    "pages": {
-      "label": "Web Page Editor",
-      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
     },
     "themes": {
       "label": "Theme Styles",
       "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
     },
-    "tutorial": {
-      "label": "Tutorials",
-      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
+    "widgets": {
+      "label": "Widget Storage",
+      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
+    },
+    "pages": {
+      "label": "Web Page Editor",
+      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
     },
     "websites": {
       "label": "Websites",
       "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
-    },
-    "widgets": {
-      "label": "Widget Storage",
-      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
     }
   }
 }

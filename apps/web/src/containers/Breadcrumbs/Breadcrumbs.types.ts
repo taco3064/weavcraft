@@ -1,4 +1,5 @@
-import type { Href, PortalContainerEl } from '~web/components';
+import type { Href } from '~web/hooks';
+import type { PortalContainerEl } from '~web/components';
 
 export interface Breadcrumb {
   label: string;
@@ -9,6 +10,7 @@ export interface BreadcrumbsProps {
   currentBreadcrumbLabel?: string;
   currentPageTitle: string;
   customBreadcrumbs?: Record<`/${string}`, 'nonLinkable' | 'hidden'>;
+  disableGutters?: boolean;
   stickyTop?: number;
   onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
 

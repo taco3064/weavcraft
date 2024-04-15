@@ -1,3 +1,4 @@
+import Container from '@mui/material/Container';
 import { useQueries } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -6,6 +7,7 @@ import type { GetServerSideProps } from 'next';
 import { Breadcrumbs, MainLayout } from '~web/containers';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import { usePageStyles } from '../../pages.styles';
 import type { PortalContainerEl } from '~web/components';
 import type { ThemeDetailPageProps } from './detail.types';
 
@@ -23,8 +25,10 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
     initialSuperiors,
   }) {
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
-    const { t } = useTranslation();
     const isTutorialMode = useTutorialMode();
+
+    const { t } = useTranslation();
+    const { classes } = usePageStyles();
 
     const [
       { data: hierarchy = initialHierarchy },
@@ -47,8 +51,14 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
     });
 
     return !hierarchy ? null : (
-      <>
+      <Container
+        disableGutters
+        component="main"
+        maxWidth="md"
+        className={classes.root}
+      >
         <Breadcrumbs
+          disableGutters
           customBreadcrumbs={{ '/themes/detail': 'hidden' }}
           currentBreadcrumbLabel={hierarchy.title}
           currentPageTitle={`${t('ttl-breadcrumbs.themes.label')} - ${
@@ -64,7 +74,7 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
             }
           }}
         />
-      </>
+      </Container>
     );
   }
 );
@@ -101,7 +111,7 @@ export const getServerSideProps: GetServerSideProps<
       initialSuperiors,
       ...(initialHierarchy && { initialHierarchy }),
       ...(initialData && { initialData }),
-      ...(await getServerSideTranslations(ctx, ['themes'])),
+      ...(await getServerSideTranslations(ctx, 'themes')),
     },
   };
 };

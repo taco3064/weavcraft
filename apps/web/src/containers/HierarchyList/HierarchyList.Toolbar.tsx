@@ -38,17 +38,17 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
             <ConfirmToggle
               severity="info"
               subject={t('ttl-navigation-confirm')}
-              message={t('msg-tutorial-confirm', {
+              message={t('msg-sandbox-confirm', {
                 name: t(`ttl-breadcrumbs.${category}.label`),
               })}
               onConfirm={() => push(`/tutorial/${category}`)}
               toggle={
-                <Tooltip title={t('btn-tutorial')}>
+                <Tooltip title={t('btn-sandbox-mode')}>
                   <IconButton
                     LinkComponent={Link}
                     href={`/tutorial/${category}`}
                   >
-                    <Display.Icon code="faCircleInfo" />
+                    <Display.Icon code="faFlask" />
                   </IconButton>
                 </Tooltip>
               }

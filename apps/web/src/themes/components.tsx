@@ -29,10 +29,29 @@ export const components: ThemeOptions['components'] = {
   MuiAccordion: {
     styleOverrides: {
       root: ({ theme }) => ({
-        // borderRadius: theme.spacing(2),
+        borderRadius: `${theme.spacing(2)} !important`,
 
+        '&::before': {
+          display: 'none',
+        },
         '&.Mui-expanded': {
           borderRadius: `${theme.spacing(2)} !important`,
+
+          '& + :not(.Mui-expanded)': {
+            borderTopLeftRadius: theme.spacing(2),
+            borderTopRightRadius: theme.spacing(2),
+          },
+        },
+        '&:not(.Mui-expanded)': {
+          '&:has(+ :not(.Mui-expanded))': {
+            borderBottomLeftRadius: '0 !important',
+            borderBottomRightRadius: '0 !important',
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          },
+          '& + :not(.Mui-expanded)': {
+            borderTopLeftRadius: '0 !important',
+            borderTopRightRadius: '0 !important',
+          },
         },
       }),
     },

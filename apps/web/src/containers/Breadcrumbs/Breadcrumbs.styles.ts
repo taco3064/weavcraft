@@ -8,10 +8,6 @@ export const useBreadcrumbsStyles = makeStyles<
     userSelect: 'none',
     top: stickyTop,
     background: theme.palette.background.default,
-
-    '& > *[role="toolbar"]': {
-      padding: theme.spacing(0, 1.5),
-    },
   },
   right: {
     marginLeft: 'auto',
