@@ -5,7 +5,7 @@ export type ValueOf<T> = T[keyof T];
 export enum EnumNotificationType {
   LIKE = 'LIKE',
   COMMENT = 'COMMENT',
-};
+}
 
 export type NotificationType = keyof typeof EnumNotificationType;
 
