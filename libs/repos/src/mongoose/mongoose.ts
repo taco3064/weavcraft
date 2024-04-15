@@ -1,8 +1,6 @@
 import { ConnectOptions, Connection, Mongoose } from 'mongoose';
 import { v4 as uuidV4 } from 'uuid';
-import { WinstonHelper } from '@weavcraft/helpers';
-
-const mongoLogger = new WinstonHelper('mongo', { context: 'DB' });
+import { Logger } from 'winston';
 
 export class BaseMongoClient {
   connection: Connection;
@@ -14,6 +12,7 @@ export class BaseMongoClient {
 
   constructor(
     public uri = 'mongodb://127.0.0.1:27017',
+    public logger?: Logger,
     options?: ConnectOptions,
     public dbName?: string,
     public clientId: string = uuidV4()
@@ -33,16 +32,24 @@ export class BaseMongoClient {
 
   private setConnectionOn() {
     this.mongoose.connection.on('connected', () => {
-      mongoLogger.logger.info(`connected: ${this.clientId}`);
+      if (this.logger) {
+        this.logger.info(`connected: ${this.clientId}`);
+      }
     });
     this.mongoose.connection.on('disconnected', () => {
-      mongoLogger.logger.info(`disconnected: ${this.clientId}`);
+      if (this.logger) {
+        this.logger.info(`disconnected: ${this.clientId}`);
+      }
     });
     this.mongoose.connection.on('error', (error) => {
-      mongoLogger.logger.error(error);
+      if (this.logger) {
+        this.logger.error(error);
+      }
     });
     this.mongoose.connection.on('open', () => {
-      mongoLogger.logger.info(`connection opened: ${this.clientId}`);
+      if (this.logger) {
+        this.logger.info(`connection opened: ${this.clientId}`);
+      }
     });
   }
 
@@ -50,7 +57,9 @@ export class BaseMongoClient {
     try {
       await this.mongoose.connection.asPromise();
     } catch (error) {
-      mongoLogger.logger.error(error);
+      if (this.logger) {
+        this.logger.error(error);
+      }
       throw error;
     }
   }

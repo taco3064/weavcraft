@@ -1,9 +1,10 @@
-import { Test, TestData, testSchema } from '@weavcraft/repos';
+import { testSchema } from '@weavcraft/repos';
 import { ITestRepository } from '../types';
 import { inject, injectable } from 'tsyringe';
 import { INJECT_MONGO_CLIENT_DEMO } from '../../const';
 import { BaseMongoClient } from '@weavcraft/repos';
 import { Model } from 'mongoose';
+import { TestData } from '@weavcraft/common';
 
 @injectable()
 export class TestRepository implements ITestRepository {

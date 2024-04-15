@@ -1,20 +1,14 @@
 import _ = require('lodash');
 import { Schema } from 'mongoose';
-import { UpdatedAtDocument, CreatedAtDocument } from '../common';
-
-export type Test = {
-  value: string;
-} & UpdatedAtDocument &
-  CreatedAtDocument;
-
-export type TestData = {
-  id: string;
-} & Test;
+import { TestData } from '@weavcraft/common';
 
 export const testSchema = new Schema<TestData>({
   value: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+}, {
+  versionKey: false,
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
 testSchema.set('toJSON', {

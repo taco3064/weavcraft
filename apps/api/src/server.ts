@@ -16,6 +16,7 @@ export async function server() {
   const controllers = Object.values(_indexControllers).values();
 
   const routingControllerOptions: RoutingControllersOptions = {
+    defaultErrorHandler: false,
     controllers: [...controllers],
   };
 
