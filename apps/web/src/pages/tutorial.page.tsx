@@ -60,7 +60,11 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
 
             <AccordionDetails>
               <List>
-                <ListItemButton LinkComponent={NextLink} href={href as string}>
+                <ListItemButton
+                  LinkComponent={NextLink}
+                  href={href as string}
+                  sx={{ borderRadius: 2 }}
+                >
                   <ListItemIcon>
                     <Display.Icon code="faLink" />
                   </ListItemIcon>
@@ -90,6 +94,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                         LinkComponent={NextLink}
                         key={label}
                         href={href as string}
+                        sx={{ borderRadius: 2 }}
                       >
                         <ListItemIcon>
                           <Display.Icon code="faLink" />

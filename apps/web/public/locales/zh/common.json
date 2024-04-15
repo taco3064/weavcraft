@@ -29,7 +29,7 @@
   "msg-filter-placeholder": "搜尋資料夾或項目...",
   "msg-no-data": "沒有資料",
   "msg-sandbox-confirm": "是否要使用\"{{name}}\"的實驗模式？",
-  "msg-sandbox-mode-description": "實驗模式允許您在不保存更改的情況下預覽和測試您的網站。請注意，您的更改將在您關閉或刷新頁面後丟失。",
+  "msg-sandbox-mode-description": "實驗模式允許您在不保存更改的情況下預覽和測試您的網站。\n請注意，您的更改將在您關閉或刷新頁面後丟失。",
   "msg-success-create": "新增{{name}}完成",
   "msg-success-delete": "刪除{{name}}完成",
   "msg-success-update": "更新{{name}}完成",
