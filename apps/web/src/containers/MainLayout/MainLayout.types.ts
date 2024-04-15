@@ -14,13 +14,6 @@ export type DefaultProps = {
   title: Omit<TypographyProps, 'ref'>;
 };
 
-export type NavItem = {
-  auth?: true;
-  icon: IconCode;
-  id: string;
-  href: string;
-};
-
 export interface MainLayoutProps {
   children: ReactNode;
 }

@@ -75,7 +75,11 @@ export default function MenuDialog({
                   return <Divider key="divider" />;
                 }
 
-                const { href, indicator, label, items: subItems } = item;
+                const { href, icon, label, items: subItems } = item;
+
+                const indicator = !icon ? undefined : (
+                  <Display.Icon code={icon} />
+                );
 
                 return (
                   <Fragment key={label}>

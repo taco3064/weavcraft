@@ -1,12 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useMainStyles = makeStyles({ name: 'UserSettings' })((theme) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    marginTop: theme.spacing(3),
-  },
   details: {
     display: 'flex',
     flexDirection: 'column',

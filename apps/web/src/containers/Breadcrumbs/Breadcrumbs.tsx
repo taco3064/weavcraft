@@ -21,6 +21,7 @@ export default function Breadcrumbs({
   currentBreadcrumbLabel,
   currentPageTitle,
   customBreadcrumbs,
+  disableGutters,
   stickyTop = 64,
   onCatchAllRoutesTransform,
   onToolbarMount,
@@ -60,7 +61,7 @@ export default function Breadcrumbs({
       />
 
       <AppBar position="sticky" elevation={0} className={classes.root}>
-        <Toolbar role="toolbar" variant="dense">
+        <Toolbar variant="dense" disableGutters={disableGutters}>
           <IconButton color="secondary" onClick={back}>
             <Display.Icon code="faArrowLeft" />
           </IconButton>

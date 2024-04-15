@@ -1,3 +1,4 @@
+import Container from '@mui/material/Container';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -8,13 +9,16 @@ import { PaletteDisplay, type PortalContainerEl } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import { usePageStyles } from '../pages.styles';
 import type { ThemesPageProps } from './themes.types';
 
 export default makePerPageLayout<ThemesPageProps>(MainLayout)(
   function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
-    const { t } = useTranslation();
     const isTutorialMode = useTutorialMode();
+
+    const { t } = useTranslation();
+    const { classes } = usePageStyles();
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
@@ -23,8 +27,14 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
     });
 
     return (
-      <>
+      <Container
+        disableGutters
+        component="main"
+        maxWidth="md"
+        className={classes.root}
+      >
         <Breadcrumbs
+          disableGutters
           currentBreadcrumbLabel={group}
           currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
           onToolbarMount={setToolbarEl}
@@ -49,7 +59,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           maxWidth="md"
           superior={group}
         />
-      </>
+      </Container>
     );
   }
 );
@@ -59,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<ThemesPageProps> = async (
 ) => {
   const group =
     typeof ctx.query.group === 'string' ? ctx.query.group : undefined;
+
   const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
 
   const initialSuperiors =

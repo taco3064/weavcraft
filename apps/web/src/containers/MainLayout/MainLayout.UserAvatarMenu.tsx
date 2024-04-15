@@ -1,11 +1,10 @@
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import { Display, type IconCode } from '@weavcraft/core';
+import { Display } from '@weavcraft/core';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
-import { SIGNIN_OPTIONS } from '../UserSettings';
-import { USER_MENU_ITEMS } from './MainLayout.const';
+import { SIGNIN_OPTIONS, USER_MENU_ITEMS } from '~web/hooks';
 import { useAuth, type SigninMethod } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
 
@@ -43,18 +42,13 @@ export default function UserAvatarMenu() {
           ),
           isAuthenticated
             ? {
-                indicator: <Display.Icon code="faArrowRightFromBracket" />,
+                icon: 'faArrowRightFromBracket',
                 label: 'btn-signout',
               }
             : {
-                indicator: <Display.Icon code="faArrowRightToBracket" />,
+                icon: 'faArrowRightToBracket',
                 label: 'btn-signin',
-                items: SIGNIN_OPTIONS.map(({ indicator, ...options }) => ({
-                  ...options,
-                  ...(typeof indicator === 'string' && {
-                    indicator: <Display.Icon code={indicator as IconCode} />,
-                  }),
-                })),
+                items: SIGNIN_OPTIONS,
               },
         ]}
       />

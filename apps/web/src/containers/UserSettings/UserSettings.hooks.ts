@@ -1,20 +1,19 @@
 import { useRouter } from 'next/router';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { ACCORDIONS } from './UserSettings.const';
-import type { AccordionId } from './UserSettings.types';
+import { USER_SETTINGS, UserSettingId } from '~web/hooks';
 
 export function useExpanded(isAuthenticated: boolean) {
   const { pathname, asPath, replace } = useRouter();
-  const [expanded, setExpanded] = useState<AccordionId>();
+  const [expanded, setExpanded] = useState<UserSettingId>();
 
-  const updateHashRef = useRef((id: AccordionId) =>
+  const updateHashRef = useRef((id: UserSettingId) =>
     replace(pathname, `${pathname}#${id}`)
   );
 
   useImperativeHandle(
     updateHashRef,
-    () => (id: AccordionId) => replace(pathname, `${pathname}#${id}`),
+    () => (id: UserSettingId) => replace(pathname, `${pathname}#${id}`),
     [pathname, replace]
   );
 
@@ -25,11 +24,11 @@ export function useExpanded(isAuthenticated: boolean) {
   }, [expanded]);
 
   useEffect(() => {
-    const hashId = asPath.split('#')[1] as AccordionId;
+    const hashId = asPath.split('#')[1] as UserSettingId;
 
-    const expanded = (ACCORDIONS.find(
+    const expanded = (USER_SETTINGS.find(
       ({ id, auth }) => id === hashId && (!auth || isAuthenticated)
-    )?.id || 'settings') as AccordionId;
+    )?.id || 'settings') as UserSettingId;
 
     setExpanded(expanded);
   }, [isAuthenticated, asPath]);

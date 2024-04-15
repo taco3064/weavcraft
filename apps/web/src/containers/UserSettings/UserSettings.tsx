@@ -5,15 +5,22 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
-import { Display, type IconCode } from '@weavcraft/core';
+import dynamic from 'next/dynamic';
+import { Display } from '@weavcraft/core';
 import { Trans } from 'next-i18next';
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 
 import { MenuDialog } from '~web/components';
-import { ACCORDIONS, SIGNIN_OPTIONS } from './UserSettings.const';
-import { useAuth, type SigninMethod } from '~web/hooks';
+import { useAuth, SIGNIN_OPTIONS, USER_SETTINGS } from '~web/hooks';
 import { useExpanded } from './UserSettings.hooks';
 import { useMainStyles } from './UserSettings.styles';
+import type { SigninMethod, UserSettingId } from '~web/hooks';
+
+const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
+  analytics: dynamic(() => import('./UserSettings.Analytics')),
+  profile: dynamic(() => import('./UserSettings.Profile')),
+  settings: dynamic(() => import('./UserSettings.Settings')),
+};
 
 export default function UserSettings() {
   const { isAuthenticated, signin, signout } = useAuth();
@@ -23,10 +30,12 @@ export default function UserSettings() {
   const [expanded, setExpanded] = useExpanded(isAuthenticated);
 
   return (
-    <Container disableGutters maxWidth="sm" className={classes.root}>
+    <>
       <Container disableGutters maxWidth={false}>
-        {ACCORDIONS.map(({ Component, id, icon, auth }) =>
-          auth && !isAuthenticated ? null : (
+        {USER_SETTINGS.map(({ id, icon, auth }) => {
+          const Component = ACCORDION_CONTENTS[id];
+
+          return auth && !isAuthenticated ? null : (
             <Accordion
               key={id}
               id={id}
@@ -50,8 +59,8 @@ export default function UserSettings() {
 
               <AccordionActions id={`actions-${id}`} />
             </Accordion>
-          )
-        )}
+          );
+        })}
       </Container>
 
       <Divider />
@@ -98,15 +107,10 @@ export default function UserSettings() {
             indicator={<Display.Icon code="faArrowRightToBracket" />}
             onClose={() => setOpen(false)}
             onItemClick={(e) => signin(e.replace(/^.+-/, '') as SigninMethod)}
-            items={SIGNIN_OPTIONS.map(({ indicator, ...options }) => ({
-              ...options,
-              ...(typeof indicator === 'string' && {
-                indicator: <Display.Icon code={indicator as IconCode} />,
-              }),
-            }))}
+            items={SIGNIN_OPTIONS}
           />
         </>
       )}
-    </Container>
+    </>
   );
 }
