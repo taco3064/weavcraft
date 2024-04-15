@@ -6,6 +6,9 @@ export const testSchema = new Schema<TestData>({
   value: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+}, {
+  versionKey: false,
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
 testSchema.set('toJSON', {
