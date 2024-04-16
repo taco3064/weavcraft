@@ -72,12 +72,14 @@ export function usePalette() {
     [palette]
   );
 
-  return [
-    { cache, palette, theme },
+  return {
+    cache,
+    palette,
+    theme,
 
-    useCallback((palette: string) => {
+    setPalette: useCallback((palette: string) => {
       Cookies.set('palette', palette);
       setPalette(palette);
     }, []),
-  ] as const;
+  };
 }
