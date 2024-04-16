@@ -4,6 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
@@ -18,12 +19,12 @@ import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
 export default function HierarchyListItem<P>({
-  PreviewComponent,
   cols,
   data,
   disableDrag = false,
   icon,
   selected = false,
+  renderPreview,
   onDeleteConfirm,
   onEditClick,
   onPublishClick,
@@ -85,10 +86,7 @@ export default function HierarchyListItem<P>({
           }
         />
 
-        {PreviewComponent &&
-          data.type === 'item' &&
-          data.payload &&
-          !isDragging && <PreviewComponent payload={data.payload} />}
+        {data.type === 'item' && !isDragging && renderPreview?.(data.payload)}
 
         {data.description && (
           <CardContent>
@@ -105,50 +103,54 @@ export default function HierarchyListItem<P>({
         )}
 
         {!isDragging && (
-          <CardActions>
-            {onEditClick && (
-              <Tooltip title={editTitle}>
-                <IconButton
-                  color="primary"
-                  onClick={() =>
-                    onEditClick({
-                      data,
-                      icon: isGroup ? 'faFolder' : icon,
-                      title: editTitle,
-                    })
+          <>
+            <Divider />
+
+            <CardActions>
+              {onEditClick && (
+                <Tooltip title={editTitle}>
+                  <IconButton
+                    color="primary"
+                    onClick={() =>
+                      onEditClick({
+                        data,
+                        icon: isGroup ? 'faFolder' : icon,
+                        title: editTitle,
+                      })
+                    }
+                  >
+                    <Display.Icon code="faEdit" />
+                  </IconButton>
+                </Tooltip>
+              )}
+
+              {onDeleteConfirm && (
+                <ConfirmToggle
+                  subject={t('ttl-delete-confirm')}
+                  message={t('msg-delete-confirm', { name: data.title })}
+                  onConfirm={() => onDeleteConfirm(data)}
+                  toggle={
+                    <Tooltip title={t('btn-delete')}>
+                      <IconButton color="primary">
+                        <Display.Icon code="faTrash" />
+                      </IconButton>
+                    </Tooltip>
                   }
-                >
-                  <Display.Icon code="faEdit" />
-                </IconButton>
-              </Tooltip>
-            )}
+                />
+              )}
 
-            {onDeleteConfirm && (
-              <ConfirmToggle
-                subject={t('ttl-delete-confirm')}
-                message={t('msg-delete-confirm', { name: data.title })}
-                onConfirm={() => onDeleteConfirm(data)}
-                toggle={
-                  <Tooltip title={t('btn-delete')}>
-                    <IconButton color="primary">
-                      <Display.Icon code="faTrash" />
-                    </IconButton>
-                  </Tooltip>
-                }
-              />
-            )}
-
-            {!onPublishClick || isGroup ? null : (
-              <Tooltip title={t('btn-publish')}>
-                <IconButton
-                  color="success"
-                  onClick={() => onPublishClick(data)}
-                >
-                  <Display.Icon code="faShare" />
-                </IconButton>
-              </Tooltip>
-            )}
-          </CardActions>
+              {!onPublishClick || isGroup ? null : (
+                <Tooltip title={t('btn-publish')}>
+                  <IconButton
+                    color="success"
+                    onClick={() => onPublishClick(data)}
+                  >
+                    <Display.Icon code="faShare" />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </CardActions>
+          </>
         )}
       </Card>
     </ImageListItem>

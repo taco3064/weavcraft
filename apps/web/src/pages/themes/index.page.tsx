@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteDisplay, type PortalContainerEl } from '~web/components';
+import { PaletteViewer, type PortalContainerEl } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
@@ -50,7 +50,6 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
 
         <HierarchyList
           {...{ initialData, isTutorialMode, toolbarEl }}
-          PreviewComponent={PaletteDisplay}
           category="themes"
           disableGroup={false}
           disableGutters
@@ -58,6 +57,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           icon="faPalette"
           maxWidth="md"
           superior={group}
+          renderPreview={(palette) => <PaletteViewer config={palette} />}
         />
       </Container>
     );

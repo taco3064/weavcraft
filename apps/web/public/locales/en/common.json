@@ -54,7 +54,7 @@
   },
   "ttl-breadcrumbs": {
     "tutorial": {
-      "label": "Tutorials",
+      "label": "Tutorial",
       "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
     },
     "gallery": {

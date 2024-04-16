@@ -5,10 +5,10 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
+import { PaletteViewer, type PortalContainerEl } from '~web/components';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../../pages.styles';
-import type { PortalContainerEl } from '~web/components';
 import type { ThemeDetailPageProps } from './detail.types';
 
 import {

@@ -29,7 +29,6 @@ import {
 } from './HierarchyList.hooks';
 
 export default function HierarchyList<P>({
-  PreviewComponent,
   category,
   disableGroup,
   disableGutters,
@@ -39,6 +38,7 @@ export default function HierarchyList<P>({
   maxWidth = false,
   superior,
   toolbarEl,
+  renderPreview,
   onMutationSuccess,
 }: HierarchyListProps<P>) {
   const isTutorialMode = useTutorialMode();
@@ -52,11 +52,7 @@ export default function HierarchyList<P>({
   const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const { isFiltering, params, onParamsChange, ...variables } =
-    useQueryVariables({
-      PreviewComponent,
-      category,
-      superior,
-    });
+    useQueryVariables({ category, superior, renderPreview });
 
   const {
     data = initialData || [],
@@ -156,7 +152,7 @@ export default function HierarchyList<P>({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ PreviewComponent, cols, icon, isTutorialMode }}
+                        {...{ cols, icon, renderPreview }}
                         key={item._id}
                         data={item}
                         disableDrag={group.length < 1}

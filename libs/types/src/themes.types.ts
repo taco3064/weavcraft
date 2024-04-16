@@ -1,12 +1,18 @@
-import type { Palette, SimplePaletteColorOptions } from '@mui/material/styles';
+import type { Palette } from '@mui/material/styles';
 
 export interface ThemePalette
-  extends Pick<Palette, 'background' | 'divider' | 'mode' | 'text'> {
+  extends Pick<
+    Palette,
+    | 'background'
+    | 'divider'
+    | 'mode'
+    | 'text'
+    | 'primary'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error'
+  > {
   id: string;
-  error: SimplePaletteColorOptions;
-  info: SimplePaletteColorOptions;
-  primary: SimplePaletteColorOptions;
-  secondary: SimplePaletteColorOptions;
-  success: SimplePaletteColorOptions;
-  warning: SimplePaletteColorOptions;
 }
