@@ -21,11 +21,12 @@ import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
 
+import CompressionContent from './MainLayout.CompressionContent';
 import Logo from '~web/assets/imgs/icon.svg';
 import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { Link, SwitchIconButton } from '~web/components';
-import { useAuth, useAppNavItems } from '~web/hooks';
+import { useAuth, useAppNavItems, useBreakpointMatches } from '~web/hooks';
 import { useLayoutStyles } from './MainLayout.styles';
 import type { DefaultProps, MainLayoutProps } from './MainLayout.types';
 
@@ -80,7 +81,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </Toolbar>
         </AppBar>
 
-        <Suspense fallback={<LinearProgress />}>{children}</Suspense>
+        <Suspense fallback={<LinearProgress />}>
+          <CompressionContent isNavMenuOpen={open}>
+            {children}
+          </CompressionContent>
+        </Suspense>
       </Container>
 
       <Drawer

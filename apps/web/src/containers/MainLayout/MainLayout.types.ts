@@ -1,5 +1,4 @@
 import type { Breakpoint } from '@mui/material/styles';
-import type { IconCode } from '@weavcraft/core';
 import type { ReactNode } from 'react';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { TypographyProps } from '@mui/material/Typography';
@@ -16,4 +15,9 @@ export type DefaultProps = {
 
 export interface MainLayoutProps {
   children: ReactNode;
+}
+
+export interface CompressionContentProps {
+  children: ReactNode;
+  isNavMenuOpen: boolean;
 }
