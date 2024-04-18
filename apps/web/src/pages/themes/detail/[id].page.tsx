@@ -74,6 +74,14 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
             }
           }}
         />
+
+        <Container disableGutters maxWidth="sm">
+          <PaletteViewer
+            config={initialData}
+            size={400}
+            onColorClick={console.log}
+          />
+        </Container>
       </Container>
     );
   }

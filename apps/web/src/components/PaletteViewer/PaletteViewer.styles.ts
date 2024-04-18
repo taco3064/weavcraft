@@ -1,9 +1,28 @@
 import { makeStyles } from 'tss-react/mui';
-import type { Palette } from '@mui/material/styles';
+import type { ViewerStyleParams } from './PaletteViewer.types';
 
-export const useViewerStyles = makeStyles<Palette>({
+export const useTooltipStyles = makeStyles<Record<string, string>>({
+  name: 'TooltipContent',
+})((theme, { color, contrastText }) => ({
+  root: {
+    background: color,
+    border: `1px solid ${theme.palette.divider}`,
+    opacity: 0.8,
+  },
+  markCell: {
+    display: 'none',
+  },
+  labelCell: {
+    color: contrastText,
+  },
+  valueCell: {
+    color: `${contrastText} !important`,
+  },
+}));
+
+export const useViewerStyles = makeStyles<ViewerStyleParams>({
   name: 'PaletteViewer',
-})((theme, { background, divider, text }) => ({
+})((theme, { clickable, size, palette: { background, divider, text } }) => ({
   root: {
     position: 'relative',
     display: 'flex',
@@ -18,12 +37,12 @@ export const useViewerStyles = makeStyles<Palette>({
       alignItems: 'center',
       justifyContent: 'center',
       left: '50%',
-      bottom: theme.spacing(1),
+      bottom: theme.spacing(2),
       transform: 'translateX(-50%)',
       pointerEvents: 'none',
 
       [theme.breakpoints.down('md')]: {
-        bottom: theme.spacing(-1),
+        bottom: theme.spacing(0),
       },
       '& > svg': {
         borderRadius: '50%',
@@ -51,11 +70,12 @@ export const useViewerStyles = makeStyles<Palette>({
     },
   },
   background: {
-    height: theme.spacing(34),
+    fontSize: `${Math.min(150, size / 2)}%` as never,
+    height: `calc(${size}px + ${theme.spacing(10)})`,
 
     [theme.breakpoints.down('md')]: {
       fontSize: '0.7em',
-      height: theme.spacing(28),
+      height: `calc(${size}px + ${theme.spacing(4)})`,
     },
     '& > *.MuiGrid-item': {
       display: 'flex',
@@ -64,6 +84,7 @@ export const useViewerStyles = makeStyles<Palette>({
       padding: theme.spacing(1),
       fontWeight: 600,
       fontSize: '1em',
+      cursor: clickable ? 'pointer' : 'default',
 
       '& > *': {
         pointerEvents: 'none',

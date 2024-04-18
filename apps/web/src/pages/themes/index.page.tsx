@@ -57,7 +57,9 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           icon="faPalette"
           maxWidth="md"
           superior={group}
-          renderPreview={(palette) => <PaletteViewer config={palette} />}
+          renderPreview={(palette) => (
+            <PaletteViewer config={palette} size={200} />
+          )}
         />
       </Container>
     );
