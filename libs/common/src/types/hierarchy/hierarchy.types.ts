@@ -1,4 +1,5 @@
 import { UpdatedAtDocument, CreatedAtDocument } from "../mongodb";
+import { PayloadData } from "../payload/payload.type";
 
 export type SearchHierarchyParams = {
   category: string;
@@ -14,15 +15,17 @@ export enum EnumHierarchyType {
 
 export type HierarchyType = keyof typeof EnumHierarchyType;
 
-export type Hierarchy<P = never> = {
+export type Hierarchy = {
   title: string;
   type: EnumHierarchyType;
   category: string;
   description?: string;
   superior?: string;
-  payload?: P;
+  payloadId?: string;
+  rootId?: string;
 } & UpdatedAtDocument & CreatedAtDocument;
 
-export type HierarchyData<P = never> = {
+export type HierarchyData<P = PayloadData> = {
   id: string;
-} & Hierarchy<P>;
+  payload?: P;
+} & Hierarchy;
