@@ -3,12 +3,7 @@ import type { PieChartProps } from '@mui/x-charts';
 import type { ThemePalette } from '@weavcraft/types';
 
 export type DefaultSeriesProps = Partial<PieChartProps['series'][number]>;
-
-export interface ViewerStyleParams {
-  palette: Palette;
-  clickable: boolean;
-  size: number;
-}
+export type PaletteColor = { name: ColorName; color: string };
 
 export type ColorName =
   | 'background.default'
@@ -30,6 +25,13 @@ export type ColorName =
 
 export interface PaletteViewerProps {
   config?: ThemePalette;
+  disableResponsiveText?: boolean;
   size: number;
-  onColorClick?: (e: { name: ColorName; color: string }[]) => void;
+  onColorClick?: (e: PaletteColor[]) => void;
+}
+
+export interface ViewerStyleParams
+  extends Pick<PaletteViewerProps, 'disableResponsiveText' | 'size'> {
+  clickable: boolean;
+  palette: Palette;
 }

@@ -75,7 +75,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           >
             <AppBar position="sticky" className={classes.header} elevation={1}>
               <Toolbar>
-                <Fade in={!open}>
+                <Fade in={open !== 'nav'}>
                   <Toolbar disableGutters variant="dense">
                     <SwitchIconButton
                       icon={logo}
@@ -144,13 +144,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         <ListItemIcon>{logo}</ListItemIcon>
 
                         <ListItemText
-                          primaryTypographyProps={DEFAULT_PROPS.title}
                           primary={<Trans i18nKey="ttl-weavcraft" />}
+                          secondary={process.env.NEXT_PUBLIC_VERSION}
+                          primaryTypographyProps={DEFAULT_PROPS.title}
                           secondaryTypographyProps={{
                             variant: 'caption',
                             color: 'text.secondary',
                           }}
-                          secondary={process.env.NEXT_PUBLIC_VERSION}
                         />
 
                         <IconButton onClick={() => setOpen(undefined)}>

@@ -1,7 +1,6 @@
 import ButtonBase from '@mui/material/ButtonBase';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Zoom from '@mui/material/Zoom';
 import _merge from 'lodash/merge';
 import _pick from 'lodash/pick';
 import { PieChart } from '@mui/x-charts';
@@ -19,6 +18,7 @@ import type {
 
 export default function PaletteViewer({
   config,
+  disableResponsiveText,
   size,
   onColorClick,
 }: PaletteViewerProps) {
@@ -31,6 +31,7 @@ export default function PaletteViewer({
 
   const { classes } = useViewerStyles({
     clickable: onColorClick instanceof Function,
+    disableResponsiveText,
     palette,
     size,
   });
@@ -48,97 +49,89 @@ export default function PaletteViewer({
   );
 
   return (
-    <Zoom in timeout={600}>
-      <Container disableGutters maxWidth={false} className={classes.root}>
-        <Grid container columns={2} className={classes.background}>
-          <Grid
-            item
-            xs={1}
-            component={onColorClick ? ButtonBase : 'div'}
-            onClick={() =>
-              onColorClick?.([
-                { name: 'background.default', color: background.default },
-                { name: 'text.primary', color: palette.text.primary },
-              ])
-            }
-          >
-            <span>Default</span>
-            <strong>{background.default}</strong>
-          </Grid>
-
-          <Grid
-            item
-            xs={1}
-            component={onColorClick ? ButtonBase : 'div'}
-            onClick={() =>
-              onColorClick?.([
-                { name: 'background.paper', color: background.paper },
-                { name: 'text.secondary', color: palette.text.secondary },
-              ])
-            }
-          >
-            <span>Paper</span>
-            <strong>{background.paper}</strong>
-          </Grid>
+    <Container disableGutters maxWidth={false} className={classes.root}>
+      <Grid container columns={2} className={classes.background}>
+        <Grid
+          item
+          xs={1}
+          component={onColorClick ? ButtonBase : 'div'}
+          onClick={() =>
+            onColorClick?.([
+              { name: 'background.default', color: background.default },
+              { name: 'text.primary', color: palette.text.primary },
+            ])
+          }
+        >
+          <span>Default</span>
+          <strong>{background.default}</strong>
         </Grid>
 
-        <PieChart
-          width={size}
-          height={size}
-          slotProps={{ legend: { hidden: true } }}
-          tooltip={{ trigger: 'item', slots: { itemContent: TooltipContent } }}
-          series={[
-            {
-              ...defaultSeriesProps,
-              innerRadius: size / 20,
-              outerRadius: (size / 10) * 3,
-              startAngle: -90,
-              valueFormatter: ({ id }) => mains[id as keyof typeof mains].main,
-              data: Object.entries(mains).map(
-                ([id, { main, contrastText }]) => ({
-                  id,
-                  value: 10,
-                  label: id.replace(/^./, id.charAt(0).toUpperCase()),
-                  color: main,
-                  contrastText,
-                })
-              ),
-            },
-            {
-              ...defaultSeriesProps,
-              innerRadius: (size / 10) * 3 + size / 20,
-              outerRadius: size / 2,
-              valueFormatter: ({ id }) =>
-                colors[id as keyof typeof colors].main,
-              data: Object.entries(colors).map(
-                ([id, { main, contrastText }]) => ({
-                  id,
-                  value: 10,
-                  label: id.replace(/^./, id.charAt(0).toUpperCase()),
-                  color: main,
-                  contrastText,
-                })
-              ),
-            },
-          ]}
-          {...(onColorClick && {
-            onItemClick: (_e, _identifier, item) => {
-              const { id, color, contrastText } = item as Record<
-                string,
-                string
-              >;
+        <Grid
+          item
+          xs={1}
+          component={onColorClick ? ButtonBase : 'div'}
+          onClick={() =>
+            onColorClick?.([
+              { name: 'background.paper', color: background.paper },
+              { name: 'text.secondary', color: palette.text.secondary },
+            ])
+          }
+        >
+          <span>Paper</span>
+          <strong>{background.paper}</strong>
+        </Grid>
+      </Grid>
 
-              onColorClick?.([
-                { name: `${id}.main` as ColorName, color },
-                {
-                  name: `${id}.contrastText` as ColorName,
-                  color: contrastText,
-                },
-              ]);
-            },
-          })}
-        />
-      </Container>
-    </Zoom>
+      <PieChart
+        width={size}
+        height={size}
+        slotProps={{ legend: { hidden: true } }}
+        tooltip={{ trigger: 'item', slots: { itemContent: TooltipContent } }}
+        series={[
+          {
+            ...defaultSeriesProps,
+            innerRadius: size / 20,
+            outerRadius: (size / 10) * 3,
+            startAngle: -90,
+            valueFormatter: ({ id }) => mains[id as keyof typeof mains].main,
+            data: Object.entries(mains).map(([id, { main, contrastText }]) => ({
+              id,
+              value: 10,
+              label: id.replace(/^./, id.charAt(0).toUpperCase()),
+              color: main,
+              contrastText,
+            })),
+          },
+          {
+            ...defaultSeriesProps,
+            innerRadius: (size / 10) * 3 + size / 20,
+            outerRadius: size / 2,
+            valueFormatter: ({ id }) => colors[id as keyof typeof colors].main,
+            data: Object.entries(colors).map(
+              ([id, { main, contrastText }]) => ({
+                id,
+                value: 10,
+                label: id.replace(/^./, id.charAt(0).toUpperCase()),
+                color: main,
+                contrastText,
+              })
+            ),
+          },
+        ]}
+        {...(onColorClick && {
+          onItemClick: (_e, _identifier, item) => {
+            const { id, color, contrastText } = item as Record<string, string>;
+
+            onColorClick?.([
+              { name: `${id}.main` as ColorName, color },
+              {
+                name: `${id}.contrastText` as ColorName,
+                color: contrastText,
+              },
+            ]);
+          },
+        })}
+      />
+    </Container>
   );
 }

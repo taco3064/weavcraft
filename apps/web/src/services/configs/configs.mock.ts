@@ -7,11 +7,13 @@ const setup = {
 };
 
 Object.entries(setup).forEach(([baseURL, setupMock]) =>
-  setupMock<Record<string, ThemePalette>>({}, ({ db, mock }) => {
+  setupMock<Record<string, ThemePalette>>('configs', {}, ({ db, mock }) => {
     mock
       .onGet(new RegExp(`^${baseURL}/configs/theme-palette/.+$`))
-      .reply(async (config) => {
-        const data = await db.read().then(() => db.data);
+      .reply((config) => {
+        db.read();
+
+        const data = db.data;
 
         return [200, data[config.url?.split('/').pop() as string]];
       });
