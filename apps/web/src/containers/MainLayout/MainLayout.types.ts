@@ -3,9 +3,11 @@ import type { ReactNode } from 'react';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { TypographyProps } from '@mui/material/Typography';
 
+export type MenuMode = 'nav' | 'custom';
+
 export type StyleParams = {
   maxWidth?: Breakpoint;
-  open: boolean;
+  open?: MenuMode;
 };
 
 export type DefaultProps = {
@@ -19,5 +21,5 @@ export interface MainLayoutProps {
 
 export interface CompressionContentProps {
   children: ReactNode;
-  isNavMenuOpen: boolean;
+  isDrawerOpen: boolean;
 }

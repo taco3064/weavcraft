@@ -18,9 +18,8 @@ import UpsertDialog from './HierarchyList.UpsertDialog';
 import { deleteHierarchyData, getHierarchyData } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode, type PortalContainerEl } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
-import type { PortalContainerEl } from '~web/components';
 
 import {
   useDataStore,

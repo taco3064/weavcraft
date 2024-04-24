@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
-import { Breadcrumbs, MainLayout } from '~web/containers';
-import { PaletteViewer, type PortalContainerEl } from '~web/components';
+import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../../pages.styles';
+import type { PortalContainerEl } from '~web/contexts';
 import type { ThemeDetailPageProps } from './detail.types';
 
 import {
@@ -59,12 +59,12 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
       >
         <Breadcrumbs
           disableGutters
+          toolbar={setToolbarEl}
           customBreadcrumbs={{ '/themes/detail': 'hidden' }}
           currentBreadcrumbLabel={hierarchy.title}
           currentPageTitle={`${t('ttl-breadcrumbs.themes.label')} - ${
             hierarchy.title
           }`}
-          onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'id' && typeof value === 'string') {
               return superiors.map(({ _id, title }) => ({
@@ -75,13 +75,12 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
           }}
         />
 
-        <Container disableGutters maxWidth="sm">
-          <PaletteViewer
-            config={initialData}
-            size={400}
-            onColorClick={console.log}
-          />
-        </Container>
+        <PaletteEditor
+          maxWidth="sm"
+          config={initialData}
+          size={360}
+          toolbarEl={toolbarEl}
+        />
       </Container>
     );
   }

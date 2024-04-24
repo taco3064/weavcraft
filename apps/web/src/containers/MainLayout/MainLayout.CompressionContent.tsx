@@ -1,42 +1,37 @@
-import {
-  ThemeProvider,
-  createTheme,
-  type ThemeOptions,
-} from '@mui/material/styles';
+import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
+import { ThemeProvider, type ThemeOptions } from '@mui/material/styles';
+import { useCallback } from 'react';
 
 import { useBreakpointMatches } from '~web/hooks';
 import type { CompressionContentProps } from './MainLayout.types';
 
-function getCompressionTheme({
-  breakpoints: { values },
-  ...outer
-}: Required<ThemeOptions>) {
-  const { breakpoints } = createTheme({
-    breakpoints: {
-      values: Object.fromEntries(
-        Object.entries(values || {}).map(([key, value]) => [
-          key,
-          Math.max(0, key === 'xs' ? 0 : value + 444),
-        ])
-      ) as typeof values,
-    },
-  });
-
-  return { ...outer, breakpoints };
-}
-
 export default function CompressionContent({
   children,
-  isNavMenuOpen,
+  isDrawerOpen,
 }: CompressionContentProps) {
   const { matched: isCompressed } = useBreakpointMatches({
     xs: false,
-    md: isNavMenuOpen,
+    md: isDrawerOpen,
   });
 
-  return !isCompressed ? (
-    children
-  ) : (
-    <ThemeProvider theme={getCompressionTheme}>{children}</ThemeProvider>
+  const getCompressionTheme = useCallback(
+    ({ breakpoints: { values }, ...outer }: Required<ThemeOptions>) => {
+      const compression = isCompressed ? 444 : 0;
+
+      return {
+        ...outer,
+        breakpoints: createBreakpoints({
+          values: Object.fromEntries(
+            Object.entries(values || {}).map(([key, value]) => [
+              key,
+              Math.max(0, key === 'xs' ? 0 : value + compression),
+            ])
+          ) as typeof values,
+        }),
+      };
+    },
+    [isCompressed]
   );
+
+  return <ThemeProvider theme={getCompressionTheme}>{children}</ThemeProvider>;
 }

@@ -5,12 +5,17 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteViewer, type PortalContainerEl } from '~web/components';
+import { PaletteViewer } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
-import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../pages.styles';
 import type { ThemesPageProps } from './themes.types';
+
+import {
+  makePerPageLayout,
+  useTutorialMode,
+  type PortalContainerEl,
+} from '~web/contexts';
 
 export default makePerPageLayout<ThemesPageProps>(MainLayout)(
   function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
@@ -37,7 +42,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           disableGutters
           currentBreadcrumbLabel={group}
           currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
-          onToolbarMount={setToolbarEl}
+          toolbar={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
               return superiors.map(({ _id, title }) => ({

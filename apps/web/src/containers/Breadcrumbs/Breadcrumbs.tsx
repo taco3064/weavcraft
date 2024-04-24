@@ -28,8 +28,8 @@ export default function Breadcrumbs({
   customBreadcrumbs,
   disableGutters,
   stickyTop = 64,
+  toolbar,
   onCatchAllRoutesTransform,
-  onToolbarMount,
 }: BreadcrumbsProps) {
   const [open, setOpen] = useState(false);
 
@@ -110,13 +110,17 @@ export default function Breadcrumbs({
             })}
           </MuiBreadcrumbs>
 
-          {!onToolbarMount ? null : (
+          {!toolbar ? null : (
             <Toolbar
-              ref={onToolbarMount}
               disableGutters
               variant="dense"
               className={classes.right}
-            />
+              {...(toolbar instanceof Function && {
+                ref: toolbar,
+              })}
+            >
+              {toolbar instanceof Function ? null : toolbar}
+            </Toolbar>
           )}
         </Toolbar>
       </AppBar>
