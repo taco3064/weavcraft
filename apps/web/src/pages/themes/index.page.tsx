@@ -32,12 +32,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
     });
 
     return (
-      <Container
-        disableGutters
-        component="main"
-        maxWidth="md"
-        className={classes.root}
-      >
+      <Container component="main" maxWidth="md" className={classes.root}>
         <Breadcrumbs
           disableGutters
           currentBreadcrumbLabel={group}

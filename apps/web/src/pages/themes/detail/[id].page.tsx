@@ -1,4 +1,5 @@
 import Container from '@mui/material/Container';
+import { nanoid } from 'nanoid';
 import { useQueries } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -19,6 +20,7 @@ import {
 
 export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
   function ThemeDetailPage({
+    hash,
     id,
     initialData,
     initialHierarchy,
@@ -33,30 +35,32 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
     const [
       { data: hierarchy = initialHierarchy },
       { data: superiors = initialSuperiors },
+      { data: config = initialData },
     ] = useQueries({
       queries: [
         {
           enabled: isTutorialMode,
-          queryHash: `hierarchy-${id}`,
+          queryHash: `hierarchy-${hash}-${id}`,
           queryKey: [id, true],
           queryFn: getHierarchyDataById,
         },
         {
           enabled: isTutorialMode,
-          queryHash: `superior-${id}`,
+          queryHash: `superior-${hash}-${id}`,
           queryKey: [id, true],
           queryFn: getSuperiorHierarchies,
+        },
+        {
+          enabled: isTutorialMode,
+          queryHash: `theme-${hash}-${id}`,
+          queryKey: [id, true],
+          queryFn: getThemePalette,
         },
       ],
     });
 
     return !hierarchy ? null : (
-      <Container
-        disableGutters
-        component="main"
-        maxWidth="md"
-        className={classes.root}
-      >
+      <Container component="main" maxWidth="md" className={classes.root}>
         <Breadcrumbs
           disableGutters
           toolbar={setToolbarEl}
@@ -77,8 +81,9 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
 
         <PaletteEditor
           maxWidth="md"
-          config={initialData}
+          config={config}
           size={360}
+          title={hierarchy.title}
           toolbarEl={toolbarEl}
         />
       </Container>
@@ -115,6 +120,7 @@ export const getServerSideProps: GetServerSideProps<
   return {
     props: {
       id,
+      hash: nanoid(),
       initialSuperiors,
       ...(initialHierarchy && { initialHierarchy }),
       ...(initialData && { initialData }),

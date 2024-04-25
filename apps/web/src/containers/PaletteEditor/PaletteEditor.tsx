@@ -5,24 +5,30 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import _set from 'lodash/set';
 import { Display } from '@weavcraft/core';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
 import { PaletteViewer } from '~web/components';
-import { PortalWrapper, useTogglePortal } from '~web/contexts';
+import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
+import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import type { ColorName } from '~web/components';
-import type { ThemePalette } from '~web/services';
-
 import type { PaletteEditorProps } from './PaletteEditor.types';
+import type { ThemePalette } from '~web/services';
 
 export default function PaletteEditor({
   config,
   maxWidth,
   size,
+  title,
   toolbarEl,
 }: PaletteEditorProps) {
+  const isTutorialMode = useTutorialMode();
+
   const [, startTransition] = useTransition();
   const [editing, setEditing] = useState<ColorName[]>();
 
@@ -31,24 +37,45 @@ export default function PaletteEditor({
   );
 
   const { t } = useTranslation();
+  const { query } = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ size });
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setEditing(undefined)
   );
 
-  console.log(editing?.join('|'), containerEl);
+  const { mutate: upsert } = useMutation({
+    mutationFn: upsertThemePalette,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: () =>
+      enqueueSnackbar(
+        t(`msg-success-${!config ? 'create' : 'update'}`, { name: title }),
+        {
+          variant: 'success',
+        }
+      ),
+  });
 
   return (
     <Slide in direction="left" timeout={1200}>
-      <Container className={classes.root} maxWidth={maxWidth}>
+      <Container disableGutters className={classes.root} maxWidth={maxWidth}>
         <PortalWrapper
           WrapperComponent={Toolbar}
           containerEl={toolbarEl}
           variant="dense"
         >
           <Tooltip title={t('btn-save')}>
-            <IconButton color="primary" size="large">
+            <IconButton
+              color="success"
+              size="large"
+              onClick={() =>
+                upsert({
+                  input: { ...value, id: query.id as string } as ThemePalette,
+                  isTutorialMode,
+                })
+              }
+            >
               <Display.Icon code="faSave" />
             </IconButton>
           </Tooltip>

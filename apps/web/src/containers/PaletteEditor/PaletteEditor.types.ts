@@ -18,6 +18,7 @@ export interface PaletteEditorProps
   extends Pick<ContainerProps, 'maxWidth'>,
     Pick<PaletteViewerProps, 'size'> {
   config?: ThemePalette;
+  title: string;
   toolbarEl?: PortalContainerEl;
 }
 

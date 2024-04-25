@@ -28,12 +28,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   const { classes } = usePageStyles();
 
   return (
-    <Container
-      disableGutters
-      component="main"
-      maxWidth="sm"
-      className={classes.root}
-    >
+    <Container component="main" maxWidth="sm" className={classes.root}>
       <Breadcrumbs
         disableGutters
         currentPageTitle={t('ttl-breadcrumbs.tutorial.label')}

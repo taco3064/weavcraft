@@ -1,3 +1,5 @@
+import _set from 'lodash/set';
+
 import { setupTestMock, setupTutorialMock } from '../common';
 import type { ThemePalette } from './configs.types';
 
@@ -17,5 +19,14 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
 
         return [200, data[config.url?.split('/').pop() as string]];
       });
+
+    mock.onPost('/configs/theme-palette').reply((config) => {
+      const input = JSON.parse(config.data) as ThemePalette;
+
+      db.update((store) => _set(store, input.id, input));
+      db.write();
+
+      return [200, input];
+    });
   })
 );

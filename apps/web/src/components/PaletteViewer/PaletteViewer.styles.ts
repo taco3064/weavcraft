@@ -86,15 +86,19 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
 
       ...(!disableResponsiveText && {
         [theme.breakpoints.down('sm')]: {
-          fontSize: '0.8em',
+          fontSize: '0.75em',
           height: `calc(${size}px + ${theme.spacing(4)})`,
+
+          '& > *.MuiGrid-item': {
+            padding: `${theme.spacing(0.5, 1)} !important`,
+          },
         },
       }),
       '& > *.MuiGrid-item': {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        padding: theme.spacing(1),
+        padding: theme.spacing(1, 2),
         fontWeight: 600,
         fontSize: '1em',
         cursor: clickable ? 'pointer' : 'default',
@@ -108,7 +112,6 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
           background: background?.default || theme.palette.background.default,
           borderRight: `1px solid ${divider}`,
           color: text?.primary || theme.palette.text.primary,
-          padding: theme.spacing(1, 2),
 
           '&:hover': {
             color: `${
@@ -121,7 +124,6 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
           background: background?.paper || theme.palette.background.paper,
           borderLeft: `1px solid ${divider}`,
           color: text?.secondary || theme.palette.text.secondary,
-          padding: theme.spacing(1, 2),
 
           '&:hover': {
             color: `${text?.primary || theme.palette.text.primary} !important`,
