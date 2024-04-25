@@ -85,6 +85,7 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
         <PaletteEditor
           maxWidth="md"
           config={config}
+          marginTop={16}
           size={360}
           title={hierarchy.title}
           toolbarEl={toolbarEl}

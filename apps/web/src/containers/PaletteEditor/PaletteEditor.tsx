@@ -28,6 +28,7 @@ import {
 
 export default function PaletteEditor({
   config,
+  marginTop,
   maxWidth,
   size,
   title,
@@ -46,7 +47,7 @@ export default function PaletteEditor({
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { isPreviewMode, onPaletteApply } = usePalettePreview();
-  const { classes } = useMainStyles({ size });
+  const { classes } = useMainStyles({ marginTop, size });
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setEditing(undefined)

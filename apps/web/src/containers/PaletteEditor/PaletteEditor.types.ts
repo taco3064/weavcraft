@@ -12,12 +12,15 @@ import type {
 } from '~web/components';
 
 export type ColorInputProps = ComponentProps<typeof HexColorInput>;
-export type StyleParams = Pick<PaletteViewerProps, 'size'>;
+
+export type StyleParams = Pick<PaletteViewerProps, 'size'> &
+  Pick<PaletteEditorProps, 'marginTop'>;
 
 export interface PaletteEditorProps
   extends Pick<ContainerProps, 'maxWidth'>,
     Pick<PaletteViewerProps, 'size'> {
   config?: ThemePalette;
+  marginTop?: number;
   title: string;
   toolbarEl?: PortalContainerEl;
 }

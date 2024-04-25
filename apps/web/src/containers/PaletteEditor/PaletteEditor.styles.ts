@@ -39,8 +39,13 @@ export const useEditorStyles = makeStyles({ name: 'ColorEditor' })((theme) => ({
 
 export const useMainStyles = makeStyles<StyleParams>({
   name: 'PaletteEditor',
-})((theme, { size }) => ({
+})((theme, { marginTop, size }) => ({
   root: {
-    marginTop: `max(${theme.spacing(6)}, calc(50vh - ${size}px))`,
+    marginTop:
+      typeof marginTop === 'number' &&
+      Number.isFinite(marginTop) &&
+      !Number.isNaN(marginTop)
+        ? marginTop
+        : `max(${theme.spacing(6)}, calc(50vh - ${size}px))`,
   },
 }));
