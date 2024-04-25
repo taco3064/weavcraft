@@ -7,11 +7,14 @@ import {
   createRef,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
 import { PALETTES, components, type PaletteCode } from '~web/themes';
+import type { ThemePalette } from '~web/services';
 
 import type {
   AppSettingsContextValue,
@@ -50,20 +53,41 @@ export function useAppSettings() {
   };
 }
 
+export function usePalettePreview() {
+  const { palette, setPalette } = useAppSettings();
+  const resetRef = useRef(() => setPalette?.(palette as PaletteCode));
+
+  useEffect(() => resetRef.current, [resetRef]);
+
+  return {
+    isPreviewMode: typeof palette !== 'string',
+
+    onPaletteApply: (palette?: Partial<ThemePalette>) => {
+      if (palette) {
+        setPalette?.(palette as ThemePalette);
+      } else {
+        resetRef.current();
+      }
+    },
+  };
+}
+
 export function usePalette() {
-  const [palette, setPalette] = useState<string>(
+  const [palette, setPalette] = useState<string | ThemePalette>(
     Cookies.get('palette') || 'WEAVCRAFT'
   );
 
   const { cache, theme } = useMemo(
     () => ({
       cache: createEmotionCache({
-        key: palette.toLowerCase().replace(/_/g, '-'),
+        key: 'weavcraft',
       }),
       theme: createTheme({
         components,
         palette:
-          palette in PALETTES ? PALETTES[palette as PaletteCode] : undefined,
+          typeof palette === 'string'
+            ? PALETTES[palette as PaletteCode]
+            : palette,
         typography: {
           fontFamily: '"Verdana", "微軟雅黑"',
         },
@@ -77,8 +101,11 @@ export function usePalette() {
     palette,
     theme,
 
-    setPalette: useCallback((palette: string) => {
-      Cookies.set('palette', palette);
+    setPalette: useCallback((palette: string | ThemePalette) => {
+      if (typeof palette === 'string') {
+        Cookies.set('palette', palette);
+      }
+
       setPalette(palette);
     }, []),
   };

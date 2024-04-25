@@ -3,6 +3,7 @@ import type { AppProps as NextAppProps } from 'next/app';
 import type { NextPage } from 'next';
 
 import type { PaletteCode } from '~web/themes';
+import type { ThemePalette } from '~web/services';
 
 type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   P,
@@ -18,14 +19,14 @@ export type LanguageCode = string;
 //* Methods
 export type SetterFns = {
   setLanguage: (language: LanguageCode) => void;
-  setPalette: (palette: PaletteCode) => void;
+  setPalette: (palette: PaletteCode | ThemePalette) => void;
 };
 
 //* HOCs & Custom Hooks
 export interface AppSettingsContextValue {
   readonly isTutorialMode: boolean;
   readonly language: LanguageCode;
-  readonly palette: string;
+  readonly palette: string | ThemePalette;
   readonly languages: LanguageCode[];
   readonly palettes: PaletteCode[];
 

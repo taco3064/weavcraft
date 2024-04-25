@@ -13,12 +13,18 @@ import { useState, useTransition } from 'react';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
 import { PaletteViewer } from '~web/components';
-import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import type { ColorName } from '~web/components';
 import type { PaletteEditorProps } from './PaletteEditor.types';
 import type { ThemePalette } from '~web/services';
+
+import {
+  PortalWrapper,
+  usePalettePreview,
+  useTogglePortal,
+  useTutorialMode,
+} from '~web/contexts';
 
 export default function PaletteEditor({
   config,
@@ -39,6 +45,7 @@ export default function PaletteEditor({
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const { isPreviewMode, onPaletteApply } = usePalettePreview();
   const { classes } = useMainStyles({ size });
 
   const { containerEl, onToggle } = useTogglePortal(() =>
@@ -65,9 +72,21 @@ export default function PaletteEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
+          <Tooltip title={t(`btn-${isPreviewMode ? 'undo' : 'preview'}`)}>
+            <IconButton
+              color="secondary"
+              size="large"
+              onClick={() => onPaletteApply(isPreviewMode ? undefined : value)}
+            >
+              <Display.Icon
+                code={isPreviewMode ? 'faUndo' : 'faWandMagicSparkles'}
+              />
+            </IconButton>
+          </Tooltip>
+
           <Tooltip title={t('btn-save')}>
             <IconButton
-              color="success"
+              color="secondary"
               size="large"
               onClick={() =>
                 upsert({

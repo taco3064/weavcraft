@@ -4,7 +4,12 @@ export {
 } from './AppProviderManager.Provider';
 
 export { makePerPageLayout } from './AppProviderManager.hocs';
-export { useAppSettings, useTutorialMode } from './AppProviderManager.hooks';
+
+export {
+  useAppSettings,
+  usePalettePreview,
+  useTutorialMode,
+} from './AppProviderManager.hooks';
 
 export type {
   AppProps,
