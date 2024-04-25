@@ -198,6 +198,11 @@ export const components: ThemeOptions['components'] = {
       }),
     },
   },
+  MuiDrawer: {
+    defaultProps: {
+      transitionDuration: process.env.NEXT_PUBLIC_TRANSITION_DURATION,
+    },
+  },
   MuiFilledInput: {
     defaultProps: {
       disableUnderline: true,

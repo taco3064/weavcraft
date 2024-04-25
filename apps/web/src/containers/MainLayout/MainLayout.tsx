@@ -28,7 +28,7 @@ import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { Link, SwitchIconButton } from '~web/components';
 import { TogglePortalProvider } from '~web/contexts';
 import { useAuth, useAppNavItems } from '~web/hooks';
-import { useLayoutStyles } from './MainLayout.styles';
+import { useMainStyles } from './MainLayout.styles';
 
 import type {
   DefaultProps,
@@ -52,7 +52,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState<MenuMode>();
   const { pathname } = useRouter();
   const { isAuthenticated } = useAuth();
-  const { classes } = useLayoutStyles({ open });
+  const { classes } = useMainStyles({ open });
 
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
   const navItems = useAppNavItems();

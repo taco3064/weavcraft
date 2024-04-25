@@ -17,7 +17,7 @@ export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
   },
 }));
 
-export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
+export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', open }) => {
     const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
 
@@ -40,6 +40,7 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           : open === 'nav'
           ? theme.spacing(4, 0, 0, 4)
           : theme.spacing(0, 4, 4, 0),
+
         transition: theme.transitions.create(
           ['border-radius', 'height', 'margin', 'top'],
           {
@@ -60,11 +61,17 @@ export const useLayoutStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         flexDirection: 'column',
         gap: theme.spacing(1.5),
         width: `calc(100vw - ${open ? drawerWidth + 8 : 0}px)`,
-        marginLeft: open !== 'nav' ? 0 : 'auto',
-        marginRight: open !== 'custom' ? 0 : 'auto',
 
+        transition: theme.transitions.create(['margin', 'width'], {
+          easing: theme.transitions.easing.sharp,
+          duration: process.env.NEXT_PUBLIC_TRANSITION_DURATION,
+        }),
         [theme.breakpoints.down('md')]: {
           width: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+          marginLeft: open !== 'nav' ? 0 : drawerWidth + 8,
+          marginRight: open !== 'custom' ? 0 : drawerWidth + 8,
         },
       },
       drawer: {

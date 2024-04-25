@@ -48,6 +48,7 @@ const nextConfig = {
     plugins: [
       ...plugins,
       new DefinePlugin({
+        'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
         'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
         'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
           i18n.defaultLocale
