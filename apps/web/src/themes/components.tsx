@@ -92,6 +92,9 @@ export const components: ThemeOptions['components'] = {
         fontSize: theme.typography.h4.fontSize,
         alignItems: 'center',
       }),
+      message: {
+        whiteSpace: 'pre-line',
+      },
     },
   },
   MuiAppBar: {

@@ -1,4 +1,6 @@
 {
+  "msg-tutorial-notice": "目前為教程沙盒模式。該模式下的所有資料異動在網頁關閉後將不會被紀錄。",
+  "ttl-tutorial-notice": "請注意",
   "ttl-lessons": {
     "themes": {}
   }

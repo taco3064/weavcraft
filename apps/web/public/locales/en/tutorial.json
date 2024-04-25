@@ -1,4 +1,6 @@
 {
+  "msg-tutorial-notice": "You're in Sandbox Mode. All the changes aren't saved when the page is closed.",
+  "ttl-tutorial-notice": "Notice",
   "ttl-lessons": {
     "themes": {}
   }

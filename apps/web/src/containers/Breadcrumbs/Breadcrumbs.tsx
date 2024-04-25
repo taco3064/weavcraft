@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
-import { MenuDialog, Link } from '~web/components';
+import { MenuDialog, Link, TutorialModeAlert } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
 import { useBreakpointMatches, type BreakpointValues } from '~web/hooks';
@@ -34,7 +34,7 @@ export default function Breadcrumbs({
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
-  const { back } = useRouter();
+  const { pathname, back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
   const { classes } = useBreadcrumbsStyles({ stickyTop });
 
@@ -124,6 +124,8 @@ export default function Breadcrumbs({
           )}
         </Toolbar>
       </AppBar>
+
+      <TutorialModeAlert key={pathname} />
     </>
   );
 }
