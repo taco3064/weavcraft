@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
+import { TutorialModeAlert } from '~web/components';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../../pages.styles';
@@ -78,6 +79,8 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
             }
           }}
         />
+
+        <TutorialModeAlert />
 
         <PaletteEditor
           maxWidth="md"

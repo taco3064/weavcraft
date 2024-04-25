@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteViewer } from '~web/components';
+import { PaletteViewer, TutorialModeAlert } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { usePageStyles } from '../pages.styles';
@@ -47,6 +47,8 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
             }
           }}
         />
+
+        <TutorialModeAlert />
 
         <HierarchyList
           {...{ initialData, isTutorialMode, toolbarEl }}
