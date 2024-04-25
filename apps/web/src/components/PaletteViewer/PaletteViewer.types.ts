@@ -1,37 +1,33 @@
-import type { Palette } from '@mui/material/styles';
 import type { PieChartProps } from '@mui/x-charts';
 import type { ThemePalette } from '@weavcraft/types';
 
 export type DefaultSeriesProps = Partial<PieChartProps['series'][number]>;
-export type PaletteColor = { name: ColorName; color: string };
+export type PaletteColor = { name: ColorName; color?: string };
+export type PrimaryColor = 'primary' | 'secondary';
+export type SecondaryColor = 'info' | 'success' | 'warning' | 'error';
 
 export type ColorName =
   | 'background.default'
   | 'background.paper'
   | 'text.primary'
   | 'text.secondary'
-  | 'primary.main'
-  | 'primary.contrastText'
-  | 'secondary.main'
-  | 'secondary.contrastText'
-  | 'info.main'
-  | 'info.contrastText'
-  | 'success.main'
-  | 'success.contrastText'
-  | 'warning.main'
-  | 'warning.contrastText'
-  | 'error.main'
-  | 'error.contrastText';
+  | `${PrimaryColor}.main`
+  | `${PrimaryColor}.contrastText`
+  | `${SecondaryColor}.main`
+  | `${SecondaryColor}.contrastText`;
 
 export interface PaletteViewerProps {
-  config?: ThemePalette;
+  config?: Partial<ThemePalette>;
+  disableBorderRadius?: boolean;
   disableResponsiveText?: boolean;
   size: number;
   onColorClick?: (e: PaletteColor[]) => void;
 }
 
 export interface ViewerStyleParams
-  extends Pick<PaletteViewerProps, 'disableResponsiveText' | 'size'> {
+  extends Pick<
+    PaletteViewerProps,
+    'config' | 'disableBorderRadius' | 'disableResponsiveText' | 'size'
+  > {
   clickable: boolean;
-  palette: Palette;
 }

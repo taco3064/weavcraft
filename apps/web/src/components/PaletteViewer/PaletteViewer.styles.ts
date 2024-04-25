@@ -27,9 +27,10 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
     theme,
     {
       clickable,
+      config: { background, divider, text } = {},
+      disableBorderRadius,
       disableResponsiveText,
       size,
-      palette: { background, divider, text },
     }
   ) => ({
     root: {
@@ -37,6 +38,7 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
+      borderRadius: disableBorderRadius ? 0 : theme.spacing(2),
 
       '& > *:not(.MuiGrid-root.MuiGrid-container)': {
         position: 'absolute',
@@ -103,22 +105,26 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
         },
         '&:first-of-type': {
           alignItems: 'flex-start',
-          background: background.default,
+          background: background?.default || theme.palette.background.default,
           borderRight: `1px solid ${divider}`,
-          color: text.primary,
+          color: text?.primary || theme.palette.text.primary,
+          padding: theme.spacing(1, 2),
 
           '&:hover': {
-            color: `${text.secondary} !important`,
+            color: `${
+              text?.secondary || theme.palette.text.secondary
+            } !important`,
           },
         },
         '&:last-of-type': {
           alignItems: 'flex-end',
-          background: background.paper,
+          background: background?.paper || theme.palette.background.paper,
           borderLeft: `1px solid ${divider}`,
-          color: text.secondary,
+          color: text?.secondary || theme.palette.text.secondary,
+          padding: theme.spacing(1, 2),
 
           '&:hover': {
-            color: `${text.primary} !important`,
+            color: `${text?.primary || theme.palette.text.primary} !important`,
           },
         },
       },

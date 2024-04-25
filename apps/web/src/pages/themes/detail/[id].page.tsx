@@ -76,7 +76,7 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
         />
 
         <PaletteEditor
-          maxWidth="sm"
+          maxWidth="md"
           config={initialData}
           size={360}
           toolbarEl={toolbarEl}

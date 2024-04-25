@@ -1,11 +1,11 @@
 import ButtonBase from '@mui/material/ButtonBase';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import _merge from 'lodash/merge';
-import _pick from 'lodash/pick';
+import _get from 'lodash/get';
 import { PieChart } from '@mui/x-charts';
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from 'next-i18next';
 
 import TooltipContent from './PaletteViewer.TooltipContent';
 import { useViewerStyles } from './PaletteViewer.styles';
@@ -14,25 +14,30 @@ import type {
   ColorName,
   DefaultSeriesProps,
   PaletteViewerProps,
+  PrimaryColor,
+  SecondaryColor,
 } from './PaletteViewer.types';
+
+const primaries: PrimaryColor[] = ['primary', 'secondary'];
+const secondaries: SecondaryColor[] = ['info', 'success', 'warning', 'error'];
 
 export default function PaletteViewer({
   config,
+  disableBorderRadius,
   disableResponsiveText,
   size,
   onColorClick,
 }: PaletteViewerProps) {
   const theme = useTheme();
-  const palette = _merge({}, theme.palette, config);
-  const mains = _pick(palette, ['primary', 'secondary']);
-  const colors = _pick(palette, ['info', 'success', 'warning', 'error']);
 
-  const { background } = palette;
+  const { t } = useTranslation();
+  const { background, text } = config || {};
 
   const { classes } = useViewerStyles({
     clickable: onColorClick instanceof Function,
+    config,
+    disableBorderRadius,
     disableResponsiveText,
-    palette,
     size,
   });
 
@@ -57,13 +62,13 @@ export default function PaletteViewer({
           component={onColorClick ? ButtonBase : 'div'}
           onClick={() =>
             onColorClick?.([
-              { name: 'background.default', color: background.default },
-              { name: 'text.primary', color: palette.text.primary },
+              { name: 'background.default', color: background?.default },
+              { name: 'text.primary', color: text?.primary },
             ])
           }
         >
           <span>Default</span>
-          <strong>{background.default}</strong>
+          <strong>{background?.default || t('themes:lbl-none')}</strong>
         </Grid>
 
         <Grid
@@ -72,13 +77,13 @@ export default function PaletteViewer({
           component={onColorClick ? ButtonBase : 'div'}
           onClick={() =>
             onColorClick?.([
-              { name: 'background.paper', color: background.paper },
-              { name: 'text.secondary', color: palette.text.secondary },
+              { name: 'background.paper', color: background?.paper },
+              { name: 'text.secondary', color: text?.secondary },
             ])
           }
         >
           <span>Paper</span>
-          <strong>{background.paper}</strong>
+          <strong>{background?.paper || t('themes:lbl-none')}</strong>
         </Grid>
       </Grid>
 
@@ -93,29 +98,41 @@ export default function PaletteViewer({
             innerRadius: size / 20,
             outerRadius: (size / 10) * 3,
             startAngle: -90,
-            valueFormatter: ({ id }) => mains[id as keyof typeof mains].main,
-            data: Object.entries(mains).map(([id, { main, contrastText }]) => ({
-              id,
-              value: 10,
-              label: id.replace(/^./, id.charAt(0).toUpperCase()),
-              color: main,
-              contrastText,
-            })),
-          },
-          {
-            ...defaultSeriesProps,
-            innerRadius: (size / 10) * 3 + size / 20,
-            outerRadius: size / 2,
-            valueFormatter: ({ id }) => colors[id as keyof typeof colors].main,
-            data: Object.entries(colors).map(
-              ([id, { main, contrastText }]) => ({
+            valueFormatter: ({ id }) =>
+              _get(config, [id as PrimaryColor, 'main']) ||
+              t('themes:lbl-none'),
+            data: primaries.map((id) => {
+              const { main = theme.palette.divider, contrastText } =
+                _get(config, id) || {};
+
+              return {
                 id,
                 value: 10,
                 label: id.replace(/^./, id.charAt(0).toUpperCase()),
                 color: main,
                 contrastText,
-              })
-            ),
+              };
+            }),
+          },
+          {
+            ...defaultSeriesProps,
+            innerRadius: (size / 10) * 3 + size / 20,
+            outerRadius: size / 2,
+            valueFormatter: ({ id }) =>
+              _get(config, [id as SecondaryColor, 'main']) ||
+              t('themes:lbl-none'),
+            data: secondaries.map((id) => {
+              const { main = theme.palette.divider, contrastText } =
+                _get(config, id) || {};
+
+              return {
+                id,
+                value: 10,
+                label: id.replace(/^./, id.charAt(0).toUpperCase()),
+                color: main,
+                contrastText,
+              };
+            }),
           },
         ]}
         {...(onColorClick && {

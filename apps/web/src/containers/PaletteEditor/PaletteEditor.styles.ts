@@ -17,5 +17,23 @@ export const useEditorStyles = makeStyles({ name: 'PaletteEditor' })(
         alignItems: 'center',
       },
     },
+    avatar: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: 'auto',
+      width: theme.spacing(7),
+
+      '& > *': {
+        color: `${theme.palette.primary.contrastText} !important`,
+        background: `${theme.palette.primary.main} !important`,
+      },
+    },
+    colorPicker: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop: theme.spacing(2),
+      transform: `translateX(${theme.spacing(-3.5)})`,
+    },
   })
 );

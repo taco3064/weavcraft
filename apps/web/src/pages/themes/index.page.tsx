@@ -63,7 +63,7 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           maxWidth="md"
           superior={group}
           renderPreview={(palette) => (
-            <PaletteViewer config={palette} size={200} />
+            <PaletteViewer disableBorderRadius config={palette} size={200} />
           )}
         />
       </Container>
