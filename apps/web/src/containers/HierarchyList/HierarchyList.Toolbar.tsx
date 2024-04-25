@@ -50,6 +50,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                 <Tooltip title={t('btn-sandbox-mode')}>
                   <IconButton
                     LinkComponent={Link}
+                    size="large"
                     href={`/tutorial/${category}`}
                   >
                     <Display.Icon code="faFlask" />
@@ -61,7 +62,11 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
 
           {onMoveToSuperiorFolder && (
             <Tooltip title={t('btn-move-to-superior-folder')}>
-              <IconButton color="warning" onClick={onMoveToSuperiorFolder}>
+              <IconButton
+                color="warning"
+                size="large"
+                onClick={onMoveToSuperiorFolder}
+              >
                 <Display.Icon code="faArrowUpFromBracket" />
               </IconButton>
             </Tooltip>
@@ -71,6 +76,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
             <Tooltip title={<Trans i18nKey="btn-add-group" />}>
               <IconButton
                 color="warning"
+                size="large"
                 onClick={() =>
                   onAdd({
                     title: t('btn-add-group'),
@@ -87,6 +93,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
           <Tooltip title={t('btn-add-item', { category: categoryLabel })}>
             <IconButton
               color="primary"
+              size="large"
               onClick={() =>
                 onAdd({
                   title: t('btn-add-item', { category: categoryLabel }),

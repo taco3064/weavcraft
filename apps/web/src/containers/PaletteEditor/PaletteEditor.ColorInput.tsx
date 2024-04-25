@@ -5,7 +5,7 @@ import type { ColorInputProps } from './PaletteEditor.types';
 
 export default forwardRef<HTMLInputElement, ColorInputProps>(
   function ColorInput(props, ref) {
-    useImperativeHandle(ref, () => ({} as HTMLInputElement), []);
+    useImperativeHandle(ref, () => global.document?.createElement('input'), []);
 
     return <HexColorInput {...props} />;
   }

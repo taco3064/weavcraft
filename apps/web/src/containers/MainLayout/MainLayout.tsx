@@ -12,7 +12,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import Paper from '@mui/material/Paper';
 import NextLink from 'next/link';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
@@ -112,18 +111,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             PaperProps={{
               className: classes.drawer,
               elevation: 1,
+              ref: (el: HTMLDivElement) =>
+                containerRef((open === 'custom' && el) || undefined),
             }}
-          >
-            {open === 'custom' && (
-              <ClickAwayListener onClickAway={() => setOpen(undefined)}>
-                <Paper
-                  ref={containerRef}
-                  className={classes.custom}
-                  elevation={0}
-                />
-              </ClickAwayListener>
-            )}
-          </Drawer>
+          />
 
           <Drawer
             anchor="left"
