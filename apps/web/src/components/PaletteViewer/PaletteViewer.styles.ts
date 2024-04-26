@@ -100,6 +100,9 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
         width: '100%',
         fontWeight: 600,
 
+        '&::before, &::after': {
+          borderTopColor: divider,
+        },
         '& > .MuiDivider-wrapper': {
           display: 'flex',
           flexDirection: 'column',
