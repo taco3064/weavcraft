@@ -43,11 +43,11 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
               severity="info"
               subject={t('ttl-navigation-confirm')}
               onConfirm={() => push(`/tutorial/${category}`)}
-              message={t('msg-sandbox-confirm', {
+              message={t('tutorial:msg-sandbox-confirm', {
                 name: t(`ttl-breadcrumbs.${category}.label`),
               })}
               toggle={
-                <Tooltip title={t('btn-sandbox-mode')}>
+                <Tooltip title={t('tutorial:btn-sandbox-mode')}>
                   <IconButton
                     LinkComponent={Link}
                     size="large"

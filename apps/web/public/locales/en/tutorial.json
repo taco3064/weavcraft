@@ -1,4 +1,7 @@
 {
+  "btn-sandbox-mode": "Sandbox Mode",
+  "msg-sandbox-confirm": "Are you sure you want to start the sandbox mode of {{name}}?",
+  "msg-sandbox-mode-description": "Sandbox mode allows you to test the functionality of the website without affecting the live version.",
   "msg-tutorial-notice": "You're in Sandbox Mode. All the changes aren't saved when the page is closed.",
   "ttl-tutorial-notice": "Notice",
   "ttl-lessons": {
