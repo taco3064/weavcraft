@@ -3,6 +3,7 @@
   "lbl-none": "無",
   "ttl-editor": "色彩配置",
   "lbl-color": {
+    "divider": "分隔線",
     "background": {
       "default": "預設背景",
       "paper": "紙張背景"
@@ -28,6 +29,7 @@
       "main": "成功顏色"
     },
     "text": {
+      "disabled": "停用文字",
       "primary": "主要文字",
       "secondary": "次要文字"
     },

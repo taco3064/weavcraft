@@ -1,5 +1,6 @@
 import ButtonBase from '@mui/material/ButtonBase';
 import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import _get from 'lodash/get';
 import { PieChart } from '@mui/x-charts';
@@ -23,6 +24,7 @@ const secondaries: SecondaryColor[] = ['info', 'success', 'warning', 'error'];
 
 export default function PaletteViewer({
   config,
+  disableBorder,
   disableBorderRadius,
   disableResponsiveText,
   size,
@@ -31,11 +33,12 @@ export default function PaletteViewer({
   const theme = useTheme();
 
   const { t } = useTranslation();
-  const { background, text } = config || {};
+  const { background, divider, text } = config || {};
 
-  const { classes } = useViewerStyles({
+  const { classes, cx } = useViewerStyles({
     clickable: onColorClick instanceof Function,
     config,
+    disableBorder,
     disableBorderRadius,
     disableResponsiveText,
     size,
@@ -55,7 +58,11 @@ export default function PaletteViewer({
 
   return (
     <Container disableGutters maxWidth={false} className={classes.root}>
-      <Grid container columns={2} className={classes.background}>
+      <Grid
+        container
+        columns={2}
+        className={cx(classes.background, classes.responsiveFont)}
+      >
         <Grid
           item
           xs={1}
@@ -90,6 +97,22 @@ export default function PaletteViewer({
           <strong>{background?.paper || t('themes:lbl-none')}</strong>
         </Grid>
       </Grid>
+
+      <Divider
+        className={cx(classes.divider, classes.responsiveFont)}
+        component={onColorClick ? ButtonBase : 'div'}
+        onClick={(e: MouseEvent) => {
+          e.stopPropagation();
+
+          onColorClick?.([
+            { name: 'divider', color: divider },
+            { name: 'text.disabled', color: text?.disabled },
+          ]);
+        }}
+      >
+        <span>Divider</span>
+        <strong>{divider || t('themes:lbl-none')}</strong>
+      </Divider>
 
       <PieChart
         width={size}

@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
+import cl from 'color';
 import createEmotionCache from '@emotion/cache';
-import { createTheme } from '@mui/material/styles';
+import createPalette from '@mui/material/styles/createPalette';
+import { createTheme, type Palette } from '@mui/material/styles';
 
 import {
   createContext,
@@ -64,16 +66,32 @@ export function usePalettePreview() {
 
     onPaletteApply: (palette?: Partial<ThemePalette>) => {
       if (palette) {
-        setPalette?.(palette as ThemePalette);
-      } else {
-        resetRef.current();
+        const bgcolor = cl(
+          palette.background?.default || palette.background?.paper
+        );
+
+        console.log(palette.divider || bgcolor.negate().grayscale().hex());
+
+        setPalette?.(
+          createPalette({
+            ...palette,
+            mode: bgcolor.isDark() ? 'dark' : 'light',
+            divider:
+              palette.divider ||
+              bgcolor.negate().grayscale().alpha(0.12).hexa(),
+          })
+        );
+
+        return;
       }
+
+      resetRef.current();
     },
   };
 }
 
 export function usePalette() {
-  const [palette, setPalette] = useState<string | ThemePalette>(
+  const [palette, setPalette] = useState<string | Palette>(
     Cookies.get('palette') || 'WEAVCRAFT'
   );
 
@@ -101,7 +119,7 @@ export function usePalette() {
     palette,
     theme,
 
-    setPalette: useCallback((palette: string | ThemePalette) => {
+    setPalette: useCallback((palette: string | Palette) => {
       if (typeof palette === 'string') {
         Cookies.set('palette', palette);
       }

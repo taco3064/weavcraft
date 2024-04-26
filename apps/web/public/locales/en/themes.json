@@ -3,6 +3,7 @@
   "lbl-none": "None",
   "ttl-editor": "Palette Editor",
   "lbl-color": {
+    "divider": "Divider",
     "background": {
       "default": "Default Background",
       "paper": "Paper Background"
@@ -28,6 +29,7 @@
       "main": "Success Color"
     },
     "text": {
+      "disabled": "Disabled Text",
       "primary": "Primary Text",
       "secondary": "Secondary Text"
     },
