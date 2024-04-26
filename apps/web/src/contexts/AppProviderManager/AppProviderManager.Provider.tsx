@@ -29,7 +29,7 @@ export default function AppProviderManager({
 
   const { i18n } = useTranslation();
   const { locale, locales, pathname, query, asPath, replace } = useRouter();
-  const [{ cache, palette, theme }, setPalette] = usePalette();
+  const { cache, palette, theme, setPalette } = usePalette();
 
   const context = useMemo<AppSettingsContextValue>(
     () => ({

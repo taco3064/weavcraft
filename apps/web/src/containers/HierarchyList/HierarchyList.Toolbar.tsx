@@ -6,9 +6,9 @@ import { Trans, useTranslation } from 'next-i18next';
 import { forwardRef } from 'react';
 import { useRouter } from 'next/router';
 
-import { ConfirmToggle, Link, PortalToolbar } from '~web/components';
+import { ConfirmToggle, Link } from '~web/components';
 import { useToolbarStyles } from './HierarchyList.styles';
-import { useTutorialMode } from '~web/contexts';
+import { PortalWrapper, useTutorialMode } from '~web/contexts';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
 
 export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
@@ -33,19 +33,24 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
 
     return (
       <>
-        <PortalToolbar variant="dense" containerEl={toolbarEl}>
+        <PortalWrapper
+          WrapperComponent={Toolbar}
+          containerEl={toolbarEl}
+          variant="dense"
+        >
           {!isTutorialMode && (
             <ConfirmToggle
               severity="info"
               subject={t('ttl-navigation-confirm')}
+              onConfirm={() => push(`/tutorial/${category}`)}
               message={t('msg-sandbox-confirm', {
                 name: t(`ttl-breadcrumbs.${category}.label`),
               })}
-              onConfirm={() => push(`/tutorial/${category}`)}
               toggle={
                 <Tooltip title={t('btn-sandbox-mode')}>
                   <IconButton
                     LinkComponent={Link}
+                    size="large"
                     href={`/tutorial/${category}`}
                   >
                     <Display.Icon code="faFlask" />
@@ -57,7 +62,11 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
 
           {onMoveToSuperiorFolder && (
             <Tooltip title={t('btn-move-to-superior-folder')}>
-              <IconButton color="warning" onClick={onMoveToSuperiorFolder}>
+              <IconButton
+                color="warning"
+                size="large"
+                onClick={onMoveToSuperiorFolder}
+              >
                 <Display.Icon code="faArrowUpFromBracket" />
               </IconButton>
             </Tooltip>
@@ -67,6 +76,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
             <Tooltip title={<Trans i18nKey="btn-add-group" />}>
               <IconButton
                 color="warning"
+                size="large"
                 onClick={() =>
                   onAdd({
                     title: t('btn-add-group'),
@@ -83,6 +93,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
           <Tooltip title={t('btn-add-item', { category: categoryLabel })}>
             <IconButton
               color="primary"
+              size="large"
               onClick={() =>
                 onAdd({
                   title: t('btn-add-item', { category: categoryLabel }),
@@ -96,7 +107,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
           </Tooltip>
 
           {children}
-        </PortalToolbar>
+        </PortalWrapper>
 
         <Toolbar ref={ref} variant="dense" className={classes.filter} />
       </>

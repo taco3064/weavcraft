@@ -5,12 +5,17 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteDisplay, type PortalContainerEl } from '~web/components';
+import { PaletteViewer, TutorialModeAlert } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
-import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../pages.styles';
 import type { ThemesPageProps } from './themes.types';
+
+import {
+  makePerPageLayout,
+  useTutorialMode,
+  type PortalContainerEl,
+} from '~web/contexts';
 
 export default makePerPageLayout<ThemesPageProps>(MainLayout)(
   function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
@@ -27,17 +32,12 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
     });
 
     return (
-      <Container
-        disableGutters
-        component="main"
-        maxWidth="md"
-        className={classes.root}
-      >
+      <Container component="main" maxWidth="md" className={classes.root}>
         <Breadcrumbs
           disableGutters
           currentBreadcrumbLabel={group}
           currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
-          onToolbarMount={setToolbarEl}
+          toolbar={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
               return superiors.map(({ _id, title }) => ({
@@ -48,9 +48,10 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           }}
         />
 
+        <TutorialModeAlert />
+
         <HierarchyList
           {...{ initialData, isTutorialMode, toolbarEl }}
-          PreviewComponent={PaletteDisplay}
           category="themes"
           disableGroup={false}
           disableGutters
@@ -58,6 +59,14 @@ export default makePerPageLayout<ThemesPageProps>(MainLayout)(
           icon="faPalette"
           maxWidth="md"
           superior={group}
+          renderPreview={(palette) => (
+            <PaletteViewer
+              disableBorder
+              disableBorderRadius
+              config={palette}
+              size={200}
+            />
+          )}
         />
       </Container>
     );

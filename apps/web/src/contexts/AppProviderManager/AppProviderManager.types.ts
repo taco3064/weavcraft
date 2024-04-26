@@ -1,6 +1,7 @@
 import type { ComponentType, ReactElement, ReactNode, RefObject } from 'react';
 import type { AppProps as NextAppProps } from 'next/app';
 import type { NextPage } from 'next';
+import type { Palette } from '@mui/material/styles';
 
 import type { PaletteCode } from '~web/themes';
 
@@ -18,14 +19,14 @@ export type LanguageCode = string;
 //* Methods
 export type SetterFns = {
   setLanguage: (language: LanguageCode) => void;
-  setPalette: (palette: PaletteCode) => void;
+  setPalette: (palette: PaletteCode | Palette) => void;
 };
 
 //* HOCs & Custom Hooks
 export interface AppSettingsContextValue {
   readonly isTutorialMode: boolean;
   readonly language: LanguageCode;
-  readonly palette: string;
+  readonly palette: string | Palette;
   readonly languages: LanguageCode[];
   readonly palettes: PaletteCode[];
 

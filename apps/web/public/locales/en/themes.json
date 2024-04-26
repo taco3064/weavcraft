@@ -1,1 +1,41 @@
-{}
+{
+  "lbl-color-code": "Color",
+  "lbl-none": "None",
+  "ttl-editor": "Palette Editor",
+  "lbl-color": {
+    "divider": "Divider",
+    "background": {
+      "default": "Default Background",
+      "paper": "Paper Background"
+    },
+    "error": {
+      "contrastText": "Error Contrast Text",
+      "main": "Error Color"
+    },
+    "info": {
+      "contrastText": "Info Contrast Text",
+      "main": "Info Color"
+    },
+    "primary": {
+      "contrastText": "Primary Contrast Text",
+      "main": "Primary Color"
+    },
+    "secondary": {
+      "contrastText": "Secondary Contrast Text",
+      "main": "Secondary Color"
+    },
+    "success": {
+      "contrastText": "Success Contrast Text",
+      "main": "Success Color"
+    },
+    "text": {
+      "disabled": "Disabled Text",
+      "primary": "Primary Text",
+      "secondary": "Secondary Text"
+    },
+    "warning": {
+      "contrastText": "Warning Contrast Text",
+      "main": "Warning Color"
+    }
+  }
+}

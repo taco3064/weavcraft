@@ -12,12 +12,7 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
   const { classes } = usePageStyles();
 
   return (
-    <Container
-      disableGutters
-      component="main"
-      maxWidth="sm"
-      className={classes.root}
-    >
+    <Container component="main" maxWidth="sm" className={classes.root}>
       <Breadcrumbs disableGutters currentPageTitle={t('ttl-user-settings')} />
 
       <UserSettings />

@@ -1,9 +1,9 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { ElementType, ReactNode } from 'react';
 import type { IconCode } from '@weavcraft/core';
+import type { ReactNode } from 'react';
 
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
-import type { PortalContainerEl } from '~web/components';
+import type { PortalContainerEl } from '~web/contexts';
 
 //* Variables
 export type MutationMode = 'create' | 'update' | 'delete';
@@ -26,7 +26,6 @@ export type UpsertedState<P> = Pick<
 type MuiContainerProps = Pick<ContainerProps, 'disableGutters' | 'maxWidth'>;
 
 export interface HierarchyListProps<P> extends MuiContainerProps {
-  PreviewComponent?: ElementType<{ payload: P }>;
   category: string;
   disableGroup?: boolean;
   disablePublish?: boolean;
@@ -34,6 +33,7 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   initialData?: HierarchyData<string, P>[];
   superior?: string;
   toolbarEl?: PortalContainerEl;
+  renderPreview?: (payload?: P) => ReactNode;
 
   onMutationSuccess?: (
     mode: MutationMode,
@@ -46,7 +46,7 @@ export interface HierarchyListSkeletonProps extends MuiContainerProps {
 }
 
 export interface HierarchyListItemProps<P>
-  extends Pick<HierarchyListProps<P>, 'PreviewComponent' | 'icon'> {
+  extends Pick<HierarchyListProps<P>, 'icon' | 'renderPreview'> {
   cols: number;
   data: HierarchyData<string, P>;
   disableDrag?: boolean;

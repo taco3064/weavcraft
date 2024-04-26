@@ -98,21 +98,21 @@ export function useDraggable<P>(
 }
 
 export function useQueryVariables<P>({
-  PreviewComponent,
   category,
   superior,
-}: Pick<HierarchyListProps<P>, 'PreviewComponent' | 'category' | 'superior'>) {
+  renderPreview,
+}: Pick<HierarchyListProps<P>, 'category' | 'renderPreview' | 'superior'>) {
   const [isPending, startTransition] = useTransition();
 
   const [params, setParams] = useState<SearchHierarchyParams>({
     category,
     superior,
-    withPayload: Boolean(PreviewComponent),
+    withPayload: Boolean(renderPreview),
   });
 
   useEffect(() => {
-    setParams({ category, superior, withPayload: Boolean(PreviewComponent) });
-  }, [PreviewComponent, category, superior]);
+    setParams({ category, superior, withPayload: Boolean(renderPreview) });
+  }, [category, superior, renderPreview]);
 
   return {
     isFiltering: Boolean(params.keyword?.trim()),

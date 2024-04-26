@@ -1,14 +1,16 @@
 import Container from '@mui/material/Container';
+import { nanoid } from 'nanoid';
 import { useQueries } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
-import { Breadcrumbs, MainLayout } from '~web/containers';
+import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
+import { TutorialModeAlert } from '~web/components';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { usePageStyles } from '../../pages.styles';
-import type { PortalContainerEl } from '~web/components';
+import type { PortalContainerEl } from '~web/contexts';
 import type { ThemeDetailPageProps } from './detail.types';
 
 import {
@@ -19,6 +21,7 @@ import {
 
 export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
   function ThemeDetailPage({
+    hash,
     id,
     initialData,
     initialHierarchy,
@@ -33,38 +36,40 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
     const [
       { data: hierarchy = initialHierarchy },
       { data: superiors = initialSuperiors },
+      { data: config = initialData },
     ] = useQueries({
       queries: [
         {
           enabled: isTutorialMode,
-          queryHash: `hierarchy-${id}`,
+          queryHash: `hierarchy-${hash}-${id}`,
           queryKey: [id, true],
           queryFn: getHierarchyDataById,
         },
         {
           enabled: isTutorialMode,
-          queryHash: `superior-${id}`,
+          queryHash: `superior-${hash}-${id}`,
           queryKey: [id, true],
           queryFn: getSuperiorHierarchies,
+        },
+        {
+          enabled: isTutorialMode,
+          queryHash: `theme-${hash}-${id}`,
+          queryKey: [id, true],
+          queryFn: getThemePalette,
         },
       ],
     });
 
     return !hierarchy ? null : (
-      <Container
-        disableGutters
-        component="main"
-        maxWidth="md"
-        className={classes.root}
-      >
+      <Container component="main" maxWidth="md" className={classes.root}>
         <Breadcrumbs
           disableGutters
+          toolbar={setToolbarEl}
           customBreadcrumbs={{ '/themes/detail': 'hidden' }}
           currentBreadcrumbLabel={hierarchy.title}
           currentPageTitle={`${t('ttl-breadcrumbs.themes.label')} - ${
             hierarchy.title
           }`}
-          onToolbarMount={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'id' && typeof value === 'string') {
               return superiors.map(({ _id, title }) => ({
@@ -73,6 +78,17 @@ export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
               }));
             }
           }}
+        />
+
+        <TutorialModeAlert />
+
+        <PaletteEditor
+          maxWidth="md"
+          config={config}
+          marginTop={16}
+          size={360}
+          title={hierarchy.title}
+          toolbarEl={toolbarEl}
         />
       </Container>
     );
@@ -108,6 +124,7 @@ export const getServerSideProps: GetServerSideProps<
   return {
     props: {
       id,
+      hash: nanoid(),
       initialSuperiors,
       ...(initialHierarchy && { initialHierarchy }),
       ...(initialData && { initialData }),

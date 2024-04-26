@@ -1,7 +1,7 @@
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import Grow from '@mui/material/Grow';
 import ImageList from '@mui/material/ImageList';
-import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import { DndContext } from '@dnd-kit/core';
 import { Fragment, useId, useMemo, useState } from 'react';
@@ -18,9 +18,8 @@ import UpsertDialog from './HierarchyList.UpsertDialog';
 import { deleteHierarchyData, getHierarchyData } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode, type PortalContainerEl } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
-import type { PortalContainerEl } from '~web/components';
 
 import {
   useDataStore,
@@ -29,7 +28,6 @@ import {
 } from './HierarchyList.hooks';
 
 export default function HierarchyList<P>({
-  PreviewComponent,
   category,
   disableGroup,
   disableGutters,
@@ -39,6 +37,7 @@ export default function HierarchyList<P>({
   maxWidth = false,
   superior,
   toolbarEl,
+  renderPreview,
   onMutationSuccess,
 }: HierarchyListProps<P>) {
   const isTutorialMode = useTutorialMode();
@@ -52,18 +51,14 @@ export default function HierarchyList<P>({
   const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const { isFiltering, params, onParamsChange, ...variables } =
-    useQueryVariables({
-      PreviewComponent,
-      category,
-      superior,
-    });
+    useQueryVariables({ category, superior, renderPreview });
 
   const {
     data = initialData || [],
     refetch: onRefetch,
     ...query
   } = useQuery({
-    enabled: Boolean(params.keyword?.trim()),
+    enabled: Boolean(params.keyword?.trim()) || isTutorialMode,
     queryKey: [params, isTutorialMode],
     queryFn: getHierarchyData,
   });
@@ -90,40 +85,36 @@ export default function HierarchyList<P>({
   return isLoading ? (
     <HierarchySkeleton {...{ cols, disableGutters, maxWidth }} />
   ) : (
-    <Container {...{ disableGutters, maxWidth }} className={classes.root}>
-      <HierarchyToolbar
-        {...{ category, disableGroup, isTutorialMode, superior, toolbarEl }}
-        ref={setFilterEl}
-        onAdd={setUpserted}
-        onMoveToSuperiorFolder={
-          !superior || !selecteds.length ? undefined : console.log
-        }
-      >
-        <FilterToggle
-          containerEl={filterEl}
-          renderKey={renderKey}
-          values={params}
-          onSearch={onParamsChange}
-        />
+    <Grow key={JSON.stringify(params)} in timeout={1200}>
+      <Container {...{ disableGutters, maxWidth }} className={classes.root}>
+        <HierarchyToolbar
+          {...{ category, disableGroup, isTutorialMode, superior, toolbarEl }}
+          ref={setFilterEl}
+          onAdd={setUpserted}
+          onMoveToSuperiorFolder={
+            !superior || !selecteds.length ? undefined : console.log
+          }
+        >
+          <FilterToggle
+            containerEl={filterEl}
+            renderKey={renderKey}
+            values={params}
+            onSearch={onParamsChange}
+          />
 
-        <UpsertDialog
-          {...upserted}
-          onClose={() => setUpserted(undefined)}
-          onSuccess={(...e) => {
-            onRefetch();
-            onMutationSuccess?.(...e);
-          }}
-        />
-      </HierarchyToolbar>
+          <UpsertDialog
+            {...upserted}
+            onClose={() => setUpserted(undefined)}
+            onSuccess={(...e) => {
+              onRefetch();
+              onMutationSuccess?.(...e);
+            }}
+          />
+        </HierarchyToolbar>
 
-      <DndContext {...contextProps} key={renderKey}>
-        {Object.entries({ group, item }).map(([type, data]) => (
-          <Fragment key={type}>
-            <Slide
-              in
-              direction={type === 'group' ? 'right' : 'left'}
-              timeout={600}
-            >
+        <DndContext {...contextProps} key={renderKey}>
+          {Object.entries({ group, item }).map(([type, data]) => (
+            <Fragment key={type}>
               <Divider>
                 {t(isFiltering ? 'ttl-filter-result' : '{{type}}', {
                   type: t(
@@ -133,9 +124,7 @@ export default function HierarchyList<P>({
                   ),
                 })}
               </Divider>
-            </Slide>
 
-            <Slide in direction="up" timeout={type === 'group' ? 800 : 1200}>
               {!data.length ? (
                 <Typography
                   className={classes.list}
@@ -156,7 +145,7 @@ export default function HierarchyList<P>({
                   {data.map((item) =>
                     item.type !== type ? null : (
                       <HierarchyListItem
-                        {...{ PreviewComponent, cols, icon, isTutorialMode }}
+                        {...{ cols, icon, renderPreview }}
                         key={item._id}
                         data={item}
                         disableDrag={group.length < 1}
@@ -174,10 +163,10 @@ export default function HierarchyList<P>({
                   )}
                 </ImageList>
               )}
-            </Slide>
-          </Fragment>
-        ))}
-      </DndContext>
-    </Container>
+            </Fragment>
+          ))}
+        </DndContext>
+      </Container>
+    </Grow>
   );
 }

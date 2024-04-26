@@ -13,7 +13,7 @@ const TUTORIAL_TOKEN = sha256(`tutorial-${version}`).toString();
 const nextConfig = {
   i18n,
   pageExtensions: ['page.tsx'],
-  transpilePackages: ['@mui/x-charts'],
+  transpilePackages: ['@mui/x-charts', '@mui/material/styles'],
   nx: {
     // Set this to true if you would like to to use SVGR
     // See: https://github.com/gregberge/svgr
@@ -48,6 +48,7 @@ const nextConfig = {
     plugins: [
       ...plugins,
       new DefinePlugin({
+        'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
         'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
         'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
           i18n.defaultLocale

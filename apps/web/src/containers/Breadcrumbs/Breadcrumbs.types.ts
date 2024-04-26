@@ -1,5 +1,7 @@
+import type { ReactElement } from 'react';
+
 import type { Href } from '~web/hooks';
-import type { PortalContainerEl } from '~web/components';
+import type { PortalContainerEl } from '~web/contexts';
 
 export interface Breadcrumb {
   label: string;
@@ -12,7 +14,7 @@ export interface BreadcrumbsProps {
   customBreadcrumbs?: Record<`/${string}`, 'nonLinkable' | 'hidden'>;
   disableGutters?: boolean;
   stickyTop?: number;
-  onToolbarMount?: (toolbarEl: PortalContainerEl) => void;
+  toolbar?: ReactElement | ((toolbarEl: PortalContainerEl) => void);
 
   onCatchAllRoutesTransform?: (
     name: string,

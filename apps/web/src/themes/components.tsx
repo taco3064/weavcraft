@@ -92,6 +92,9 @@ export const components: ThemeOptions['components'] = {
         fontSize: theme.typography.h4.fontSize,
         alignItems: 'center',
       }),
+      message: {
+        whiteSpace: 'pre-line',
+      },
     },
   },
   MuiAppBar: {
@@ -196,6 +199,11 @@ export const components: ThemeOptions['components'] = {
         padding: theme.spacing(1.5, 3),
         userSelect: 'none',
       }),
+    },
+  },
+  MuiDrawer: {
+    defaultProps: {
+      transitionDuration: process.env.NEXT_PUBLIC_TRANSITION_DURATION,
     },
   },
   MuiFilledInput: {
