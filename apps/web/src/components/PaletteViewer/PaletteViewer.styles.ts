@@ -111,7 +111,7 @@ export const useViewerStyles = makeStyles<ViewerStyleParams>({
         height: `calc(${size}px + ${theme.spacing(16)})`,
 
         [theme.breakpoints.down('md')]: {
-          height: `calc(${size}px + ${theme.spacing(6)})`,
+          height: `calc(${size}px + ${theme.spacing(7)})`,
 
           '& > *.MuiGrid-item': {
             padding: `${theme.spacing(0.5, 1)} !important`,
