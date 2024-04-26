@@ -60,13 +60,15 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                   href={href as string}
                   sx={{ borderRadius: 2 }}
                 >
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
                     <Display.Icon code="faLink" />
                   </ListItemIcon>
 
                   <ListItemText
-                    primary={<Trans i18nKey="btn-sandbox-mode" />}
-                    secondary={<Trans i18nKey="msg-sandbox-mode-description" />}
+                    primary={<Trans i18nKey="tutorial:btn-sandbox-mode" />}
+                    secondary={
+                      <Trans i18nKey="tutorial:msg-sandbox-mode-description" />
+                    }
                     primaryTypographyProps={{
                       variant: 'subtitle1',
                       color: 'secondary',

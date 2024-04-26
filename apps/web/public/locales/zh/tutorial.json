@@ -1,5 +1,8 @@
 {
-  "msg-tutorial-notice": "目前為教程沙盒模式。該模式下的所有資料異動在網頁關閉後將不會被紀錄。",
+  "btn-sandbox-mode": "實驗模式",
+  "msg-sandbox-confirm": "是否要使用\"{{name}}\"的實驗模式？",
+  "msg-sandbox-mode-description": "實驗模式允許您在不保存更改的情況下預覽和測試您的網站。\n請注意，您的資料異動將在您關閉網頁後丟失。",
+  "msg-tutorial-notice": "目前為教程實驗模式。該模式下的所有資料異動在網頁關閉後將不會被紀錄。",
   "ttl-tutorial-notice": "請注意",
   "ttl-lessons": {
     "themes": {}
