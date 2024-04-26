@@ -76,10 +76,10 @@ export default function ColorEditor({
                     />
 
                     <TextField
+                      fullWidth
                       variant="outlined"
                       size="small"
                       label={<Trans i18nKey="themes:lbl-color-code" />}
-                      style={{ width: 200 }}
                       onChange={(e) => onChange({ name, color: e.toString() })}
                       InputLabelProps={{ shrink: true }}
                       InputProps={{

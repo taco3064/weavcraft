@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import _get from 'lodash/get';
 import { PieChart } from '@mui/x-charts';
-import { useMemo } from 'react';
+import { useMemo, type MouseEvent } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'next-i18next';
 
@@ -60,12 +60,14 @@ export default function PaletteViewer({
           item
           xs={1}
           component={onColorClick ? ButtonBase : 'div'}
-          onClick={() =>
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation();
+
             onColorClick?.([
               { name: 'background.default', color: background?.default },
               { name: 'text.primary', color: text?.primary },
-            ])
-          }
+            ]);
+          }}
         >
           <span>Default</span>
           <strong>{background?.default || t('themes:lbl-none')}</strong>
@@ -75,12 +77,14 @@ export default function PaletteViewer({
           item
           xs={1}
           component={onColorClick ? ButtonBase : 'div'}
-          onClick={() =>
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation();
+
             onColorClick?.([
               { name: 'background.paper', color: background?.paper },
               { name: 'text.secondary', color: text?.secondary },
-            ])
-          }
+            ]);
+          }}
         >
           <span>Paper</span>
           <strong>{background?.paper || t('themes:lbl-none')}</strong>
@@ -136,8 +140,10 @@ export default function PaletteViewer({
           },
         ]}
         {...(onColorClick && {
-          onItemClick: (_e, _identifier, item) => {
+          onItemClick: (e, _identifier, item) => {
             const { id, color, contrastText } = item as Record<string, string>;
+
+            e.stopPropagation();
 
             onColorClick?.([
               { name: `${id}.main` as ColorName, color },

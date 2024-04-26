@@ -105,6 +105,11 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           },
         },
       },
+      custom: {
+        background: 'transparent',
+        height: '100%',
+        overflow: 'hidden auto',
+      },
       avatar: {
         display: 'flex',
         alignItems: 'center',

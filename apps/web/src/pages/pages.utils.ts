@@ -32,6 +32,6 @@ export async function getServerSideTranslations(
 
   return await serverSideTranslations(
     locale || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
-    ['common', ...ns]
+    ['common', 'tutorial', ...ns]
   );
 }

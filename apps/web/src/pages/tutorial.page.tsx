@@ -126,6 +126,6 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => ({
   props: {
-    ...(await getServerSideTranslations(ctx, 'tutorial')),
+    ...(await getServerSideTranslations(ctx)),
   },
 });

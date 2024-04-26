@@ -34,6 +34,10 @@ export const useEditorStyles = makeStyles({ name: 'ColorEditor' })((theme) => ({
     alignItems: 'center',
     marginTop: theme.spacing(2),
     transform: `translateX(${theme.spacing(-3.5)})`,
+
+    '& .react-colorful': {
+      width: '100%',
+    },
   },
 }));
 
