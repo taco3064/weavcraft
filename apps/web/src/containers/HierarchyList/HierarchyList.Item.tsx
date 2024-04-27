@@ -127,8 +127,13 @@ export default function HierarchyListItem<P>({
               {onDeleteConfirm && (
                 <ConfirmToggle
                   subject={t('ttl-delete-confirm')}
-                  message={t('msg-delete-confirm', { name: data.title })}
                   onConfirm={() => onDeleteConfirm(data)}
+                  message={t(
+                    isGroup
+                      ? 'msg-delete-hierarchy-group-confirm'
+                      : 'msg-delete-confirm',
+                    { name: data.title }
+                  )}
                   toggle={
                     <Tooltip title={t('btn-delete')}>
                       <IconButton color="primary">

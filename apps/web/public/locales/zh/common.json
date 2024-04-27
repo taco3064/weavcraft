@@ -29,6 +29,7 @@
   "lbl-settings": "設定",
   "lbl-theme": "主題樣式",
   "msg-delete-confirm": "確定要刪除{{name}}嗎？",
+  "msg-delete-hierarchy-group-confirm": "確定要刪除資料夾{{name}}及其所有內容嗎？",
   "msg-filter-placeholder": "搜尋資料夾或項目...",
   "msg-no-data": "沒有資料",
   "msg-success-create": "新增{{name}}完成",

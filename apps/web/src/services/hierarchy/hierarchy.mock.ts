@@ -111,7 +111,17 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
           const id = config.url?.split('/').pop() as string;
 
           db.update((store) => {
-            delete store[id];
+            const list = Object.values(store);
+
+            (function remove(id: string) {
+              delete store[id];
+
+              list.forEach(({ _id, superior }) => {
+                if (superior === id) {
+                  remove(_id);
+                }
+              });
+            })(id);
           });
 
           db.write();
