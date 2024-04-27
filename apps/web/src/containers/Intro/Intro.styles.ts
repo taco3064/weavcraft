@@ -9,6 +9,7 @@ export const useMainStyles = makeStyles({ name: 'Intro' })((theme) => ({
     '& img': {
       borderRadius: theme.spacing(2),
       transform: 'scale(0.8)',
+      height: 'auto',
       width: '100%',
     },
     '& .MuiTypography-root': {
