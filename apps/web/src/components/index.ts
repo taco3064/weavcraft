@@ -1,4 +1,5 @@
 export * from './ConfirmToggle';
+export * from './FallbackTrans';
 export * from './Link';
 export * from './MenuDialog';
 export * from './PaletteViewer';
