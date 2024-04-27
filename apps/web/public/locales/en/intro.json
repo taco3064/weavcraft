@@ -1,0 +1,12 @@
+{
+  "msg-intro": "Weavcraft offers a fast and easy way to build your personal website.\n\nFrom customizable themes to interactive and multifunctional webpage content, our platform provides you with convenient components built on Material UI, ensuring your website not only looks elegant but also functions richly.\n\nYou can also find inspiration and quickly apply templates shared by other users through our community service to meet your various needs.\n\nJoin us now and start creating your unique personal website.",
+  "msg-themes": "Theme Styles functionality provides you with a simple and intuitive way to configure the various colors displayed on your website.\n\nAdditionally, we offer a quick apply feature, allowing you to preview and apply changes instantly, ensuring your website looks stunning and rich in functionality.",
+  "ttl-themes": {
+    "normal": "Color Easily For Unique Style",
+    "tiny": "Color Easily\nFor Unique Style"
+  },
+  "ttl-welcome": {
+    "normal": "Welcome To Weavcraft",
+    "tiny": "Welcome To\nWeavcraft"
+  }
+}
