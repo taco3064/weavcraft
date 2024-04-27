@@ -1,6 +1,5 @@
 import Container from '@mui/material/Container';
 import { nanoid } from 'nanoid';
-import { useQueries } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
@@ -8,115 +7,92 @@ import type { GetServerSideProps } from 'next';
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
 import { TutorialModeAlert } from '~web/components';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
-import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import { useInitializationConfig, type InitializationConfig } from '~web/hooks';
 import { usePageStyles } from '../../pages.styles';
-import type { PortalContainerEl } from '~web/contexts';
-import type { ThemeDetailPageProps } from './detail.types';
+
+import {
+  makePerPageLayout,
+  useTutorialMode,
+  type PortalContainerEl,
+} from '~web/contexts';
 
 import {
   getHierarchyDataById,
   getThemePalette,
   getSuperiorHierarchies,
+  type ThemePalette,
 } from '~web/services';
 
-export default makePerPageLayout<ThemeDetailPageProps>(MainLayout)(
-  function ThemeDetailPage({
-    hash,
-    id,
-    initialData,
-    initialHierarchy,
-    initialSuperiors,
-  }) {
-    const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
-    const isTutorialMode = useTutorialMode();
+export default makePerPageLayout<InitializationConfig<ThemePalette>>(
+  MainLayout
+)(function ThemeDetailPage(props) {
+  const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
+  const isTutorialMode = useTutorialMode();
 
-    const { t } = useTranslation();
-    const { classes } = usePageStyles();
+  const { t } = useTranslation();
+  const { classes } = usePageStyles();
 
-    const [
-      { data: hierarchy = initialHierarchy },
-      { data: superiors = initialSuperiors },
-      { data: config = initialData },
-    ] = useQueries({
-      queries: [
-        {
-          enabled: isTutorialMode,
-          queryHash: `hierarchy-${hash}-${id}`,
-          queryKey: [id, true],
-          queryFn: getHierarchyDataById,
-        },
-        {
-          enabled: isTutorialMode,
-          queryHash: `superior-${hash}-${id}`,
-          queryKey: [id, true],
-          queryFn: getSuperiorHierarchies,
-        },
-        {
-          enabled: isTutorialMode,
-          queryHash: `theme-${hash}-${id}`,
-          queryKey: [id, true],
-          queryFn: getThemePalette,
-        },
-      ],
-    });
+  const { config, hierarchy, superiors } = useInitializationConfig(
+    getThemePalette,
+    props
+  );
 
-    return !hierarchy ? null : (
-      <Container component="main" maxWidth="md" className={classes.root}>
-        <Breadcrumbs
-          disableGutters
-          toolbar={setToolbarEl}
-          customBreadcrumbs={{ '/themes/detail': 'hidden' }}
-          currentBreadcrumbLabel={hierarchy.title}
-          currentPageTitle={`${t('ttl-breadcrumbs.themes.label')} - ${
-            hierarchy.title
-          }`}
-          onCatchAllRoutesTransform={(key, value) => {
-            if (key === 'id' && typeof value === 'string') {
-              return superiors.map(({ _id, title }) => ({
-                href: `${isTutorialMode ? '/tutorial' : ''}/themes/${_id}`,
-                label: title,
-              }));
-            }
-          }}
-        />
+  return !hierarchy ? null : (
+    <Container component="main" maxWidth="md" className={classes.root}>
+      <Breadcrumbs
+        disableGutters
+        toolbar={setToolbarEl}
+        customBreadcrumbs={{ '/themes/detail': 'hidden' }}
+        currentBreadcrumbLabel={hierarchy.title}
+        currentPageTitle={`${t('ttl-breadcrumbs.themes.label')} - ${
+          hierarchy.title
+        }`}
+        onCatchAllRoutesTransform={(key, value) => {
+          if (key === 'id' && typeof value === 'string') {
+            return superiors.map(({ _id, title }) => ({
+              href: `${isTutorialMode ? '/tutorial' : ''}/themes/${_id}`,
+              label: title,
+            }));
+          }
+        }}
+      />
 
-        <TutorialModeAlert />
+      <TutorialModeAlert />
 
-        <PaletteEditor
-          maxWidth="md"
-          config={config}
-          marginTop={16}
-          size={360}
-          title={hierarchy.title}
-          toolbarEl={toolbarEl}
-        />
-      </Container>
-    );
-  }
-);
+      <PaletteEditor
+        maxWidth="md"
+        config={config}
+        marginTop={16}
+        size={360}
+        title={hierarchy.title}
+        toolbarEl={toolbarEl}
+      />
+    </Container>
+  );
+});
 
 export const getServerSideProps: GetServerSideProps<
-  ThemeDetailPageProps
+  InitializationConfig<ThemePalette>
 > = async (ctx) => {
   const id = ctx.query.id as string;
   const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
 
-  const initialData = isTutorialMode
+  const config = isTutorialMode
     ? undefined
     : await getThemePalette({ queryKey: [id] });
 
-  const initialHierarchy = isTutorialMode
+  const hierarchy = isTutorialMode
     ? undefined
     : await getHierarchyDataById({ queryKey: [id] });
 
-  const initialSuperiors = isTutorialMode
+  const superiors = isTutorialMode
     ? []
     : await getSuperiorHierarchies({ queryKey: [id] });
 
   if (await isUserEnvStatus(ctx, 'unauth', 'nontutorial')) {
     //* Redirect to home page if not authenticated and not in tutorial mode
     return { redirect: { destination: '/', permanent: false } };
-  } else if (!isTutorialMode && !initialHierarchy) {
+  } else if (!isTutorialMode && !hierarchy) {
     //* Redirect to 404 page if detail does not exist
     return { notFound: true };
   }
@@ -125,9 +101,9 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       id,
       hash: nanoid(),
-      initialSuperiors,
-      ...(initialHierarchy && { initialHierarchy }),
-      ...(initialData && { initialData }),
+      superiors,
+      ...(hierarchy && { hierarchy }),
+      ...(config && { config }),
       ...(await getServerSideTranslations(ctx, 'themes')),
     },
   };
