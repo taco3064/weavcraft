@@ -1,13 +1,14 @@
 import * as Dnd from '@dnd-kit/core';
 import { useEffect, useMemo, useState, useTransition } from 'react';
 
+import { EnumHierarchyType } from '~web/services';
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
 import type { HierarchyListProps } from './HierarchyList.types';
 
 let bodyScrollTop = 0;
 
 export function useDndContextProps(
-  ids: Record<'group' | 'item', string>
+  ids: Record<Lowercase<EnumHierarchyType>, string>
 ): Dnd.DndContextProps {
   const sensors = Dnd.useSensors(
     Dnd.useSensor(Dnd.MouseSensor, {
@@ -56,12 +57,12 @@ export function useDndContextProps(
   };
 }
 
-export function useDroppable<P>(
-  data: HierarchyData<string, P>,
-  disabled = false
-) {
-  const { _id: id, type } = data;
-  const drop = Dnd.useDroppable({ id, disabled: disabled || type !== 'group' });
+export function useDroppable<P>(data: HierarchyData<P>, disabled = false) {
+  const { id, type } = data;
+  const drop = Dnd.useDroppable({
+    id,
+    disabled: disabled || type !== EnumHierarchyType.GROUP,
+  });
 
   return {
     dropRef: drop.setNodeRef,
@@ -69,11 +70,8 @@ export function useDroppable<P>(
   };
 }
 
-export function useDraggable<P>(
-  data: HierarchyData<string, P>,
-  disabled = false
-) {
-  const { _id: id } = data;
+export function useDraggable<P>(data: HierarchyData<P>, disabled = false) {
+  const { id } = data;
   const { active } = Dnd.useDndContext();
   const drag = Dnd.useDraggable({ id, disabled });
 
@@ -124,7 +122,7 @@ export function useQueryVariables<P>({
   };
 }
 
-export function useDataStore<P>(data: HierarchyData<string, P>[]) {
+export function useDataStore<P>(data: HierarchyData<P>[]) {
   const [selecteds, setSelecteds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -136,23 +134,26 @@ export function useDataStore<P>(data: HierarchyData<string, P>[]) {
 
     ...useMemo(
       () =>
-        data.reduce<
-          Record<HierarchyData<string, P>['type'], HierarchyData<string, P>[]>
-        >(
-          (result, item) => ({
-            ...result,
-            [item.type]: [...result[item.type], item],
-          }),
+        data.reduce<Record<Lowercase<EnumHierarchyType>, HierarchyData<P>[]>>(
+          (result, item) => {
+            const type =
+              item.type.toLowerCase() as Lowercase<EnumHierarchyType>;
+
+            return {
+              ...result,
+              [type]: [...result[type], item],
+            };
+          },
           { group: [], item: [] }
         ),
       [data]
     ),
 
-    onDataSelect: (isSelected: boolean, data: HierarchyData<string, P>) => {
+    onDataSelect: (isSelected: boolean, data: HierarchyData<P>) => {
       const set = new Set(selecteds);
 
-      set.delete(data._id);
-      isSelected && set.add(data._id);
+      set.delete(data.id);
+      isSelected && set.add(data.id);
       setSelecteds(Array.from(set));
     },
   };

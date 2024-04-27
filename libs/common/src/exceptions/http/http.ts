@@ -1,7 +1,7 @@
 import { EnumErrorCode } from '../../enums';
 import { HttpErr } from '../../types/errors';
 import { BaseException } from '../base.exception';
-import httpStatus = require('http-status');
+import * as httpStatus from 'http-status';
 
 export class HttpException extends BaseException {
   protected override _errorCode: EnumErrorCode = EnumErrorCode.HTTP_BASE_ERROR;
@@ -23,9 +23,11 @@ export class HttpException extends BaseException {
   constructor(
     message?: string,
     protected _status: number = httpStatus.BAD_REQUEST,
-    description?: string,
+    description?: string
   ) {
-    message = (message && message.length ? message : (httpStatus as any)[_status] ?? '') as string;
+    message = (
+      message && message.length ? message : (httpStatus as any)[_status] ?? ''
+    ) as string;
     super(message, description);
     this._status = _status;
   }

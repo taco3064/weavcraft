@@ -68,7 +68,7 @@ export default function UpsertDialog<P>({
 
     if (data) {
       const formdata = new FormData(e.currentTarget);
-      const mode: MutationMode = data?._id ? 'update' : 'create';
+      const mode: MutationMode = data?.id ? 'update' : 'create';
       const mutate = mutation[mode].mutate;
       const input = { ...data } as Parameters<typeof mutate>[0]['input'];
 

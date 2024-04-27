@@ -40,8 +40,8 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
           toolbar={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
-              return superiors.map(({ _id, title }) => ({
-                href: `${isTutorialMode ? '/tutorial' : ''}/widgets/${_id}`,
+              return superiors.map(({ id, title }) => ({
+                href: `${isTutorialMode ? '/tutorial' : ''}/widgets/${id}`,
                 label: title,
               }));
             }

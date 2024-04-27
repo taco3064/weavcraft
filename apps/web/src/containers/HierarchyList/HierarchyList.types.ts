@@ -8,14 +8,11 @@ import type { PortalContainerEl } from '~web/contexts';
 //* Variables
 export type MutationMode = 'create' | 'update' | 'delete';
 
-export type UpsertedData<P> = Pick<
-  HierarchyData<string, P>,
+export type UpsertedData<P> = Omit<
+  Partial<HierarchyData<P>>,
   'category' | 'type'
 > &
-  Omit<
-    HierarchyData<string, P> | Partial<HierarchyData<undefined, P>>,
-    'category' | 'type'
-  >;
+  Pick<HierarchyData<P>, 'category' | 'type'>;
 
 export type UpsertedState<P> = Pick<
   UpsertDialogProps<P>,
@@ -30,15 +27,11 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   disableGroup?: boolean;
   disablePublish?: boolean;
   icon: IconCode;
-  initialData?: HierarchyData<string, P>[];
+  initialData?: HierarchyData<P>[];
   superior?: string;
   toolbarEl?: PortalContainerEl;
   renderPreview?: (payload?: P) => ReactNode;
-
-  onMutationSuccess?: (
-    mode: MutationMode,
-    item: HierarchyData<string, P>
-  ) => void;
+  onMutationSuccess?: (mode: MutationMode, item: HierarchyData<P>) => void;
 }
 
 export interface HierarchyListSkeletonProps extends MuiContainerProps {
@@ -48,15 +41,16 @@ export interface HierarchyListSkeletonProps extends MuiContainerProps {
 export interface HierarchyListItemProps<P>
   extends Pick<HierarchyListProps<P>, 'icon' | 'renderPreview'> {
   cols: number;
-  data: HierarchyData<string, P>;
+  data: HierarchyData<P>;
   disableDrag?: boolean;
   selected?: boolean;
-  onDeleteConfirm?: (e: HierarchyData<string, P>) => void;
+  onDeleteConfirm?: (e: HierarchyData<P>) => void;
   onEditClick?: (e: UpsertedState<P>) => void;
-  onPublishClick?: (e: HierarchyData<string, P>) => void;
-  onSelect?: (isSelected: boolean, data: HierarchyData<string, P>) => void;
+  onPublishClick?: (e: HierarchyData<P>) => void;
+  onSelect?: (isSelected: boolean, data: HierarchyData<P>) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface HierarchyToolbarProps<P = any>
   extends Pick<
     HierarchyListProps<P>,
@@ -82,6 +76,6 @@ export interface UpsertDialogProps<P> {
 
   onSuccess: (
     mode: Extract<MutationMode, 'create' | 'update'>,
-    item: HierarchyData<string>
+    item: HierarchyData<P>
   ) => void;
 }

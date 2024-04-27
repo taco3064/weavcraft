@@ -1,4 +1,4 @@
-import type { ThemePalette } from '@weavcraft/types';
+import type { ThemePalette } from '@weavcraft/common';
 
 export type { ThemePalette };
 

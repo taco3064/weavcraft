@@ -17,7 +17,7 @@ const setup = {
 };
 
 Object.entries(setup).forEach(([baseURL, setupMock]) =>
-  setupMock<Record<string, HierarchyData<string, any>>>(
+  setupMock<Record<string, HierarchyData<any>>>(
     'hierarchy',
     {},
     ({ db, mock }) => {
@@ -31,9 +31,9 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
           let data = store[config.url?.split('/').pop() as string];
 
           while (data) {
-            const { _id, title, superior } = data;
+            const { id, title, superior } = data;
 
-            result.push({ _id, title });
+            result.push({ id, title });
             data = store[superior as string];
           }
 
@@ -53,7 +53,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
         db.read();
 
         const store = Object.values(db.data);
-        const result: HierarchyData<string, any>[] = [];
+        const result: HierarchyData<any>[] = [];
 
         const { keyword, ...params } = JSON.parse(
           config.data
@@ -74,7 +74,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
               ...(params.withPayload &&
                 category === 'themes' && {
                   payload: await getThemePalette({
-                    queryKey: [data._id, baseURL === '/mocks'],
+                    queryKey: [data.id, baseURL === '/mocks'],
                   }),
                 }),
             });
@@ -86,7 +86,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
 
       mock.onPost(`${baseURL}/hierarchy/create`).reply((config) => {
         const input = {
-          ...(JSON.parse(config.data) as HierarchyData<undefined>),
+          ...(JSON.parse(config.data) as HierarchyData),
           _id: nanoid(),
         };
 
@@ -97,9 +97,9 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       });
 
       mock.onPost(`${baseURL}/hierarchy/update`).reply((config) => {
-        const input = JSON.parse(config.data) as HierarchyData<string>;
+        const input = JSON.parse(config.data) as HierarchyData;
 
-        db.update((store) => _set(store, input._id, input));
+        db.update((store) => _set(store, input.id, input));
         db.write();
 
         return [200, input];
@@ -113,12 +113,12 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
           db.update((store) => {
             const list = Object.values(store);
 
-            (function remove(id: string) {
-              delete store[id];
+            (function remove(targetId: string) {
+              delete store[targetId];
 
-              list.forEach(({ _id, superior }) => {
-                if (superior === id) {
-                  remove(_id);
+              list.forEach(({ id, superior }) => {
+                if (superior === targetId) {
+                  remove(id);
                 }
               });
             })(id);

@@ -49,8 +49,8 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
         }`}
         onCatchAllRoutesTransform={(key, value) => {
           if (key === 'id' && typeof value === 'string') {
-            return superiors.map(({ _id, title }) => ({
-              href: `${isTutorialMode ? '/tutorial' : ''}/themes/${_id}`,
+            return superiors.map(({ id, title }) => ({
+              href: `${isTutorialMode ? '/tutorial' : ''}/themes/${id}`,
               label: title,
             }));
           }

@@ -4,6 +4,6 @@ export interface InitializationConfig<T> {
   hash: string;
   id: string;
   config?: T;
-  hierarchy?: HierarchyData<string>;
+  hierarchy?: HierarchyData;
   superiors: SuperiorHierarchy[];
 }
