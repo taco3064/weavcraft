@@ -3,7 +3,7 @@ import Slide from '@mui/material/Slide';
 import { forwardRef } from 'react';
 import type { ThemeOptions } from '@mui/material/styles';
 
-import type { TransitionProps } from './types';
+import type { TransitionProps } from './themes.types';
 
 //* Dialog Transition
 const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
