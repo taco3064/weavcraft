@@ -20,7 +20,6 @@
       "@weavcraft/helpers": ["libs/helpers/src/index.ts"],
       "@weavcraft/modules": ["libs/modules/src/index.ts"],
       "@weavcraft/repos": ["libs/repos/src/index.ts"],
-      "@weavcraft/types": ["libs/types/src/index.ts"],
       "~web/*": ["apps/web/src/*"]
     }
   },

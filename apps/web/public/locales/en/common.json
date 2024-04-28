@@ -29,6 +29,7 @@
   "lbl-settings": "Settings",
   "lbl-theme": "Theme Style",
   "msg-delete-confirm": "Are you sure you want to delete {{name}}?",
+  "msg-delete-hierarchy-group-confirm": "Are you sure you want to delete the folder '{{name}}' and all its contents?",
   "msg-filter-placeholder": "Enter the search keyword...",
   "msg-no-data": "No data available.",
   "msg-success-create": "Successfully created {{name}}.",

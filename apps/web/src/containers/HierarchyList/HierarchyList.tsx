@@ -146,14 +146,14 @@ export default function HierarchyList<P>({
                     item.type !== type ? null : (
                       <HierarchyListItem
                         {...{ cols, icon, renderPreview }}
-                        key={item._id}
+                        key={item.id}
                         data={item}
                         disableDrag={group.length < 1}
-                        selected={selecteds.includes(item._id)}
+                        selected={selecteds.includes(item.id)}
                         onDeleteConfirm={(input) =>
                           onDelete({ input, isTutorialMode })
                         }
-                        onEditClick={setUpserted}
+                        onEditClick={(e) => setUpserted(e)}
                         onSelect={!superior ? undefined : onDataSelect}
                         onPublishClick={
                           disablePublish ? undefined : console.log

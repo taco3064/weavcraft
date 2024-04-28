@@ -7,6 +7,7 @@ import { forwardRef } from 'react';
 import { useRouter } from 'next/router';
 
 import { ConfirmToggle, Link } from '~web/components';
+import { EnumHierarchyType } from '~web/services';
 import { useToolbarStyles } from './HierarchyList.styles';
 import { PortalWrapper, useTutorialMode } from '~web/contexts';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
@@ -81,7 +82,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                   onAdd({
                     title: t('btn-add-group'),
                     icon: 'faFolderPlus',
-                    data: { category, superior, type: 'group' },
+                    data: { category, superior, type: EnumHierarchyType.GROUP },
                   })
                 }
               >
@@ -98,7 +99,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                 onAdd({
                   title: t('btn-add-item', { category: categoryLabel }),
                   icon: 'faPlus',
-                  data: { category, superior, type: 'item' },
+                  data: { category, superior, type: EnumHierarchyType.ITEM },
                 })
               }
             >

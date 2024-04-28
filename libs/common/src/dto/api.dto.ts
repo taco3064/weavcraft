@@ -10,7 +10,7 @@ import {
 import { JSONSchema } from 'class-validator-jsonschema';
 import { ApiResData, ApiResErr, ApiResPaginated } from '../types/api/api.type';
 import { EnumErrorCode } from '../enums';
-import httpStatus = require('http-status');
+import * as httpStatus from 'http-status';
 
 export class ApiResPaginatedDTO<TData> implements ApiResPaginated<TData> {
   @JSONSchema({ description: '請求結果' })

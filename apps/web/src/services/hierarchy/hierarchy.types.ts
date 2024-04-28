@@ -1,15 +1,15 @@
-import type * as WeavcraftTypes from '@weavcraft/types';
+import type { HierarchyData as CommonHierarchyData } from '@weavcraft/common';
 
-export type SearchHierarchyParams = WeavcraftTypes.SearchHierarchyParams;
-export type SuperiorHierarchy = Pick<HierarchyData<string>, '_id' | 'title'>;
+export {
+  EnumHierarchyType,
+  type SearchHierarchyParams,
+} from '@weavcraft/common';
 
-export type HierarchyData<U extends string | undefined, P = never> = Omit<
-  WeavcraftTypes.HierarchyData<U, P>,
-  'userid'
->;
+export type SuperiorHierarchy = Pick<CommonHierarchyData, 'id' | 'title'>;
+export type HierarchyData<P = never> = CommonHierarchyData<P>;
 
 export type MutationtHierarchyInput = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  input: HierarchyData<string | undefined, any>;
+  input: HierarchyData<any>;
   isTutorialMode?: boolean;
 };

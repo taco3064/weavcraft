@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteViewer, TutorialModeAlert } from '~web/components';
+import { TutorialModeAlert } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { usePageStyles } from '../pages.styles';
@@ -18,7 +18,7 @@ import {
 } from '~web/contexts';
 
 export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
-  function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
+  function WidgetGroupsPage({ group, initialData, initialSuperiors }) {
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
     const isTutorialMode = useTutorialMode();
 
@@ -36,12 +36,12 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
         <Breadcrumbs
           disableGutters
           currentBreadcrumbLabel={group}
-          currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
+          currentPageTitle={!group ? t('ttl-breadcrumbs.widgets.label') : group}
           toolbar={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {
               return superiors.map(({ id, title }) => ({
-                href: `${isTutorialMode ? '/tutorial' : ''}/themes/${id}`,
+                href: `${isTutorialMode ? '/tutorial' : ''}/widgets/${id}`,
                 label: title,
               }));
             }
@@ -52,21 +52,13 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
 
         <HierarchyList
           {...{ initialData, toolbarEl }}
-          category="themes"
+          category="widgets"
           disableGroup={false}
           disableGutters
           disablePublish={false}
-          icon="faPalette"
+          icon="faPuzzlePiece"
           maxWidth="md"
           superior={group}
-          renderPreview={(palette) => (
-            <PaletteViewer
-              disableBorder
-              disableBorderRadius
-              config={palette}
-              size={200}
-            />
-          )}
         />
       </Container>
     );
@@ -98,14 +90,12 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       initialSuperiors,
       ...(group && { group }),
-      ...(await getServerSideTranslations(ctx, 'themes')),
+      ...(await getServerSideTranslations(ctx, 'widgets')),
 
       initialData: isTutorialMode
         ? []
         : await getHierarchyData({
-            queryKey: [
-              { category: 'themes', superior: group, withPayload: true },
-            ],
+            queryKey: [{ category: 'widgets', superior: group }],
           }),
     },
   };

@@ -13,6 +13,7 @@ import { Display } from '@weavcraft/core';
 import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
+import { EnumHierarchyType } from '~web/services';
 import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
 import { useTutorialMode } from '~web/contexts';
@@ -37,7 +38,7 @@ export default function HierarchyListItem<P>({
   const { style, ...toggleProps } = dragProps;
 
   const isTutorialMode = useTutorialMode();
-  const isGroup = data.type === 'group';
+  const isGroup = data.type === EnumHierarchyType.GROUP;
 
   const editTitle = isGroup
     ? t('btn-edit-group')
@@ -55,7 +56,7 @@ export default function HierarchyListItem<P>({
             color: 'text.primary',
             component: Link,
             href: `${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
-              isGroup ? data._id : `detail/${data._id}`
+              isGroup ? data.id : `detail/${data.id}`
             }`,
           }}
           action={
@@ -86,7 +87,9 @@ export default function HierarchyListItem<P>({
           }
         />
 
-        {data.type === 'item' && !isDragging && renderPreview?.(data.payload)}
+        {data.type === EnumHierarchyType.ITEM &&
+          !isDragging &&
+          renderPreview?.(data.payload)}
 
         {data.description && (
           <CardContent>
@@ -127,8 +130,13 @@ export default function HierarchyListItem<P>({
               {onDeleteConfirm && (
                 <ConfirmToggle
                   subject={t('ttl-delete-confirm')}
-                  message={t('msg-delete-confirm', { name: data.title })}
                   onConfirm={() => onDeleteConfirm(data)}
+                  message={t(
+                    isGroup
+                      ? 'msg-delete-hierarchy-group-confirm'
+                      : 'msg-delete-confirm',
+                    { name: data.title }
+                  )}
                   toggle={
                     <Tooltip title={t('btn-delete')}>
                       <IconButton color="primary">
