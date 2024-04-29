@@ -8,10 +8,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import NextLink from 'next/link';
-
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
@@ -21,11 +20,10 @@ import { useTutorialLessons } from '~web/hooks';
 import { usePageStyles } from './pages.styles';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
-  const tutorials = useTutorialLessons();
-  const [expanded, setExpanded] = useState(tutorials[0].label);
-
   const { t } = useTranslation();
+  const { replace } = useRouter();
   const { classes } = usePageStyles();
+  const { expanded, tutorials } = useTutorialLessons('expand');
 
   return (
     <Container component="main" maxWidth="sm" className={classes.root}>
@@ -35,13 +33,16 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
       />
 
       <Container disableGutters maxWidth={false}>
-        {tutorials.map(({ label, icon, href, items }) => (
+        {tutorials.map(({ id, label, icon, href, items }) => (
           <Accordion
-            key={label}
-            id={label}
-            expanded={expanded === label}
+            key={id}
+            id={id}
+            expanded={expanded === id}
             slotProps={{ transition: { timeout: 600 } }}
-            onChange={(_e, isExpanded) => isExpanded && setExpanded(label)}
+            onChange={(_e, isExpanded) =>
+              isExpanded &&
+              replace(`/tutorial?expand=${id}`, '/tutorial', { shallow: true })
+            }
           >
             <AccordionSummary
               expandIcon={
