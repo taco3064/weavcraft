@@ -1,7 +1,7 @@
 import type { HierarchyData, SuperiorHierarchy } from '~web/services';
 
-export interface BaseHierarchyProps {
+export interface BaseHierarchyProps<P = never> {
   group?: string;
-  initialData: HierarchyData[];
+  initialData: HierarchyData<P>[];
   initialSuperiors: SuperiorHierarchy[];
 }

@@ -40,6 +40,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
             key={label}
             id={label}
             expanded={expanded === label}
+            slotProps={{ transition: { timeout: 600 } }}
             onChange={(_e, isExpanded) => isExpanded && setExpanded(label)}
           >
             <AccordionSummary

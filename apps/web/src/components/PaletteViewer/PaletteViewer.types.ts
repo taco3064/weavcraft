@@ -19,6 +19,7 @@ export type ColorName =
   | `${SecondaryColor}.contrastText`;
 
 export interface PaletteViewerProps {
+  className?: string;
   config?: Partial<ThemePalette>;
   disableBorder?: boolean;
   disableBorderRadius?: boolean;

@@ -39,6 +39,7 @@ export default function UserSettings() {
               key={id}
               id={id}
               expanded={expanded === id}
+              slotProps={{ transition: { timeout: 600 } }}
               onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
             >
               <AccordionSummary

@@ -43,8 +43,8 @@
   "ttl-user-settings": "用戶設定",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
-    "group": "資料夾名稱",
-    "item": "{{category}}名稱"
+    "GROUP": "資料夾名稱",
+    "ITEM": "{{category}}名稱"
   },
   "opt-language": {
     "en": "English",

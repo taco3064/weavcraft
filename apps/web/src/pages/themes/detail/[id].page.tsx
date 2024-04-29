@@ -77,13 +77,14 @@ export const getServerSideProps: GetServerSideProps<
   const id = ctx.query.id as string;
   const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
 
-  const config = isTutorialMode
-    ? undefined
-    : await getThemePalette({ queryKey: [id] });
-
   const hierarchy = isTutorialMode
     ? undefined
     : await getHierarchyDataById({ queryKey: [id] });
+
+  const config =
+    isTutorialMode || !hierarchy?.payloadId
+      ? undefined
+      : await getThemePalette({ queryKey: [hierarchy.payloadId] });
 
   const superiors = isTutorialMode
     ? []

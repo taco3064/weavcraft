@@ -2,38 +2,46 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { type AxiosError } from 'axios';
 import { LowSync, MemorySync } from 'lowdb';
-import { SessionStorage } from 'lowdb/browser';
+import { LocalStorage } from 'lowdb/browser';
 
 import type { MockSetupOptions } from './common.types';
 
 const mock = new MockAdapter(axios);
+const testDbs: Record<string, LowSync<any>> = {};
+const tutorialDbs: Record<string, LowSync<any>> = {};
 
-export function setupTutorialMock<T>(
+export function setupTutorialMock(
   name: string,
-  initialData: T,
-  mockFn: (options: MockSetupOptions<T>) => void
+  initialData: Record<string, any>,
+  mockFn: (options: MockSetupOptions) => void
 ) {
-  mockFn({
-    mock,
-    db: new LowSync(
-      global.window ? new SessionStorage<T>(name) : new MemorySync<T>(),
+  if (global.window) {
+    tutorialDbs[name] = new LowSync(
+      new LocalStorage<Record<string, any>>(name),
       initialData
-    ),
-  });
-}
+    );
 
-export function setupTestMock<T>(
-  name: string,
-  initialData: T,
-  mockFn: (options: MockSetupOptions<T>) => void
-) {
-  if (process.env.NODE_ENV === 'test') {
     mockFn({
       mock,
-      db: new LowSync(
-        global.window ? new SessionStorage<T>(name) : new MemorySync<T>(),
-        initialData
-      ),
+      getDb: (name) => tutorialDbs[name],
+    });
+  }
+}
+
+export function setupTestMock(
+  name: string,
+  initialData: Record<string, any>,
+  mockFn: (options: MockSetupOptions) => void
+) {
+  if (process.env.NODE_ENV === 'test') {
+    testDbs[name] = new LowSync(
+      new MemorySync<Record<string, any>>(),
+      initialData
+    );
+
+    mockFn({
+      mock,
+      getDb: (name) => testDbs[name],
     });
   }
 }

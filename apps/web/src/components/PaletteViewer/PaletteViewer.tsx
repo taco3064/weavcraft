@@ -23,6 +23,7 @@ const primaries: PrimaryColor[] = ['primary', 'secondary'];
 const secondaries: SecondaryColor[] = ['info', 'success', 'warning', 'error'];
 
 export default function PaletteViewer({
+  className,
   config,
   disableBorder,
   disableBorderRadius,
@@ -57,7 +58,11 @@ export default function PaletteViewer({
   );
 
   return (
-    <Container disableGutters maxWidth={false} className={classes.root}>
+    <Container
+      disableGutters
+      maxWidth={false}
+      className={cx(classes.root, className)}
+    >
       <Grid
         container
         columns={2}

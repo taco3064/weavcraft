@@ -43,8 +43,8 @@
   "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
-    "group": "Folder Name",
-    "item": "{{category}} Name"
+    "GROUP": "Folder Name",
+    "ITEM": "{{category}} Name"
   },
   "opt-language": {
     "en": "English",
