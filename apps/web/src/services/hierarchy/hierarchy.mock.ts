@@ -2,7 +2,7 @@
 import _set from 'lodash/set';
 import { nanoid } from 'nanoid';
 
-import { getThemePalette } from '../configs';
+import { getThemePalette } from '../configs/configs';
 import { setupTestMock, setupTutorialMock } from '../common';
 
 import type {
@@ -17,117 +17,122 @@ const setup = {
 };
 
 Object.entries(setup).forEach(([baseURL, setupMock]) =>
-  setupMock<Record<string, HierarchyData<any>>>(
-    'hierarchy',
-    {},
-    ({ db, mock }) => {
-      mock
-        .onGet(new RegExp(`^${baseURL}/hierarchy/superiors/.+$`))
-        .reply((config) => {
-          db.read();
+  setupMock('hierarchy', {}, ({ mock, getDb }) => {
+    mock
+      .onGet(new RegExp(`^${baseURL}/hierarchy/superiors/.+$`))
+      .reply((config) => {
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+        const result: SuperiorHierarchy[] = [];
 
-          const result: SuperiorHierarchy[] = [];
-          const store = db.data;
-          let data = store[config.url?.split('/').pop() as string];
+        hierarchyDb.read();
 
-          while (data) {
+        (function get(superior: string) {
+          const data = hierarchyDb.data[superior];
+
+          if (data) {
             const { id, title, superior } = data;
 
             result.push({ id, title });
-            data = store[superior as string];
+            get(superior as string);
           }
-
-          return [200, result];
-        });
-
-      mock.onGet(new RegExp(`^${baseURL}/hierarchy/.+$`)).reply((config) => {
-        db.read();
-
-        const store = db.data;
-        const data = store[config.url?.split('/').pop() as string];
-
-        return [200, data];
-      });
-
-      mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
-        db.read();
-
-        const store = Object.values(db.data);
-        const result: HierarchyData<any>[] = [];
-
-        const { keyword, ...params } = JSON.parse(
-          config.data
-        ) as SearchHierarchyParams;
-
-        for (const data of store) {
-          const { category, superior, title, description } = data;
-
-          if (
-            params.category === category &&
-            ((!keyword &&
-              ((!params.superior && !superior) ||
-                (params.superior && params.superior === superior))) ||
-              (keyword && `${title} ${description}`.includes(keyword)))
-          ) {
-            result.push({
-              ...data,
-              ...(params.withPayload &&
-                category === 'themes' && {
-                  payload: await getThemePalette({
-                    queryKey: [data.id, baseURL === '/mocks'],
-                  }),
-                }),
-            });
-          }
-        }
+        })(config.url?.split('/').pop() as string);
 
         return [200, result];
       });
 
-      mock.onPost(`${baseURL}/hierarchy/create`).reply((config) => {
-        const input = {
-          ...(JSON.parse(config.data) as HierarchyData),
-          _id: nanoid(),
-        };
+    mock.onGet(new RegExp(`^${baseURL}/hierarchy/.+$`)).reply((config) => {
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
+      const id = config.url?.split('/').pop() as string;
 
-        db.update((store) => _set(store, input._id, input));
-        db.write();
+      hierarchyDb.read();
 
-        return [200, input];
-      });
+      return [200, hierarchyDb.data[id]];
+    });
 
-      mock.onPost(`${baseURL}/hierarchy/update`).reply((config) => {
-        const input = JSON.parse(config.data) as HierarchyData;
+    mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
 
-        db.update((store) => _set(store, input.id, input));
-        db.write();
+      hierarchyDb.read();
 
-        return [200, input];
-      });
+      const store = Object.values(hierarchyDb.data);
+      const result: HierarchyData<any>[] = [];
 
-      mock
-        .onDelete(new RegExp(`^${baseURL}/hierarchy/delete/.+$`))
-        .reply((config) => {
-          const id = config.url?.split('/').pop() as string;
+      const { keyword, ...params } = JSON.parse(
+        config.data
+      ) as SearchHierarchyParams;
 
-          db.update((store) => {
-            const list = Object.values(store);
+      for (const data of store) {
+        const { category, superior, title, description } = data;
 
-            (function remove(targetId: string) {
-              delete store[targetId];
-
-              list.forEach(({ id, superior }) => {
-                if (superior === targetId) {
-                  remove(id);
-                }
-              });
-            })(id);
+        if (
+          params.category === category &&
+          ((!keyword &&
+            ((!params.superior && !superior) ||
+              (params.superior && params.superior === superior))) ||
+            (keyword && `${title} ${description}`.includes(keyword)))
+        ) {
+          result.push({
+            ...data,
+            ...(params.withPayload &&
+              category === 'themes' && {
+                payload: await getThemePalette({
+                  queryKey: [data.id, baseURL === '/mocks'],
+                }),
+              }),
           });
+        }
+      }
 
-          db.write();
+      return [200, result];
+    });
 
-          return [200];
+    mock.onPost(`${baseURL}/hierarchy/create`).reply((config) => {
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
+
+      const input: HierarchyData = {
+        ...(JSON.parse(config.data) as HierarchyData),
+        id: nanoid(),
+      };
+
+      hierarchyDb.update((store) => _set(store, input.id, input));
+      hierarchyDb.write();
+
+      return [200, input];
+    });
+
+    mock.onPost(`${baseURL}/hierarchy/update`).reply((config) => {
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
+      const input = JSON.parse(config.data) as HierarchyData;
+
+      hierarchyDb.update((store) => _set(store, input.id, input));
+      hierarchyDb.write();
+
+      return [200, input];
+    });
+
+    mock
+      .onDelete(new RegExp(`^${baseURL}/hierarchy/delete/.+$`))
+      .reply((config) => {
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+        const id = config.url?.split('/').pop() as string;
+
+        hierarchyDb.update((store) => {
+          const list = Object.values(store);
+
+          (function remove(targetId: string) {
+            delete store[targetId];
+
+            list.forEach(({ id, superior }) => {
+              if (superior === targetId) {
+                remove(id);
+              }
+            });
+          })(id);
         });
-    }
-  )
+
+        hierarchyDb.write();
+
+        return [200];
+      });
+  })
 );

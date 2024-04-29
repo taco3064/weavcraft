@@ -91,7 +91,8 @@ export default function PaletteEditor({
               size="large"
               onClick={() =>
                 upsert({
-                  input: { ...value, id: query.id as string } as ThemePalette,
+                  hierarchyId: query.id as string,
+                  input: value as ThemePalette,
                   isTutorialMode,
                 })
               }
@@ -103,6 +104,7 @@ export default function PaletteEditor({
 
         <PaletteViewer
           disableResponsiveText
+          className={classes.viewer}
           config={value}
           size={size}
           onColorClick={(e) =>

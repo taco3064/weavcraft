@@ -143,7 +143,7 @@ export default function HierarchyList<P>({
                   gap={16}
                 >
                   {data.map((item) =>
-                    item.type !== type ? null : (
+                    item.type.toLowerCase() !== type ? null : (
                       <HierarchyListItem
                         {...{ cols, icon, renderPreview }}
                         key={item.id}

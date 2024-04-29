@@ -6,10 +6,15 @@ import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
 import { PaletteViewer, TutorialModeAlert } from '~web/components';
-import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
 import { usePageStyles } from '../pages.styles';
 import type { BaseHierarchyProps } from '../pages.types';
+
+import {
+  getHierarchyData,
+  getSuperiorHierarchies,
+  type ThemePalette,
+} from '~web/services';
 
 import {
   makePerPageLayout,
@@ -17,7 +22,7 @@ import {
   type PortalContainerEl,
 } from '~web/contexts';
 
-export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
+export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
   function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
     const isTutorialMode = useTutorialMode();
@@ -74,7 +79,7 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
 );
 
 export const getServerSideProps: GetServerSideProps<
-  BaseHierarchyProps
+  BaseHierarchyProps<ThemePalette>
 > = async (ctx) => {
   const group =
     typeof ctx.query.group === 'string' ? ctx.query.group : undefined;

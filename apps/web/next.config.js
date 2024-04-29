@@ -29,6 +29,10 @@ const nextConfig = {
       destination: `/:path*?tutorial=${TUTORIAL_TOKEN}`,
     },
     {
+      source: '/api/parser/:path*',
+      destination: '/api/parser/:path*',
+    },
+    {
       source: '/api/:path*',
       destination: 'http://127.0.0.1:4000/:path*',
     },
