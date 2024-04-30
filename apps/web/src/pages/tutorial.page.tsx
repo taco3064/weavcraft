@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import NextLink from 'next/link';
 import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
@@ -21,9 +21,10 @@ import { usePageStyles } from './pages.styles';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   const { t } = useTranslation();
-  const { replace } = useRouter();
   const { classes } = usePageStyles();
-  const { expanded, tutorials } = useTutorialLessons('expand');
+
+  const tutorials = useTutorialLessons();
+  const [activeId, setActiveId] = useState(tutorials[0].id);
 
   return (
     <Container component="main" maxWidth="sm" className={classes.root}>
@@ -37,16 +38,13 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
           <Accordion
             key={id}
             id={id}
-            expanded={expanded === id}
+            expanded={activeId === id}
             slotProps={{ transition: { timeout: 600 } }}
-            onChange={(_e, isExpanded) =>
-              isExpanded &&
-              replace(`/tutorial?expand=${id}`, '/tutorial', { shallow: true })
-            }
+            onChange={(_e, isExpanded) => isExpanded && setActiveId(id)}
           >
             <AccordionSummary
               expandIcon={
-                expanded === label ? null : <Display.Icon code="faAngleDown" />
+                activeId === label ? null : <Display.Icon code="faAngleDown" />
               }
             >
               <Display.Icon color="primary" code={icon} />
