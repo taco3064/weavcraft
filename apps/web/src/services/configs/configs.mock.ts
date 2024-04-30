@@ -6,7 +6,7 @@ import type { HierarchyData } from '../hierarchy/hierarchy.types';
 import type { ThemePalette } from './configs.types';
 
 const setup = {
-  '/api': setupTestMock,
+  '/service': setupTestMock,
   '/mocks': setupTutorialMock,
 };
 

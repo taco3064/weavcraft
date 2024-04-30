@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { withConnRefusedCatch } from '../common';
 
-import type { QueryFunctionParams } from '../common';
+import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
 import type { MutationtThemePaletteInput, ThemePalette } from './configs.types';
 
 export const getThemePalette = withConnRefusedCatch(async function ({
@@ -10,7 +9,7 @@ export const getThemePalette = withConnRefusedCatch(async function ({
   const { data } = await axios.get<ThemePalette>(
     `/configs/themes/${hierarchyId}`,
     {
-      baseURL: isTutorialMode ? '/mocks' : '/api',
+      baseURL: isTutorialMode ? '/mocks' : '/service',
     }
   );
 
@@ -33,7 +32,7 @@ export const upsertThemePalette = withConnRefusedCatch(async function ({
   const { data } = await axios.post<ThemePalette>(
     `/configs/themes/${hierarchyId}`,
     input,
-    { baseURL: isTutorialMode ? '/mocks' : '/api' }
+    { baseURL: isTutorialMode ? '/mocks' : '/service' }
   );
 
   return data;

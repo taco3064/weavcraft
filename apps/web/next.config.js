@@ -12,12 +12,10 @@ const TUTORIAL_TOKEN = sha256(`tutorial-${version}`).toString();
  */
 const nextConfig = {
   i18n,
-  pageExtensions: ['page.tsx'],
+  pageExtensions: ['page.tsx', 'service.ts'],
   transpilePackages: ['@mui/x-charts', '@mui/material/styles'],
   nx: {
-    // Set this to true if you would like to to use SVGR
-    // See: https://github.com/gregberge/svgr
-    svgr: false,
+    svgr: true,
   },
   compiler: {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
@@ -29,26 +27,12 @@ const nextConfig = {
       destination: `/:path*?tutorial=${TUTORIAL_TOKEN}`,
     },
     {
-      source: '/api/parser/:path*',
-      destination: '/api/parser/:path*',
-    },
-    {
-      source: '/api/:path*',
+      source: '/service/:path*',
       destination: 'http://127.0.0.1:4000/:path*',
     },
   ],
-  webpack: ({ module, plugins, ...config }) => ({
+  webpack: ({ plugins, ...config }) => ({
     ...config,
-    module: {
-      ...module,
-      rules: [
-        ...module.rules,
-        {
-          test: /\.svg$/,
-          use: ['@svgr/webpack'],
-        },
-      ],
-    },
     plugins: [
       ...plugins,
       new DefinePlugin({

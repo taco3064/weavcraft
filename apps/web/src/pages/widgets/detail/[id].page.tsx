@@ -1,6 +1,7 @@
 import Container from '@mui/material/Container';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
@@ -19,6 +20,7 @@ import {
 import {
   getHierarchyDataById,
   getSuperiorHierarchies,
+  getWidgetProps,
   getWidgetConfigs,
 } from '~web/services';
 
@@ -34,6 +36,14 @@ export default makePerPageLayout<InitializationConfig<unknown>>(MainLayout)(
       getWidgetConfigs,
       props
     );
+
+    /** Next.js /api === TEST START */
+    const res = useQuery({
+      queryHash: `props-${props.hash}`,
+      queryKey: ['Icon', isTutorialMode],
+      queryFn: getWidgetProps,
+    });
+    /** Next.js /api === TEST END */
 
     return !hierarchy ? null : (
       <Container component="main" maxWidth="md" className={classes.root}>
