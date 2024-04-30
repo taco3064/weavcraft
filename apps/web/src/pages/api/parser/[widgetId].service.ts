@@ -1,8 +1,15 @@
+import * as docgen from 'react-docgen-typescript';
+import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('============');
+const CORE_PATH = path.resolve(
+  process.cwd(),
+  process.env.NODE_ENV === 'production'
+    ? './out/libs/core'
+    : '../../libs/core/src/components'
+);
 
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // if (req.method !== 'POST') {
   //   return res
   //     .setHeader('Allow', ['POST'])
@@ -12,5 +19,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const { widgetId } = req.query;
 
-  return res.status(200).json({ name: widgetId });
+  const [{ props, ...e }, ...f] = docgen.parse(
+    path.resolve(CORE_PATH, `./${widgetId}/index.ts`),
+    {
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldExtractValuesFromUnion: true,
+      savePropValueAsString: false,
+    }
+  );
+
+  console.log(e, f);
+
+  return res.status(200).json(props);
 }
