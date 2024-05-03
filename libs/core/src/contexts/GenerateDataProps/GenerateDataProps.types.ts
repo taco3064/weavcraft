@@ -1,8 +1,6 @@
 import type { JSXElementConstructor, ReactElement } from 'react';
 
-type NonCallbackProps<P> = {
-  [K in Extract<keyof P, string>]: P[K] extends Function ? never : K;
-}[Extract<keyof P, string>];
+type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
 
 type TypeMapping = {
   bigint: bigint;
@@ -11,6 +9,20 @@ type TypeMapping = {
   number: number;
   string: string;
 };
+
+export type PropertyPath<T> = T extends Function | Array<any> | ReactElement
+  ? ''
+  : (
+      T extends object
+        ? {
+            [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<
+              PropertyPath<T[K]>
+            >}`;
+          }[Exclude<keyof T, symbol>]
+        : ''
+    ) extends infer D
+  ? Extract<D, string>
+  : never;
 
 export interface GenericData {
   [key: string]:
@@ -21,22 +33,7 @@ export interface GenericData {
     | GenericData[];
 }
 
-export type PropertyPath<
-  D extends GenericData,
-  K extends keyof D = keyof D
-> = K extends string
-  ? D[K] extends Record<string, any> | undefined
-    ? D[K] extends undefined
-      ? `${K}`
-      : `${K}.${PropertyPath<NonNullable<D[K]>>}` | `${K}`
-    : `${K}`
-  : never;
-
 //* - Utility Prop Types
-type Capitalize<S extends string> = S extends `${infer T}${infer U}`
-  ? `${Uppercase<T>}${U}`
-  : never;
-
 export type PrefixProps<P, PX extends string> = {
   [K in Extract<keyof P, string> as `${PX}${Capitalize<K>}`]?: P[K];
 };
@@ -44,12 +41,7 @@ export type PrefixProps<P, PX extends string> = {
 //* - Component Data
 export interface MappableProps<D extends GenericData, P = {}> {
   data?: D;
-  propMapping?: Partial<
-    Record<
-      NonCallbackProps<P>,
-      D extends GenericData ? PropertyPath<D> : string
-    >
-  >;
+  propMapping?: Partial<Record<PropertyPath<P>, PropertyPath<D> | string>>;
 }
 
 export type PropsWithMappedData<
@@ -68,22 +60,21 @@ export type SlotElement<
 > = ReactElement<P, JSXElementConstructor<P>>;
 
 //* - Store Records
-export type StoreProps<D extends GenericData> = {
+export type PropsWithStore<D extends GenericData, P = {}> = P & {
   records?: D[];
 };
 
-type MappableStoreProps<D extends GenericData, P extends StoreProps<D>> = {
-  propMapping?: Partial<Record<NonCallbackProps<P> | 'records', string>>;
+type MappableStoreProps<D extends GenericData, P extends PropsWithStore<D>> = {
+  propMapping?: Partial<
+    Record<PropertyPath<P> | 'records', PropertyPath<D> | string>
+  >;
 };
-
-export type PropsWithStore<D extends GenericData, P = {}> = P &
-  StoreProps<Extract<D, GenericData>>;
 
 export type PropsWithMappedStore<
   D extends GenericData,
-  P = {},
-  K extends keyof (P & StoreProps<D>) = 'records'
-> = PropsWithStore<D, P> & MappableStoreProps<D, Pick<P & StoreProps<D>, K>>;
+  P extends PropsWithStore<D>,
+  K extends keyof P = 'records'
+> = PropsWithStore<D, P> & MappableStoreProps<D, Pick<P, K>>;
 
 //* - Custom Hooks
 type ValueType<

@@ -2,7 +2,7 @@ import MuiToggleButton from '@mui/material/ToggleButton';
 import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { ComponentProps } from 'react';
 
-import type { ControlVariant, GroupProps } from '../../hooks';
+import type { SelectionGroupProps, SelectionVariant } from '../../hooks';
 import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 
@@ -30,8 +30,8 @@ export type ToggleButtonProps<D extends GenericData> = PropsWithMappedData<
 
 export interface ToggleButtonGroupProps<
   D extends GenericData = {},
-  T extends ControlVariant = ControlVariant
+  V extends SelectionVariant = SelectionVariant
 > extends MuiToggleButtonGroupProps,
-    GroupProps<T, ToggleButtonProps<D>> {
-  variant?: T;
+    SelectionGroupProps<V, D, ToggleButtonProps<D>> {
+  variant?: V;
 }

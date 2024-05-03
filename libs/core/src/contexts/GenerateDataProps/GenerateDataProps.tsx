@@ -36,50 +36,48 @@ export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
     );
   };
 
-export function makeStoreProps<
-  R extends PropsWithStore<{}>,
-  K extends keyof R = 'records'
->() {
-  return (Component: ComponentType<R>) =>
-    function GenerateStoreWrapper<
-      D extends GenericData,
-      P = PropsWithStore<D, Omit<R, 'records'>>
-    >(props: PropsWithMappedStore<D, P, Extract<K, keyof P>>) {
-      const { records, propMapping } = props;
-      const { root, paths } = useDataStructure();
+export const withStoreProps = <
+  D extends GenericData,
+  P extends PropsWithStore<D>,
+  K extends keyof P = 'records'
+>(
+  Component: ComponentType<P>
+): ComponentType<PropsWithMappedStore<D, P, K>> =>
+  function GenerateStoreWrapper(props) {
+    const { records, propMapping } = props;
+    const { root, paths } = useDataStructure();
 
-      const getProps = usePropsGetter();
-      const { data } = useComponentData();
-      const uid = useSymbolId();
-      const consumer = <Component {...getProps({ ...props, data })} />;
+    const getProps = usePropsGetter();
+    const { data } = useComponentData();
+    const uid = useSymbolId();
+    const consumer = <Component {...getProps({ ...props, data })} />;
 
-      const value = useMemo(() => {
-        if (records) {
-          /**
-           * ? If there are records: (Root Case)
-           * * - Generate a new uid
-           * * - Leave paths empty
-           */
-          return { uid, paths: [] };
-        } else if (propMapping?.records) {
-          /**
-           * ? If the propMapping is defined: (Leaf Case)
-           * * - Use the root uid
-           * * - Append 'propMapping.records' to paths
-           */
-          return { uid: root, paths: [...paths, propMapping.records] };
-        }
+    const value = useMemo(() => {
+      if (records) {
+        /**
+         * ? If there are records: (Root Case)
+         * * - Generate a new uid
+         * * - Leave paths empty
+         */
+        return { uid, paths: [] };
+      } else if (propMapping?.records) {
+        /**
+         * ? If the propMapping is defined: (Leaf Case)
+         * * - Use the root uid
+         * * - Append 'propMapping.records' to paths
+         */
+        return { uid: root, paths: [...paths, propMapping.records] };
+      }
 
-        //* - Bypass
-        return null;
-      }, [root, uid, paths, records, propMapping?.records]);
+      //* - Bypass
+      return null;
+    }, [root, uid, paths, records, propMapping?.records]);
 
-      return !value ? (
-        consumer
-      ) : (
-        <DataStructureContext.Provider value={value}>
-          {consumer}
-        </DataStructureContext.Provider>
-      );
-    };
-}
+    return !value ? (
+      consumer
+    ) : (
+      <DataStructureContext.Provider value={value}>
+        {consumer}
+      </DataStructureContext.Provider>
+    );
+  };

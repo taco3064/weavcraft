@@ -11,9 +11,8 @@ import type { GenericData } from '../../contexts';
 
 import type {
   BaseSelectFieldProps,
-  ControlProps,
-  ControlVariant,
-  GroupProps,
+  SelectionGroupProps,
+  SelectionVariant,
 } from './useSelection.types';
 
 export function useMultipleSelection<D extends GenericData>({
@@ -22,7 +21,7 @@ export function useMultipleSelection<D extends GenericData>({
   records,
   value,
   onChange,
-}: GroupProps<'multiple', ControlProps<D>>) {
+}: SelectionGroupProps<'multiple', D, any>) {
   type GroupValue = NonNullable<typeof value>[number];
 
   return {
@@ -57,7 +56,7 @@ export function useSingleSelection<D extends GenericData>({
   records,
   value,
   onChange,
-}: GroupProps<'single', ControlProps<D>>) {
+}: SelectionGroupProps<'single', D, any>) {
   type GroupValue = NonNullable<typeof value>;
 
   return {
@@ -84,9 +83,9 @@ export function useSingleSelection<D extends GenericData>({
 }
 
 export function useOptionsRender<
-  T extends ControlVariant,
+  V extends SelectionVariant,
   D extends GenericData
->({ optionIndicator, optionProps, records }: BaseSelectFieldProps<T, D>) {
+>({ optionIndicator, optionProps, records }: BaseSelectFieldProps<V, D>) {
   const ItemIndicator = useComponentSlot(optionIndicator);
   const getProps = usePropsGetter();
 
@@ -98,9 +97,10 @@ export function useOptionsRender<
 
     return (
       <MuiMenuItem
-        {...{ disabled, value }}
-        disableGutters
         key={i}
+        disableGutters
+        disabled={disabled}
+        value={value as string}
         data-testid="SingleSelectFieldOption"
       >
         <MuiListItem component="div">

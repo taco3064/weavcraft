@@ -1,5 +1,5 @@
 import type { GenericData } from '../../contexts';
-import type { GroupProps } from '../../hooks';
+import type { SelectionGroupProps } from '../../hooks';
 import type { SelectionProps } from '../Selection';
 
 type BaseRadioProps<D extends GenericData> = Omit<
@@ -8,6 +8,6 @@ type BaseRadioProps<D extends GenericData> = Omit<
 >;
 
 export interface RadioGroupProps<D extends GenericData = {}>
-  extends GroupProps<'single', BaseRadioProps<D>> {
+  extends SelectionGroupProps<'single', D, BaseRadioProps<D>> {
   title?: string;
 }

@@ -1,5 +1,6 @@
 import * as docgen from 'react-docgen-typescript';
 import path from 'path';
+import type { ComponentDoc } from 'react-docgen-typescript';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const CORE_PATH = path.resolve(
@@ -19,7 +20,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const { widgetId } = req.query;
 
-  const [{ props, ...e }, ...f] = docgen.parse(
+  const [{ props = {}, ...e } = {} as ComponentDoc, ...f] = docgen.parse(
     path.resolve(CORE_PATH, `./${widgetId}/index.ts`),
     {
       shouldExtractLiteralValuesFromEnum: true,
@@ -28,7 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
   );
 
-  console.log(e, f);
+  console.log(e, f, path.resolve(CORE_PATH, `./${widgetId}/index.ts`));
 
   return res.status(200).json(props);
 }

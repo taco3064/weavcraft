@@ -4,32 +4,33 @@ import ImageListItem from '../ImageListItem';
 import type { ImageListProps } from './ImageList.types';
 
 import {
-  makeStoreProps,
+  withStoreProps,
   useComponentSlot,
   type GenericData,
 } from '../../contexts';
 
-const withStoreProps = makeStoreProps<ImageListProps>();
+export default (<D extends GenericData>() =>
+  withStoreProps<D, ImageListProps<D>>(function ImageList({
+    itemAction,
+    itemProps,
+    records = [],
+    onItemActionClick,
+    ...props
+  }) {
+    const Action = useComponentSlot(itemAction, onItemActionClick);
 
-export default withStoreProps(function ImageList<D extends GenericData>({
-  itemAction,
-  itemProps,
-  records = [],
-  onItemActionClick,
-  ...props
-}: ImageListProps<D>) {
-  const Action = useComponentSlot(itemAction, onItemActionClick);
-
-  return (
-    <MuiImageList {...props} data-testid="ImageList">
-      {records.map((item, i) => (
-        <ImageListItem
-          {...itemProps}
-          key={i}
-          data={item}
-          action={Action.Slot && <Action.Slot {...Action.getSlotProps(item)} />}
-        />
-      ))}
-    </MuiImageList>
-  );
-});
+    return (
+      <MuiImageList {...props} data-testid="ImageList">
+        {records.map((item, i) => (
+          <ImageListItem
+            {...itemProps}
+            key={i}
+            data={item}
+            action={
+              Action.Slot && <Action.Slot {...Action.getSlotProps(item)} />
+            }
+          />
+        ))}
+      </MuiImageList>
+    );
+  }))();

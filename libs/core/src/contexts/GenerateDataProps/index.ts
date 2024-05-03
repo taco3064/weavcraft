@@ -1,4 +1,4 @@
-export { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
+export { withGenerateDataProps, withStoreProps } from './GenerateDataProps';
 
 export {
   useComponentData,
@@ -15,5 +15,4 @@ export type {
   PropsWithStore,
   SlotElement,
   SlotProps,
-  StoreProps,
 } from './GenerateDataProps.types';

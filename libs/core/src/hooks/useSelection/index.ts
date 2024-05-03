@@ -3,6 +3,6 @@ export * from './useSelection';
 export type {
   BaseListItemProps,
   BaseSelectFieldProps,
-  ControlVariant,
-  GroupProps,
+  SelectionGroupProps,
+  SelectionVariant,
 } from './useSelection.types';

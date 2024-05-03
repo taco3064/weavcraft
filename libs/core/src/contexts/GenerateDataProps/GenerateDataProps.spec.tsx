@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
-import { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
+import { withGenerateDataProps, withStoreProps } from './GenerateDataProps';
 
 import {
   ComponentDataContext,
@@ -18,6 +18,7 @@ import {
 import type {
   GenericData,
   PropsWithMappedStore,
+  PropsWithStore,
   SlotElement,
 } from './GenerateDataProps.types';
 
@@ -120,17 +121,16 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       )
     );
 
-    const WrappedDummies = makeStoreProps<
-      PropsWithMappedStore<{ name: string }>
-    >()(function Dummy({ records }) {
-      return (
-        <div data-testid="dummies">
-          {records?.map(({ name }, i) => (
-            <span key={i}>{name}</span>
-          ))}
-        </div>
-      );
-    });
+    const WrappedDummies = (<D extends (typeof records)[number]>() =>
+      withStoreProps<D, PropsWithStore<D>>(function Dummy({ records }) {
+        return (
+          <div data-testid="dummies">
+            {records?.map(({ name }, i) => (
+              <span key={i}>{name}</span>
+            ))}
+          </div>
+        );
+      }))();
 
     const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
   });

@@ -2,67 +2,59 @@ import type {
   GenericData,
   MappableProps,
   PropertyPath,
+  PropsWithStore,
   SlotElement,
-  StoreProps,
 } from '../../contexts';
 
 type PropertyType<
-  D extends {},
-  P extends PropertyPath<D> = PropertyPath<D>
+  T,
+  P extends PropertyPath<T> = PropertyPath<T>
 > = P extends `${infer K}.${infer Rest}`
-  ? K extends keyof D
-    ? Rest extends PropertyPath<NonNullable<D[K]>>
-      ? PropertyType<NonNullable<D[K]>, Rest>
-      : never
+  ? K extends keyof T
+    ? PropertyType<T[K], Extract<Rest, PropertyPath<T[K]>>>
     : never
-  : P extends keyof D
-  ? D[P]
+  : P extends keyof T
+  ? T[P]
   : never;
 
-export type ControlVariant = 'single' | 'multiple';
+export type SelectionVariant = 'single' | 'multiple';
 
-export type ControlProps<D extends GenericData> = {
-  value?: any;
-} & MappableProps<D, { value?: any }>;
-
-export type ControlValue<
-  T extends ControlVariant,
-  P extends ControlProps<GenericData>,
-  V = NonNullable<
-    PropertyType<
-      NonNullable<P['data']>,
-      Extract<
-        NonNullable<P['propMapping']>['value'],
-        PropertyPath<NonNullable<P['data']>>
-      >
-    >
-  >
-> = T extends 'multiple' ? V[] : V;
+type SelectionValue<
+  V extends SelectionVariant,
+  D,
+  ValuePath extends PropertyPath<D> = PropertyPath<D>
+> = V extends 'multiple'
+  ? PropertyType<D, ValuePath>[]
+  : PropertyType<D, ValuePath>;
 
 //* - Prop Types
-export interface GroupProps<
-  T extends ControlVariant,
-  P extends ControlProps<GenericData>
-> extends StoreProps<NonNullable<P['data']>> {
-  name?: string;
-  optionProps?: Omit<P, 'data'>;
-  value?: ControlValue<T, P>;
-  onChange?: (value?: ControlValue<T, P>, name?: string) => void;
-}
-
 export interface BaseListItemProps {
   primary?: string;
   secondary?: string;
   disabled?: boolean;
 }
 
-interface BaseOptionProps extends BaseListItemProps {
-  value?: any;
+export interface SelectionGroupProps<
+  V extends SelectionVariant,
+  D extends GenericData,
+  OptionProps extends object = {},
+  ValuePath extends PropertyPath<D> = PropertyPath<D>
+> extends PropsWithStore<D> {
+  name?: string;
+  value?: SelectionValue<V, D, ValuePath>;
+  onChange?: (value?: SelectionValue<V, D, ValuePath>, name?: string) => void;
+
+  optionProps?: OptionProps & {
+    value?: SelectionValue<'single', D, ValuePath>;
+    propMapping?: NonNullable<MappableProps<D, OptionProps>['propMapping']> & {
+      value?: ValuePath;
+    };
+  };
 }
 
 export interface BaseSelectFieldProps<
-  T extends ControlVariant,
+  V extends SelectionVariant,
   D extends GenericData
-> extends GroupProps<T, BaseOptionProps & MappableProps<D, BaseOptionProps>> {
+> extends SelectionGroupProps<V, D, BaseListItemProps> {
   optionIndicator?: SlotElement;
 }

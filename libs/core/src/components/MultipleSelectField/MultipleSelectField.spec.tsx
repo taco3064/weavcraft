@@ -76,7 +76,7 @@ describe('@weavcraft/core/components/MultipleSelectField', () => {
     const initIndex = Math.floor(Math.random() * records.length);
     const index = (initIndex + 1) % records.length;
     const { result } = renderHook(() =>
-      useState<string[] | undefined>([records[initIndex].id])
+      useState<any[] | undefined>([records[initIndex].id])
     );
 
     const { getAllByRole, getByRole } = render(
@@ -108,7 +108,7 @@ describe('@weavcraft/core/components/MultipleSelectField', () => {
     );
 
     const { result } = renderHook(() =>
-      useState<string[] | undefined>(indexes.map((i) => records[i].id))
+      useState<any[] | undefined>(indexes.map((i) => records[i].id))
     );
 
     const { getAllByTestId } = render(
