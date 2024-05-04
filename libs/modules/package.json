@@ -6,7 +6,8 @@
     "tsyringe": "^4.8.0",
     "@weavcraft/repos": "0.0.1",
     "mongoose": "^8.2.3",
-    "@weavcraft/common": "0.0.1"
+    "@weavcraft/common": "0.0.1",
+    "@supabase/supabase-js": "^2.42.7"
   },
   "type": "commonjs",
   "main": "./src/index.js",
