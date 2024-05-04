@@ -1,6 +1,5 @@
-import { IsDate, IsDateString, IsEnum, IsMongoId, IsOptional, IsString } from "class-validator";
-import { EnumHierarchyType, HierarchyData } from "../types/hierarchy";
-import { PayloadData } from "../types/payload/payload.type";
+import { IsDate, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { PayloadData } from '../types/payload/payload.type';
 
 export class PayloadDataDTO implements PayloadData {
   @IsMongoId()

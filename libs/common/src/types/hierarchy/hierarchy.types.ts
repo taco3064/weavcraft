@@ -1,5 +1,5 @@
-import { UpdatedAtDocument, CreatedAtDocument } from "../mongodb";
-import { PayloadData } from "../payload/payload.type";
+import { UpdatedAtDocument, CreatedAtDocument } from '../mongodb';
+import { PayloadData } from '../payload/payload.type';
 
 export type SearchHierarchyParams = {
   category: string;
@@ -23,7 +23,8 @@ export type Hierarchy = {
   superior?: string;
   payloadId?: string;
   rootId?: string;
-} & UpdatedAtDocument & CreatedAtDocument;
+} & UpdatedAtDocument &
+  CreatedAtDocument;
 
 export type HierarchyData<P = PayloadData> = {
   id: string;
