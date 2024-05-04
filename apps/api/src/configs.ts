@@ -47,6 +47,10 @@ export class Configs {
       mongodb: {
         uri: this._env.MONGO_DEV_URI ?? this._env.DB_MONGO_URI,
       },
+      supabase: {
+        url: process.env['PUBLIC_SUPABASE_URL'],
+        key: process.env['PUBLIC_SUPABASE_ANON_KEY'],
+      },
     };
   }
 }

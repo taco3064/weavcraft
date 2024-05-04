@@ -25,7 +25,10 @@ export class AppController {
   @APIHelper.ApiResDataListSchema(TestDataDTO, { status: httpStatus.CREATED })
   async getAppDataList(): Promise<ApiResDataDTO<TestDataDTO>> {
     const data = await this.demoUCase.getTests();
-    const result = APIHelper.apiResDataList<TestDataDTO>(data, httpStatus.CREATED);
+    const result = APIHelper.apiResDataList<TestDataDTO>(
+      data,
+      httpStatus.CREATED
+    );
     return result;
   }
 
