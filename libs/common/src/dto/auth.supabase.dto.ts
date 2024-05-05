@@ -11,7 +11,6 @@ export class AuthSupabaseSignOutBodyDTO {
 
 export enum EnumAuthSupabaseProvider {
   GOOGLE = 'google',
-  GITHUB = 'github',
 }
 
 export class AuthSupabaseSignInBodyDTO {
