@@ -10,6 +10,11 @@ export class AuthSupabaseUseCase {
     private readonly supabase: SupabaseClient
   ) {}
 
+  async validateToken(token: string) {
+    const data = await this.supabase.auth.getUser(token);
+    return data;
+  }
+
   async getOAuthProviders(redirectTo: string) {
     const data: {
       provider: Provider;
