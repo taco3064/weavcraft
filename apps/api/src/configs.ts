@@ -40,6 +40,10 @@ export class Configs {
   public get cfgs() {
     return {
       env: this._env.NODE_ENV,
+      jwt: {
+        secret: this._env.JWT_SECRET,
+        expiresIn: Number(this._env.JWT_EXPIRES_IN) || 3600,
+      },
       app: {
         host: this._env.HOST || 'localhost',
         port: Number(this._env.APP_API_PORT) || 7001,
