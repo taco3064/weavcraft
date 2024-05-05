@@ -9,7 +9,7 @@ import Icon from '../Icon';
 import Toolbar from '../Toolbar';
 import { WidgetWrapper } from '../../styles';
 import { useDrawerStyles } from './Drawer.styles';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 
 import type {
   AnchorOptions,
@@ -30,7 +30,7 @@ const ANCHOR_OPTIONS: AnchorOptions = {
 };
 
 //* Components
-export default withGenerateDataProps<DrawerProps, MappablePropNames>(
+export default withGenerateData<DrawerProps, MappablePropNames>(
   function Drawer({
     anchor = 'left',
     breakpoint = 'sm',

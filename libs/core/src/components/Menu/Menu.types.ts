@@ -1,14 +1,15 @@
 import type { ReactElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithStore, SlotProps } from '../../contexts';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
+import type { PropsWithMappedStore, SlotProps } from '../../contexts';
 
 export type MenuItemVariant = Extract<ListItemVariant, 'button' | 'link'>;
 
 export type MenuProps<
-  D extends GenericData = {},
+  D extends JsonObject,
   V extends MenuItemVariant = MenuItemVariant
-> = PropsWithStore<
+> = PropsWithMappedStore<
   D,
   {
     toggle?: ReactElement<SlotProps>;
@@ -16,7 +17,7 @@ export type MenuProps<
     onItemClick?: (item: D) => void;
 
     itemProps?: Omit<
-      ListItemProps<D, V>,
+      ListItemProps<D>,
       'data' | 'action' | 'indicator' | 'variant'
     >;
   }

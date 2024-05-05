@@ -1,9 +1,9 @@
 import Toolbar from '../Toolbar';
 import { FlexGridItem } from '../../styles';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { GridItemProps, MappablePropNames } from './GridItem.types';
 
-export default withGenerateDataProps<GridItemProps, MappablePropNames>(
+export default withGenerateData<GridItemProps, MappablePropNames>(
   function GridItem({ children, elevation, icon, title, ...props }) {
     return (
       <FlexGridItem

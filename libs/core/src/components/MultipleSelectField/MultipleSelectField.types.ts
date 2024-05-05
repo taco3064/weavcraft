@@ -1,10 +1,13 @@
+import type { JsonObject, Paths } from 'type-fest';
+
 import type { BaseFieldWithoutInputProps } from '../BaseField';
 import type { BaseSelectFieldProps } from '../../hooks';
-import type { GenericData } from '../../contexts';
 
-export type MultipleSelectFieldProps<D extends GenericData = {}> =
-  BaseSelectFieldProps<'multiple', D> &
-    Omit<
-      BaseFieldWithoutInputProps<unknown>,
-      'adornmentPosition' | 'value' | 'onChange'
-    >;
+export type MultipleSelectFieldProps<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+> = BaseSelectFieldProps<'multiple', D, Path> &
+  Omit<
+    BaseFieldWithoutInputProps<unknown>,
+    'adornmentPosition' | 'value' | 'onChange'
+  >;

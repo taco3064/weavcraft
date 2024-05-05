@@ -1,8 +1,9 @@
+import type { JsonObject } from 'type-fest';
 import type { ReactElement, ButtonHTMLAttributes } from 'react';
 
 import Card, { type CardProps } from '../Card';
 import Form, { type FormProps } from '../Form';
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
 import type { WidgetWrapperProps } from '../../styles';
 
@@ -22,19 +23,19 @@ export interface ButtonParams
 //* Component Props
 type CommonOmitProps = 'avatar' | 'description' | 'headerAction' | 'title';
 
-export type StepFormProps<D extends GenericData = {}> = Omit<
+export type StepFormProps<D extends JsonObject> = Omit<
   FormProps<D>,
   CommonOmitProps | 'data' | 'action' | 'actionJustify' | 'onSubmit'
 >;
 
-export type StepCardProps<D extends GenericData = {}> = Omit<
+export type StepCardProps<D extends JsonObject> = Omit<
   CardProps<D>,
   CommonOmitProps | 'data' | 'footerAction' | 'footerJustify'
 >;
 
 type StepProps<
-  V extends StepVariant,
-  D extends GenericData
+  D extends JsonObject,
+  V extends StepVariant
 > = PropsWithMappedData<
   D,
   {
@@ -48,10 +49,10 @@ type StepProps<
   'label'
 >;
 
-export interface StepperProps<D extends GenericData>
+export interface StepperProps<D extends JsonObject>
   extends Pick<WidgetWrapperProps, 'maxWidth'> {
   data?: D;
-  items?: StepProps<StepVariant, D>[];
+  items?: StepProps<D, StepVariant>[];
   doneButtonText?: string;
   nextButtonText?: string;
   prevButtonText?: string;

@@ -3,24 +3,20 @@ import MuiListItemButton from '@mui/material/ListItemButton';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
+import { useMemo } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import {
-  useComponentData,
-  withGenerateDataProps,
-  type GenericData,
-} from '../../contexts';
+import { useGenerateData, withGenerateData } from '../../contexts';
 import { useUrlValidation } from '../../hooks';
 
 import type {
   MappablePropNames,
   ListItemProps,
   ListItemVariant,
+  WrappedProps,
 } from './ListItem.types';
 
-export default withGenerateDataProps<
-  ListItemProps<ListItemVariant, any>,
-  MappablePropNames
->(function ListItem<D extends GenericData>({
+function BaseListItem<D extends JsonObject>({
   action,
   disabled,
   href,
@@ -33,8 +29,8 @@ export default withGenerateDataProps<
   variant = 'item',
   onItemClick,
   ...props
-}: ListItemProps<ListItemVariant, D>) {
-  const { data } = useComponentData<D>();
+}: ListItemProps<D>) {
+  const { data } = useGenerateData<D>();
   const isHrefValid = useUrlValidation(href);
 
   const children = (
@@ -100,4 +96,14 @@ export default withGenerateDataProps<
       )}
     </>
   );
-});
+}
+
+export default function ListItem<D extends JsonObject>(props: WrappedProps<D>) {
+  const WrappedListItem = useMemo(
+    () =>
+      withGenerateData<ListItemProps<D>, MappablePropNames<D>>(BaseListItem),
+    []
+  );
+
+  return <WrappedListItem {...props} />;
+}

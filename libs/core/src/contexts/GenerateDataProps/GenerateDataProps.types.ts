@@ -1,37 +1,5 @@
+import type * as TF from 'type-fest';
 import type { JSXElementConstructor, ReactElement } from 'react';
-
-type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
-
-type TypeMapping = {
-  bigint: bigint;
-  boolean: boolean;
-  date: Date;
-  number: number;
-  string: string;
-};
-
-export type PropertyPath<T> = T extends Function | Array<any> | ReactElement
-  ? ''
-  : (
-      T extends object
-        ? {
-            [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<
-              PropertyPath<T[K]>
-            >}`;
-          }[Exclude<keyof T, symbol>]
-        : ''
-    ) extends infer D
-  ? Extract<D, string>
-  : never;
-
-export interface GenericData {
-  [key: string]:
-    | null
-    | undefined
-    | TypeMapping[keyof TypeMapping]
-    | GenericData
-    | GenericData[];
-}
 
 //* - Utility Prop Types
 export type PrefixProps<P, PX extends string> = {
@@ -39,13 +7,22 @@ export type PrefixProps<P, PX extends string> = {
 };
 
 //* - Component Data
-export interface MappableProps<D extends GenericData, P = {}> {
+export interface MappableProps<D extends TF.JsonObject, P = {}> {
   data?: D;
-  propMapping?: Partial<Record<PropertyPath<P>, PropertyPath<D> | string>>;
+  propMapping?: Partial<
+    Record<
+      keyof TF.ConditionalExcept<Required<P>, Function>,
+      TF.Paths<D> extends infer Paths
+        ? TF.IsNever<Paths> extends true
+          ? string
+          : Paths
+        : string
+    >
+  >;
 }
 
 export type PropsWithMappedData<
-  D extends GenericData,
+  D extends TF.JsonObject,
   P,
   K extends keyof P = keyof P
 > = P & MappableProps<D, Pick<P, K>>;
@@ -56,27 +33,34 @@ export type SlotProps = Record<string, any> & {
 };
 
 export type SlotElement<
-  P = SlotProps & Omit<MappableProps<GenericData, SlotProps>, 'data'>
+  P = SlotProps & Omit<MappableProps<TF.JsonObject, SlotProps>, 'data'>
 > = ReactElement<P, JSXElementConstructor<P>>;
 
 //* - Store Records
-export type PropsWithStore<D extends GenericData, P = {}> = P & {
+export type PropsWithStore<D extends TF.JsonObject, P = {}> = P & {
   records?: D[];
 };
 
-type MappableStoreProps<D extends GenericData, P extends PropsWithStore<D>> = {
+export type PropsWithMappedStore<
+  D extends TF.JsonObject,
+  P = {},
+  K extends keyof P | never = never
+> = PropsWithStore<D, P> & {
   propMapping?: Partial<
-    Record<PropertyPath<P> | 'records', PropertyPath<D> | string>
+    Record<
+      'records' | (K extends never ? never : TF.Paths<Pick<P, K>>),
+      TF.Paths<D> | string
+    >
   >;
 };
 
-export type PropsWithMappedStore<
-  D extends GenericData,
-  P extends PropsWithStore<D>,
-  K extends keyof P = 'records'
-> = PropsWithStore<D, P> & MappableStoreProps<D, Pick<P, K>>;
-
 //* - Custom Hooks
+type TypeMapping = {
+  boolean: boolean;
+  number: number;
+  string: string;
+};
+
 type ValueType<
   T extends keyof TypeMapping,
   A extends 'arrayOf' | undefined = undefined

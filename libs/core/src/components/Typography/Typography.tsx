@@ -1,10 +1,10 @@
 import MuiTypography from '@mui/material/Typography';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { TypographyProps, MappablePropNames } from './Typography.types';
 
-export default withGenerateDataProps<TypographyProps, MappablePropNames>(
+export default withGenerateData<TypographyProps, MappablePropNames>(
   function Typography({ align, icon, text, ...props }) {
     return (
       <MuiTypography

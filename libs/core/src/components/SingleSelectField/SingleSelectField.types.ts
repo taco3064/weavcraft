@@ -1,9 +1,12 @@
+import type { JsonObject, Paths } from 'type-fest';
+
 import type { BaseFieldWithoutInputProps } from '../BaseField';
 import type { BaseSelectFieldProps } from '../../hooks';
-import type { GenericData } from '../../contexts';
 
-export interface SingleSelectFieldProps<D extends GenericData = {}>
-  extends BaseSelectFieldProps<'single', D>,
+export interface SingleSelectFieldProps<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+> extends BaseSelectFieldProps<'single', D, Path>,
     Omit<
       BaseFieldWithoutInputProps<unknown>,
       'adornmentPosition' | 'value' | 'onChange'

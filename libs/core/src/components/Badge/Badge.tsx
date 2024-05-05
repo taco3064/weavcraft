@@ -1,6 +1,5 @@
 import MuiBadge from '@mui/material/Badge';
-
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 
 import type {
   AnchorOrigin,
@@ -8,22 +7,23 @@ import type {
   MappablePropNames,
 } from './Badge.types';
 
-export default withGenerateDataProps<BadgeProps, MappablePropNames>(
-  function Badge({ anchorPosition = 'top-right', ...props }) {
-    const [vertical, horizontal] = anchorPosition.split('-') as [
-      AnchorOrigin<'vertical'>,
-      AnchorOrigin<'horizontal'>
-    ];
+export default withGenerateData<BadgeProps, MappablePropNames>(function Badge({
+  anchorPosition = 'top-right',
+  ...props
+}) {
+  const [vertical, horizontal] = anchorPosition.split('-') as [
+    AnchorOrigin<'vertical'>,
+    AnchorOrigin<'horizontal'>
+  ];
 
-    return (
-      <MuiBadge
-        {...props}
-        data-testid="BadgeContainer"
-        anchorOrigin={{ horizontal, vertical }}
-        slotProps={{
-          badge: { 'data-testid': 'Badge' } as never,
-        }}
-      />
-    );
-  }
-);
+  return (
+    <MuiBadge
+      {...props}
+      data-testid="BadgeContainer"
+      anchorOrigin={{ horizontal, vertical }}
+      slotProps={{
+        badge: { 'data-testid': 'Badge' } as never,
+      }}
+    />
+  );
+});

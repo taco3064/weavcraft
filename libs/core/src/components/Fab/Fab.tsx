@@ -5,10 +5,10 @@ import type { Property } from 'csstype';
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
 import { useUrlValidation } from '../../hooks';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { FabProps, MappablePropNames } from './Fab.types';
 
-export default withGenerateDataProps<FabProps, MappablePropNames>(function Fab({
+export default withGenerateData<FabProps, MappablePropNames>(function Fab({
   containerId,
   href,
   icon,

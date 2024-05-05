@@ -1,23 +1,19 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
+import { useMemo } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import {
-  withGenerateDataProps,
-  useComponentData,
-  type GenericData,
-} from '../../contexts';
+import { withGenerateData, useGenerateData } from '../../contexts';
 
 import type {
   MappablePropNames,
   SelectionProps,
   SelectionVariant,
+  WrappedProps,
 } from './Selection.types';
 
-export default withGenerateDataProps<
-  SelectionProps<SelectionVariant, any>,
-  MappablePropNames
->(function Selection<D extends GenericData>({
+function BaseSelection<D extends JsonObject>({
   label,
   labelPlacement,
   checked,
@@ -26,9 +22,9 @@ export default withGenerateDataProps<
   variant = 'checkbox',
   onChange,
   ...props
-}: SelectionProps<SelectionVariant, D>) {
+}: SelectionProps<D>) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const { data } = useComponentData<D>();
+  const { data } = useGenerateData<D>();
 
   const control = (
     <Control
@@ -48,4 +44,17 @@ export default withGenerateDataProps<
       data-testid="FormControlLabel"
     />
   );
-});
+}
+
+export default function Selection<
+  D extends JsonObject,
+  V extends SelectionVariant
+>(props: WrappedProps<D, V>) {
+  const WrappedSelection = useMemo(
+    () =>
+      withGenerateData<SelectionProps<D, V>, MappablePropNames>(BaseSelection),
+    []
+  );
+
+  return <WrappedSelection {...props} />;
+}

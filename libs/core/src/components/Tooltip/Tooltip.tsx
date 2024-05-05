@@ -1,9 +1,9 @@
 import MuiTooltip from '@mui/material/Tooltip';
 
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { TooltipProps, MappablePropNames } from './Tooltip.types';
 
-export default withGenerateDataProps<TooltipProps, MappablePropNames>(
+export default withGenerateData<TooltipProps, MappablePropNames>(
   function Tooltip({ children, disabled = false, title, ...props }) {
     return (
       <MuiTooltip

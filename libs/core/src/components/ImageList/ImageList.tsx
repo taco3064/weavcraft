@@ -1,36 +1,29 @@
 import MuiImageList from '@mui/material/ImageList';
+import type { JsonObject } from 'type-fest';
 
 import ImageListItem from '../ImageListItem';
+import { useComponentSlot, withDataStructure } from '../../contexts';
 import type { ImageListProps } from './ImageList.types';
 
-import {
-  withStoreProps,
-  useComponentSlot,
-  type GenericData,
-} from '../../contexts';
+export default withDataStructure(function ImageList<D extends JsonObject>({
+  itemAction,
+  itemProps,
+  records = [],
+  onItemActionClick,
+  ...props
+}: ImageListProps<D>) {
+  const Action = useComponentSlot(itemAction, onItemActionClick);
 
-export default (<D extends GenericData>() =>
-  withStoreProps<D, ImageListProps<D>>(function ImageList({
-    itemAction,
-    itemProps,
-    records = [],
-    onItemActionClick,
-    ...props
-  }) {
-    const Action = useComponentSlot(itemAction, onItemActionClick);
-
-    return (
-      <MuiImageList {...props} data-testid="ImageList">
-        {records.map((item, i) => (
-          <ImageListItem
-            {...itemProps}
-            key={i}
-            data={item}
-            action={
-              Action.Slot && <Action.Slot {...Action.getSlotProps(item)} />
-            }
-          />
-        ))}
-      </MuiImageList>
-    );
-  }))();
+  return (
+    <MuiImageList {...props} data-testid="ImageList">
+      {records.map((item, i) => (
+        <ImageListItem
+          {...itemProps}
+          key={i}
+          data={item}
+          action={Action.Slot && <Action.Slot {...Action.getSlotProps(item)} />}
+        />
+      ))}
+    </MuiImageList>
+  );
+});

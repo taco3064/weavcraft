@@ -2,19 +2,14 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiPaper from '@mui/material/Paper';
 import type { Breakpoint } from '@mui/material/styles';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import type { BaseToolbarProps } from '../Toolbar';
 import type { IconCode } from '../Icon';
-
-import type {
-  GenericData,
-  PrefixProps,
-  PropsWithMappedData,
-} from '../../contexts';
+import type { PrefixProps, PropsWithMappedData } from '../../contexts';
 
 type MuiPaperProps = Pick<ComponentProps<typeof MuiPaper>, 'elevation'>;
-
 type MuiDrawerProps = Pick<ComponentProps<typeof MuiDrawer>, 'anchor'>;
 
 type ToolbarProps = Pick<
@@ -56,7 +51,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'content' | 'headerIcon' | 'headerTitle'
 >;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   DrawerProps,
   MappablePropNames

@@ -4,10 +4,10 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { AccordionProps, MappablePropNames } from './Accordion.types';
 
-export default withGenerateDataProps<AccordionProps, MappablePropNames>(
+export default withGenerateData<AccordionProps, MappablePropNames>(
   function Accordion({
     action,
     children,

@@ -1,55 +1,52 @@
 import { useMemo, type ComponentType } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import {
   DataStructureContext,
-  ComponentDataContext,
+  GenerateDataContext,
   useDataStructure,
-  useComponentData,
+  useGenerateData,
   usePropsGetter,
   useSymbolId,
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenericData,
   PropsWithMappedData,
   PropsWithMappedStore,
-  PropsWithStore,
 } from './GenerateDataProps.types';
 
 //* - HOC
-export const withGenerateDataProps = <P, K extends keyof P = keyof P>(
+export const withGenerateData = <P, K extends keyof P = keyof P>(
   Component: ComponentType<P>
 ) =>
-  function GenerateDataWrapper<D extends GenericData>(
+  function GenerateDataWrapper<D extends JsonObject>(
     props: PropsWithMappedData<D, P, K>
   ) {
     const getProps = usePropsGetter();
-    const { type, data, onChange } = useComponentData<D>(props.data);
+    const { type, data, onChange } = useGenerateData<D>(props.data);
     const consumer = <Component {...getProps({ ...props, data })} />;
 
     return type === 'context' ? (
       consumer
     ) : (
-      <ComponentDataContext.Provider value={[data, onChange]}>
+      <GenerateDataContext.Provider value={[data, onChange]}>
         {consumer}
-      </ComponentDataContext.Provider>
+      </GenerateDataContext.Provider>
     );
   };
 
-export const withStoreProps = <
-  D extends GenericData,
-  P extends PropsWithStore<D>,
-  K extends keyof P = 'records'
->(
-  Component: ComponentType<P>
-): ComponentType<PropsWithMappedStore<D, P, K>> =>
-  function GenerateStoreWrapper(props) {
+export const withDataStructure = (Component: ComponentType<any>) =>
+  function StoreProvider<
+    D extends JsonObject,
+    P = {},
+    K extends keyof P | never = never
+  >(props: PropsWithMappedStore<D, P, K>) {
     const { records, propMapping } = props;
     const { root, paths } = useDataStructure();
+    const { data } = useGenerateData();
 
-    const getProps = usePropsGetter();
-    const { data } = useComponentData();
     const uid = useSymbolId();
+    const getProps = usePropsGetter();
     const consumer = <Component {...getProps({ ...props, data })} />;
 
     const value = useMemo(() => {
@@ -66,7 +63,7 @@ export const withStoreProps = <
          * * - Use the root uid
          * * - Append 'propMapping.records' to paths
          */
-        return { uid: root, paths: [...paths, propMapping.records] };
+        return { uid: root, paths: [...paths, propMapping.records as string] };
       }
 
       //* - Bypass

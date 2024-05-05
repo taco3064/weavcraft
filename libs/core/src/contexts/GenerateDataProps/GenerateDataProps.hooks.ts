@@ -2,6 +2,7 @@ import _get from 'lodash/get';
 import _omit from 'lodash/omit';
 import _set from 'lodash/set';
 import { create } from 'zustand';
+import type { JsonObject } from 'type-fest';
 
 import {
   createContext,
@@ -18,7 +19,6 @@ import type {
   DataStructure,
   DataStructureContextValue,
   DataValue,
-  GenericData,
   MappableProps,
   SlotElement,
   ValueTypeMapping,
@@ -26,7 +26,6 @@ import type {
 
 //* - Variables
 const VALUE_TYPE_MAP: ValueTypeMapping = {
-  bigint: 'bigint',
   boolean: 'boolean',
   number: 'number',
   string: 'string',
@@ -37,10 +36,6 @@ const useStructure = create(() => {
   let structure: DataStructure = {};
 
   function getDataType(value: any): DataValue | undefined {
-    if (value instanceof Date) {
-      return 'date';
-    }
-
     if (Array.isArray(value) && value.length) {
       const type = getDataType(value[0])?.replace('[]', '');
 
@@ -75,7 +70,7 @@ const useStructure = create(() => {
 });
 
 //* - Context
-export const ComponentDataContext = createContext<
+export const GenerateDataContext = createContext<
   ReturnType<typeof useState<any>>
 >([undefined, () => undefined]);
 
@@ -100,11 +95,11 @@ export function useSymbolId() {
   return useMemo(() => Symbol(id), [id]);
 }
 
-export function useComponentData<D extends GenericData>(propData?: D) {
+export function useGenerateData<D extends JsonObject>(propData?: D) {
   const dataState = useState<D>(propData!);
   const type: 'props' | 'context' = propData ? 'props' : 'context';
 
-  const [data, setData] = useContext(ComponentDataContext) as ReturnType<
+  const [data, setData] = useContext(GenerateDataContext) as ReturnType<
     typeof useState<D>
   >;
 
@@ -121,19 +116,19 @@ export function useComponentData<D extends GenericData>(propData?: D) {
       };
 }
 
-export function useComponentSlot<D extends GenericData>(
+export function useComponentSlot<D extends JsonObject>(
   action?: SlotElement,
   onItemToggle?: (item: D) => void
 ) {
   const { type: Slot, props } = action || {};
-  const getProps = usePropsGetter();
+  const getProps = usePropsGetter<D>();
 
   return {
     Slot: Slot as ComponentType<typeof props> | undefined,
 
     getSlotProps: (data: D) =>
       ({
-        ...getProps({ ...props, data }),
+        ...getProps({ ...props, data }), // Specify the type of getProps function
         ...(onItemToggle && {
           onClick: (...args: any[]) => {
             args.forEach((arg) => arg?.stopPropagation?.());
@@ -155,7 +150,7 @@ export function useDataStructure() {
   };
 }
 
-export function usePropsGetter<D extends GenericData>() {
+export function usePropsGetter<D extends JsonObject>() {
   const { root, paths } = useDataStructure();
   const { set, destroy } = useStructure();
   const destroyRef = useRef(() => destroy(root, paths));

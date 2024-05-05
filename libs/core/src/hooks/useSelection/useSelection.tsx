@@ -5,40 +5,44 @@ import MuiListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import { useMemo } from 'react';
+import type { JsonObject, Paths } from 'type-fest';
 
 import { usePropsGetter, useComponentSlot } from '../../contexts';
-import type { GenericData } from '../../contexts';
 
 import type {
   BaseSelectFieldProps,
+  OptionProps,
   SelectionGroupProps,
   SelectionVariant,
 } from './useSelection.types';
 
-export function useMultipleSelection<D extends GenericData>({
+export function useMultipleSelection<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>,
+  P
+>({
   name,
   optionProps,
   records,
   value,
   onChange,
-}: SelectionGroupProps<'multiple', D, any>) {
+}: SelectionGroupProps<'multiple', D, Path, P>) {
   type GroupValue = NonNullable<typeof value>[number];
+  const path = _get(optionProps, ['propMapping', 'value']) as string;
 
   return {
     selected: useMemo<boolean[]>(
       () =>
         records?.map((data) => {
-          const { value: path } = optionProps?.propMapping || {};
-          const optionValue = _get(data, path as string) as GroupValue;
+          const optionValue = _get(data, path) as GroupValue;
 
           return value?.includes(optionValue) || false;
         }) || [],
-      [optionProps?.propMapping, records, value]
+      [path, records, value]
     ),
 
     onChange: (checked: boolean, data?: D) => {
-      const { value: path } = optionProps?.propMapping || {};
-      const optionValue = _get(data, path as string) as GroupValue;
+      const optionValue = _get(data, path) as GroupValue;
 
       if (!_isEmpty(optionValue)) {
         const values = new Set<GroupValue>([...(value || [])]);
@@ -50,30 +54,33 @@ export function useMultipleSelection<D extends GenericData>({
   };
 }
 
-export function useSingleSelection<D extends GenericData>({
+export function useSingleSelection<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>,
+  P
+>({
   name,
   optionProps,
   records,
   value,
   onChange,
-}: SelectionGroupProps<'single', D, any>) {
+}: SelectionGroupProps<'single', D, Path, P>) {
   type GroupValue = NonNullable<typeof value>;
+  const path = _get(optionProps, ['propMapping', 'value']) as string;
 
   return {
     selected: useMemo<boolean[]>(
       () =>
         records?.map((data) => {
-          const { value: path } = optionProps?.propMapping || {};
-          const optionValue = _get(data, path as string) as GroupValue;
+          const optionValue = _get(data, path) as GroupValue;
 
           return value === optionValue;
         }) || [],
-      [optionProps?.propMapping, records, value]
+      [path, records, value]
     ),
 
     onChange: (checked: boolean, data?: D) => {
-      const { value: path } = optionProps?.propMapping || {};
-      const optionValue = _get(data, path as string) as GroupValue;
+      const optionValue = _get(data, path) as GroupValue;
 
       if (checked) {
         onChange?.(optionValue || undefined, name);
@@ -84,14 +91,15 @@ export function useSingleSelection<D extends GenericData>({
 
 export function useOptionsRender<
   V extends SelectionVariant,
-  D extends GenericData
->({ optionIndicator, optionProps, records }: BaseSelectFieldProps<V, D>) {
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+>({ optionIndicator, optionProps, records }: BaseSelectFieldProps<V, D, Path>) {
   const ItemIndicator = useComponentSlot(optionIndicator);
   const getProps = usePropsGetter();
 
   return records?.map((data, i) => {
     const { disabled, primary, secondary, value } = getProps({
-      ...optionProps,
+      ...(optionProps as OptionProps<D, NonNullable<typeof optionProps>, Path>),
       data,
     });
 

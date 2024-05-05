@@ -1,30 +1,29 @@
 import { act, fireEvent, render, renderHook } from '@testing-library/react';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { MouseEventHandler, ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
-import { withGenerateDataProps, withStoreProps } from './GenerateDataProps';
+import { withDataStructure, withGenerateData } from './GenerateDataProps';
 
 import {
-  ComponentDataContext,
   DataStructureContext,
-  useComponentData,
+  GenerateDataContext,
   useComponentSlot,
   useDataStructure,
+  useGenerateData,
   usePropsGetter,
   useSymbolId,
 } from './GenerateDataProps.hooks';
 
 import type {
-  GenericData,
   PropsWithMappedStore,
-  PropsWithStore,
   SlotElement,
 } from './GenerateDataProps.types';
 
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
   //* - HOC
-  describe('withGenerateDataProps', () => {
+  describe('withGenerateData', () => {
     it('should pass correct props to the wrapped component', () => {
       const value = 'Tom White';
 
@@ -49,7 +48,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       expect(getByTestId('dummy')).toHaveTextContent(value);
     });
 
-    it('should useComponentData works correctly', () => {
+    it('should useGenerateData works correctly', () => {
       const value = 'White';
 
       const { getByText } = render(
@@ -64,7 +63,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       expect(getByText(value)).toBeTruthy();
     });
 
-    const WrappedDummy = withGenerateDataProps(
+    const WrappedDummy = withGenerateData(
       (props: { title?: string; children?: ReactNode }) => (
         <div data-testid="dummy">
           {props.title}
@@ -115,30 +114,29 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       );
     });
 
-    const WrappedDummy = withGenerateDataProps(
-      (props: { children?: ReactNode }) => (
-        <div data-testid="dummy">{props.children}</div>
-      )
-    );
+    const WrappedDummy = withGenerateData((props: { children?: ReactNode }) => (
+      <div data-testid="dummy">{props.children}</div>
+    ));
 
-    const WrappedDummies = (<D extends (typeof records)[number]>() =>
-      withStoreProps<D, PropsWithStore<D>>(function Dummy({ records }) {
-        return (
-          <div data-testid="dummies">
-            {records?.map(({ name }, i) => (
-              <span key={i}>{name}</span>
-            ))}
-          </div>
-        );
-      }))();
+    const WrappedDummies = withDataStructure(function Dummy({
+      records,
+    }: PropsWithMappedStore<{ name: string }>) {
+      return (
+        <div data-testid="dummies">
+          {records?.map(({ name }, i) => (
+            <span key={i}>{name}</span>
+          ))}
+        </div>
+      );
+    });
 
     const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
   });
 
   //* - Custom Hooks
-  describe('useComponentData', () => {
+  describe('useGenerateData', () => {
     it('should return data from ComponentDataContext', () => {
-      const { result } = renderHook(() => useComponentData(), {
+      const { result } = renderHook(() => useGenerateData(), {
         wrapper: TestProvider,
       });
 
@@ -158,9 +156,9 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       const state = useState(data);
 
       return (
-        <ComponentDataContext.Provider value={state}>
+        <GenerateDataContext.Provider value={state}>
           {children}
-        </ComponentDataContext.Provider>
+        </GenerateDataContext.Provider>
       );
     }
   });
@@ -205,7 +203,7 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       expect(onItemToggle).toHaveBeenCalledWith(data);
     });
 
-    const WrappedDummy = withGenerateDataProps(
+    const WrappedDummy = withGenerateData(
       (props: { text?: string; onClick?: MouseEventHandler }) => (
         <button data-testid="dummy" onClick={props.onClick}>
           {props.text}
@@ -213,16 +211,19 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       )
     );
 
-    function renderSlot<D extends GenericData>(
+    function renderSlot<D extends JsonObject>(
       slot: SlotElement,
       data: D,
       onItemToggle?: (item: D) => void
     ) {
-      const { result } = renderHook(() => useComponentSlot(slot, onItemToggle));
+      const { result } = renderHook(() =>
+        useComponentSlot<D>(slot, onItemToggle)
+      );
 
       const { Slot, getSlotProps } = result.current;
+      const props = getSlotProps(data);
 
-      return render(Slot ? <Slot {...getSlotProps(data)} /> : <>none</>);
+      return render(Slot ? <Slot {...props} /> : <>none</>);
     }
   });
 
@@ -264,9 +265,9 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       const state = useState(data);
 
       return (
-        <ComponentDataContext.Provider value={state}>
+        <GenerateDataContext.Provider value={state}>
           {children}
-        </ComponentDataContext.Provider>
+        </GenerateDataContext.Provider>
       );
     }
   });

@@ -9,7 +9,7 @@ import { forwardRef, useState, type ReactElement } from 'react';
 import type { TransitionProps } from '@mui/material/transitions';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { DialogProps, MappablePropNames } from './Dialog.types';
 
 const Transition = forwardRef<
@@ -19,7 +19,7 @@ const Transition = forwardRef<
   return <MuiSlide direction="up" ref={ref} {...props} />;
 });
 
-export default withGenerateDataProps<DialogProps, MappablePropNames>(
+export default withGenerateData<DialogProps, MappablePropNames>(
   function Dialog({
     actions,
     children,
