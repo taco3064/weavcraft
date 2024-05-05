@@ -2,21 +2,15 @@ import MuiList from '@mui/material/List';
 import MuiListSubheader from '@mui/material/ListSubheader';
 import MuiToolbar from '@mui/material/Toolbar';
 import MuiTypography from '@mui/material/Typography';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
 import ListItem, { type ListItemVariant } from '../ListItem';
-import type { ListProps, MappablePropNames } from './List.types';
+import { useComponentSlot, withDataStructure } from '../../contexts';
+import type { ListProps } from './List.types';
 
-import {
-  makeStoreProps,
-  useComponentSlot,
-  type GenericData,
-} from '../../contexts';
-
-const withStoreProps = makeStoreProps<ListProps, MappablePropNames>();
-
-export default withStoreProps(function List<
-  D extends GenericData,
+export default withDataStructure(function List<
+  D extends JsonObject,
   V extends ListItemVariant
 >({
   //* - Subheader

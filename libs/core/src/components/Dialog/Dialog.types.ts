@@ -1,14 +1,10 @@
 import MuiDialog from '@mui/material/Dialog';
 import type { ButtonProps } from '@mui/material/Button';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import type { IconCode } from '../Icon';
-
-import type {
-  GenericData,
-  PropsWithMappedData,
-  SlotProps,
-} from '../../contexts';
+import type { PropsWithMappedData, SlotProps } from '../../contexts';
 
 type MuiDialogProps = Pick<
   ComponentProps<typeof MuiDialog>,
@@ -34,7 +30,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'icon' | 'title'
 >;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   DialogProps,
   MappablePropNames

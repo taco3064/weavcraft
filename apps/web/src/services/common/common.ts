@@ -6,7 +6,7 @@ import { LocalStorage } from 'lowdb/browser';
 
 import type { MockSetupOptions } from './common.types';
 
-const mock = new MockAdapter(axios);
+const mock = new MockAdapter(axios, { onNoMatch: 'passthrough' });
 const testDbs: Record<string, LowSync<any>> = {};
 const tutorialDbs: Record<string, LowSync<any>> = {};
 

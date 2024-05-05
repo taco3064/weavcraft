@@ -12,7 +12,7 @@ import type {
 } from './hierarchy.types';
 
 const setup = {
-  '/api': setupTestMock,
+  '/service': setupTestMock,
   '/mocks': setupTutorialMock,
 };
 

@@ -1,8 +1,9 @@
 import MuiImageListItem from '@mui/material/ImageListItem';
 import MuiImageListItemBar from '@mui/material/ImageListItemBar';
 import type { ComponentProps, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 type MuiImageListItemProps = Pick<
   ComponentProps<typeof MuiImageListItem>,
@@ -29,7 +30,7 @@ export interface ImageListItemProps extends BaseImageListItemProps {
   barPosition?: MuiImageListItemBarProps['position'];
 }
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   ImageListItemProps,
   MappablePropNames

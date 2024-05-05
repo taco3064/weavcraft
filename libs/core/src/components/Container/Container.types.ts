@@ -1,7 +1,8 @@
 import MuiContainer from '@mui/material/Container';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 export type ContainerProps = Pick<
   ComponentProps<typeof MuiContainer>,
@@ -10,7 +11,7 @@ export type ContainerProps = Pick<
 
 export type MappablePropNames = keyof Pick<ContainerProps, 'children'>;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   ContainerProps,
   MappablePropNames

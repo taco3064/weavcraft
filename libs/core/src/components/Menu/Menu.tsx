@@ -1,15 +1,14 @@
 import MuiMenu from '@mui/material/Menu';
 import MuiMenuItem from '@mui/material/MenuItem';
 import { useId, useState } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import ListItem from '../ListItem';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { withDataStructure } from '../../contexts';
 import type { MenuItemVariant, MenuProps } from './Menu.types';
 
-const withStoreProps = makeStoreProps<MenuProps>();
-
-export default withStoreProps(function Menu<
-  D extends GenericData,
+export default withDataStructure(function Menu<
+  D extends JsonObject,
   V extends MenuItemVariant
 >({
   toggle,

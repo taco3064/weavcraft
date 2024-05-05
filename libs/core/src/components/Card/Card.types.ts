@@ -1,8 +1,9 @@
 import MuiContainer from '@mui/material/Container';
 import type { ComponentProps, FormEvent, ReactElement, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 type MuiContainerProps = Pick<ComponentProps<typeof MuiContainer>, 'maxWidth'>;
 
@@ -40,7 +41,7 @@ export type MappablePropNames = keyof Pick<
   'children' | 'description' | 'title'
 >;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   Omit<CardProps, 'component' | 'onSubmit'>,
   MappablePropNames

@@ -1,25 +1,20 @@
 import MuiToggleButton from '@mui/material/ToggleButton';
 import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import type { JsonObject, Paths } from 'type-fest';
 
 import Icon from '../Icon';
-import type { ControlVariant } from '../../hooks';
-
-import {
-  makeStoreProps,
-  usePropsGetter,
-  type GenericData,
-} from '../../contexts';
+import { withDataStructure, usePropsGetter } from '../../contexts';
+import type { SelectionVariant } from '../../hooks';
 
 import type {
   ToggleButtonProps,
   ToggleButtonGroupProps,
 } from './ToggleButtonGroup.types';
 
-const withStoreProps = makeStoreProps<ToggleButtonGroupProps>();
-
-export default withStoreProps(function ToggleButtonGroup<
-  D extends GenericData,
-  T extends ControlVariant
+export default withDataStructure(function ToggleButtonGroup<
+  D extends JsonObject,
+  V extends SelectionVariant,
+  Path extends Extract<Paths<D>, string>
 >({
   variant,
   name,
@@ -28,7 +23,7 @@ export default withStoreProps(function ToggleButtonGroup<
   value,
   onChange,
   ...props
-}: ToggleButtonGroupProps<D, T>) {
+}: ToggleButtonGroupProps<D, V, Path>) {
   const getProps = usePropsGetter<D>();
 
   return (

@@ -1,7 +1,8 @@
 import MuiBadge from '@mui/material/Badge';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 type MuiBadgeProps = Pick<
   ComponentProps<typeof MuiBadge>,
@@ -28,7 +29,7 @@ export type MappablePropNames = keyof Pick<
   'badgeContent' | 'children' | 'max'
 >;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   BadgeProps,
   MappablePropNames

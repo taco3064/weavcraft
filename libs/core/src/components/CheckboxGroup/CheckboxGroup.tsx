@@ -1,19 +1,27 @@
 import MuiFormControl from '@mui/material/FormControl';
 import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
+import type { JsonObject, Paths } from 'type-fest';
 
 import Selection from '../Selection';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { withDataStructure } from '../../contexts';
 import { useMultipleSelection } from '../../hooks';
-import type { CheckboxGroupProps } from './CheckboxGroup.types';
+import type {
+  BaseCheckboxProps,
+  CheckboxGroupProps,
+} from './CheckboxGroup.types';
 
-const withStoreProps = makeStoreProps<CheckboxGroupProps>();
-
-export default withStoreProps(function CheckboxGroup<D extends GenericData>(
-  props: CheckboxGroupProps<D>
-) {
+export default withDataStructure(function CheckboxGroup<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+>(props: CheckboxGroupProps<D, Path>) {
   const { title, optionProps, records } = props;
-  const { selected, onChange } = useMultipleSelection<D>(props);
+
+  const { selected, onChange } = useMultipleSelection<
+    D,
+    Path,
+    BaseCheckboxProps<D>
+  >(props);
 
   return (
     <MuiFormControl component="fieldset" data-testid="CheckboxGroup">

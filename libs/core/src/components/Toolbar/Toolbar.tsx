@@ -4,10 +4,10 @@ import MuiTypography from '@mui/material/Typography';
 import { isValidElement } from 'react';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { ToolbarProps, MappablePropNames } from './Toolbar.types';
 
-export default withGenerateDataProps<ToolbarProps, MappablePropNames>(
+export default withGenerateData<ToolbarProps, MappablePropNames>(
   function Toolbar({
     children,
     color = 'transparent',

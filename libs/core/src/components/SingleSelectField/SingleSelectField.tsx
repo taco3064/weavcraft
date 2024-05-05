@@ -1,23 +1,28 @@
 import MuiMenuItem from '@mui/material/MenuItem';
+import type { JsonObject, Paths } from 'type-fest';
 
 import BaseField from '../BaseField';
-import { makeStoreProps, type GenericData } from '../../contexts';
 import { useOptionsRender } from '../../hooks';
+import { withDataStructure } from '../../contexts';
 import type { SingleSelectFieldProps } from './SingleSelectField.types';
 
-const withStoreProps = makeStoreProps<SingleSelectFieldProps>();
-
-export default withStoreProps(function SingleSelectField<
-  D extends GenericData
+export default withDataStructure(function SingleSelectField<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
 >({
   emptyText,
   optionIndicator,
   optionProps,
   records,
   ...props
-}: SingleSelectFieldProps<D>) {
-  const children = useOptionsRender({ optionIndicator, optionProps, records });
+}: SingleSelectFieldProps<D, Path>) {
   const displayEmpty = Boolean(emptyText);
+
+  const children = useOptionsRender<'single', D, Path>({
+    optionIndicator,
+    optionProps,
+    records,
+  });
 
   return (
     <BaseField

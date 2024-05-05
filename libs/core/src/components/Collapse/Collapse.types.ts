@@ -1,11 +1,8 @@
 import MuiCollapse from '@mui/material/Collapse';
 import type { ComponentProps, ReactElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type {
-  GenericData,
-  PropsWithMappedData,
-  SlotProps,
-} from '../../contexts';
+import type { PropsWithMappedData, SlotProps } from '../../contexts';
 
 type MuiCollapseProps = Pick<
   ComponentProps<typeof MuiCollapse>,
@@ -19,7 +16,7 @@ export interface CollapseProps extends MuiCollapseProps {
   toggle?: ReactElement<SlotProps>;
 }
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   CollapseProps,
   MappablePropNames

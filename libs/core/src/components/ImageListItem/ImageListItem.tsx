@@ -2,14 +2,14 @@ import MuiImageListItem from '@mui/material/ImageListItem';
 import MuiImageListItemBar from '@mui/material/ImageListItemBar';
 
 import { useUrlValidation } from '../../hooks';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 
 import type {
   ImageListItemProps,
   MappablePropNames,
 } from './ImageListItem.types';
 
-export default withGenerateDataProps<ImageListItemProps, MappablePropNames>(
+export default withGenerateData<ImageListItemProps, MappablePropNames>(
   function ImageListItem({
     action,
     actionPosition,
@@ -19,7 +19,7 @@ export default withGenerateDataProps<ImageListItemProps, MappablePropNames>(
     src,
     srcSet,
     ...props
-  }: ImageListItemProps) {
+  }) {
     const isUrlValid = useUrlValidation(src);
 
     return !isUrlValid ? null : (

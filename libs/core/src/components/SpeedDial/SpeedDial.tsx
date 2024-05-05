@@ -1,11 +1,12 @@
 import MuiSpeedDial from '@mui/material/SpeedDial';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
 import SpeedDialAction from '../SpeedDialAction';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { withDataStructure } from '../../contexts';
 
 import type { Origin, PositionSplit, SpeedDialProps } from './SpeedDial.types';
 
@@ -30,9 +31,7 @@ const ORIGIN: Origin = {
 };
 
 //* - Components
-const withStoreProps = makeStoreProps<SpeedDialProps>();
-
-export default withStoreProps(function SpeedDial<D extends GenericData>({
+export default withDataStructure(function SpeedDial<D extends JsonObject>({
   ariaLabel = 'SpeedDial',
   containerId,
   icon,

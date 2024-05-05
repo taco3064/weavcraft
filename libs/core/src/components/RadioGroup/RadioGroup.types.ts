@@ -1,13 +1,16 @@
-import type { GenericData } from '../../contexts';
-import type { GroupProps } from '../../hooks';
+import type { JsonObject, Paths } from 'type-fest';
+
+import type { SelectionGroupProps } from '../../hooks';
 import type { SelectionProps } from '../Selection';
 
-type BaseRadioProps<D extends GenericData> = Omit<
-  SelectionProps<'radio', D>,
+export type BaseRadioProps<D extends JsonObject> = Omit<
+  SelectionProps<D, 'radio'>,
   'checked'
 >;
 
-export interface RadioGroupProps<D extends GenericData = {}>
-  extends GroupProps<'single', BaseRadioProps<D>> {
+export interface RadioGroupProps<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+> extends SelectionGroupProps<'single', D, Path, BaseRadioProps<D>> {
   title?: string;
 }

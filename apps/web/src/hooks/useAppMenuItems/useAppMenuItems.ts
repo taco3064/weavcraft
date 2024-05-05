@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import { NAV_ITEMS } from './useAppMenuItems.const';
@@ -29,12 +28,10 @@ export function useAppNavItems() {
   }, [i18n]);
 }
 
-export function useTutorialLessons(paramKey: string) {
+export function useTutorialLessons() {
   const { i18n } = useTranslation();
-  const { query } = useRouter();
-  const { [paramKey]: expanded } = query;
 
-  const tutorials = useMemo(() => {
+  return useMemo(() => {
     const resource = i18n.getResource(i18n.language, 'tutorial', 'ttl-lessons');
 
     return Object.keys(resource).reduce<
@@ -57,9 +54,4 @@ export function useTutorialLessons(paramKey: string) {
       ];
     }, []);
   }, [i18n]);
-
-  return {
-    expanded: (expanded as string) || tutorials[0].id,
-    tutorials,
-  };
 }

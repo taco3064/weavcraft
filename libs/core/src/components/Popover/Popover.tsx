@@ -2,7 +2,7 @@ import MuiPopover, { type PopoverOrigin } from '@mui/material/Popover';
 import cx from 'clsx';
 import { useId, useMemo, useState } from 'react';
 
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 
 import type {
   AnchorOrigin,
@@ -10,7 +10,7 @@ import type {
   MappablePropNames,
 } from './Popover.types';
 
-export default withGenerateDataProps<PopoverProps, MappablePropNames>(
+export default withGenerateData<PopoverProps, MappablePropNames>(
   function Popover({ anchorPosition = 'bottom-center', toggle, ...props }) {
     const { type: Toggle, props: toggleProps } = toggle || {};
     const [open, setOpen] = useState(false);

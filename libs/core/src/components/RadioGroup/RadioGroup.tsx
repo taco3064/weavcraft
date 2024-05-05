@@ -1,19 +1,22 @@
 import MuiFormControl from '@mui/material/FormControl';
 import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
+import type { JsonObject, Paths } from 'type-fest';
 
 import Selection from '../Selection';
-import { makeStoreProps, type GenericData } from '../../contexts';
 import { useSingleSelection } from '../../hooks';
-import type { RadioGroupProps } from './RadioGroup.types';
+import { withDataStructure } from '../../contexts';
+import type { BaseRadioProps, RadioGroupProps } from './RadioGroup.types';
 
-const withStoreProps = makeStoreProps<RadioGroupProps>();
-
-export default withStoreProps(function RadioGroupProps<D extends GenericData>(
-  props: RadioGroupProps<D>
-) {
+export default withDataStructure(function RadioGroup<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+>(props: RadioGroupProps<D, Path>) {
   const { title, optionProps, records } = props;
-  const { selected, onChange } = useSingleSelection(props);
+
+  const { selected, onChange } = useSingleSelection<D, Path, BaseRadioProps<D>>(
+    props
+  );
 
   return (
     <MuiFormControl component="fieldset" data-testid="RadioGroup">

@@ -1,7 +1,8 @@
 import MuiSlider from '@mui/material/Slider';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 export type SliderProps = Pick<
   ComponentProps<typeof MuiSlider>,
@@ -26,7 +27,7 @@ export type MappablePropNames = keyof Pick<
   'disabled' | 'marks' | 'max' | 'min' | 'name' | 'value'
 >;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   SliderProps,
   MappablePropNames

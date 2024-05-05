@@ -1,25 +1,27 @@
 import MuiBox from '@mui/material/Box';
 import MuiChip from '@mui/material/Chip';
 import _get from 'lodash/get';
+import type { JsonObject, Paths } from 'type-fest';
 
 import BaseField from '../BaseField';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { withDataStructure } from '../../contexts';
 import { useOptionsRender } from '../../hooks';
 import type { MultipleSelectFieldProps } from './MultipleSelectField.types';
 
-const withStoreProps = makeStoreProps<MultipleSelectFieldProps>();
-
-export default withStoreProps(function MultipleSelectField<
-  D extends GenericData
+export default withDataStructure(function MultipleSelectField<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
 >({
   optionIndicator,
   optionProps,
   records,
   ...props
-}: MultipleSelectFieldProps<D>) {
-  const propMapping = optionProps?.propMapping || {};
+}: MultipleSelectFieldProps<D, Path>) {
+  const propMapping = optionProps?.propMapping as Partial<
+    Record<string, string>
+  >;
 
-  const children = useOptionsRender({
+  const children = useOptionsRender<'multiple', D, Path>({
     optionIndicator,
     optionProps,
     records,
@@ -40,14 +42,14 @@ export default withStoreProps(function MultipleSelectField<
           <MuiBox display="flex" flexWrap="wrap" gap={0.5}>
             {selected.map((value, i) => {
               const data = records?.find(
-                (data) => _get(data, propMapping.value as string) === value
+                (data) => _get(data, propMapping?.value as string) === value
               );
 
               return (
                 <MuiChip
                   key={i}
                   data-testid="MultipleSelectFieldChip"
-                  label={_get(data, propMapping.primary as string) as string}
+                  label={_get(data, propMapping?.primary as string) as string}
                   onDelete={() =>
                     props.onChange?.(
                       selected.filter((v) => v !== value),

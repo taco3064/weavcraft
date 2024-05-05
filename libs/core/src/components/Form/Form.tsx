@@ -2,6 +2,8 @@ import MuiGrid from '@mui/material/Grid';
 import MuiIconButton from '@mui/material/IconButton';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import type { FormEvent, ReactElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import {
   Children,
@@ -9,141 +11,141 @@ import {
   isValidElement,
   useMemo,
   useState,
-  type FormEvent,
-  type ReactElement,
 } from 'react';
 
 import Card from '../Card';
 import Icon from '../Icon';
+import { withGenerateData, useGenerateData } from '../../contexts';
 import type { BaseFieldProps } from '../BaseField';
-import type { FormProps, MappablePropNames } from './Form.types';
+import type { FormProps, MappablePropNames, WrappedProps } from './Form.types';
 
-import {
-  withGenerateDataProps,
-  useComponentData,
-  type GenericData,
-} from '../../contexts';
+function BaseForm<D extends JsonObject>({
+  action,
+  actionJustify = 'center',
+  breakpoint = 'sm',
+  children,
+  color,
+  fullWidthFields,
+  resetIcon = 'faRotateLeft',
+  size,
+  submitIcon = 'faCheck',
+  variant,
+  onSubmit,
+  onValidate,
+  ...props
+}: FormProps<D>) {
+  const { data, onChange } = useGenerateData<D>();
+  const [key, setKey] = useState(new Date().valueOf());
 
-export default withGenerateDataProps<FormProps, MappablePropNames>(
-  function Form<D extends GenericData>({
-    action,
-    actionJustify = 'center',
-    breakpoint = 'sm',
-    children,
-    color,
-    fullWidthFields,
-    resetIcon = 'faRotateLeft',
-    size,
-    submitIcon = 'faCheck',
-    variant,
-    onSubmit,
-    onValidate,
-    ...props
-  }: FormProps<D>) {
-    const { data, onChange } = useComponentData<D>();
-    const [key, setKey] = useState(new Date().valueOf());
+  const fields = Children.toArray(children).filter(
+    isValidElement
+  ) as ReactElement<BaseFieldProps<any>>[];
 
-    const fields = Children.toArray(children).filter(
-      isValidElement
-    ) as ReactElement<BaseFieldProps<any>>[];
+  const stringify = JSON.stringify({
+    key,
+    fields: fields.map((field) => field.props.name as string).filter(Boolean),
+  });
 
-    const stringify = JSON.stringify({
-      key,
-      fields: fields.map((field) => field.props.name as string).filter(Boolean),
-    });
+  const styleProps = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries({ color, size, variant }).filter(([, value]) => value)
+      ),
+    [color, size, variant]
+  );
 
-    const styleProps = useMemo(
-      () =>
-        Object.fromEntries(
-          Object.entries({ color, size, variant }).filter(([, value]) => value)
-        ),
-      [color, size, variant]
+  const formdata = useMemo(() => {
+    const fieldNames = JSON.parse(stringify).fields as string[];
+
+    return fieldNames.reduce(
+      (acc, name) => _set(acc, name, _get(data, name)),
+      {} as D
     );
+  }, [data, stringify]);
 
-    const formdata = useMemo(() => {
-      const fieldNames = JSON.parse(stringify).fields as string[];
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      return fieldNames.reduce(
-        (acc, name) => _set(acc, name, _get(data, name)),
-        {} as D
-      );
-    }, [data, stringify]);
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      try {
-        if ((await onValidate?.(formdata)) !== false) {
-          onSubmit?.(formdata);
-          onChange(formdata);
-        }
-      } catch (err) {
-        console.warn('@weavcraft/core/Form Error:', err);
+    try {
+      if ((await onValidate?.(formdata)) !== false) {
+        onSubmit?.(formdata);
+        onChange(formdata);
       }
-    };
+    } catch (err) {
+      console.warn('@weavcraft/core/Form Error:', err);
+    }
+  };
 
-    return (
-      <Card
-        {...props}
-        component="form"
-        footerJustify={actionJustify}
-        onSubmit={handleSubmit}
-        footerAction={
-          action || (
-            <>
-              <MuiIconButton
-                data-testid="FormResetButton"
-                size="large"
-                color="default"
-                onClick={() => setKey(new Date().valueOf())}
-              >
-                <Icon code={resetIcon} />
-              </MuiIconButton>
+  return (
+    <Card
+      {...props}
+      component="form"
+      footerJustify={actionJustify}
+      onSubmit={handleSubmit}
+      footerAction={
+        action || (
+          <>
+            <MuiIconButton
+              data-testid="FormResetButton"
+              size="large"
+              color="default"
+              onClick={() => setKey(new Date().valueOf())}
+            >
+              <Icon code={resetIcon} />
+            </MuiIconButton>
 
-              <MuiIconButton
-                data-testid="FormSubmitButton"
-                size="large"
-                color="primary"
-                type="submit"
-              >
-                <Icon code={submitIcon} />
-              </MuiIconButton>
-            </>
-          )
-        }
+            <MuiIconButton
+              data-testid="FormSubmitButton"
+              size="large"
+              color="primary"
+              type="submit"
+            >
+              <Icon code={submitIcon} />
+            </MuiIconButton>
+          </>
+        )
+      }
+    >
+      <MuiGrid
+        data-testid="FormContent"
+        key={key}
+        container
+        columns={2}
+        justifyContent="center"
       >
-        <MuiGrid
-          data-testid="FormContent"
-          key={key}
-          container
-          columns={2}
-          justifyContent="center"
-        >
-          {fields.map((field, i) => {
-            const name = field.props.name as string;
-            const value = _get(data, name);
-            const cols = fullWidthFields?.includes(name) ? 2 : 1;
+        {fields.map((field, i) => {
+          const name = field.props.name as string;
+          const value = _get(data, name);
+          const cols = fullWidthFields?.includes(name) ? 2 : 1;
 
-            return (
-              <MuiGrid key={i} item xs={2} {...{ [breakpoint]: cols }}>
-                {cloneElement(field, {
-                  value,
-                  onChange: (value: any) => _set(formdata!, name, value),
+          return (
+            <MuiGrid key={i} item xs={2} {...{ [breakpoint]: cols }}>
+              {cloneElement(field, {
+                value,
+                onChange: (value: any) => _set(formdata!, name, value),
 
-                  ...(['color', 'size', 'variant'] as const).reduce(
-                    (acc, styleName) => ({
-                      ...acc,
-                      [styleName]:
-                        field.props[styleName] || styleProps[styleName],
-                    }),
-                    {}
-                  ),
-                })}
-              </MuiGrid>
-            );
-          })}
-        </MuiGrid>
-      </Card>
-    );
-  }
-);
+                ...(['color', 'size', 'variant'] as const).reduce(
+                  (acc, styleName) => ({
+                    ...acc,
+                    [styleName]:
+                      field.props[styleName] || styleProps[styleName],
+                  }),
+                  {}
+                ),
+              })}
+            </MuiGrid>
+          );
+        })}
+      </MuiGrid>
+    </Card>
+  );
+}
+
+export default function Form<D extends JsonObject>(props: WrappedProps<D>) {
+  const WrappedForm = useMemo(
+    () => withGenerateData<FormProps<D>, MappablePropNames>(BaseForm),
+    []
+  );
+
+  return <WrappedForm {...props} />;
+}

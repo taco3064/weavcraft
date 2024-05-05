@@ -1,17 +1,11 @@
 import MuiImageList from '@mui/material/ImageList';
+import type { JsonObject } from 'type-fest';
 
 import ImageListItem from '../ImageListItem';
+import { useComponentSlot, withDataStructure } from '../../contexts';
 import type { ImageListProps } from './ImageList.types';
 
-import {
-  makeStoreProps,
-  useComponentSlot,
-  type GenericData,
-} from '../../contexts';
-
-const withStoreProps = makeStoreProps<ImageListProps>();
-
-export default withStoreProps(function ImageList<D extends GenericData>({
+export default withDataStructure(function ImageList<D extends JsonObject>({
   itemAction,
   itemProps,
   records = [],

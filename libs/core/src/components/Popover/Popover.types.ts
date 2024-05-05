@@ -1,11 +1,8 @@
 import MuiPopover from '@mui/material/Popover';
 import type { ComponentProps, ReactElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type {
-  GenericData,
-  PropsWithMappedData,
-  SlotProps,
-} from '../../contexts';
+import type { PropsWithMappedData, SlotProps } from '../../contexts';
 
 type MuiPopoverProps = Pick<
   ComponentProps<typeof MuiPopover>,
@@ -24,7 +21,7 @@ export interface PopoverProps
 
 export type MappablePropNames = keyof Pick<PopoverProps, 'children'>;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   PopoverProps,
   MappablePropNames

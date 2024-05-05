@@ -1,33 +1,37 @@
 import MuiChip from '@mui/material/Chip';
+import { useMemo } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { ChipProps, MappablePropNames } from './Chip.types';
+import { useGenerateData, withGenerateData } from '../../contexts';
+import type { ChipProps, MappablePropNames, WrappedProps } from './Chip.types';
 
-import {
-  useComponentData,
-  withGenerateDataProps,
-  type GenericData,
-} from '../../contexts';
+function BaseChip<D extends JsonObject>({
+  indicator,
+  onClick,
+  onDelete,
+  ...props
+}: ChipProps<D>) {
+  const { data } = useGenerateData<D>();
 
-export default withGenerateDataProps<ChipProps<any>, MappablePropNames>(
-  function Chip<D extends GenericData>({
-    indicator,
-    onClick,
-    onDelete,
-    ...props
-  }: ChipProps<D>) {
-    const { data } = useComponentData<D>();
+  return (
+    <MuiChip
+      {...props}
+      {...(onClick && {
+        clickable: true,
+        onClick: () => onClick(data),
+      })}
+      data-testid="Chip"
+      avatar={indicator}
+      onDelete={() => onDelete?.(data)}
+    />
+  );
+}
 
-    return (
-      <MuiChip
-        {...props}
-        {...(onClick && {
-          clickable: true,
-          onClick: () => onClick(data),
-        })}
-        data-testid="Chip"
-        avatar={indicator}
-        onDelete={() => onDelete?.(data)}
-      />
-    );
-  }
-);
+export default function Chip<D extends JsonObject>(props: WrappedProps<D>) {
+  const WrappedChip = useMemo(
+    () => withGenerateData<ChipProps<D>, MappablePropNames>(BaseChip),
+    []
+  );
+
+  return <WrappedChip {...props} />;
+}

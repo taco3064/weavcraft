@@ -1,8 +1,9 @@
 import MuiSpeedDial from '@mui/material/SpeedDial';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithStore } from '../../contexts';
 import type { IconCode } from '../Icon';
+import type { PropsWithMappedStore } from '../../contexts';
 
 import type {
   SpeedDialActionProps,
@@ -12,7 +13,7 @@ import type {
 //* - Component Props
 type MuiSpeedDialProps = Pick<ComponentProps<typeof MuiSpeedDial>, 'direction'>;
 
-export type SpeedDialProps<D extends GenericData = {}> = PropsWithStore<
+export type SpeedDialProps<D extends JsonObject> = PropsWithMappedStore<
   D,
   {
     ariaLabel?: string;

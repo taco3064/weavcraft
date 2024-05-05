@@ -1,10 +1,10 @@
 import MuiAvatar from '@mui/material/Avatar';
 
 import { useUrlValidation } from '../../hooks';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { AvatarProps, MappablePropNames } from './Avatar.types';
 
-export default withGenerateDataProps<AvatarProps, MappablePropNames>(
+export default withGenerateData<AvatarProps, MappablePropNames>(
   function Avatar({ height, text, width, ...props }) {
     const isUrlValid = useUrlValidation(props.src);
 

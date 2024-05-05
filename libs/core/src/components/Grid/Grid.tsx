@@ -1,16 +1,15 @@
 import MuiGrid from '@mui/material/Grid';
 import _pick from 'lodash/pick';
 import { Children, cloneElement, isValidElement, useMemo } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import GridItem from '../GridItem';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { withDataStructure } from '../../contexts';
 import type { GridItemBrakpoints, GridItemProps } from '../GridItem';
 import type { GridProps, ItemVariant } from './Grid.types';
 
-const withStoreProps = makeStoreProps<GridProps>();
-
-export default withStoreProps(function Grid<
-  D extends GenericData,
+export default withDataStructure(function Grid<
+  D extends JsonObject,
   V extends ItemVariant
 >({
   children,

@@ -1,9 +1,10 @@
 import MuiList from '@mui/material/List';
 import type { ComponentProps, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithStore, SlotElement } from '../../contexts';
 import type { IconCode } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
+import type { PropsWithMappedStore, SlotElement } from '../../contexts';
 
 type MuiListProps = Pick<
   ComponentProps<typeof MuiList>,
@@ -14,12 +15,12 @@ type BaseListProps = {
   title?: string;
 };
 
-export type MappablePropNames = keyof BaseListProps;
+type MappablePropNames = keyof BaseListProps;
 
 export type ListProps<
-  D extends GenericData = {},
-  V extends ListItemVariant = ListItemVariant
-> = PropsWithStore<
+  D extends JsonObject,
+  V extends ListItemVariant
+> = PropsWithMappedStore<
   D,
   MuiListProps &
     BaseListProps & {
@@ -32,14 +33,15 @@ export type ListProps<
       //* - ListItem
       itemAction?: SlotElement;
       itemIndicator?: SlotElement;
-      itemVariant?: ListItemProps<D, V>['variant'];
+      itemVariant?: V;
       itemProps?: Omit<
-        ListItemProps<D, V>,
+        ListItemProps<D>,
         'data' | 'action' | 'indicator' | 'variant' | 'onItemClick'
       >;
 
       onItemClick?: V extends 'button' ? (item: D) => void : undefined;
       onItemActionClick?: (item: D) => void;
       onItemIndicatorClick?: (item: D) => void;
-    }
+    },
+  MappablePropNames
 >;

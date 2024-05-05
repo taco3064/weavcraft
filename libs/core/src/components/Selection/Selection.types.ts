@@ -2,8 +2,9 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 export type SelectionVariant = 'checkbox' | 'radio';
 
@@ -26,14 +27,14 @@ export type MappablePropNames = keyof Omit<
 >;
 
 export interface SelectionProps<
-  V extends SelectionVariant,
-  D extends GenericData
+  D extends JsonObject,
+  V extends SelectionVariant = SelectionVariant
 > extends BaseSelectionProps {
   variant?: V;
   onChange?: (checked: boolean, data?: D) => void;
 }
 
 export type WrappedProps<
-  V extends SelectionVariant,
-  D extends GenericData
-> = PropsWithMappedData<D, SelectionProps<V, D>, MappablePropNames>;
+  D extends JsonObject,
+  V extends SelectionVariant
+> = PropsWithMappedData<D, SelectionProps<D, V>, MappablePropNames>;

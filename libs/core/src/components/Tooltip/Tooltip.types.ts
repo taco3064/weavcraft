@@ -1,7 +1,8 @@
 import MuiTooltip from '@mui/material/Tooltip';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../contexts';
 
 type MuiTooltipProps = Partial<
   Pick<
@@ -20,7 +21,7 @@ export interface TooltipProps extends Omit<MuiTooltipProps, 'placement'> {
 
 export type MappablePropNames = keyof Pick<TooltipProps, 'disabled' | 'title'>;
 
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
   D,
   TooltipProps,
   MappablePropNames

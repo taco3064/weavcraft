@@ -1,12 +1,11 @@
 import MuiButtonGroup from '@mui/material/ButtonGroup';
+import type { JsonObject } from 'type-fest';
 
 import Button from '../Button';
-import { makeStoreProps, type GenericData } from '../../contexts';
-import type { ButtonGroupProps, MappablePropNames } from './ButtonGroup.types';
+import { withDataStructure } from '../../contexts';
+import type { ButtonGroupProps } from './ButtonGroup.types';
 
-const withStoreProps = makeStoreProps<ButtonGroupProps, MappablePropNames>();
-
-export default withStoreProps(function ButtonGroup<D extends GenericData>({
+export default withDataStructure(function ButtonGroup<D extends JsonObject>({
   borderRadiusVariant,
   itemProps,
   records,

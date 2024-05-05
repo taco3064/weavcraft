@@ -2,10 +2,10 @@ import MuiCollapse from '@mui/material/Collapse';
 import { useState } from 'react';
 
 import PortalContainer from '../PortalContainer';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { CollapseProps, MappablePropNames } from './Collapse.types';
 
-export default withGenerateDataProps<CollapseProps, MappablePropNames>(
+export default withGenerateData<CollapseProps, MappablePropNames>(
   function Collapse({ children, containerId, toggle, ...props }) {
     const { type: Toggle, props: toggleProps } = toggle || {};
     const [expanded, setExpanded] = useState(false);

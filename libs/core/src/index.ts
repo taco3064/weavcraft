@@ -1,7 +1,5 @@
 import * as Comp from './components';
-
 export type * from './components';
-export type { GenericData, PropertyPath } from './contexts';
 
 export const Display = {
   Avatar: Comp.Avatar,

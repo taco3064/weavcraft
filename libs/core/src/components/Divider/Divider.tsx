@@ -1,9 +1,9 @@
 import MuiDivider from '@mui/material/Divider';
 
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { DividerProps, MappablePropNames } from './Divider.types';
 
-export default withGenerateDataProps<DividerProps, MappablePropNames>(
+export default withGenerateData<DividerProps, MappablePropNames>(
   function Divider({ text, ...props }) {
     return (
       <MuiDivider {...props} data-testid="Divider">

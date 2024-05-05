@@ -2,10 +2,10 @@ import MuiIconButton from '@mui/material/IconButton';
 
 import Icon from '../Icon';
 import { useUrlValidation } from '../../hooks';
-import { withGenerateDataProps } from '../../contexts';
+import { withGenerateData } from '../../contexts';
 import type { IconButtonProps, MappablePropNames } from './IconButton.types';
 
-export default withGenerateDataProps<IconButtonProps, MappablePropNames>(
+export default withGenerateData<IconButtonProps, MappablePropNames>(
   function IconButton({ href, icon, ...props }) {
     const isHrefValid = useUrlValidation(href);
 
