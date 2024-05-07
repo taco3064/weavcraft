@@ -5,23 +5,23 @@ import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
-import type { BaseToolbarProps } from '../Toolbar';
+import type { ToolbarProps } from '../Toolbar';
 import type { IconCode } from '../Icon';
-import type { PrefixProps, PropsWithMappedData } from '../../contexts';
+import type { PrefixProps, PropsWithMappedData } from '../../hooks';
 
 type MuiPaperProps = Pick<ComponentProps<typeof MuiPaper>, 'elevation'>;
 type MuiDrawerProps = Pick<ComponentProps<typeof MuiDrawer>, 'anchor'>;
+type DrawerAnchor = Extract<MuiDrawerProps['anchor'], 'left' | 'right'>;
 
-type ToolbarProps = Pick<
-  BaseToolbarProps,
+type DrawerToolbarProps<D extends JsonObject> = Pick<
+  ToolbarProps<D>,
   'color' | 'elevation' | 'title' | 'variant'
 >;
 
-export interface DrawerProps
+interface BaseDrawerProps
   extends MuiPaperProps,
-    Omit<MuiDrawerProps, 'anchor'>,
-    PrefixProps<ToolbarProps, 'header'> {
-  anchor?: Extract<MuiDrawerProps['anchor'], 'left' | 'right'>;
+    Omit<MuiDrawerProps, 'anchor'> {
+  anchor?: DrawerAnchor;
   breakpoint?: Exclude<Breakpoint, 'xs'>;
   children?: ReactNode;
   content?: ReactElement;
@@ -34,7 +34,7 @@ export interface DrawerProps
 }
 
 export type AnchorOptions = Record<
-  NonNullable<DrawerProps['anchor']>,
+  DrawerAnchor,
   {
     closeIcon: IconCode;
     direction: Property.FlexDirection;
@@ -42,17 +42,12 @@ export type AnchorOptions = Record<
 >;
 
 export interface DrawerStyleParams
-  extends Required<Pick<DrawerProps, 'breakpoint' | 'height' | 'width'>> {
+  extends Required<Pick<BaseDrawerProps, 'breakpoint' | 'height' | 'width'>> {
   open: boolean;
 }
 
-export type MappablePropNames = keyof Pick<
-  DrawerProps,
-  'children' | 'content' | 'headerIcon' | 'headerTitle'
->;
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type DrawerProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  DrawerProps,
-  MappablePropNames
+  BaseDrawerProps & PrefixProps<DrawerToolbarProps<D>, 'header'>,
+  'children' | 'content' | 'headerIcon' | 'headerTitle'
 >;

@@ -2,24 +2,19 @@ import MuiChip from '@mui/material/Chip';
 import type { ComponentProps, ReactElement } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
 type MuiChipProps = Pick<
   ComponentProps<typeof MuiChip>,
   'color' | 'disabled' | 'label' | 'size' | 'variant' | 'onDelete'
 >;
 
-export interface ChipProps<D extends JsonObject>
-  extends Omit<MuiChipProps, 'onDelete'> {
-  indicator?: ReactElement;
-  onClick?: (data?: D) => void;
-  onDelete?: (data?: D) => void;
-}
-
-export type MappablePropNames = keyof Pick<ChipProps<{}>, 'disabled' | 'label'>;
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type ChipProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  ChipProps<D>,
-  MappablePropNames
+  Omit<MuiChipProps, 'onDelete'> & {
+    indicator?: ReactElement;
+    onClick?: (data?: D) => void;
+    onDelete?: (data?: D) => void;
+  },
+  'disabled' | 'label'
 >;

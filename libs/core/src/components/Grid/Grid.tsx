@@ -4,21 +4,25 @@ import { Children, cloneElement, isValidElement, useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import GridItem from '../GridItem';
-import { withDataStructure } from '../../contexts';
+import { useStoreProps } from '../../hooks';
 import type { GridItemBrakpoints, GridItemProps } from '../GridItem';
 import type { GridProps, ItemVariant } from './Grid.types';
 
-export default withDataStructure(function Grid<
-  D extends JsonObject,
-  V extends ItemVariant
->({
-  children,
-  columns = 12,
-  itemVariant,
-  itemProps = {},
-  records = [],
-  ...props
-}: GridProps<D, V>) {
+export default function Grid<D extends JsonObject, V extends ItemVariant>(
+  props: GridProps<D, V>
+) {
+  const [
+    StoreProvider,
+    {
+      children,
+      columns = 12,
+      itemVariant,
+      itemProps = {},
+      records = [],
+      ...gridProps
+    },
+  ] = useStoreProps(props);
+
   const templates = Children.toArray(children);
   const stringifyProps = JSON.stringify(itemProps);
 
@@ -41,17 +45,19 @@ export default withDataStructure(function Grid<
   }, [columns, stringifyProps]);
 
   return (
-    <MuiGrid {...props} data-testid="Grid" columns={columns}>
-      {records?.map((item, i) => (
-        <GridItem {...gridItemProps} key={i} data={item}>
-          {(itemVariant === 'unique' ? [templates[i]] : templates).map(
-            (template, ii) =>
-              !isValidElement(template)
-                ? null
-                : cloneElement(template, { key: ii })
-          )}
-        </GridItem>
-      ))}
-    </MuiGrid>
+    <StoreProvider>
+      <MuiGrid {...gridProps} data-testid="Grid" columns={columns}>
+        {records?.map((item, i) => (
+          <GridItem {...gridItemProps} key={i} data={item}>
+            {(itemVariant === 'unique' ? [templates[i]] : templates).map(
+              (template, ii) =>
+                !isValidElement(template)
+                  ? null
+                  : cloneElement(template, { key: ii })
+            )}
+          </GridItem>
+        ))}
+      </MuiGrid>
+    </StoreProvider>
   );
-});
+}

@@ -1,4 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import { useMultipleSelection, useSingleSelection } from './useSelection';
 
 describe('@weavcraft/core/hooks/useMultipleSelection', () => {

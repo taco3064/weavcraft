@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { IconCode } from '../Icon';
-import type { PropsWithMappedStore } from '../../contexts';
+import type { PropsWithMappedStore } from '../../hooks';
 
 import type {
   SpeedDialActionProps,

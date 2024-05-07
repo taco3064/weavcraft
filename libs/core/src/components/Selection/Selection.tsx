@@ -1,34 +1,35 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
-import { useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { withGenerateData, useGenerateData } from '../../contexts';
+import { useGenerateProps } from '../../hooks';
+import type { SelectionProps, SelectionVariant } from './Selection.types';
 
-import type {
-  MappablePropNames,
-  SelectionProps,
-  SelectionVariant,
-  WrappedProps,
-} from './Selection.types';
+export default function Selection<
+  D extends JsonObject,
+  V extends SelectionVariant = 'checkbox'
+>(props: SelectionProps<D, V>) {
+  const [
+    GeneratePropsProvider,
+    {
+      label,
+      labelPlacement,
+      checked,
+      disabled,
+      required,
+      variant,
+      onChange,
+      ...controlProps
+    },
+    { data },
+  ] = useGenerateProps<D, SelectionProps<D, V>>(props);
 
-function BaseSelection<D extends JsonObject>({
-  label,
-  labelPlacement,
-  checked,
-  disabled,
-  required,
-  variant = 'checkbox',
-  onChange,
-  ...props
-}: SelectionProps<D>) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const { data } = useGenerateData<D>();
 
   const control = (
     <Control
-      {...props}
+      {...controlProps}
       {...{ disabled, required }}
       defaultChecked={checked}
       data-testid="Selection"
@@ -36,25 +37,16 @@ function BaseSelection<D extends JsonObject>({
     />
   );
 
-  return !label ? (
-    control
-  ) : (
-    <MuiFormControlLabel
-      {...{ label, labelPlacement, disabled, required, control }}
-      data-testid="FormControlLabel"
-    />
+  return (
+    <GeneratePropsProvider>
+      {!label ? (
+        control
+      ) : (
+        <MuiFormControlLabel
+          {...{ label, labelPlacement, disabled, required, control }}
+          data-testid="FormControlLabel"
+        />
+      )}
+    </GeneratePropsProvider>
   );
-}
-
-export default function Selection<
-  D extends JsonObject,
-  V extends SelectionVariant
->(props: WrappedProps<D, V>) {
-  const WrappedSelection = useMemo(
-    () =>
-      withGenerateData<SelectionProps<D, V>, MappablePropNames>(BaseSelection),
-    []
-  );
-
-  return <WrappedSelection {...props} />;
 }

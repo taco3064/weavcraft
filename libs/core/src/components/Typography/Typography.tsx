@@ -1,14 +1,20 @@
 import MuiTypography from '@mui/material/Typography';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
-import { withGenerateData } from '../../contexts';
-import type { TypographyProps, MappablePropNames } from './Typography.types';
+import { useGenerateProps } from '../../hooks';
+import type { TypographyProps } from './Typography.types';
 
-export default withGenerateData<TypographyProps, MappablePropNames>(
-  function Typography({ align, icon, text, ...props }) {
-    return (
+export default function Typography<D extends JsonObject>(
+  props: TypographyProps<D>
+) {
+  const [GeneratePropsProvider, { align, icon, text, ...typographyProps }] =
+    useGenerateProps<D, TypographyProps<D>>(props);
+
+  return (
+    <GeneratePropsProvider>
       <MuiTypography
-        {...props}
+        {...typographyProps}
         data-testid="Typography"
         display="flex"
         flexDirection="row"
@@ -25,6 +31,6 @@ export default withGenerateData<TypographyProps, MappablePropNames>(
         {icon && <Icon color="inherit" fontSize="inherit" code={icon} />}
         {text}
       </MuiTypography>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

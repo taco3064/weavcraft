@@ -3,8 +3,8 @@ import type { ReactElement, ButtonHTMLAttributes } from 'react';
 
 import Card, { type CardProps } from '../Card';
 import Form, { type FormProps } from '../Form';
-import type { PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
+import type { PropsWithMappedData } from '../../hooks';
 import type { WidgetWrapperProps } from '../../styles';
 
 //* Utility Types

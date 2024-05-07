@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react';
 import type { JsonObject, Paths } from 'type-fest';
 
 import type { IconCode } from '../Icon';
-import type { PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 import type { SelectionGroupProps, SelectionVariant } from '../../hooks';
 
 type MuiToggleButtonGroupProps = Pick<
@@ -17,16 +17,14 @@ type MuiToggleButtonProps = Pick<
   'color' | 'disabled'
 >;
 
-interface BaseToggleButtonProps extends MuiToggleButtonProps {
-  icon?: IconCode;
-  text?: string;
-  value?: any;
-}
-
 export type ToggleButtonProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  BaseToggleButtonProps,
-  keyof Pick<BaseToggleButtonProps, 'disabled' | 'icon' | 'text' | 'value'>
+  MuiToggleButtonProps & {
+    icon?: IconCode;
+    text?: string;
+    value?: any;
+  },
+  'disabled' | 'icon' | 'text' | 'value'
 >;
 
 export interface ToggleButtonGroupProps<

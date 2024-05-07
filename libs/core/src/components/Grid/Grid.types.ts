@@ -2,7 +2,7 @@ import MuiGrid from '@mui/material/Grid';
 import type { ComponentProps, ReactNode } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedStore } from '../../contexts';
+import type { PropsWithMappedStore } from '../../hooks';
 import type { GridItemProps } from '../GridItem';
 
 type MuiGridProps = Pick<

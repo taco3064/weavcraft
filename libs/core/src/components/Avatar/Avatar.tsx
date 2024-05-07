@@ -1,17 +1,20 @@
 import MuiAvatar from '@mui/material/Avatar';
+import type { JsonObject } from 'type-fest';
 
-import { useUrlValidation } from '../../hooks';
-import { withGenerateData } from '../../contexts';
-import type { AvatarProps, MappablePropNames } from './Avatar.types';
+import { useGenerateProps, useUrlValidation } from '../../hooks';
+import type { AvatarProps } from './Avatar.types';
 
-export default withGenerateData<AvatarProps, MappablePropNames>(
-  function Avatar({ height, text, width, ...props }) {
-    const isUrlValid = useUrlValidation(props.src);
+export default function Avatar<D extends JsonObject>(props: AvatarProps<D>) {
+  const [GenerateDataProvider, { height, text, width, ...avatarProps }] =
+    useGenerateProps<D, AvatarProps<D>>(props);
 
-    return (
-      <MuiAvatar {...props} sx={{ width, height }} data-testid="Avatar">
+  const isUrlValid = useUrlValidation(avatarProps.src);
+
+  return (
+    <GenerateDataProvider>
+      <MuiAvatar {...avatarProps} sx={{ width, height }} data-testid="Avatar">
         {isUrlValid ? null : text?.charAt(0)}
       </MuiAvatar>
-    );
-  }
-);
+    </GenerateDataProvider>
+  );
+}

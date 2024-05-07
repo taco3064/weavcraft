@@ -12,7 +12,14 @@ describe('@weavcraft/core/components/AvatarGroup', () => {
 
   it('should render all text avatars', () => {
     const { getAllByTestId } = render(
-      <AvatarGroup records={records} itemProps={{ text: 'name' }} />
+      <AvatarGroup
+        records={records}
+        itemProps={{
+          propMapping: {
+            text: 'name',
+          },
+        }}
+      />
     );
 
     expect(getAllByTestId('Avatar')).toHaveLength(records.length);
@@ -20,7 +27,15 @@ describe('@weavcraft/core/components/AvatarGroup', () => {
 
   it('should render all img avatars', () => {
     const { getAllByTestId } = render(
-      <AvatarGroup records={records} itemProps={{ alt: 'name', src: 'url' }} />
+      <AvatarGroup
+        records={records}
+        itemProps={{
+          propMapping: {
+            alt: 'name',
+            src: 'url',
+          },
+        }}
+      />
     );
 
     expect(getAllByTestId('Avatar')).toHaveLength(records.length);

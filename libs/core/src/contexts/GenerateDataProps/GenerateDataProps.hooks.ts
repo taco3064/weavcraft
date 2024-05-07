@@ -1,26 +1,14 @@
-import _get from 'lodash/get';
 import _omit from 'lodash/omit';
 import _set from 'lodash/set';
 import { create } from 'zustand';
 import type { JsonObject } from 'type-fest';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentType,
-} from 'react';
+import { createContext, useContext, useId, useMemo, useState } from 'react';
 
 import type {
   DataStructure,
   DataStructureContextValue,
   DataValue,
-  MappableProps,
-  SlotElement,
   ValueTypeMapping,
 } from './GenerateDataProps.types';
 
@@ -32,7 +20,7 @@ const VALUE_TYPE_MAP: ValueTypeMapping = {
 };
 
 //* - Zustand
-const useStructure = create(() => {
+export const useStructure = create(() => {
   let structure: DataStructure = {};
 
   function getDataType(value: any): DataValue | undefined {
@@ -95,6 +83,16 @@ export function useSymbolId() {
   return useMemo(() => Symbol(id), [id]);
 }
 
+export function useDataStructure() {
+  const { uid, paths } = useContext(DataStructureContext) || {};
+  const newId = useSymbolId();
+
+  return {
+    root: uid || newId,
+    paths: useMemo(() => paths || [], [paths]),
+  };
+}
+
 export function useGenerateData<D extends JsonObject>(propData?: D) {
   const dataState = useState<D>(propData!);
   const type: 'props' | 'context' = propData ? 'props' : 'context';
@@ -114,65 +112,4 @@ export function useGenerateData<D extends JsonObject>(propData?: D) {
         data: data!,
         onChange: setData,
       };
-}
-
-export function useComponentSlot<D extends JsonObject>(
-  action?: SlotElement,
-  onItemToggle?: (item: D) => void
-) {
-  const { type: Slot, props } = action || {};
-  const getProps = usePropsGetter<D>();
-
-  return {
-    Slot: Slot as ComponentType<typeof props> | undefined,
-
-    getSlotProps: (data: D) =>
-      ({
-        ...getProps({ ...props, data }), // Specify the type of getProps function
-        ...(onItemToggle && {
-          onClick: (...args: any[]) => {
-            args.forEach((arg) => arg?.stopPropagation?.());
-            props?.onClick?.(...args);
-            onItemToggle(data);
-          },
-        }),
-      } as typeof props),
-  };
-}
-
-export function useDataStructure() {
-  const { uid, paths } = useContext(DataStructureContext) || {};
-  const newId = useSymbolId();
-
-  return {
-    root: uid || newId,
-    paths: useMemo(() => paths || [], [paths]),
-  };
-}
-
-export function usePropsGetter<D extends JsonObject>() {
-  const { root, paths } = useDataStructure();
-  const { set, destroy } = useStructure();
-  const destroyRef = useRef(() => destroy(root, paths));
-
-  useEffect(() => destroyRef.current, [destroyRef]);
-
-  return function <
-    P extends MappableProps<D>,
-    R = Omit<P, 'data' | 'propMapping'>
-  >({ data, propMapping, ...props }: P & MappableProps<D>) {
-    return Object.entries(propMapping || {}).reduce((result, [key, path]) => {
-      const propValue = _get(props, key);
-      const dataValue = _get(data, path as string);
-
-      //* - The prop value must be undefined
-      if (propValue === undefined && dataValue !== undefined) {
-        set(root, [...paths, key], dataValue);
-
-        return { ...result, [key]: dataValue };
-      }
-
-      return { ...result, [key]: propValue };
-    }, props) as R;
-  };
 }

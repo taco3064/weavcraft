@@ -5,9 +5,8 @@ import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import type { IconCode } from '../Icon';
+import type { PrefixProps, PropsWithMappedData } from '../../hooks';
 import type { WidgetWrapperProps } from '../../styles';
-
-import type { PrefixProps, PropsWithMappedData } from '../../contexts';
 
 type MuiTabProps = Pick<
   ComponentProps<typeof MuiTab>,

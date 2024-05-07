@@ -2,9 +2,9 @@ import MuiSlider from '@mui/material/Slider';
 import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
-export type SliderProps = Pick<
+type BaseSliderProps = Pick<
   ComponentProps<typeof MuiSlider>,
   | 'color'
   | 'disabled'
@@ -22,13 +22,8 @@ export type SliderProps = Pick<
   | 'onChange'
 >;
 
-export type MappablePropNames = keyof Pick<
-  SliderProps,
-  'disabled' | 'marks' | 'max' | 'min' | 'name' | 'value'
->;
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type SliderProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  SliderProps,
-  MappablePropNames
+  BaseSliderProps,
+  'disabled' | 'marks' | 'max' | 'min' | 'name' | 'value'
 >;

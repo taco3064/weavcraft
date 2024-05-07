@@ -1,6 +1,6 @@
 export { default, default as SpeedDialAction } from './SpeedDialAction';
 
 export type {
+  SpeedDialActionProps,
   TooltipPlacement,
-  WrappedProps as SpeedDialActionProps,
 } from './SpeedDialAction.types';

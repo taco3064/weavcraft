@@ -3,13 +3,13 @@ import type { JsonObject, Paths } from 'type-fest';
 import type { Property } from 'csstype';
 import type { ReactNode } from 'react';
 
-import type { BaseCardProps } from '../Card';
 import type { BaseFieldProps } from '../BaseField';
-import type { PropsWithMappedData } from '../../contexts';
+import type { CardProps } from '../Card';
 import type { IconCode } from '../Icon';
+import type { PropsWithMappedData } from '../../hooks';
 
-type BaseFormProps = Pick<
-  BaseCardProps,
+type BaseCardProps<D extends JsonObject> = Pick<
+  CardProps<D>,
   'avatar' | 'children' | 'description' | 'maxWidth' | 'title'
 >;
 
@@ -18,8 +18,8 @@ type BaseFormProps = Pick<
  * * - `action` and `actionJustify` are used in the `Stepper` component
  * * - `children` is ReactNode, but it actually only allows the insertion of components related to `BaseField`
  */
-export interface FormProps<D extends JsonObject>
-  extends BaseFormProps,
+interface BaseFormProps<D extends JsonObject>
+  extends BaseCardProps<D>,
     Pick<BaseFieldProps<any>, 'color' | 'size' | 'variant'> {
   action?: ReactNode;
   actionJustify?: Property.JustifyContent;
@@ -31,13 +31,8 @@ export interface FormProps<D extends JsonObject>
   onValidate?: (data: D) => Promise<boolean> | boolean;
 }
 
-export type MappablePropNames = keyof Pick<
-  BaseFormProps,
-  'title' | 'description'
->;
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type FormProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  FormProps<D>,
-  MappablePropNames
+  BaseFormProps<D>,
+  'title' | 'description'
 >;

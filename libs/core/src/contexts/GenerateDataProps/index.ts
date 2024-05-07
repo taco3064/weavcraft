@@ -1,17 +1,12 @@
-export { withGenerateData, withDataStructure } from './GenerateDataProps';
+export {
+  DataStructureProvider,
+  GenerateDataProvider,
+} from './GenerateDataProps';
 
 export {
+  useDataStructure,
   useGenerateData,
-  useComponentSlot,
-  usePropsGetter,
+  useStructure,
 } from './GenerateDataProps.hooks';
 
-export type {
-  MappableProps,
-  PrefixProps,
-  PropsWithMappedData,
-  PropsWithStore,
-  PropsWithMappedStore,
-  SlotElement,
-  SlotProps,
-} from './GenerateDataProps.types';
+export type { DataStructureProviderProps } from './GenerateDataProps.types';

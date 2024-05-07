@@ -1,2 +1,2 @@
 export { default, default as Fab } from './Fab';
-export type { WrappedProps as FabProps } from './Fab.types';
+export type { FabProps } from './Fab.types';

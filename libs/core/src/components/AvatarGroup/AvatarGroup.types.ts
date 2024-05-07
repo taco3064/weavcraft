@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { AvatarProps } from '../Avatar';
-import type { PropsWithMappedStore } from '../../contexts';
+import type { PropsWithMappedStore } from '../../hooks';
 
 type MuiAvatarGroupProps = Pick<
   ComponentProps<typeof MuiAvatarGroup>,

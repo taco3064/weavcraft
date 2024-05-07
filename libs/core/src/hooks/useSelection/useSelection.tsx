@@ -7,7 +7,8 @@ import _isEmpty from 'lodash/isEmpty';
 import { useMemo } from 'react';
 import type { JsonObject, Paths } from 'type-fest';
 
-import { usePropsGetter, useComponentSlot } from '../../contexts';
+import { usePropsGetter } from '../usePropsGetter';
+import { useSlotElement } from '../useSlotElement';
 
 import type {
   BaseSelectFieldProps,
@@ -94,8 +95,8 @@ export function useOptionsRender<
   D extends JsonObject,
   Path extends Extract<Paths<D>, string>
 >({ optionIndicator, optionProps, records }: BaseSelectFieldProps<V, D, Path>) {
-  const ItemIndicator = useComponentSlot(optionIndicator);
-  const getProps = usePropsGetter();
+  const ItemIndicator = useSlotElement(optionIndicator);
+  const getProps = usePropsGetter<D>();
 
   return records?.map((data, i) => {
     const { disabled, primary, secondary, value } = getProps({
