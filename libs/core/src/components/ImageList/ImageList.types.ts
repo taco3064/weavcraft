@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { ImageListItemProps } from '../ImageListItem';
-import type { PropsWithMappedStore, SlotElement } from '../../contexts';
+import type { PropsWithMappedStore, SlotElement } from '../../hooks';
 
 type MuiImageListProps = Pick<
   ComponentProps<typeof MuiImageList>,

@@ -4,35 +4,41 @@ import MuiCardActions from '@mui/material/CardActions';
 import MuiCardContent from '@mui/material/CardContent';
 import MuiCardHeader from '@mui/material/CardHeader';
 import MuiCardMedia from '@mui/material/CardMedia';
+import type { JsonObject } from 'type-fest';
 
 import { WidgetWrapper } from '../../styles';
-import { withGenerateData } from '../../contexts';
-import type { CardProps, MappablePropNames } from './Card.types';
+import { useGenerateProps } from '../../hooks';
+import type { CardProps } from './Card.types';
 
-export default withGenerateData<CardProps, MappablePropNames>(function Card({
-  children,
-  component,
-  maxWidth,
+export default function Card<D extends JsonObject>(props: CardProps<D>) {
+  const [
+    GenerateDataProvider,
+    {
+      children,
+      component,
+      maxWidth,
 
-  //* Header
-  avatar,
-  description,
-  headerAction,
-  title,
+      //* Header
+      avatar,
+      description,
+      headerAction,
+      title,
 
-  //* Footer
-  footerAction,
-  footerJustify,
+      //* Footer
+      footerAction,
+      footerJustify,
 
-  //* Media
-  mediaHeight,
-  mediaPosition = 'top',
-  mediaSrc,
-  mediaType,
-  mediaWidth,
+      //* Media
+      mediaHeight,
+      mediaPosition = 'top',
+      mediaSrc,
+      mediaType,
+      mediaWidth,
 
-  onSubmit,
-}) {
+      onSubmit,
+    },
+  ] = useGenerateProps<D, CardProps<D>>(props);
+
   const isHeaderVisible = [avatar, description, headerAction, title].some(
     Boolean
   );
@@ -49,57 +55,59 @@ export default withGenerateData<CardProps, MappablePropNames>(function Card({
     );
 
   return (
-    <WidgetWrapper
-      maxWidth={maxWidth}
-      {...(component === 'form' && {
-        component: 'form',
-        onSubmit: onSubmit as never,
-      })}
-    >
-      <MuiCard
-        data-testid="Card"
-        sx={{
-          display: 'flex',
-          flexDirection: /^(left|right)$/.test(mediaPosition)
-            ? 'row'
-            : 'column',
-        }}
+    <GenerateDataProvider>
+      <WidgetWrapper
+        maxWidth={maxWidth}
+        {...(component === 'form' && {
+          component: 'form',
+          onSubmit: onSubmit as never,
+        })}
       >
-        {mediaPosition === 'left' ? media : null}
+        <MuiCard
+          data-testid="Card"
+          sx={{
+            display: 'flex',
+            flexDirection: /^(left|right)$/.test(mediaPosition)
+              ? 'row'
+              : 'column',
+          }}
+        >
+          {mediaPosition === 'left' ? media : null}
 
-        <MuiBox display="flex" flexDirection="column">
-          {!isHeaderVisible ? null : (
-            <MuiCardHeader
-              data-testid="CardHeader"
-              avatar={avatar}
-              action={headerAction}
-              title={title}
-              subheader={description}
-            />
-          )}
+          <MuiBox display="flex" flexDirection="column">
+            {!isHeaderVisible ? null : (
+              <MuiCardHeader
+                data-testid="CardHeader"
+                avatar={avatar}
+                action={headerAction}
+                title={title}
+                subheader={description}
+              />
+            )}
 
-          {mediaPosition === 'top' ? media : null}
+            {mediaPosition === 'top' ? media : null}
 
-          {!children ? null : (
-            <MuiCardContent data-testid="CardContent">
-              {children}
-            </MuiCardContent>
-          )}
+            {!children ? null : (
+              <MuiCardContent data-testid="CardContent">
+                {children}
+              </MuiCardContent>
+            )}
 
-          {mediaPosition === 'bottom' ? media : null}
+            {mediaPosition === 'bottom' ? media : null}
 
-          {!footerAction ? null : (
-            <MuiCardActions
-              data-testid="CardActions"
-              style={{ justifyContent: footerJustify }}
-            >
-              {footerAction}
-            </MuiCardActions>
-          )}
-        </MuiBox>
+            {!footerAction ? null : (
+              <MuiCardActions
+                data-testid="CardActions"
+                style={{ justifyContent: footerJustify }}
+              >
+                {footerAction}
+              </MuiCardActions>
+            )}
+          </MuiBox>
 
-        {mediaPosition === 'right' ? media : null}
-      </MuiCard>
-    </WidgetWrapper>
+          {mediaPosition === 'right' ? media : null}
+        </MuiCard>
+      </WidgetWrapper>
+    </GenerateDataProvider>
   );
-});
+}

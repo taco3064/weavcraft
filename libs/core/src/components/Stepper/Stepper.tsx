@@ -9,7 +9,7 @@ import Card from '../Card';
 import Form from '../Form';
 import StepperButton from './Stepper.button';
 import { WidgetWrapper } from '../../styles';
-import { usePropsGetter } from '../../contexts';
+import { usePropsGetter } from '../../hooks';
 
 import type {
   StepCardProps,

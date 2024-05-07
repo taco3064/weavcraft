@@ -3,34 +3,33 @@ import MuiListItemButton from '@mui/material/ListItemButton';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
-import { useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { useGenerateData, withGenerateData } from '../../contexts';
-import { useUrlValidation } from '../../hooks';
+import { useGenerateProps, useUrlValidation } from '../../hooks';
+import type { ListItemProps } from './ListItem.types';
 
-import type {
-  MappablePropNames,
-  ListItemProps,
-  ListItemVariant,
-  WrappedProps,
-} from './ListItem.types';
+export default function ListItem<D extends JsonObject>(
+  props: ListItemProps<D>
+) {
+  const [
+    GeneratePropsProvider,
+    {
+      action,
+      disabled,
+      href,
+      indicator,
+      nested,
+      nestedId,
+      primary,
+      secondary,
+      selected,
+      variant = 'item',
+      onItemClick,
+      ...listItemProps
+    },
+    { data },
+  ] = useGenerateProps<D, ListItemProps<D>>(props);
 
-function BaseListItem<D extends JsonObject>({
-  action,
-  disabled,
-  href,
-  indicator,
-  nested,
-  nestedId,
-  primary,
-  secondary,
-  selected,
-  variant = 'item',
-  onItemClick,
-  ...props
-}: ListItemProps<D>) {
-  const { data } = useGenerateData<D>();
   const isHrefValid = useUrlValidation(href);
 
   const children = (
@@ -69,14 +68,14 @@ function BaseListItem<D extends JsonObject>({
   );
 
   return (
-    <>
+    <GeneratePropsProvider>
       {variant === 'item' ? (
-        <MuiListItem {...props} data-testid="ListItem">
+        <MuiListItem {...listItemProps} data-testid="ListItem">
           {children}
         </MuiListItem>
       ) : (
         <MuiListItemButton
-          {...props}
+          {...listItemProps}
           {...{ disabled, selected }}
           {...(variant === 'link' &&
             isHrefValid && { LinkComponent: 'a', href })}
@@ -94,16 +93,6 @@ function BaseListItem<D extends JsonObject>({
           {nested}
         </MuiListItem>
       )}
-    </>
+    </GeneratePropsProvider>
   );
-}
-
-export default function ListItem<D extends JsonObject>(props: WrappedProps<D>) {
-  const WrappedListItem = useMemo(
-    () =>
-      withGenerateData<ListItemProps<D>, MappablePropNames<D>>(BaseListItem),
-    []
-  );
-
-  return <WrappedListItem {...props} />;
 }

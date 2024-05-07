@@ -2,7 +2,7 @@ import MuiFab from '@mui/material/Fab';
 import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 import type { IconCode } from '../Icon';
 
 type MuiFabProps = Pick<
@@ -10,20 +10,13 @@ type MuiFabProps = Pick<
   'color' | 'disabled' | 'href' | 'size' | 'onClick'
 >;
 
-export interface FabProps extends MuiFabProps {
-  containerId?: string;
-  icon?: IconCode;
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  text?: string;
-}
-
-export type MappablePropNames = keyof Pick<
-  FabProps,
-  'containerId' | 'disabled' | 'href' | 'icon' | 'text'
->;
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type FabProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  FabProps,
-  MappablePropNames
+  MuiFabProps & {
+    containerId?: string;
+    icon?: IconCode;
+    position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    text?: string;
+  },
+  'containerId' | 'disabled' | 'href' | 'icon' | 'text'
 >;

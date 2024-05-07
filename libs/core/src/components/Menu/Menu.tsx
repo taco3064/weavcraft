@@ -4,26 +4,23 @@ import { useId, useState } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import ListItem from '../ListItem';
-import { withDataStructure } from '../../contexts';
+import { useStoreProps } from '../../hooks';
 import type { MenuItemVariant, MenuProps } from './Menu.types';
 
-export default withDataStructure(function Menu<
-  D extends JsonObject,
-  V extends MenuItemVariant
->({
-  toggle,
-  itemProps,
-  itemVariant,
-  records,
-  onItemClick,
-  ...props
-}: MenuProps<D, V>) {
+export default function Menu<D extends JsonObject, V extends MenuItemVariant>(
+  props: MenuProps<D, V>
+) {
+  const [
+    StoreProvider,
+    { toggle, itemProps, itemVariant, records, onItemClick, ...menuProps },
+  ] = useStoreProps(props);
+
   const { type: Toggle, props: toggleProps } = toggle || {};
   const [open, setOpen] = useState(false);
   const id = useId();
 
   return (
-    <>
+    <StoreProvider>
       {Toggle && (
         <Toggle
           {...toggleProps}
@@ -37,7 +34,7 @@ export default withDataStructure(function Menu<
       )}
 
       <MuiMenu
-        {...props}
+        {...menuProps}
         anchorEl={() => document.getElementById(id)!}
         open={open}
         onClose={() => setOpen(false)}
@@ -62,6 +59,6 @@ export default withDataStructure(function Menu<
           </MuiMenuItem>
         ))}
       </MuiMenu>
-    </>
+    </StoreProvider>
   );
-});
+}

@@ -4,7 +4,7 @@ import type { JsonObject } from 'type-fest';
 
 import type { IconCode } from '../Icon';
 import type { ListItemProps, ListItemVariant } from '../ListItem';
-import type { PropsWithMappedStore, SlotElement } from '../../contexts';
+import type { PropsWithMappedStore, SlotElement } from '../../hooks';
 
 type MuiListProps = Pick<
   ComponentProps<typeof MuiList>,

@@ -15,26 +15,31 @@ import {
 
 import Card from '../Card';
 import Icon from '../Icon';
-import { withGenerateData, useGenerateData } from '../../contexts';
+import { useGenerateProps } from '../../hooks';
 import type { BaseFieldProps } from '../BaseField';
-import type { FormProps, MappablePropNames, WrappedProps } from './Form.types';
+import type { FormProps } from './Form.types';
 
-function BaseForm<D extends JsonObject>({
-  action,
-  actionJustify = 'center',
-  breakpoint = 'sm',
-  children,
-  color,
-  fullWidthFields,
-  resetIcon = 'faRotateLeft',
-  size,
-  submitIcon = 'faCheck',
-  variant,
-  onSubmit,
-  onValidate,
-  ...props
-}: FormProps<D>) {
-  const { data, onChange } = useGenerateData<D>();
+export default function Form<D extends JsonObject>(props: FormProps<D>) {
+  const [
+    GeneratePropsProvider,
+    {
+      action,
+      actionJustify = 'center',
+      breakpoint = 'sm',
+      children,
+      color,
+      fullWidthFields,
+      resetIcon = 'faRotateLeft',
+      size,
+      submitIcon = 'faCheck',
+      variant,
+      onSubmit,
+      onValidate,
+      ...formProps
+    },
+    { data, onChange },
+  ] = useGenerateProps<D, FormProps<D>>(props);
+
   const [key, setKey] = useState(new Date().valueOf());
 
   const fields = Children.toArray(children).filter(
@@ -77,75 +82,68 @@ function BaseForm<D extends JsonObject>({
   };
 
   return (
-    <Card
-      {...props}
-      component="form"
-      footerJustify={actionJustify}
-      onSubmit={handleSubmit}
-      footerAction={
-        action || (
-          <>
-            <MuiIconButton
-              data-testid="FormResetButton"
-              size="large"
-              color="default"
-              onClick={() => setKey(new Date().valueOf())}
-            >
-              <Icon code={resetIcon} />
-            </MuiIconButton>
+    <GeneratePropsProvider>
+      <Card
+        {...formProps}
+        component="form"
+        footerJustify={actionJustify}
+        onSubmit={handleSubmit}
+        footerAction={
+          action || (
+            <>
+              <MuiIconButton
+                data-testid="FormResetButton"
+                size="large"
+                color="default"
+                onClick={() => setKey(new Date().valueOf())}
+              >
+                <Icon code={resetIcon} />
+              </MuiIconButton>
 
-            <MuiIconButton
-              data-testid="FormSubmitButton"
-              size="large"
-              color="primary"
-              type="submit"
-            >
-              <Icon code={submitIcon} />
-            </MuiIconButton>
-          </>
-        )
-      }
-    >
-      <MuiGrid
-        data-testid="FormContent"
-        key={key}
-        container
-        columns={2}
-        justifyContent="center"
+              <MuiIconButton
+                data-testid="FormSubmitButton"
+                size="large"
+                color="primary"
+                type="submit"
+              >
+                <Icon code={submitIcon} />
+              </MuiIconButton>
+            </>
+          )
+        }
       >
-        {fields.map((field, i) => {
-          const name = field.props.name as string;
-          const value = _get(data, name);
-          const cols = fullWidthFields?.includes(name) ? 2 : 1;
+        <MuiGrid
+          data-testid="FormContent"
+          key={key}
+          container
+          columns={2}
+          justifyContent="center"
+        >
+          {fields.map((field, i) => {
+            const name = field.props.name as string;
+            const value = _get(data, name);
+            const cols = fullWidthFields?.includes(name) ? 2 : 1;
 
-          return (
-            <MuiGrid key={i} item xs={2} {...{ [breakpoint]: cols }}>
-              {cloneElement(field, {
-                value,
-                onChange: (value: any) => _set(formdata!, name, value),
+            return (
+              <MuiGrid key={i} item xs={2} {...{ [breakpoint]: cols }}>
+                {cloneElement(field, {
+                  value,
+                  onChange: (value: any) => _set(formdata!, name, value),
 
-                ...(['color', 'size', 'variant'] as const).reduce(
-                  (acc, styleName) => ({
-                    ...acc,
-                    [styleName]:
-                      field.props[styleName] || styleProps[styleName],
-                  }),
-                  {}
-                ),
-              })}
-            </MuiGrid>
-          );
-        })}
-      </MuiGrid>
-    </Card>
+                  ...(['color', 'size', 'variant'] as const).reduce(
+                    (acc, styleName) => ({
+                      ...acc,
+                      [styleName]:
+                        field.props[styleName] || styleProps[styleName],
+                    }),
+                    {}
+                  ),
+                })}
+              </MuiGrid>
+            );
+          })}
+        </MuiGrid>
+      </Card>
+    </GeneratePropsProvider>
   );
-}
-
-export default function Form<D extends JsonObject>(props: WrappedProps<D>) {
-  const WrappedForm = useMemo(
-    () => withGenerateData<FormProps<D>, MappablePropNames>(BaseForm),
-    []
-  );
-
-  return <WrappedForm {...props} />;
 }

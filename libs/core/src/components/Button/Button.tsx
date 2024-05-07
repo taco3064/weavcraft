@@ -1,17 +1,22 @@
 import MuiButton from '@mui/material/Button';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
-import { useUrlValidation } from '../../hooks';
-import { withGenerateData } from '../../contexts';
-import type { ButtonProps, MappablePropNames } from './Button.types';
+import { useGenerateProps, useUrlValidation } from '../../hooks';
+import type { ButtonProps } from './Button.types';
 
-export default withGenerateData<ButtonProps, MappablePropNames>(
-  function Button({ href, icon, iconPosition = 'start', text, ...props }) {
-    const isHrefValid = useUrlValidation(href);
+export default function Button<D extends JsonObject>(props: ButtonProps<D>) {
+  const [
+    GenerateDataProvider,
+    { href, icon, iconPosition = 'start', text, ...buttonProps },
+  ] = useGenerateProps<D, ButtonProps<D>>(props);
 
-    return (
+  const isHrefValid = useUrlValidation(href);
+
+  return (
+    <GenerateDataProvider>
       <MuiButton
-        {...props}
+        {...buttonProps}
         {...(isHrefValid && {
           LinkComponent: 'a',
           href,
@@ -23,6 +28,6 @@ export default withGenerateData<ButtonProps, MappablePropNames>(
       >
         {text}
       </MuiButton>
-    );
-  }
-);
+    </GenerateDataProvider>
+  );
+}

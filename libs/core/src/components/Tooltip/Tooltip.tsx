@@ -1,13 +1,19 @@
 import MuiTooltip from '@mui/material/Tooltip';
+import type { JsonObject } from 'type-fest';
 
-import { withGenerateData } from '../../contexts';
-import type { TooltipProps, MappablePropNames } from './Tooltip.types';
+import { useGenerateProps } from '../../hooks';
+import type { TooltipProps } from './Tooltip.types';
 
-export default withGenerateData<TooltipProps, MappablePropNames>(
-  function Tooltip({ children, disabled = false, title, ...props }) {
-    return (
+export default function Tooltip<D extends JsonObject>(props: TooltipProps<D>) {
+  const [
+    GeneratePropsProvider,
+    { children, disabled = false, title, ...tooltipProps },
+  ] = useGenerateProps<D, TooltipProps<D>>(props);
+
+  return (
+    <GeneratePropsProvider>
       <MuiTooltip
-        {...props}
+        {...tooltipProps}
         {...((disabled || !title) && {
           disableFocusListener: true,
           disableHoverListener: true,
@@ -18,6 +24,6 @@ export default withGenerateData<TooltipProps, MappablePropNames>(
       >
         <span data-testid="TooltipToggle">{children}</span>
       </MuiTooltip>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

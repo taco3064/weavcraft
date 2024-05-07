@@ -3,7 +3,7 @@ import MuiImageListItemBar from '@mui/material/ImageListItemBar';
 import type { ComponentProps, ReactNode } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
 type MuiImageListItemProps = Pick<
   ComponentProps<typeof MuiImageListItem>,
@@ -22,16 +22,12 @@ interface BaseImageListItemProps extends MuiImageListItemProps {
   srcSet?: string;
 }
 
-export type MappablePropNames = keyof BaseImageListItemProps;
-
-export interface ImageListItemProps extends BaseImageListItemProps {
-  action?: ReactNode;
-  actionPosition?: MuiImageListItemBarProps['actionPosition'];
-  barPosition?: MuiImageListItemBarProps['position'];
-}
-
-export type WrappedProps<D extends JsonObject> = PropsWithMappedData<
+export type ImageListItemProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  ImageListItemProps,
-  MappablePropNames
+  BaseImageListItemProps & {
+    action?: ReactNode;
+    actionPosition?: MuiImageListItemBarProps['actionPosition'];
+    barPosition?: MuiImageListItemBarProps['position'];
+  },
+  keyof BaseImageListItemProps
 >;

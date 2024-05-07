@@ -3,14 +3,12 @@ import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { ButtonProps } from '../Button';
-import type { PropsWithMappedStore } from '../../contexts';
+import type { PropsWithMappedStore } from '../../hooks';
 
 type MuiButtonGroupProps = Pick<
   ComponentProps<typeof MuiButtonGroup>,
   'color' | 'disabled' | 'fullWidth' | 'orientation' | 'size' | 'variant'
 >;
-
-type MappablePropNames = keyof Pick<MuiButtonGroupProps, 'disabled'>;
 
 export type ButtonGroupProps<D extends JsonObject> = PropsWithMappedStore<
   D,
@@ -19,5 +17,5 @@ export type ButtonGroupProps<D extends JsonObject> = PropsWithMappedStore<
     itemProps?: Pick<ButtonProps<D>, 'iconPosition' | 'propMapping'>;
     onItemClick?: (item: D) => void;
   },
-  MappablePropNames
+  'disabled'
 >;

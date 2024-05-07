@@ -12,7 +12,7 @@ import {
 import Container from '../Container';
 import Icon from '../Icon';
 import { WidgetWrapper } from '../../styles';
-import { usePropsGetter } from '../../contexts';
+import { usePropsGetter } from '../../hooks';
 import type { TabProps, TabsProps } from './Tabs.types';
 
 export default function Tabs({

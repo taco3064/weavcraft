@@ -1,10 +1,8 @@
 import type { Get, JsonObject, Merge, Paths } from 'type-fest';
 
-import type {
-  MappableProps,
-  PropsWithStore,
-  SlotElement,
-} from '../../contexts';
+import type { MappableProps } from '../usePropsGetter';
+import type { PropsWithStore } from '../useStoreProps';
+import type { SlotElement } from '../useSlotElement';
 
 export type SelectionVariant = 'single' | 'multiple';
 
@@ -15,7 +13,7 @@ type SelectionValue<
 > = V extends 'multiple' ? Get<D, Path>[] : Get<D, Path>;
 
 //* - Prop Types
-export interface BaseListItemProps {
+export interface BaseItemProps {
   primary?: string;
   secondary?: string;
   disabled?: boolean;
@@ -38,13 +36,17 @@ export interface SelectionGroupProps<
   value?: SelectionValue<V, D, Path>;
   onChange?: (value?: SelectionValue<V, D, Path>, name?: string) => void;
 
-  optionProps?: P & Omit<MappableProps<D, OptionProps<D, P, Path>>, 'data'>;
+  optionProps?: P &
+    Omit<
+      MappableProps<D, Extract<keyof OptionProps<D, P, Path>, string>>,
+      'data'
+    >;
 }
 
 export interface BaseSelectFieldProps<
   V extends SelectionVariant,
   D extends JsonObject,
   Path extends Extract<Paths<D>, string>
-> extends SelectionGroupProps<V, D, Path, BaseListItemProps> {
+> extends SelectionGroupProps<V, D, Path, BaseItemProps> {
   optionIndicator?: SlotElement;
 }
