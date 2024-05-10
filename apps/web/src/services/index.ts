@@ -3,4 +3,4 @@ export * from './hierarchy';
 export * from './notifications';
 export * from './parser';
 
-export type { QueryFunctionParams } from './common';
+export type { PropTypeDefinitions, QueryFunctionParams } from './common';
