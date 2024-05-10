@@ -1,10 +1,11 @@
 import MuiToggleButton from '@mui/material/ToggleButton';
 import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { ComponentProps } from 'react';
+import type { JsonObject, Paths } from 'type-fest';
 
-import type { ControlVariant, GroupProps } from '../../hooks';
-import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
+import type { PropsWithMappedData } from '../../hooks';
+import type { SelectionGroupProps, SelectionVariant } from '../../hooks';
 
 type MuiToggleButtonGroupProps = Pick<
   ComponentProps<typeof MuiToggleButtonGroup>,
@@ -16,22 +17,21 @@ type MuiToggleButtonProps = Pick<
   'color' | 'disabled'
 >;
 
-interface BaseToggleButtonProps extends MuiToggleButtonProps {
-  icon?: IconCode;
-  text?: string;
-  value?: any;
-}
-
-export type ToggleButtonProps<D extends GenericData> = PropsWithMappedData<
+export type ToggleButtonProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  BaseToggleButtonProps,
-  keyof Pick<BaseToggleButtonProps, 'disabled' | 'icon' | 'text' | 'value'>
+  MuiToggleButtonProps & {
+    icon?: IconCode;
+    text?: string;
+    value?: any;
+  },
+  'disabled' | 'icon' | 'text' | 'value'
 >;
 
 export interface ToggleButtonGroupProps<
-  D extends GenericData = {},
-  T extends ControlVariant = ControlVariant
+  D extends JsonObject,
+  V extends SelectionVariant,
+  Path extends Extract<Paths<D>, string>
 > extends MuiToggleButtonGroupProps,
-    GroupProps<T, ToggleButtonProps<D>> {
-  variant?: T;
+    SelectionGroupProps<V, D, Path, ToggleButtonProps<D>> {
+  variant?: V;
 }

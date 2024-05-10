@@ -1,7 +1,8 @@
 import MuiGrid, { type RegularBreakpoints } from '@mui/material/Grid';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 import type { ToolbarProps } from '../Toolbar';
 
 type MuiGridProps = Pick<
@@ -9,28 +10,25 @@ type MuiGridProps = Pick<
   'children' | 'columnSpacing' | 'rowSpacing'
 >;
 
-type BaseGridProps = Pick<
-  ToolbarProps<GenericData>,
+type BaseToolbarProps<D extends JsonObject> = Pick<
+  ToolbarProps<D>,
   'icon' | 'title' | 'elevation'
 >;
-
 type ColumnSpacing = Extract<MuiGridProps['columnSpacing'], number>;
 type RowSpacing = Extract<MuiGridProps['rowSpacing'], number>;
 
 export type GridItemBrakpoints = keyof RegularBreakpoints;
 
-export interface GridItemProps
-  extends BaseGridProps,
+interface BaseGridItemProps<D extends JsonObject>
+  extends BaseToolbarProps<D>,
     Pick<MuiGridProps, 'children'>,
     Partial<Record<GridItemBrakpoints, number>> {
   columnSpacing?: ColumnSpacing;
   rowSpacing?: RowSpacing;
 }
 
-export type MappablePropNames = keyof Pick<GridItemProps, 'icon' | 'title'>;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type GridItemProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  GridItemProps,
-  MappablePropNames
+  BaseGridItemProps<D>,
+  'icon' | 'title'
 >;

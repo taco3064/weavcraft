@@ -1,38 +1,35 @@
 import MuiCheckbox from '@mui/material/Checkbox';
 import MuiFormControlLabel from '@mui/material/FormControlLabel';
 import MuiRadio from '@mui/material/Radio';
+import type { JsonObject } from 'type-fest';
 
-import {
-  withGenerateDataProps,
-  useComponentData,
-  type GenericData,
-} from '../../contexts';
+import { useGenerateProps } from '../../hooks';
+import type { SelectionProps, SelectionVariant } from './Selection.types';
 
-import type {
-  MappablePropNames,
-  SelectionProps,
-  SelectionVariant,
-} from './Selection.types';
+export default function Selection<
+  D extends JsonObject,
+  V extends SelectionVariant = 'checkbox'
+>(props: SelectionProps<D, V>) {
+  const [
+    GeneratePropsProvider,
+    {
+      label,
+      labelPlacement,
+      checked,
+      disabled,
+      required,
+      variant,
+      onChange,
+      ...controlProps
+    },
+    { data },
+  ] = useGenerateProps<D, SelectionProps<D, V>>(props);
 
-export default withGenerateDataProps<
-  SelectionProps<SelectionVariant, any>,
-  MappablePropNames
->(function Selection<D extends GenericData>({
-  label,
-  labelPlacement,
-  checked,
-  disabled,
-  required,
-  variant = 'checkbox',
-  onChange,
-  ...props
-}: SelectionProps<SelectionVariant, D>) {
   const Control = variant === 'radio' ? MuiRadio : MuiCheckbox;
-  const { data } = useComponentData<D>();
 
   const control = (
     <Control
-      {...props}
+      {...controlProps}
       {...{ disabled, required }}
       defaultChecked={checked}
       data-testid="Selection"
@@ -40,12 +37,16 @@ export default withGenerateDataProps<
     />
   );
 
-  return !label ? (
-    control
-  ) : (
-    <MuiFormControlLabel
-      {...{ label, labelPlacement, disabled, required, control }}
-      data-testid="FormControlLabel"
-    />
+  return (
+    <GeneratePropsProvider>
+      {!label ? (
+        control
+      ) : (
+        <MuiFormControlLabel
+          {...{ label, labelPlacement, disabled, required, control }}
+          data-testid="FormControlLabel"
+        />
+      )}
+    </GeneratePropsProvider>
   );
-});
+}

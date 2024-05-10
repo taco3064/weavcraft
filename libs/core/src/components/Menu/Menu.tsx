@@ -1,30 +1,26 @@
 import MuiMenu from '@mui/material/Menu';
 import MuiMenuItem from '@mui/material/MenuItem';
 import { useId, useState } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import ListItem from '../ListItem';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { useStoreProps } from '../../hooks';
 import type { MenuItemVariant, MenuProps } from './Menu.types';
 
-const withStoreProps = makeStoreProps<MenuProps>();
+export default function Menu<D extends JsonObject, V extends MenuItemVariant>(
+  props: MenuProps<D, V>
+) {
+  const [
+    StoreProvider,
+    { toggle, itemProps, itemVariant, records, onItemClick, ...menuProps },
+  ] = useStoreProps(props);
 
-export default withStoreProps(function Menu<
-  D extends GenericData,
-  V extends MenuItemVariant
->({
-  toggle,
-  itemProps,
-  itemVariant,
-  records,
-  onItemClick,
-  ...props
-}: MenuProps<D, V>) {
   const { type: Toggle, props: toggleProps } = toggle || {};
   const [open, setOpen] = useState(false);
   const id = useId();
 
   return (
-    <>
+    <StoreProvider>
       {Toggle && (
         <Toggle
           {...toggleProps}
@@ -38,7 +34,7 @@ export default withStoreProps(function Menu<
       )}
 
       <MuiMenu
-        {...props}
+        {...menuProps}
         anchorEl={() => document.getElementById(id)!}
         open={open}
         onClose={() => setOpen(false)}
@@ -63,6 +59,6 @@ export default withStoreProps(function Menu<
           </MuiMenuItem>
         ))}
       </MuiMenu>
-    </>
+    </StoreProvider>
   );
-});
+}

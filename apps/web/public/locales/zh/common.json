@@ -1,0 +1,83 @@
+{
+  "btn-add-group": "新增資料夾",
+  "btn-add-item": "新增{{category}}",
+  "btn-cancel": "取消",
+  "btn-clear": "清除",
+  "btn-close": "關閉",
+  "btn-confirm": "確認",
+  "btn-delete": "刪除",
+  "btn-delete-account": "刪除帳戶",
+  "btn-edit-group": "編輯資料夾",
+  "btn-edit-item": "編輯{{category}}",
+  "btn-filter": "查詢",
+  "btn-move-to-superior-folder": "移至上層資料夾",
+  "btn-preview": "預覽",
+  "btn-publish": "分享到展示迴廊",
+  "btn-reset": "重設",
+  "btn-save": "儲存",
+  "btn-search": "搜尋",
+  "btn-signin": "登入",
+  "btn-signin-with-google": "使用 Google 登入",
+  "btn-signout": "登出",
+  "btn-undo": "復原",
+  "btn-update": "更新",
+  "lbl-analytics": "統計資訊",
+  "lbl-description": "相關說明",
+  "lbl-hierarchy-groups": "資料夾",
+  "lbl-language": "偏好語言",
+  "lbl-profile": "個人資訊",
+  "lbl-settings": "設定",
+  "lbl-theme": "主題樣式",
+  "msg-delete-confirm": "確定要刪除{{name}}嗎？",
+  "msg-delete-hierarchy-group-confirm": "確定要刪除資料夾{{name}}及其所有內容嗎？",
+  "msg-filter-placeholder": "搜尋資料夾或項目...",
+  "msg-no-data": "沒有資料",
+  "msg-success-create": "新增{{name}}完成",
+  "msg-success-delete": "刪除{{name}}完成",
+  "msg-success-update": "更新{{name}}完成",
+  "ttl-delete-confirm": "刪除確認",
+  "ttl-filter-result": "查詢結果: {{type}}",
+  "ttl-hierarchy-search": "搜尋{{name}}",
+  "ttl-navigation-confirm": "即將離開當前頁面",
+  "ttl-user-options": "用戶選項",
+  "ttl-user-settings": "用戶設定",
+  "ttl-weavcraft": "Weavcraft",
+  "lbl-hierarchy-name": {
+    "GROUP": "資料夾名稱",
+    "ITEM": "{{category}}名稱"
+  },
+  "opt-language": {
+    "en": "English",
+    "zh": "繁體中文"
+  },
+  "opt-theme": {
+    "SPARKLING_CHAMPAGNE": "璀璨香檳",
+    "WEAVCRAFT": "預設"
+  },
+  "ttl-breadcrumbs": {
+    "tutorial": {
+      "label": "教學指南",
+      "description": "查看有關 Weavcraft 的教學指南，了解如何使用各種功能和工具"
+    },
+    "gallery": {
+      "label": "展示迴廊",
+      "description": "發現和分享其他使用者創建的主題、組件與網站，與 Weavcraft 社群互動"
+    },
+    "themes": {
+      "label": "主題風格",
+      "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性"
+    },
+    "widgets": {
+      "label": "組件管理",
+      "description": "管理和組織你的自定義組件集合，輕鬆存取並在你的網頁中重複使用"
+    },
+    "pages": {
+      "label": "網頁配置",
+      "description": "輕鬆創建和編輯你的網頁，配置資料來源、將事件綁定到組件並添加互動元素的選項"
+    },
+    "websites": {
+      "label": "個人網站",
+      "description": "查看、管理和自訂你的個人網站，包括 URL 設置、頁面配置和主題選擇"
+    }
+  }
+}

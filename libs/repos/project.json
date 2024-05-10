@@ -1,0 +1,19 @@
+{
+  "name": "repos",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/repos/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/repos",
+        "main": "libs/repos/src/index.ts",
+        "tsConfig": "libs/repos/tsconfig.lib.json",
+        "assets": ["libs/repos/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,83 @@
+{
+  "btn-add-group": "Add Folder",
+  "btn-add-item": "Create {{category}}",
+  "btn-cancel": "Cancel",
+  "btn-clear": "Clear",
+  "btn-close": "Close",
+  "btn-confirm": "Confirm",
+  "btn-delete": "Delete",
+  "btn-delete-account": "Delete Account",
+  "btn-edit-group": "Edit Folder",
+  "btn-edit-item": "Edit {{category}}",
+  "btn-filter": "Filter",
+  "btn-move-to-superior-folder": "Move To Superior Folder",
+  "btn-preview": "Preview",
+  "btn-publish": "Publish To Gallery",
+  "btn-reset": "Reset",
+  "btn-save": "Save",
+  "btn-search": "Search",
+  "btn-signin": "Sign In",
+  "btn-signin-with-google": "Sign In with Google",
+  "btn-signout": "Sign Out",
+  "btn-undo": "Undo",
+  "btn-update": "Update",
+  "lbl-analytics": "Analytics",
+  "lbl-description": "Description",
+  "lbl-hierarchy-groups": "Folders",
+  "lbl-language": "Language",
+  "lbl-profile": "User Profile",
+  "lbl-settings": "Settings",
+  "lbl-theme": "Theme Style",
+  "msg-delete-confirm": "Are you sure you want to delete {{name}}?",
+  "msg-delete-hierarchy-group-confirm": "Are you sure you want to delete the folder '{{name}}' and all its contents?",
+  "msg-filter-placeholder": "Enter the search keyword...",
+  "msg-no-data": "No data available.",
+  "msg-success-create": "Successfully created {{name}}.",
+  "msg-success-delete": "Successfully deleted {{name}}.",
+  "msg-success-update": "Successfully updated {{name}}.",
+  "ttl-delete-confirm": "Confirm Deletion",
+  "ttl-filter-result": "Search Result: {{type}}",
+  "ttl-hierarchy-search": "Search {{name}}",
+  "ttl-navigation-confirm": "Confirm Navigation",
+  "ttl-user-options": "User Options",
+  "ttl-user-settings": "User Settings",
+  "ttl-weavcraft": "Weavcraft",
+  "lbl-hierarchy-name": {
+    "GROUP": "Folder Name",
+    "ITEM": "{{category}} Name"
+  },
+  "opt-language": {
+    "en": "English",
+    "zh": "繁體中文"
+  },
+  "opt-theme": {
+    "SPARKLING_CHAMPAGNE": "Sparkling Champagne",
+    "WEAVCRAFT": "Default Theme"
+  },
+  "ttl-breadcrumbs": {
+    "tutorial": {
+      "label": "Tutorial",
+      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
+    },
+    "gallery": {
+      "label": "Craft Gallery",
+      "description": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community."
+    },
+    "themes": {
+      "label": "Theme Styles",
+      "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
+    },
+    "widgets": {
+      "label": "Widget Storage",
+      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
+    },
+    "pages": {
+      "label": "Web Page Editor",
+      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
+    },
+    "websites": {
+      "label": "Websites",
+      "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
+    }
+  }
+}

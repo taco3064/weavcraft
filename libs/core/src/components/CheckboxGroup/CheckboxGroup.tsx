@@ -1,37 +1,48 @@
 import MuiFormControl from '@mui/material/FormControl';
 import MuiFormGroup from '@mui/material/FormGroup';
 import MuiFormLabel from '@mui/material/FormLabel';
+import type { JsonObject, Paths } from 'type-fest';
 
 import Selection from '../Selection';
-import { makeStoreProps, type GenericData } from '../../contexts';
-import { useMultipleSelection } from '../../hooks';
-import type { CheckboxGroupProps } from './CheckboxGroup.types';
+import { useMultipleSelection, useStoreProps } from '../../hooks';
 
-const withStoreProps = makeStoreProps<CheckboxGroupProps>();
+import type {
+  BaseCheckboxProps,
+  CheckboxGroupProps,
+} from './CheckboxGroup.types';
 
-export default withStoreProps(function CheckboxGroup<D extends GenericData>(
-  props: CheckboxGroupProps<D>
-) {
-  const { title, optionProps, records } = props;
-  const { selected, onChange } = useMultipleSelection<D>(props);
+export default function CheckboxGroup<
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+>(props: CheckboxGroupProps<D, Path>) {
+  const [StoreProvider, checkboxGroupProps] = useStoreProps(props);
+  const { name, title, optionProps, records } = checkboxGroupProps;
+
+  const { selected, onChange } = useMultipleSelection<
+    D,
+    Path,
+    BaseCheckboxProps<D>
+  >(checkboxGroupProps);
 
   return (
-    <MuiFormControl component="fieldset" data-testid="CheckboxGroup">
-      {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
+    <StoreProvider>
+      <MuiFormControl component="fieldset" data-testid="CheckboxGroup">
+        {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
 
-      <MuiFormGroup>
-        {records?.map((data, i) => (
-          <Selection
-            name={props.name}
-            {...optionProps}
-            variant="checkbox"
-            key={i}
-            checked={selected[i]}
-            data={data}
-            onChange={(checked, data) => onChange(checked, data as D)}
-          />
-        ))}
-      </MuiFormGroup>
-    </MuiFormControl>
+        <MuiFormGroup>
+          {records?.map((data, i) => (
+            <Selection
+              name={name}
+              {...optionProps}
+              variant="checkbox"
+              key={i}
+              checked={selected[i]}
+              data={data}
+              onChange={(checked, data) => onChange(checked, data as D)}
+            />
+          ))}
+        </MuiFormGroup>
+      </MuiFormControl>
+    </StoreProvider>
   );
-});
+}

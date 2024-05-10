@@ -1,7 +1,8 @@
 import MuiBadge from '@mui/material/Badge';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
 type MuiBadgeProps = Pick<
   ComponentProps<typeof MuiBadge>,
@@ -19,17 +20,10 @@ export type AnchorOrigin<
   K extends keyof NonNullable<MuiBadgeProps['anchorOrigin']>
 > = NonNullable<MuiBadgeProps['anchorOrigin']>[K];
 
-export interface BadgeProps extends Omit<MuiBadgeProps, 'anchorOrigin'> {
-  anchorPosition?: `${AnchorOrigin<'vertical'>}-${AnchorOrigin<'horizontal'>}`;
-}
-
-export type MappablePropNames = keyof Pick<
-  BadgeProps,
-  'badgeContent' | 'children' | 'max'
->;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type BadgeProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  BadgeProps,
-  MappablePropNames
+  Omit<MuiBadgeProps, 'anchorOrigin'> & {
+    anchorPosition?: `${AnchorOrigin<'vertical'>}-${AnchorOrigin<'horizontal'>}`;
+  },
+  'badgeContent' | 'children' | 'max'
 >;

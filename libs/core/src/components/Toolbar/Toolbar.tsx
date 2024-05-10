@@ -2,24 +2,30 @@ import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import MuiTypography from '@mui/material/Typography';
 import { isValidElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
-import type { ToolbarProps, MappablePropNames } from './Toolbar.types';
+import { useGenerateProps } from '../../hooks';
+import type { ToolbarProps } from './Toolbar.types';
 
-export default withGenerateDataProps<ToolbarProps, MappablePropNames>(
-  function Toolbar({
-    children,
-    color = 'transparent',
-    disableGutters,
-    elevation,
-    icon,
-    position = 'sticky',
-    square,
-    title,
-    variant,
-  }) {
-    return (
+export default function Toolbar<D extends JsonObject>(props: ToolbarProps<D>) {
+  const [
+    GeneratePropsProvider,
+    {
+      children,
+      color = 'transparent',
+      disableGutters,
+      elevation,
+      icon,
+      position = 'sticky',
+      square,
+      title,
+      variant,
+    },
+  ] = useGenerateProps<D, ToolbarProps<D>>(props);
+
+  return (
+    <GeneratePropsProvider>
       <MuiAppBar
         data-testid="AppBar"
         {...{ color, elevation, position, square }}
@@ -40,6 +46,6 @@ export default withGenerateDataProps<ToolbarProps, MappablePropNames>(
           {children}
         </MuiToolbar>
       </MuiAppBar>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

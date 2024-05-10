@@ -4,18 +4,15 @@ import MuiToolbar from '@mui/material/Toolbar';
 import MuiTypography from '@mui/material/Typography';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
 import Toolbar from '../Toolbar';
 import { WidgetWrapper } from '../../styles';
 import { useDrawerStyles } from './Drawer.styles';
-import { withGenerateDataProps } from '../../contexts';
+import { useGenerateProps } from '../../hooks';
 
-import type {
-  AnchorOptions,
-  DrawerProps,
-  MappablePropNames,
-} from './Drawer.types';
+import type { AnchorOptions, DrawerProps } from './Drawer.types';
 
 //* Variables
 const ANCHOR_OPTIONS: AnchorOptions = {
@@ -30,40 +27,45 @@ const ANCHOR_OPTIONS: AnchorOptions = {
 };
 
 //* Components
-export default withGenerateDataProps<DrawerProps, MappablePropNames>(
-  function Drawer({
-    anchor = 'left',
-    breakpoint = 'sm',
-    children,
-    content,
-    elevation,
-    height = '100vh',
-    title,
-    toggleIcon = 'faBars',
-    width = 320,
-    ...headerProps
-  }) {
-    const [open, setOpen] = useState(false);
+export default function Drawer<D extends JsonObject>(props: DrawerProps<D>) {
+  const [open, setOpen] = useState(false);
 
-    const { classes } = useDrawerStyles({ breakpoint, open, height, width });
-    const { closeIcon, direction } = ANCHOR_OPTIONS[anchor];
+  const [
+    GeneratePropsProvider,
+    {
+      anchor = 'left',
+      breakpoint = 'sm',
+      children,
+      content,
+      elevation,
+      height = '100vh',
+      title,
+      toggleIcon = 'faBars',
+      width = 320,
+      ...headerProps
+    },
+  ] = useGenerateProps<D, DrawerProps<D>>(props);
 
-    const toggle = open ? null : (
-      <MuiIconButton
-        data-testid="DrawerToggle"
-        color="inherit"
-        className={classes.toggle}
-        onClick={() => setOpen(true)}
-      >
-        <Icon className="Drawer-toggle" code={toggleIcon} />
+  const { classes } = useDrawerStyles({ breakpoint, open, height, width });
+  const { closeIcon, direction } = ANCHOR_OPTIONS[anchor];
 
-        {headerProps.headerIcon && (
-          <Icon className="Drawer-icon" code={headerProps.headerIcon} />
-        )}
-      </MuiIconButton>
-    );
+  const toggle = open ? null : (
+    <MuiIconButton
+      data-testid="DrawerToggle"
+      color="inherit"
+      className={classes.toggle}
+      onClick={() => setOpen(true)}
+    >
+      <Icon className="Drawer-toggle" code={toggleIcon} />
 
-    return (
+      {headerProps.headerIcon && (
+        <Icon className="Drawer-icon" code={headerProps.headerIcon} />
+      )}
+    </MuiIconButton>
+  );
+
+  return (
+    <GeneratePropsProvider>
       <WidgetWrapper
         data-testid="DrawerContainer"
         direction={direction}
@@ -144,6 +146,6 @@ export default withGenerateDataProps<DrawerProps, MappablePropNames>(
           {children}
         </WidgetWrapper>
       </WidgetWrapper>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

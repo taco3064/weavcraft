@@ -2,6 +2,8 @@ import MuiGrid from '@mui/material/Grid';
 import MuiIconButton from '@mui/material/IconButton';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import type { FormEvent, ReactElement } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import {
   Children,
@@ -9,82 +11,80 @@ import {
   isValidElement,
   useMemo,
   useState,
-  type FormEvent,
-  type ReactElement,
 } from 'react';
 
 import Card from '../Card';
 import Icon from '../Icon';
+import { useGenerateProps } from '../../hooks';
 import type { BaseFieldProps } from '../BaseField';
-import type { FormProps, MappablePropNames } from './Form.types';
+import type { FormProps } from './Form.types';
 
-import {
-  withGenerateDataProps,
-  useComponentData,
-  type GenericData,
-} from '../../contexts';
+export default function Form<D extends JsonObject>(props: FormProps<D>) {
+  const [
+    GeneratePropsProvider,
+    {
+      action,
+      actionJustify = 'center',
+      breakpoint = 'sm',
+      children,
+      color,
+      fullWidthFields,
+      resetIcon = 'faRotateLeft',
+      size,
+      submitIcon = 'faCheck',
+      variant,
+      onSubmit,
+      onValidate,
+      ...formProps
+    },
+    { data, onChange },
+  ] = useGenerateProps<D, FormProps<D>>(props);
 
-export default withGenerateDataProps<FormProps, MappablePropNames>(
-  function Form<D extends GenericData>({
-    action,
-    actionJustify = 'center',
-    breakpoint = 'sm',
-    children,
-    color,
-    fullWidthFields,
-    resetIcon = 'faRotateLeft',
-    size,
-    submitIcon = 'faCheck',
-    variant,
-    onSubmit,
-    onValidate,
-    ...props
-  }: FormProps<D>) {
-    const { data, onChange } = useComponentData<D>();
-    const [key, setKey] = useState(new Date().valueOf());
+  const [key, setKey] = useState(new Date().valueOf());
 
-    const fields = Children.toArray(children).filter(
-      isValidElement
-    ) as ReactElement<BaseFieldProps<any>>[];
+  const fields = Children.toArray(children).filter(
+    isValidElement
+  ) as ReactElement<BaseFieldProps<any>>[];
 
-    const stringify = JSON.stringify({
-      key,
-      fields: fields.map((field) => field.props.name as string).filter(Boolean),
-    });
+  const stringify = JSON.stringify({
+    key,
+    fields: fields.map((field) => field.props.name as string).filter(Boolean),
+  });
 
-    const styleProps = useMemo(
-      () =>
-        Object.fromEntries(
-          Object.entries({ color, size, variant }).filter(([, value]) => value)
-        ),
-      [color, size, variant]
+  const styleProps = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries({ color, size, variant }).filter(([, value]) => value)
+      ),
+    [color, size, variant]
+  );
+
+  const formdata = useMemo(() => {
+    const fieldNames = JSON.parse(stringify).fields as string[];
+
+    return fieldNames.reduce(
+      (acc, name) => _set(acc, name, _get(data, name)),
+      {} as D
     );
+  }, [data, stringify]);
 
-    const formdata = useMemo(() => {
-      const fieldNames = JSON.parse(stringify).fields as string[];
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      return fieldNames.reduce(
-        (acc, name) => _set(acc, name, _get(data, name)),
-        {} as D
-      );
-    }, [data, stringify]);
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      try {
-        if ((await onValidate?.(formdata)) !== false) {
-          onSubmit?.(formdata);
-          onChange(formdata);
-        }
-      } catch (err) {
-        console.warn('@weavcraft/core/Form Error:', err);
+    try {
+      if ((await onValidate?.(formdata)) !== false) {
+        onSubmit?.(formdata);
+        onChange(formdata);
       }
-    };
+    } catch (err) {
+      console.warn('@weavcraft/core/Form Error:', err);
+    }
+  };
 
-    return (
+  return (
+    <GeneratePropsProvider>
       <Card
-        {...props}
+        {...formProps}
         component="form"
         footerJustify={actionJustify}
         onSubmit={handleSubmit}
@@ -144,6 +144,6 @@ export default withGenerateDataProps<FormProps, MappablePropNames>(
           })}
         </MuiGrid>
       </Card>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

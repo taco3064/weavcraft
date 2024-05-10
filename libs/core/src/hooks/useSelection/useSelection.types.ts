@@ -1,68 +1,52 @@
-import type {
-  GenericData,
-  MappableProps,
-  PropertyPath,
-  SlotElement,
-  StoreProps,
-} from '../../contexts';
+import type { Get, JsonObject, Merge, Paths } from 'type-fest';
 
-type PropertyType<
-  D extends {},
-  P extends PropertyPath<D> = PropertyPath<D>
-> = P extends `${infer K}.${infer Rest}`
-  ? K extends keyof D
-    ? Rest extends PropertyPath<NonNullable<D[K]>>
-      ? PropertyType<NonNullable<D[K]>, Rest>
-      : never
-    : never
-  : P extends keyof D
-  ? D[P]
-  : never;
+import type { MappableProps } from '../usePropsGetter';
+import type { PropsWithStore } from '../useStoreProps';
+import type { SlotElement } from '../useSlotElement';
 
-export type ControlVariant = 'single' | 'multiple';
+export type SelectionVariant = 'single' | 'multiple';
 
-export type ControlProps<D extends GenericData> = {
-  value?: any;
-} & MappableProps<D, { value?: any }>;
-
-export type ControlValue<
-  T extends ControlVariant,
-  P extends ControlProps<GenericData>,
-  V = NonNullable<
-    PropertyType<
-      NonNullable<P['data']>,
-      Extract<
-        NonNullable<P['propMapping']>['value'],
-        PropertyPath<NonNullable<P['data']>>
-      >
-    >
-  >
-> = T extends 'multiple' ? V[] : V;
+type SelectionValue<
+  V extends SelectionVariant,
+  D,
+  Path extends string
+> = V extends 'multiple' ? Get<D, Path>[] : Get<D, Path>;
 
 //* - Prop Types
-export interface GroupProps<
-  T extends ControlVariant,
-  P extends ControlProps<GenericData>
-> extends StoreProps<NonNullable<P['data']>> {
-  name?: string;
-  optionProps?: Omit<P, 'data'>;
-  value?: ControlValue<T, P>;
-  onChange?: (value?: ControlValue<T, P>, name?: string) => void;
-}
-
-export interface BaseListItemProps {
+export interface BaseItemProps {
   primary?: string;
   secondary?: string;
   disabled?: boolean;
 }
 
-interface BaseOptionProps extends BaseListItemProps {
-  value?: any;
+export type OptionProps<D extends JsonObject, P, Path extends string> = Merge<
+  {
+    value?: SelectionValue<'single', D, Path>;
+  },
+  Omit<P, 'value'>
+>;
+
+export interface SelectionGroupProps<
+  V extends SelectionVariant,
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string> = Extract<Paths<D>, string>,
+  P = {}
+> extends PropsWithStore<D> {
+  name?: string;
+  value?: SelectionValue<V, D, Path>;
+  onChange?: (value?: SelectionValue<V, D, Path>, name?: string) => void;
+
+  optionProps?: P &
+    Omit<
+      MappableProps<D, Extract<keyof OptionProps<D, P, Path>, string>>,
+      'data'
+    >;
 }
 
 export interface BaseSelectFieldProps<
-  T extends ControlVariant,
-  D extends GenericData
-> extends GroupProps<T, BaseOptionProps & MappableProps<D, BaseOptionProps>> {
+  V extends SelectionVariant,
+  D extends JsonObject,
+  Path extends Extract<Paths<D>, string>
+> extends SelectionGroupProps<V, D, Path, BaseItemProps> {
   optionIndicator?: SlotElement;
 }

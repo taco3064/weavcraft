@@ -1,16 +1,12 @@
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import type { ComponentProps, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import type { IconCode } from '../Icon';
+import type { PrefixProps, PropsWithMappedData } from '../../hooks';
 import type { WidgetWrapperProps } from '../../styles';
-
-import type {
-  GenericData,
-  PrefixProps,
-  PropsWithMappedData,
-} from '../../contexts';
 
 type MuiTabProps = Pick<
   ComponentProps<typeof MuiTab>,
@@ -22,7 +18,7 @@ type MuiTabsProps = Pick<
   'centered' | 'indicatorColor' | 'textColor'
 >;
 
-export type TabProps<D extends GenericData = {}> = PropsWithMappedData<
+export type TabProps<D extends JsonObject = {}> = PropsWithMappedData<
   D,
   Omit<MuiTabProps, 'iconPosition'> & {
     children?: ReactNode;

@@ -4,52 +4,58 @@ import MuiCardActions from '@mui/material/CardActions';
 import MuiCardContent from '@mui/material/CardContent';
 import MuiCardHeader from '@mui/material/CardHeader';
 import MuiCardMedia from '@mui/material/CardMedia';
+import type { JsonObject } from 'type-fest';
 
 import { WidgetWrapper } from '../../styles';
-import { withGenerateDataProps } from '../../contexts';
-import type { CardProps, MappablePropNames } from './Card.types';
+import { useGenerateProps } from '../../hooks';
+import type { CardProps } from './Card.types';
 
-export default withGenerateDataProps<CardProps, MappablePropNames>(
-  function Card({
-    children,
-    component,
-    maxWidth,
+export default function Card<D extends JsonObject>(props: CardProps<D>) {
+  const [
+    GenerateDataProvider,
+    {
+      children,
+      component,
+      maxWidth,
 
-    //* Header
-    avatar,
-    description,
-    headerAction,
-    title,
+      //* Header
+      avatar,
+      description,
+      headerAction,
+      title,
 
-    //* Footer
-    footerAction,
-    footerJustify,
+      //* Footer
+      footerAction,
+      footerJustify,
 
-    //* Media
-    mediaHeight,
-    mediaPosition = 'top',
-    mediaSrc,
-    mediaType,
-    mediaWidth,
+      //* Media
+      mediaHeight,
+      mediaPosition = 'top',
+      mediaSrc,
+      mediaType,
+      mediaWidth,
 
-    onSubmit,
-  }) {
-    const isHeaderVisible = [avatar, description, headerAction, title].some(
-      Boolean
+      onSubmit,
+    },
+  ] = useGenerateProps<D, CardProps<D>>(props);
+
+  const isHeaderVisible = [avatar, description, headerAction, title].some(
+    Boolean
+  );
+
+  const media =
+    !mediaSrc || !mediaType ? null : (
+      <MuiCardMedia
+        data-testid="CardMedia"
+        component={mediaType}
+        controls
+        src={mediaSrc}
+        sx={{ height: mediaHeight, width: mediaWidth }}
+      />
     );
 
-    const media =
-      !mediaSrc || !mediaType ? null : (
-        <MuiCardMedia
-          data-testid="CardMedia"
-          component={mediaType}
-          controls
-          src={mediaSrc}
-          sx={{ height: mediaHeight, width: mediaWidth }}
-        />
-      );
-
-    return (
+  return (
+    <GenerateDataProvider>
       <WidgetWrapper
         maxWidth={maxWidth}
         {...(component === 'form' && {
@@ -102,6 +108,6 @@ export default withGenerateDataProps<CardProps, MappablePropNames>(
           {mediaPosition === 'right' ? media : null}
         </MuiCard>
       </WidgetWrapper>
-    );
-  }
-);
+    </GenerateDataProvider>
+  );
+}

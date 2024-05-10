@@ -1,28 +1,54 @@
-//@ts-check
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { DefinePlugin } = require('webpack');
 const { composePlugins, withNx } = require('@nx/next');
+const sha256 = require('crypto-js/sha256');
+
+//* 取得 App 支援的 Languages
+const { i18n } = require('./next-i18next.config');
+const { version } = require('../../package.json');
+const TUTORIAL_TOKEN = sha256(`tutorial-${version}`).toString();
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
- **/
+ */
 const nextConfig = {
-  pageExtensions: ['tsx'],
-
+  i18n,
+  pageExtensions: ['page.tsx', 'service.ts'],
+  transpilePackages: ['@mui/x-charts', '@mui/material/styles'],
+  nx: {
+    svgr: true,
+  },
   compiler: {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true,
   },
-  nx: {
-    // Set this to true if you would like to to use SVGR
-    // See: https://github.com/gregberge/svgr
-    svgr: false,
-  },
+  rewrites: async () => [
+    {
+      source: '/tutorial/:path*',
+      destination: `/:path*?tutorial=${TUTORIAL_TOKEN}`,
+    },
+    {
+      source: '/service/:path*',
+      destination: 'http://127.0.0.1:4000/:path*',
+    },
+  ],
+  webpack: ({ plugins, ...config }) => ({
+    ...config,
+    plugins: [
+      ...plugins,
+      new DefinePlugin({
+        'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
+        'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
+        'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
+          i18n.defaultLocale
+        ),
+        'process.env.NEXT_PUBLIC_TUTORIAL_TOKEN':
+          JSON.stringify(TUTORIAL_TOKEN),
+      }),
+    ],
+  }),
 };
 
-const plugins = [
+module.exports = composePlugins(
   // Add more Next.js plugins to this list if needed.
-  withNx,
-];
-
-module.exports = composePlugins(...plugins)(nextConfig);
+  withNx
+)(nextConfig);

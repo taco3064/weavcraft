@@ -1,27 +1,21 @@
 import MuiIconButton from '@mui/material/IconButton';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
 import type { IconCode } from '../Icon';
+import type { PropsWithMappedData } from '../../hooks';
 
 type MuiIconButtonProps = Pick<
   ComponentProps<typeof MuiIconButton>,
   'color' | 'disabled' | 'size'
 >;
 
-export interface IconButtonProps extends MuiIconButtonProps {
-  'data-testid'?: string;
-  href?: string;
-  icon?: IconCode;
-}
-
-export type MappablePropNames = keyof Pick<
-  IconButtonProps,
-  'disabled' | 'href' | 'icon'
->;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type IconButtonProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  Omit<IconButtonProps, 'data-testid'>,
-  MappablePropNames
+  MuiIconButtonProps & {
+    'data-testid'?: string;
+    href?: string;
+    icon?: IconCode;
+  },
+  'disabled' | 'href' | 'icon'
 >;

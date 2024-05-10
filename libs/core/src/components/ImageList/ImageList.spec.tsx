@@ -13,7 +13,7 @@ describe('@weavcraft/core/components/ImageList', () => {
   it('should render all images', () => {
     const { baseElement, getAllByTestId } = render(
       <ImageList
-        records={records}
+        records={records as RecordWithNulls[]}
         itemProps={{
           propMapping: {
             cols: 'cols',
@@ -38,7 +38,7 @@ describe('@weavcraft/core/components/ImageList', () => {
 
     const { baseElement } = render(
       <ImageList
-        records={records}
+        records={records as RecordWithNulls[]}
         onItemActionClick={onItemActionClick}
         itemAction={
           <button {...{ propMapping: { children: 'title' } as never }}>
@@ -65,6 +65,15 @@ describe('@weavcraft/core/components/ImageList', () => {
     expect(buttons).toHaveLength(records.length);
     expect(onItemActionClick).toHaveBeenCalledTimes(records.length);
   });
+
+  type RecordWithNulls = {
+    img: string;
+    title: string;
+    author: string;
+    rows: number | null;
+    cols: number | null;
+    featured: boolean | null;
+  };
 
   const records = [
     {

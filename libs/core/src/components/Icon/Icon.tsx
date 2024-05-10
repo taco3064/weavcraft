@@ -1,28 +1,34 @@
 import MuiSvgIcon from '@mui/material/SvgIcon';
 import _get from 'lodash/get';
 import { useMemo } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import { FaIcon } from './Icon.types';
-import { withGenerateDataProps } from '../../contexts';
-import type { IconProps, MappablePropNames } from './Icon.types';
+import { useGenerateProps } from '../../hooks';
+import type { IconProps } from './Icon.types';
 
-export default withGenerateDataProps<IconProps, MappablePropNames>(
-  function Icon({ className, code, ...props }) {
-    const options = useMemo(() => {
-      const icon = _get(FaIcon, [code!, 'icon']);
+export default function Icon<D extends JsonObject>(props: IconProps<D>) {
+  const [GeneratePropsProvider, { code, ...iconProps }] = useGenerateProps<
+    D,
+    IconProps<D>
+  >(props);
 
-      if (icon) {
-        const [width, height, , , svgPathData] = icon;
+  const options = useMemo(() => {
+    const icon = _get(FaIcon, [code!, 'icon']);
 
-        return { width, height, svgPathData };
-      }
+    if (icon) {
+      const [width, height, , , svgPathData] = icon;
 
-      return null;
-    }, [code]);
+      return { width, height, svgPathData };
+    }
 
-    return !options ? null : (
+    return null;
+  }, [code]);
+
+  return !options ? null : (
+    <GeneratePropsProvider>
       <MuiSvgIcon
-        {...props}
+        {...iconProps}
         viewBox={`0 0 ${options.width} ${options.height}`}
         data-testid={`Icon_${code}`}
       >
@@ -34,6 +40,6 @@ export default withGenerateDataProps<IconProps, MappablePropNames>(
           ))
         )}
       </MuiSvgIcon>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

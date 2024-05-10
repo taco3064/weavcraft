@@ -1,9 +1,9 @@
 import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { BaseListItemProps } from '../../hooks';
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { BaseItemProps, PropsWithMappedData } from '../../hooks';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
@@ -22,8 +22,10 @@ type BasePropName = Extract<
   keyof MuiListItemButtonProps
 >;
 
-export interface ListItemProps<V extends ListItemVariant, D extends GenericData>
-  extends BaseListItemProps,
+interface BaseListItemProps<
+  D extends JsonObject,
+  V extends ListItemVariant = ListItemVariant
+> extends BaseItemProps,
     Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
   href?: V extends 'link' ? string : undefined;
   nested?: ReactNode;
@@ -35,12 +37,13 @@ export interface ListItemProps<V extends ListItemVariant, D extends GenericData>
   indicator?: ReactElement;
   variant?: V;
 
-  onItemClick?: V extends 'button' ? (data?: D) => void : undefined;
+  onItemClick?: V extends 'button' ? (data: D) => void : undefined;
 }
 
-export type MappablePropNames = keyof Pick<
-  ListItemProps<ListItemVariant, {}>,
-  | BasePropName
+export type ListItemProps<D extends JsonObject> = PropsWithMappedData<
+  D,
+  BaseListItemProps<D, ListItemVariant>,
+  | Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>
   | 'disabled'
   | 'href'
   | 'nestedId'
@@ -49,8 +52,3 @@ export type MappablePropNames = keyof Pick<
   | 'secondary'
   | 'selected'
 >;
-
-export type WrappedProps<
-  D extends GenericData,
-  V extends ListItemVariant
-> = PropsWithMappedData<D, ListItemProps<V, D>, MappablePropNames>;

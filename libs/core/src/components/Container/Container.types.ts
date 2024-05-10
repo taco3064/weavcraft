@@ -1,17 +1,16 @@
 import MuiContainer from '@mui/material/Container';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
-export type ContainerProps = Pick<
+type MuiContainerProps = Pick<
   ComponentProps<typeof MuiContainer>,
   'children' | 'disableGutters' | 'maxWidth'
 >;
 
-export type MappablePropNames = keyof Pick<ContainerProps, 'children'>;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type ContainerProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  ContainerProps,
-  MappablePropNames
+  MuiContainerProps,
+  'children'
 >;

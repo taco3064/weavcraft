@@ -1,0 +1,41 @@
+{
+  "lbl-color-code": "色碼",
+  "lbl-none": "無",
+  "ttl-editor": "色彩配置",
+  "lbl-color": {
+    "divider": "分隔線",
+    "background": {
+      "default": "預設背景",
+      "paper": "紙張背景"
+    },
+    "error": {
+      "contrastText": "錯誤對比文字",
+      "main": "錯誤顏色"
+    },
+    "info": {
+      "contrastText": "資訊對比文字",
+      "main": "資訊顏色"
+    },
+    "primary": {
+      "contrastText": "主要對比文字",
+      "main": "主要顏色"
+    },
+    "secondary": {
+      "contrastText": "次要對比文字",
+      "main": "次要顏色"
+    },
+    "success": {
+      "contrastText": "成功對比文字",
+      "main": "成功顏色"
+    },
+    "text": {
+      "disabled": "停用文字",
+      "primary": "主要文字",
+      "secondary": "次要文字"
+    },
+    "warning": {
+      "contrastText": "警告對比文字",
+      "main": "警告顏色"
+    }
+  }
+}

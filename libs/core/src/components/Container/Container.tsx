@@ -1,10 +1,20 @@
 import MuiContainer from '@mui/material/Container';
+import type { JsonObject } from 'type-fest';
 
-import { withGenerateDataProps } from '../../contexts';
-import type { ContainerProps, MappablePropNames } from './Container.types';
+import { useGenerateProps } from '../../hooks';
+import type { ContainerProps } from './Container.types';
 
-export default withGenerateDataProps<ContainerProps, MappablePropNames>(
-  function Container(props) {
-    return <MuiContainer {...props} data-testid="Container" />;
-  }
-);
+export default function Container<D extends JsonObject>(
+  props: ContainerProps<D>
+) {
+  const [GeneratePropsProvider, containerProps] = useGenerateProps<
+    D,
+    ContainerProps<D>
+  >(props);
+
+  return (
+    <GeneratePropsProvider>
+      <MuiContainer {...containerProps} data-testid="Container" />
+    </GeneratePropsProvider>
+  );
+}

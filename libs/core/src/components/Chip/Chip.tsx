@@ -1,25 +1,20 @@
 import MuiChip from '@mui/material/Chip';
+import type { JsonObject } from 'type-fest';
 
-import type { ChipProps, MappablePropNames } from './Chip.types';
+import { useGenerateProps } from '../../hooks';
+import type { ChipProps } from './Chip.types';
 
-import {
-  useComponentData,
-  withGenerateDataProps,
-  type GenericData,
-} from '../../contexts';
+export default function Chip<D extends JsonObject>(props: ChipProps<D>) {
+  const [
+    GeneratePropsProvider,
+    { indicator, onClick, onDelete, ...chipProps },
+    { data },
+  ] = useGenerateProps<D, ChipProps<D>>(props);
 
-export default withGenerateDataProps<ChipProps<any>, MappablePropNames>(
-  function Chip<D extends GenericData>({
-    indicator,
-    onClick,
-    onDelete,
-    ...props
-  }: ChipProps<D>) {
-    const { data } = useComponentData<D>();
-
-    return (
+  return (
+    <GeneratePropsProvider>
       <MuiChip
-        {...props}
+        {...chipProps}
         {...(onClick && {
           clickable: true,
           onClick: () => onClick(data),
@@ -28,6 +23,6 @@ export default withGenerateDataProps<ChipProps<any>, MappablePropNames>(
         avatar={indicator}
         onDelete={() => onDelete?.(data)}
       />
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

@@ -1,34 +1,40 @@
 import MuiCollapse from '@mui/material/Collapse';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import PortalContainer from '../PortalContainer';
-import { withGenerateDataProps } from '../../contexts';
-import type { CollapseProps, MappablePropNames } from './Collapse.types';
+import { useGenerateProps } from '../../hooks';
+import type { CollapseProps } from './Collapse.types';
 
-export default withGenerateDataProps<CollapseProps, MappablePropNames>(
-  function Collapse({ children, containerId, toggle, ...props }) {
-    const { type: Toggle, props: toggleProps } = toggle || {};
-    const [expanded, setExpanded] = useState(false);
+export default function Collapse<D extends JsonObject>(
+  props: CollapseProps<D>
+) {
+  const [
+    GeneratePropsProvider,
+    { children, containerId, toggle, ...collapseProps },
+  ] = useGenerateProps<D, CollapseProps<D>>(props);
 
-    return (
-      <>
-        {Toggle && (
-          <Toggle
-            {...toggleProps}
-            data-testid="CollapseToggle"
-            onClick={(...e: any[]) => {
-              setExpanded(!expanded);
-              toggleProps?.onClick?.(...e);
-            }}
-          />
-        )}
+  const { type: Toggle, props: toggleProps } = toggle || {};
+  const [expanded, setExpanded] = useState(false);
 
-        <PortalContainer id={containerId}>
-          <MuiCollapse {...props} data-testid="Collapse">
-            {!expanded ? null : children}
-          </MuiCollapse>
-        </PortalContainer>
-      </>
-    );
-  }
-);
+  return (
+    <GeneratePropsProvider>
+      {Toggle && (
+        <Toggle
+          {...toggleProps}
+          data-testid="CollapseToggle"
+          onClick={(...e: any[]) => {
+            setExpanded(!expanded);
+            toggleProps?.onClick?.(...e);
+          }}
+        />
+      )}
+
+      <PortalContainer id={containerId}>
+        <MuiCollapse {...collapseProps} data-testid="Collapse">
+          {!expanded ? null : children}
+        </MuiCollapse>
+      </PortalContainer>
+    </GeneratePropsProvider>
+  );
+}

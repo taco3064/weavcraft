@@ -1,46 +1,29 @@
-import _get from 'lodash/get';
 import _omit from 'lodash/omit';
 import _set from 'lodash/set';
 import { create } from 'zustand';
+import type { JsonObject } from 'type-fest';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentType,
-} from 'react';
+import { createContext, useContext, useId, useMemo, useState } from 'react';
 
 import type {
   DataStructure,
   DataStructureContextValue,
   DataValue,
-  GenericData,
-  MappableProps,
-  SlotElement,
   ValueTypeMapping,
 } from './GenerateDataProps.types';
 
 //* - Variables
 const VALUE_TYPE_MAP: ValueTypeMapping = {
-  bigint: 'bigint',
   boolean: 'boolean',
   number: 'number',
   string: 'string',
 };
 
 //* - Zustand
-const useStructure = create(() => {
+export const useStructure = create(() => {
   let structure: DataStructure = {};
 
   function getDataType(value: any): DataValue | undefined {
-    if (value instanceof Date) {
-      return 'date';
-    }
-
     if (Array.isArray(value) && value.length) {
       const type = getDataType(value[0])?.replace('[]', '');
 
@@ -75,7 +58,7 @@ const useStructure = create(() => {
 });
 
 //* - Context
-export const ComponentDataContext = createContext<
+export const GenerateDataContext = createContext<
   ReturnType<typeof useState<any>>
 >([undefined, () => undefined]);
 
@@ -100,11 +83,21 @@ export function useSymbolId() {
   return useMemo(() => Symbol(id), [id]);
 }
 
-export function useComponentData<D extends GenericData>(propData?: D) {
+export function useDataStructure() {
+  const { uid, paths } = useContext(DataStructureContext) || {};
+  const newId = useSymbolId();
+
+  return {
+    root: uid || newId,
+    paths: useMemo(() => paths || [], [paths]),
+  };
+}
+
+export function useGenerateData<D extends JsonObject>(propData?: D) {
   const dataState = useState<D>(propData!);
   const type: 'props' | 'context' = propData ? 'props' : 'context';
 
-  const [data, setData] = useContext(ComponentDataContext) as ReturnType<
+  const [data, setData] = useContext(GenerateDataContext) as ReturnType<
     typeof useState<D>
   >;
 
@@ -119,65 +112,4 @@ export function useComponentData<D extends GenericData>(propData?: D) {
         data: data!,
         onChange: setData,
       };
-}
-
-export function useComponentSlot<D extends GenericData>(
-  action?: SlotElement,
-  onItemToggle?: (item: D) => void
-) {
-  const { type: Slot, props } = action || {};
-  const getProps = usePropsGetter();
-
-  return {
-    Slot: Slot as ComponentType<typeof props> | undefined,
-
-    getSlotProps: (data: D) =>
-      ({
-        ...getProps({ ...props, data }),
-        ...(onItemToggle && {
-          onClick: (...args: any[]) => {
-            args.forEach((arg) => arg?.stopPropagation?.());
-            props?.onClick?.(...args);
-            onItemToggle(data);
-          },
-        }),
-      } as typeof props),
-  };
-}
-
-export function useDataStructure() {
-  const { uid, paths } = useContext(DataStructureContext) || {};
-  const newId = useSymbolId();
-
-  return {
-    root: uid || newId,
-    paths: useMemo(() => paths || [], [paths]),
-  };
-}
-
-export function usePropsGetter<D extends GenericData>() {
-  const { root, paths } = useDataStructure();
-  const { set, destroy } = useStructure();
-  const destroyRef = useRef(() => destroy(root, paths));
-
-  useEffect(() => destroyRef.current, [destroyRef]);
-
-  return function <
-    P extends MappableProps<D>,
-    R = Omit<P, 'data' | 'propMapping'>
-  >({ data, propMapping, ...props }: P & MappableProps<D>) {
-    return Object.entries(propMapping || {}).reduce((result, [key, path]) => {
-      const propValue = _get(props, key);
-      const dataValue = _get(data, path as string);
-
-      //* - The prop value must be undefined
-      if (propValue === undefined && dataValue !== undefined) {
-        set(root, [...paths, key], dataValue);
-
-        return { ...result, [key]: dataValue };
-      }
-
-      return { ...result, [key]: propValue };
-    }, props) as R;
-  };
 }

@@ -10,7 +10,24 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/web/pages"]
+        "@typescript-eslint/ban-types": "off",
+        "@next/next/no-html-link-for-pages": ["error", "apps/web/pages"],
+        "@nx/enforce-module-boundaries": "off",
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react-i18next",
+                "message": "Please change to use 'next-i18next'."
+              },
+              {
+                "name": "i18next",
+                "message": "Please change to use 'next-i18next'."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -25,6 +42,14 @@
       "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
       "env": {
         "jest": true
+      },
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "allow": ["~web/*"]
+          }
+        ]
       }
     }
   ]

@@ -3,38 +3,33 @@ import MuiListItemButton from '@mui/material/ListItemButton';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import MuiToolbar from '@mui/material/Toolbar';
+import type { JsonObject } from 'type-fest';
 
-import {
-  useComponentData,
-  withGenerateDataProps,
-  type GenericData,
-} from '../../contexts';
-import { useUrlValidation } from '../../hooks';
+import { useGenerateProps, useUrlValidation } from '../../hooks';
+import type { ListItemProps } from './ListItem.types';
 
-import type {
-  MappablePropNames,
-  ListItemProps,
-  ListItemVariant,
-} from './ListItem.types';
+export default function ListItem<D extends JsonObject>(
+  props: ListItemProps<D>
+) {
+  const [
+    GeneratePropsProvider,
+    {
+      action,
+      disabled,
+      href,
+      indicator,
+      nested,
+      nestedId,
+      primary,
+      secondary,
+      selected,
+      variant = 'item',
+      onItemClick,
+      ...listItemProps
+    },
+    { data },
+  ] = useGenerateProps<D, ListItemProps<D>>(props);
 
-export default withGenerateDataProps<
-  ListItemProps<ListItemVariant, any>,
-  MappablePropNames
->(function ListItem<D extends GenericData>({
-  action,
-  disabled,
-  href,
-  indicator,
-  nested,
-  nestedId,
-  primary,
-  secondary,
-  selected,
-  variant = 'item',
-  onItemClick,
-  ...props
-}: ListItemProps<ListItemVariant, D>) {
-  const { data } = useComponentData<D>();
   const isHrefValid = useUrlValidation(href);
 
   const children = (
@@ -73,14 +68,14 @@ export default withGenerateDataProps<
   );
 
   return (
-    <>
+    <GeneratePropsProvider>
       {variant === 'item' ? (
-        <MuiListItem {...props} data-testid="ListItem">
+        <MuiListItem {...listItemProps} data-testid="ListItem">
           {children}
         </MuiListItem>
       ) : (
         <MuiListItemButton
-          {...props}
+          {...listItemProps}
           {...{ disabled, selected }}
           {...(variant === 'link' &&
             isHrefValid && { LinkComponent: 'a', href })}
@@ -98,6 +93,6 @@ export default withGenerateDataProps<
           {nested}
         </MuiListItem>
       )}
-    </>
+    </GeneratePropsProvider>
   );
-});
+}

@@ -1,4 +1,5 @@
 import * as Comp from './components';
+export type * from './components';
 
 export const Display = {
   Avatar: Comp.Avatar,

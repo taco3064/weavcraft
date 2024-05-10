@@ -1,15 +1,22 @@
 import 'reflect-metadata';
 import configs from './configs';
-import { TsyringeAdapter } from './iocAdapter';
+import { iocAdapter } from './iocAdapter';
 import { RoutingControllersOptions, useContainer } from 'routing-controllers';
 import * as _indexControllers from './controllers';
 import { initKoaApp } from './koaApp';
+import { HttpLogger } from './common/helpers/logger.helper';
+import { INJECT_MONGO_CLIENT_DEMO } from '@weavcraft/modules';
+import { DemoDbMongoClient } from './common/database/mongodb/testDB';
 
 export async function server() {
-  const iocAdapter = new TsyringeAdapter();
+  const demoMgoClient = iocAdapter.container.resolve<DemoDbMongoClient>(
+    INJECT_MONGO_CLIENT_DEMO
+  );
+  await demoMgoClient.initialize();
   const controllers = Object.values(_indexControllers).values();
 
   const routingControllerOptions: RoutingControllersOptions = {
+    defaultErrorHandler: false,
     controllers: [...controllers],
   };
 
@@ -17,10 +24,10 @@ export async function server() {
 
   const app = initKoaApp(routingControllerOptions, true);
 
-  const { host, port } = configs.app;
+  const { host, port } = configs.cfgs.app;
 
   const httpServer = app.listen(port, host, () => {
-    console.log(`[ ready ] http://${host}:${port}`);
+    HttpLogger.log.info(`http://${host}:${port}`);
   });
 
   return {

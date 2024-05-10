@@ -1,66 +1,64 @@
 import MuiToggleButton from '@mui/material/ToggleButton';
 import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import type { JsonObject, Paths } from 'type-fest';
 
 import Icon from '../Icon';
-import type { ControlVariant } from '../../hooks';
 
 import {
-  makeStoreProps,
   usePropsGetter,
-  type GenericData,
-} from '../../contexts';
+  useStoreProps,
+  type SelectionVariant,
+} from '../../hooks';
 
 import type {
   ToggleButtonProps,
   ToggleButtonGroupProps,
 } from './ToggleButtonGroup.types';
 
-const withStoreProps = makeStoreProps<ToggleButtonGroupProps>();
+export default function ToggleButtonGroup<
+  D extends JsonObject,
+  V extends SelectionVariant,
+  Path extends Extract<Paths<D>, string>
+>(props: ToggleButtonGroupProps<D, V, Path>) {
+  const [
+    StoreProvider,
+    { variant, name, optionProps, records, value, onChange, ...groupProps },
+  ] = useStoreProps(props);
 
-export default withStoreProps(function ToggleButtonGroup<
-  D extends GenericData,
-  T extends ControlVariant
->({
-  variant,
-  name,
-  optionProps,
-  records,
-  value,
-  onChange,
-  ...props
-}: ToggleButtonGroupProps<D, T>) {
   const getProps = usePropsGetter<D>();
 
   return (
-    <MuiToggleButtonGroup
-      {...props}
-      data-testid="ToggleButtonGroup"
-      exclusive={variant !== 'multiple'}
-      defaultValue={value as never}
-      onChange={(_e, newValue) => onChange?.(newValue, name)}
-    >
-      {records?.map((option, i) => {
-        const {
-          icon,
-          text,
-          value = i,
-          ...buttonProps
-        } = getProps<ToggleButtonProps<D>>({
-          ...optionProps,
-          data: option,
-        });
+    <StoreProvider>
+      <MuiToggleButtonGroup
+        {...groupProps}
+        data-testid="ToggleButtonGroup"
+        exclusive={variant !== 'multiple'}
+        defaultValue={value as never}
+        onChange={(_e, newValue) => onChange?.(newValue, name)}
+      >
+        {records?.map((option, i) => {
+          const {
+            icon,
+            text,
+            value = i,
+            ...buttonProps
+          } = getProps<ToggleButtonProps<D>>({
+            ...optionProps,
+            data: option,
+          });
 
-        return (
-          <MuiToggleButton
-            {...buttonProps}
-            key={i}
-            value={value}
-            data-testid="ToggleButton"
-          >
-            {icon ? <Icon code={icon} /> : text}
-          </MuiToggleButton>
-        );
-      })}
-    </MuiToggleButtonGroup>
+          return (
+            <MuiToggleButton
+              {...buttonProps}
+              key={i}
+              value={value}
+              data-testid="ToggleButton"
+            >
+              {icon ? <Icon code={icon} /> : text}
+            </MuiToggleButton>
+          );
+        })}
+      </MuiToggleButtonGroup>
+    </StoreProvider>
   );
-});
+}

@@ -3,8 +3,9 @@ import * as FaSolid from '@fortawesome/free-solid-svg-icons';
 import MuiSvgIcon from '@mui/material/SvgIcon';
 import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
 export const FaIcon = { ...FaSolid, ...FaBrands } as const;
 
@@ -19,14 +20,10 @@ type MuiIconProps = Pick<
 
 export type IconCode = FortawesomeCode<typeof FaIcon>;
 
-export interface IconProps extends MuiIconProps {
-  code?: IconCode;
-}
-
-export type MappablePropNames = keyof Pick<IconProps, 'code'>;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type IconProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  Omit<IconProps, 'className'>,
-  MappablePropNames
+  MuiIconProps & {
+    code?: IconCode;
+  },
+  'code'
 >;

@@ -1,144 +1,80 @@
-import { act, fireEvent, render, renderHook } from '@testing-library/react';
-import { useState } from 'react';
-import type { MouseEventHandler, ReactNode } from 'react';
+import { act, render, renderHook } from '@testing-library/react';
+import { useContext, useState } from 'react';
+import type { JsonObject } from 'type-fest';
+import type { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 
-import { makeStoreProps, withGenerateDataProps } from './GenerateDataProps';
+import {
+  DataStructureProvider,
+  GenerateDataProvider,
+} from './GenerateDataProps';
 
 import {
-  ComponentDataContext,
   DataStructureContext,
-  useComponentData,
-  useComponentSlot,
+  GenerateDataContext,
   useDataStructure,
-  usePropsGetter,
+  useGenerateData,
   useSymbolId,
 } from './GenerateDataProps.hooks';
 
-import type {
-  GenericData,
-  PropsWithMappedStore,
-  SlotElement,
-} from './GenerateDataProps.types';
-
 describe('@weavcraft/core/contexts/GenerateDataProps', () => {
-  //* - HOC
-  describe('withGenerateDataProps', () => {
-    it('should pass correct props to the wrapped component', () => {
-      const value = 'Tom White';
-
-      const { getByTestId } = render(
-        <WrappedDummy data={{ name: value }} propMapping={{ title: 'name' }} />
-      );
-
-      expect(getByTestId('dummy')).toHaveTextContent(value);
-    });
-
-    it('should pass the original props', () => {
-      const value = 'Johnny Smith';
-
-      const { getByTestId } = render(
-        <WrappedDummy
-          title={value}
-          data={{ name: 'Tom White' }}
-          propMapping={{ title: 'name' }}
-        />
-      );
-
-      expect(getByTestId('dummy')).toHaveTextContent(value);
-    });
-
-    it('should useComponentData works correctly', () => {
-      const value = 'White';
+  //* - Provider
+  describe('GenerateDataProvider', () => {
+    it('provides the correct value to children', () => {
+      const testValue = 'test value';
 
       const { getByText } = render(
-        <WrappedDummy
-          data={{ firstName: 'Tom', lastName: value }}
-          propMapping={{ title: 'firstName' }}
-        >
-          <WrappedDummy propMapping={{ title: 'lastName' }} />
-        </WrappedDummy>
+        <GenerateDataContext.Provider value={[testValue, () => null]}>
+          <TestComponent />
+        </GenerateDataContext.Provider>
       );
 
-      expect(getByText(value)).toBeTruthy();
+      expect(getByText(testValue)).toBeInTheDocument();
     });
 
-    const WrappedDummy = withGenerateDataProps(
-      (props: { title?: string; children?: ReactNode }) => (
-        <div data-testid="dummy">
-          {props.title}
-          {props.children}
-        </div>
-      )
-    );
+    const TestComponent = () => {
+      const [value] = useContext(GenerateDataContext);
+
+      return <div>{value}</div>;
+    };
   });
 
-  describe('makeStoreProps', () => {
-    it('should pass correct props to the wrapped component', () => {
-      const { getByTestId } = render(<WrappedDummies records={records} />);
-      const spans = getByTestId('dummies').querySelectorAll('span');
+  describe('DataStructureProvider', () => {
+    it('provides the correct context when records is provided', () => {
+      const records: JsonObject[] = [{ test: 'test' }];
 
-      expect(spans).toHaveLength(records.length);
+      const { getByText } = render(
+        <DataStructureProvider records={records}>
+          <TestComponent />
+        </DataStructureProvider>
+      );
 
-      spans.forEach((span, i) => {
-        expect(span).toHaveTextContent(records[i].name);
-      });
+      expect(getByText(/^Symbol(.+)$/i)).toBeInTheDocument();
     });
 
-    it('should pass correct records to the wrapped component with propMapping', () => {
-      const { getByTestId } = render(
-        <WrappedDummy data={{ override: records }}>
-          <WrappedDummies propMapping={{ records: 'override' }} />
-        </WrappedDummy>
+    it('provides the correct context when recordsMappingPath is provided', () => {
+      const recordsMappingPath = 'test';
+
+      const { getByText } = render(
+        <DataStructureProvider recordsMappingPath={recordsMappingPath}>
+          <TestComponent />
+        </DataStructureProvider>
       );
 
-      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
-        records.length
-      );
+      expect(getByText(/^Symbol(.+)$/i)).toBeInTheDocument();
     });
 
-    it('should pass the original props', () => {
-      const override = [...records, { name: 'John Doe' }];
+    const TestComponent = () => {
+      const context = useContext(DataStructureContext);
 
-      const { getByTestId } = render(
-        <WrappedDummy data={{ override }}>
-          <WrappedDummies
-            records={records}
-            propMapping={{ records: 'override' }}
-          />
-        </WrappedDummy>
-      );
-
-      expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
-        records.length
-      );
-    });
-
-    const WrappedDummy = withGenerateDataProps(
-      (props: { children?: ReactNode }) => (
-        <div data-testid="dummy">{props.children}</div>
-      )
-    );
-
-    const WrappedDummies = makeStoreProps<
-      PropsWithMappedStore<{ name: string }>
-    >()(function Dummy({ records }) {
-      return (
-        <div data-testid="dummies">
-          {records?.map(({ name }, i) => (
-            <span key={i}>{name}</span>
-          ))}
-        </div>
-      );
-    });
-
-    const records = [{ name: 'Tom White' }, { name: 'Johnny Smith' }];
+      return <div>{context?.uid?.toString()}</div>;
+    };
   });
 
   //* - Custom Hooks
-  describe('useComponentData', () => {
+  describe('useGenerateData', () => {
     it('should return data from ComponentDataContext', () => {
-      const { result } = renderHook(() => useComponentData(), {
+      const { result } = renderHook(() => useGenerateData(), {
         wrapper: TestProvider,
       });
 
@@ -158,71 +94,10 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
       const state = useState(data);
 
       return (
-        <ComponentDataContext.Provider value={state}>
+        <GenerateDataContext.Provider value={state}>
           {children}
-        </ComponentDataContext.Provider>
+        </GenerateDataContext.Provider>
       );
-    }
-  });
-
-  describe('useComponentSlot', () => {
-    it('should return correct slot element options', () => {
-      const { getByTestId } = renderSlot(<WrappedDummy text="text" />, {
-        name: 'any',
-      });
-
-      const button = getByTestId('dummy');
-
-      expect(button.tagName).toBe('BUTTON');
-      expect(button).toHaveTextContent('text');
-    });
-
-    it('should pass the original props', () => {
-      const value = 'text';
-
-      const { getByText } = renderSlot(
-        <WrappedDummy text={value} propMapping={{ text: 'name' }} />,
-        { name: 'any' }
-      );
-
-      expect(getByText(value)).toBeTruthy();
-    });
-
-    it('calls onClick & onItemToggle when button is clicked', () => {
-      const data = { name: 'any' };
-
-      const onClick = jest.fn();
-      const onItemToggle = jest.fn();
-
-      const { getByTestId } = renderSlot(
-        <WrappedDummy text="test" onClick={onClick} />,
-        data,
-        onItemToggle
-      );
-
-      fireEvent.click(getByTestId('dummy'));
-      expect(onClick).toHaveBeenCalled();
-      expect(onItemToggle).toHaveBeenCalledWith(data);
-    });
-
-    const WrappedDummy = withGenerateDataProps(
-      (props: { text?: string; onClick?: MouseEventHandler }) => (
-        <button data-testid="dummy" onClick={props.onClick}>
-          {props.text}
-        </button>
-      )
-    );
-
-    function renderSlot<D extends GenericData>(
-      slot: SlotElement,
-      data: D,
-      onItemToggle?: (item: D) => void
-    ) {
-      const { result } = renderHook(() => useComponentSlot(slot, onItemToggle));
-
-      const { Slot, getSlotProps } = result.current;
-
-      return render(Slot ? <Slot {...getSlotProps(data)} /> : <>none</>);
     }
   });
 
@@ -243,30 +118,6 @@ describe('@weavcraft/core/contexts/GenerateDataProps', () => {
         <DataStructureContext.Provider value={{ uid, paths }}>
           {children}
         </DataStructureContext.Provider>
-      );
-    }
-  });
-
-  describe('usePropsGetter', () => {
-    it('should return correct props', () => {
-      const { result } = renderHook(() => usePropsGetter(), {
-        wrapper: TestProvider,
-      });
-
-      expect(result.current({ data, propMapping })).toEqual({ name });
-    });
-
-    const name = 'Tom';
-    const data = { user: { name: 'Tom' } };
-    const propMapping = { name: 'user.name' };
-
-    function TestProvider({ children }: { children: ReactNode }) {
-      const state = useState(data);
-
-      return (
-        <ComponentDataContext.Provider value={state}>
-          {children}
-        </ComponentDataContext.Provider>
       );
     }
   });

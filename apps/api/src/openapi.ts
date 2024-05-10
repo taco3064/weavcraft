@@ -6,6 +6,7 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { getMetadataStorage } from 'class-validator';
+import { LoggerHelper } from './common/helpers/logger.helper';
 
 /**
  *
@@ -35,8 +36,7 @@ export function getSwaggerSpec(
     return spec;
   } catch (err) {
     const errInfo = `[DOC][getSwaggerSpec] error: ${err}`;
-    console.error(errInfo);
-    console.error(err);
+    LoggerHelper.log.error(errInfo);
     return null;
   }
 }

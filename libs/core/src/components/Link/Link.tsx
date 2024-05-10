@@ -1,14 +1,18 @@
 import MuiLink from '@mui/material/Link';
+import type { JsonObject } from 'type-fest';
 
 import Icon from '../Icon';
-import { withGenerateDataProps } from '../../contexts';
-import type { LinkProps, MappablePropNames } from './Link.types';
+import { useGenerateProps } from '../../hooks';
+import type { LinkProps } from './Link.types';
 
-export default withGenerateDataProps<LinkProps, MappablePropNames>(
-  function Link({ align, icon, text, ...props }) {
-    return (
+export default function Link<D extends JsonObject>(props: LinkProps<D>) {
+  const [GeneratePropsProvider, { align, icon, text, ...linkProps }] =
+    useGenerateProps<D, LinkProps<D>>(props);
+
+  return (
+    <GeneratePropsProvider>
       <MuiLink
-        {...props}
+        {...linkProps}
         data-testid="Link"
         display="flex"
         flexDirection="row"
@@ -25,6 +29,6 @@ export default withGenerateDataProps<LinkProps, MappablePropNames>(
         {icon && <Icon color="inherit" fontSize="inherit" code={icon} />}
         {text}
       </MuiLink>
-    );
-  }
-);
+    </GeneratePropsProvider>
+  );
+}

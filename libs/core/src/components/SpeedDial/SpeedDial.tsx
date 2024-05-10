@@ -1,11 +1,12 @@
 import MuiSpeedDial from '@mui/material/SpeedDial';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
 import SpeedDialAction from '../SpeedDialAction';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { useStoreProps } from '../../hooks';
 
 import type { Origin, PositionSplit, SpeedDialProps } from './SpeedDial.types';
 
@@ -30,53 +31,60 @@ const ORIGIN: Origin = {
 };
 
 //* - Components
-const withStoreProps = makeStoreProps<SpeedDialProps>();
+export default function SpeedDial<D extends JsonObject>(
+  props: SpeedDialProps<D>
+) {
+  const [
+    StoreProvider,
+    {
+      ariaLabel = 'SpeedDial',
+      containerId,
+      icon,
+      itemProps,
+      openIcon,
+      position = 'bottom-left',
+      records,
+      onItemClick,
+    },
+  ] = useStoreProps(props);
 
-export default withStoreProps(function SpeedDial<D extends GenericData>({
-  ariaLabel = 'SpeedDial',
-  containerId,
-  icon,
-  itemProps,
-  openIcon,
-  position = 'bottom-left',
-  records,
-  onItemClick,
-}: SpeedDialProps<D>) {
   const [cssPosition, setCssPosition] = useState<Property.Position>('fixed');
   const [vertical, horizontal] = position.split('-') as PositionSplit;
   const { direction, tooltipPlacement } = ORIGIN[`${vertical}-${horizontal}`];
 
   return (
-    <PortalContainer
-      id={containerId}
-      onContainerRetrieved={(container) => {
-        setCssPosition('absolute');
-        container.style.position = 'relative';
-      }}
-    >
-      <MuiSpeedDial
-        data-testid="SpeedDial"
-        ariaLabel={ariaLabel}
-        direction={direction}
-        icon={<Icon code={icon} />}
-        openIcon={<Icon code={openIcon} />}
-        sx={(theme) => ({
-          position: cssPosition,
-          [vertical]: theme.spacing(1),
-          [horizontal]: theme.spacing(1),
-        })}
+    <StoreProvider>
+      <PortalContainer
+        id={containerId}
+        onContainerRetrieved={(container) => {
+          setCssPosition('absolute');
+          container.style.position = 'relative';
+        }}
       >
-        {records?.map((item, i) => (
-          <SpeedDialAction
-            {...itemProps}
-            data-testid="SpeedDialAction"
-            key={i}
-            data={item}
-            tooltipPlacement={tooltipPlacement}
-            onClick={() => onItemClick?.(item)}
-          />
-        ))}
-      </MuiSpeedDial>
-    </PortalContainer>
+        <MuiSpeedDial
+          data-testid="SpeedDial"
+          ariaLabel={ariaLabel}
+          direction={direction}
+          icon={<Icon code={icon} />}
+          openIcon={<Icon code={openIcon} />}
+          sx={(theme) => ({
+            position: cssPosition,
+            [vertical]: theme.spacing(1),
+            [horizontal]: theme.spacing(1),
+          })}
+        >
+          {records?.map((item, i) => (
+            <SpeedDialAction
+              {...itemProps}
+              data-testid="SpeedDialAction"
+              key={i}
+              data={item}
+              tooltipPlacement={tooltipPlacement}
+              onClick={() => onItemClick?.(item)}
+            />
+          ))}
+        </MuiSpeedDial>
+      </PortalContainer>
+    </StoreProvider>
   );
-});
+}

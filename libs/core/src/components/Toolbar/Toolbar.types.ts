@@ -1,9 +1,9 @@
 import MuiAppBar from '@mui/material/AppBar';
 import MuiToolbar from '@mui/material/Toolbar';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
-import type { Property } from 'csstype';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 import type { IconCode } from '../Icon';
 
 type MuiAppBarProps = Pick<
@@ -16,16 +16,14 @@ type MuiToolbarProps = Pick<
   'disableGutters' | 'variant'
 >;
 
-export interface ToolbarProps extends MuiAppBarProps, MuiToolbarProps {
+interface BaseToolbarProps extends MuiAppBarProps, MuiToolbarProps {
   children?: ReactNode;
   icon?: ReactElement | IconCode | null;
   title?: string;
 }
 
-export type MappablePropNames = keyof Pick<ToolbarProps, 'icon' | 'title'>;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type ToolbarProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  Omit<ToolbarProps, 'icon'> & { icon?: IconCode },
-  MappablePropNames
+  BaseToolbarProps,
+  'icon' | 'title'
 >;

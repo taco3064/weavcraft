@@ -1,21 +1,18 @@
 import MuiDivider from '@mui/material/Divider';
 import type { ComponentProps } from 'react';
+import type { JsonObject } from 'type-fest';
 
-import type { GenericData, PropsWithMappedData } from '../../contexts';
+import type { PropsWithMappedData } from '../../hooks';
 
 type MuiDividerProps = Pick<
   ComponentProps<typeof MuiDivider>,
   'flexItem' | 'orientation' | 'variant'
 >;
 
-export interface DividerProps extends MuiDividerProps {
-  text?: string;
-}
-
-export type MappablePropNames = keyof Pick<DividerProps, 'text'>;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type DividerProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  DividerProps,
-  MappablePropNames
+  MuiDividerProps & {
+    text?: string;
+  },
+  'text'
 >;

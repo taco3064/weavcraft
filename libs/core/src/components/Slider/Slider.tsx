@@ -1,10 +1,18 @@
 import MuiSlider from '@mui/material/Slider';
+import type { JsonObject } from 'type-fest';
 
-import { withGenerateDataProps } from '../../contexts';
-import type { SliderProps, MappablePropNames } from './Slider.types';
+import { useGenerateProps } from '../../hooks';
+import type { SliderProps } from './Slider.types';
 
-export default withGenerateDataProps<SliderProps, MappablePropNames>(
-  function Slider(props) {
-    return <MuiSlider {...props} data-testid="Slider" />;
-  }
-);
+export default function Slider<D extends JsonObject>(props: SliderProps<D>) {
+  const [GeneratePropsProvider, sliderProps] = useGenerateProps<
+    D,
+    SliderProps<D>
+  >(props);
+
+  return (
+    <GeneratePropsProvider>
+      <MuiSlider {...sliderProps} data-testid="Slider" />
+    </GeneratePropsProvider>
+  );
+}

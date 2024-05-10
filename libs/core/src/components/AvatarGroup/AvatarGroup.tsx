@@ -1,21 +1,23 @@
 import MuiAvatarGroup from '@mui/material/AvatarGroup';
+import type { JsonObject } from 'type-fest';
 
 import Avatar from '../Avatar';
-import { makeStoreProps, type GenericData } from '../../contexts';
+import { useStoreProps } from '../../hooks';
 import type { AvatarGroupProps } from './AvatarGroup.types';
 
-const withStoreProps = makeStoreProps<AvatarGroupProps>();
+export default function AvatarGroup<D extends JsonObject>(
+  props: AvatarGroupProps<D>
+) {
+  const [StoreProvider, { itemProps, records, ...avatarGroupProps }] =
+    useStoreProps(props);
 
-export default withStoreProps(function AvatarGroup<D extends GenericData>({
-  itemProps,
-  records,
-  ...props
-}: AvatarGroupProps<D>) {
   return (
-    <MuiAvatarGroup {...props} data-testid="AvatarGroup">
-      {records?.map((item, i) => (
-        <Avatar key={i} {...itemProps} data={item} />
-      ))}
-    </MuiAvatarGroup>
+    <StoreProvider>
+      <MuiAvatarGroup {...avatarGroupProps}>
+        {records?.map((item, i) => (
+          <Avatar key={i} {...itemProps} data={item} />
+        ))}
+      </MuiAvatarGroup>
+    </StoreProvider>
   );
-});
+}

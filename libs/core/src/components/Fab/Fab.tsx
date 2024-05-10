@@ -1,50 +1,50 @@
 import MuiFab from '@mui/material/Fab';
 import { useState } from 'react';
+import type { JsonObject } from 'type-fest';
 import type { Property } from 'csstype';
 
 import Icon from '../Icon';
 import PortalContainer from '../PortalContainer';
-import { useUrlValidation } from '../../hooks';
-import { withGenerateDataProps } from '../../contexts';
-import type { FabProps, MappablePropNames } from './Fab.types';
+import { useGenerateProps, useUrlValidation } from '../../hooks';
+import type { FabProps } from './Fab.types';
 
-export default withGenerateDataProps<FabProps, MappablePropNames>(function Fab({
-  containerId,
-  href,
-  icon,
-  text,
-  position = 'bottom-right',
-  ...props
-}) {
+export default function Fab<D extends JsonObject>(props: FabProps<D>) {
+  const [
+    GeneratePropsProvider,
+    { containerId, href, icon, text, position = 'bottom-right', ...fabProps },
+  ] = useGenerateProps<D, FabProps<D>>(props);
+
   const [cssPosition, setCssPosition] = useState<Property.Position>('fixed');
   const isHrefValid = useUrlValidation(href);
 
   return (
-    <PortalContainer
-      id={containerId}
-      onContainerRetrieved={(container) => {
-        setCssPosition('absolute');
-        container.style.position = 'relative';
-      }}
-    >
-      <MuiFab
-        {...props}
-        {...(isHrefValid && {
-          LinkComponent: 'a',
-          href,
-        })}
-        data-testid="Fab"
-        variant={text ? 'extended' : 'circular'}
-        sx={(theme) => ({
-          position: cssPosition,
-          ...Object.fromEntries(
-            position.split('-').map((pos) => [pos, theme.spacing(1)])
-          ),
-        })}
+    <GeneratePropsProvider>
+      <PortalContainer
+        id={containerId}
+        onContainerRetrieved={(container) => {
+          setCssPosition('absolute');
+          container.style.position = 'relative';
+        }}
       >
-        {icon && <Icon code={icon} />}
-        {text}
-      </MuiFab>
-    </PortalContainer>
+        <MuiFab
+          {...fabProps}
+          {...(isHrefValid && {
+            LinkComponent: 'a',
+            href,
+          })}
+          data-testid="Fab"
+          variant={text ? 'extended' : 'circular'}
+          sx={(theme) => ({
+            position: cssPosition,
+            ...Object.fromEntries(
+              position.split('-').map((pos) => [pos, theme.spacing(1)])
+            ),
+          })}
+        >
+          {icon && <Icon code={icon} />}
+          {text}
+        </MuiFab>
+      </PortalContainer>
+    </GeneratePropsProvider>
   );
-});
+}

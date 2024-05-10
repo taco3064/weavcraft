@@ -1,41 +1,30 @@
 import MuiDialog from '@mui/material/Dialog';
 import type { ButtonProps } from '@mui/material/Button';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import type { IconCode } from '../Icon';
-
-import type {
-  GenericData,
-  PropsWithMappedData,
-  SlotProps,
-} from '../../contexts';
+import type { PropsWithMappedData, SlotProps } from '../../hooks';
 
 type MuiDialogProps = Pick<
   ComponentProps<typeof MuiDialog>,
   'fullScreen' | 'maxWidth' | 'scroll'
 >;
 
-export interface DialogProps extends MuiDialogProps {
-  children?: ReactNode;
-  icon?: IconCode;
-  title?: string;
-  toggle?: ReactElement<SlotProps>;
-  onActionClick?: (key: string | number) => void;
-
-  actions?: {
-    text?: string;
-    icon?: IconCode;
-    color?: ButtonProps['color'];
-  }[];
-}
-
-export type MappablePropNames = keyof Pick<
-  DialogProps,
-  'children' | 'icon' | 'title'
->;
-
-export type WrappedProps<D extends GenericData> = PropsWithMappedData<
+export type DialogProps<D extends JsonObject> = PropsWithMappedData<
   D,
-  DialogProps,
-  MappablePropNames
+  MuiDialogProps & {
+    children?: ReactNode;
+    icon?: IconCode;
+    title?: string;
+    toggle?: ReactElement<SlotProps>;
+    onActionClick?: (key: string | number) => void;
+
+    actions?: {
+      text?: string;
+      icon?: IconCode;
+      color?: ButtonProps['color'];
+    }[];
+  },
+  'children' | 'icon' | 'title'
 >;

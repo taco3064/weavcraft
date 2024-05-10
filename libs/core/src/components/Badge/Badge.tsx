@@ -1,29 +1,30 @@
 import MuiBadge from '@mui/material/Badge';
+import { JsonObject } from 'type-fest';
 
-import { withGenerateDataProps } from '../../contexts';
+import { useGenerateProps } from '../../hooks';
+import type { AnchorOrigin, BadgeProps } from './Badge.types';
 
-import type {
-  AnchorOrigin,
-  BadgeProps,
-  MappablePropNames,
-} from './Badge.types';
+export default function Badge<D extends JsonObject>(props: BadgeProps<D>) {
+  const [
+    GenerateDataProvider,
+    { anchorPosition = 'top-right', ...badgeProps },
+  ] = useGenerateProps<D, BadgeProps<D>>(props);
 
-export default withGenerateDataProps<BadgeProps, MappablePropNames>(
-  function Badge({ anchorPosition = 'top-right', ...props }) {
-    const [vertical, horizontal] = anchorPosition.split('-') as [
-      AnchorOrigin<'vertical'>,
-      AnchorOrigin<'horizontal'>
-    ];
+  const [vertical, horizontal] = anchorPosition.split('-') as [
+    AnchorOrigin<'vertical'>,
+    AnchorOrigin<'horizontal'>
+  ];
 
-    return (
+  return (
+    <GenerateDataProvider>
       <MuiBadge
-        {...props}
+        {...badgeProps}
         data-testid="BadgeContainer"
         anchorOrigin={{ horizontal, vertical }}
         slotProps={{
           badge: { 'data-testid': 'Badge' } as never,
         }}
       />
-    );
-  }
-);
+    </GenerateDataProvider>
+  );
+}

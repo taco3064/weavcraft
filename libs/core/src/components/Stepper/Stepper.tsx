@@ -3,12 +3,13 @@ import MuiStep from '@mui/material/Step';
 import MuiStepLabel from '@mui/material/StepLabel';
 import MuiStepContent from '@mui/material/StepContent';
 import { isValidElement, useEffect, useMemo, useState } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import Card from '../Card';
 import Form from '../Form';
 import StepperButton from './Stepper.button';
 import { WidgetWrapper } from '../../styles';
-import { usePropsGetter, type GenericData } from '../../contexts';
+import { usePropsGetter } from '../../hooks';
 
 import type {
   StepCardProps,
@@ -20,7 +21,7 @@ function isLastStep(active: number, items?: number) {
   return active + 1 === (items || 0);
 }
 
-export default function Stepper<D extends GenericData>({
+export default function Stepper<D extends JsonObject>({
   data,
   items,
   maxWidth,
@@ -87,10 +88,10 @@ export default function Stepper<D extends GenericData>({
               <MuiStepContent data-testid="StepContent">
                 {variant === 'form' ? (
                   <Form
-                    {...(props as StepFormProps)}
+                    {...(props as StepFormProps<D>)}
                     action={getActions(i)}
                     actionJustify="flex-start"
-                    data={stepData}
+                    data={stepData as D}
                     onSubmit={(data) => {
                       setStepData({ ...stepData, ...data });
                       setActive(i + 1);
@@ -98,8 +99,8 @@ export default function Stepper<D extends GenericData>({
                   />
                 ) : (
                   <Card
-                    {...(props as StepCardProps)}
-                    data={stepData}
+                    {...(props as StepCardProps<D>)}
+                    data={stepData as D}
                     footerAction={getActions(i, () => setActive(i + 1))}
                     footerJustify="flex-start"
                   />
