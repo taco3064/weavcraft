@@ -1,4 +1,4 @@
-name: NPM Publish of @weavcraft/core
+name: Deploy web to Vercel
 
 on:
   workflow_dispatch:
@@ -14,8 +14,8 @@ on:
         type: string
 
 jobs:
-  publish-to-npm:
-    name: Publish @weavcraft/core to NPM
+  deploy-to-vercel:
+    name: Deploy web to Vercel
     runs-on: ubuntu-latest
     environment: actions
     strategy:
@@ -39,12 +39,12 @@ jobs:
       - name: Build
         run: |
           npm ci
-          npx nx build core
-          cd ./dist/libs/core
-          npm version ${{ inputs.version }} --no-git-tag-version
+          npx nx build web
 
-      - uses: JS-DevTools/npm-publish@v1
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
         with:
-          package: ./dist/libs/core/package.json
-          access: public
-          token: ${{ secrets.NPM_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: weavcraft
+          vercel-project-id: web
+          vercel-args: '--prod --dir=apps/web/.next'
