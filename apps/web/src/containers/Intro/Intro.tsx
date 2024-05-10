@@ -33,8 +33,6 @@ export default function Intro() {
     md: 'h6',
   });
 
-  console.log('something changed...');
-
   return (
     <Container disableGutters className={classes.root} maxWidth={false}>
       <Grid container className={classes.paragraph} spacing={2}>
