@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/taco3064/weavcraft/compare/v0.0.8...v0.0.9) (2024-05-10)
+
+
+### Bug Fixes
+
+* **deploy-web:** update github-action .yml ([1af004a](https://github.com/taco3064/weavcraft/commit/1af004aaece9bf613109820245868d2009e82663))
+
 ### [0.0.8](https://github.com/taco3064/weavcraft/compare/v0.0.6...v0.0.8) (2024-05-10)
 
 ### [0.0.7](https://github.com/taco3064/weavcraft/compare/v0.0.6...v0.0.7) (2024-05-10)
