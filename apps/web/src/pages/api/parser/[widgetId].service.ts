@@ -15,8 +15,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   source.refreshFromFileSystemSync();
 
-  console.log('====');
-
   return res.status(200).json(
     source.getExportSymbols().reduce<ParserResult>((result, symbol) => {
       if (symbol.getName() === `${widgetId}Props`) {

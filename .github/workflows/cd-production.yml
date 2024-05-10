@@ -41,10 +41,10 @@ jobs:
           npx standard-version --skip.tag
           git push origin HEAD:production -f
 
-  release-tag:
+  release:
     needs: standard-version
     if: github.event.pull_request.merged == true
-    name: Release Tag
+    name: Release
     runs-on: ubuntu-latest
     environment: actions
     strategy:
