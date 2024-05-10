@@ -1,2 +1,2 @@
 export * from './common';
-export type { QueryFunctionParams } from './common.types';
+export type { PropTypeDefinitions, QueryFunctionParams } from './common.types';
