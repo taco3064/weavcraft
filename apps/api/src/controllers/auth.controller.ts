@@ -1,6 +1,7 @@
-import { AuthLoginBySupabaseBodyDTO } from '@weavcraft/common';
+import { AuthLoginBySupabaseBodyDTO, AuthLoginResDTO } from '@weavcraft/common';
 import { AuthUseCase } from '@weavcraft/modules';
 import { Body, JsonController, Post } from 'routing-controllers';
+import { ResponseSchema } from 'routing-controllers-openapi';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -10,8 +11,12 @@ export class AuthController {
     @inject(AuthUseCase)
     private readonly authUseCase: AuthUseCase
   ) {}
+
   @Post('/login/supabase')
-  async loginBySupabase(@Body() body: AuthLoginBySupabaseBodyDTO) {
+  @ResponseSchema(AuthLoginResDTO)
+  async loginBySupabase(
+    @Body() body: AuthLoginBySupabaseBodyDTO
+  ): Promise<AuthLoginResDTO> {
     return this.authUseCase.loginBySupabase(body.accessToken);
   }
 
