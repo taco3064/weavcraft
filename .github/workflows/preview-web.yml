@@ -1,4 +1,4 @@
-name: Deploy web to Vercel
+name: Preview web in Vercel
 
 on:
   workflow_dispatch:
@@ -9,13 +9,10 @@ on:
       head:
         required: true
         type: string
-      version:
-        required: true
-        type: string
 
 jobs:
-  deploy-to-vercel:
-    name: Deploy web to Vercel
+  preview-in-vercel:
+    name: Preview web in Vercel
     runs-on: ubuntu-latest
     environment: actions
     strategy:
@@ -35,4 +32,3 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          alias-domains: 'www.weavcraft.com'
