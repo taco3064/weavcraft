@@ -94,9 +94,9 @@ jobs:
             -f \
             -a "v${{ steps.version.outputs.current-version }}" \
             -m "$( \
-              npx nx print-affected \
-                --select=projects \
-                --target=build \
+              npx nx show projects \
+                --affected \
+                --withTarget=build \
                 --base=${{ steps.setSHAs.outputs.base }} \
                 --head=${{ steps.setSHAs.outputs.head }} \
             )"
