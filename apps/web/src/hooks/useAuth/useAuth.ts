@@ -7,8 +7,6 @@ export const useAuth = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   signin: async (type) => {
-    console.log(`Signing in with ${type}`);
-
     set({ isAuthenticated: true });
     Cookies.set('token', nanoid());
   },
