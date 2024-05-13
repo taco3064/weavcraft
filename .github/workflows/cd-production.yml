@@ -106,9 +106,9 @@ jobs:
       - name: Trigger Affected Actions(Libs)
         run: |
           IFS=', ' read -r -a affecteds <<< "$( \
-            npx nx print-affected \
-              --select=projects \
-              --target=build \
+            npx nx show projects \
+              --affected \
+              --withTarget=build \
               --type=lib \
               --base=${{ steps.setSHAs.outputs.base }} \
               --head=${{ steps.setSHAs.outputs.head }} \
@@ -134,9 +134,9 @@ jobs:
       - name: Trigger Affected Actions(Apps)
         run: |
           IFS=', ' read -r -a affecteds <<< "$( \
-            npx nx print-affected \
-              --select=projects \
-              --target=build \
+            npx nx show projects \
+              --affected \
+              --withTarget=build \
               --type=app \
               --base=${{ steps.setSHAs.outputs.base }} \
               --head=${{ steps.setSHAs.outputs.head }} \

@@ -70,8 +70,6 @@ export function usePalettePreview() {
           palette.background?.default || palette.background?.paper
         );
 
-        console.log(palette.divider || bgcolor.negate().grayscale().hex());
-
         setPalette?.(
           createPalette({
             ...palette,
