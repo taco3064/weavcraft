@@ -27,8 +27,6 @@ export const upsertThemePalette = withConnRefusedCatch(async function ({
   input,
   isTutorialMode,
 }: MutationtThemePaletteInput) {
-  console.log(hierarchyId, input);
-
   const { data } = await axios.post<ThemePalette>(
     `/configs/themes/${hierarchyId}`,
     input,
