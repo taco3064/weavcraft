@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/taco3064/weavcraft/compare/v0.0.22...v0.0.23) (2024-05-15)
+
+
+### Features
+
+* **web/parser:** add typegen for production deploy ([2148ac9](https://github.com/taco3064/weavcraft/commit/2148ac9d84acc24c58251259d9e6712fe51e135a))
+
 ### [0.0.22](https://github.com/taco3064/weavcraft/compare/v0.0.21...v0.0.22) (2024-05-14)
 
 ### [0.0.21](https://github.com/taco3064/weavcraft/compare/v0.0.20...v0.0.21) (2024-05-14)
