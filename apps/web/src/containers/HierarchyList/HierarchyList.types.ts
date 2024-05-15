@@ -1,5 +1,5 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { IconCode } from '@weavcraft/core';
+import type { Core } from '@weavcraft/core';
 import type { ReactNode } from 'react';
 
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';
@@ -26,7 +26,7 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   category: string;
   disableGroup?: boolean;
   disablePublish?: boolean;
-  icon: IconCode;
+  icon: Core.IconCode;
   initialData?: HierarchyData<P>[];
   superior?: string;
   toolbarEl?: PortalContainerEl;
@@ -70,7 +70,7 @@ export interface FilterToggleProps {
 
 export interface UpsertDialogProps<P> {
   data?: UpsertedData<P>;
-  icon?: IconCode;
+  icon?: Core.IconCode;
   title?: string;
   onClose: () => void;
 

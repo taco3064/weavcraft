@@ -7,7 +7,7 @@ import type { IconCode } from '../Icon';
 
 type MuiFabProps = Pick<
   ComponentProps<typeof MuiFab>,
-  'color' | 'disabled' | 'href' | 'size' | 'onClick'
+  'color' | 'disabled' | 'href' | 'size'
 >;
 
 export type FabProps<D extends JsonObject> = PropsWithMappedData<
@@ -17,6 +17,7 @@ export type FabProps<D extends JsonObject> = PropsWithMappedData<
     icon?: IconCode;
     position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     text?: string;
+    onClick?: () => void;
   },
   'containerId' | 'disabled' | 'href' | 'icon' | 'text'
 >;

@@ -7,7 +7,7 @@ import type { IconCode } from '../Icon';
 
 type MuiButtonProps = Pick<
   ComponentProps<typeof MuiButton>,
-  'color' | 'disabled' | 'fullWidth' | 'href' | 'size' | 'variant' | 'onClick'
+  'color' | 'disabled' | 'fullWidth' | 'href' | 'size' | 'variant'
 >;
 
 export type ButtonProps<D extends JsonObject> = PropsWithMappedData<
@@ -16,6 +16,7 @@ export type ButtonProps<D extends JsonObject> = PropsWithMappedData<
     icon?: IconCode;
     iconPosition?: 'start' | 'end';
     text?: string;
+    onClick?: () => void;
   },
   'disabled' | 'href' | 'icon' | 'text'
 >;
