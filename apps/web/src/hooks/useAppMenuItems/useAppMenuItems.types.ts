@@ -1,4 +1,4 @@
-import type { IconCode } from '@weavcraft/core';
+import type { Core } from '@weavcraft/core';
 import type { UrlObject } from 'url';
 
 export type Href = string | UrlObject;
@@ -8,7 +8,7 @@ export type MenuItemOptions<P = {}> = P &
     | 'divider'
     | {
         href?: Href;
-        icon?: IconCode;
+        icon?: Core.IconCode;
         label: string;
         items?: (null | false | undefined | MenuItemOptions<P>)[];
       }
@@ -28,5 +28,5 @@ export type UserSettingId = 'profile' | 'settings' | 'analytics';
 export type UserSettings = {
   auth: boolean;
   id: UserSettingId;
-  icon: IconCode;
+  icon: Core.IconCode;
 }[];

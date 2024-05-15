@@ -159,6 +159,7 @@ export const components: ThemeOptions['components'] = {
   MuiDialog: {
     defaultProps: {
       TransitionComponent: Transition,
+      transitionDuration: 400,
     },
     styleOverrides: {
       paper: ({ theme }) => ({
