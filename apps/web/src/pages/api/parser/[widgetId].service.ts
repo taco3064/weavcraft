@@ -1,35 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { source, getProperty } from './parser.utils';
-import type { ParserResult } from './parser.types';
+import { getParser } from './parser.utils';
+import type { PropertyDefinitions, WidgetProps } from '~web/services';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { widgetId } = req.query;
-
-  if (req.method !== 'GET') {
+  if (req.method !== 'GET' || process.env.NODE_ENV === 'production') {
     return res
       .setHeader('Allow', ['GET'])
       .status(405)
-      .end(`Method ${req.method} Not Allowed`);
+      .end('Parser API Not Allowed');
   }
 
-  source.refreshFromFileSystemSync();
+  const { getCoreGroup, getProperty, getPropSymbol } = getParser();
+  const { widgetId } = req.query as { widgetId: string };
+  const propSymbol = getPropSymbol(widgetId);
+  const properties = propSymbol?.getDeclaredType()?.getProperties() || [];
 
-  return res.status(200).json(
-    source.getExportSymbols().reduce<ParserResult>((result, symbol) => {
-      if (symbol.getName() === `${widgetId}Props`) {
-        const properties = symbol.getDeclaredType()?.getProperties();
+  const data: WidgetProps = {
+    componentName: widgetId,
+    group: getCoreGroup(widgetId),
+    propsType: properties.reduce<PropertyDefinitions>((result, property) => {
+      const [propName, definition] = getProperty(property);
 
-        properties.forEach((property) => {
-          const [propName, definition] = getProperty(property);
+      return {
+        ...result,
+        ...(definition && {
+          [propName]: definition,
+        }),
+      };
+    }, {}),
+  };
 
-          if (definition) {
-            result[propName] = definition;
-          }
-        });
-      }
-
-      return result;
-    }, {})
-  );
+  return res.status(200).json(data);
 }

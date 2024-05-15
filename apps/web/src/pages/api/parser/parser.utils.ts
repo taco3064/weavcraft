@@ -1,20 +1,19 @@
 import path from 'path';
 import * as Tsm from 'ts-morph';
-import type { Symbol as TsmSymbol } from 'ts-morph';
 
-import type { PropTypeDefinitions } from '~web/services';
+import type { PropertyDefinitions, PropTypeDefinitions } from '~web/services';
 
 import type {
+  CoreParser,
   GetDefinitionFn,
   GetPropertyFn,
-  ParserResult,
 } from './parser.types';
 
-export const source = new Tsm.Project().addSourceFileAtPath(
+const source = new Tsm.Project().addSourceFileAtPath(
   path.resolve(process.cwd(), '../../libs/core/src/index.ts')
 );
 
-export const getProperty: GetPropertyFn = (property: TsmSymbol) => {
+const getProperty: GetPropertyFn = (property) => {
   const name = property.getName();
 
   const definition = getDefinition(property.getTypeAtLocation(source), {
@@ -24,6 +23,44 @@ export const getProperty: GetPropertyFn = (property: TsmSymbol) => {
 
   return [name, !definition ? null : definition];
 };
+
+export function getParser(): CoreParser {
+  source.refreshFromFileSystemSync();
+
+  const key = 'Core';
+  const [core] = source.getExportedDeclarations().get(key) || [];
+
+  const propSymbols =
+    core
+      ?.getSourceFile()
+      .getExportSymbols()
+      .filter((symbol) => symbol.getName().endsWith('Props')) || [];
+
+  const coreGroups = source.getExportSymbols().reduce((result, symbol) => {
+    const type = symbol.getTypeAtLocation(source);
+
+    if (symbol.getName() !== key && type.isObject()) {
+      type
+        .getProperties()
+        .forEach((property) =>
+          result.set(property.getName(), symbol.getName())
+        );
+    }
+
+    return result;
+  }, new Map<string, string>());
+
+  return {
+    source,
+    propSymbols,
+
+    getCoreGroup: (component) => coreGroups.get(component),
+    getProperty,
+
+    getPropSymbol: (component) =>
+      propSymbols.find((symbol) => symbol.getName() === `${component}Props`),
+  };
+}
 
 const trimImportText = (text?: string) =>
   text?.replace(/import\s*\(.*?\)\s*;?\./g, '');
@@ -100,7 +137,7 @@ const generators: GetDefinitionFn[] = [
   (type, options) => {
     const [callSignature] = type.getCallSignatures().reverse();
 
-    return callSignature
+    return callSignature && /^on[A-Z]/.test(options.name)
       ? {
           ...options,
           type: 'function',
@@ -109,10 +146,12 @@ const generators: GetDefinitionFn[] = [
               const paramType = param.getTypeAtLocation(source);
 
               return (
-                getDefinition(paramType, {
-                  name: param.getName(),
-                  required: !param.isOptional(),
-                }) || undefined
+                (param.getName() !== 'e' &&
+                  getDefinition(paramType, {
+                    name: param.getName(),
+                    required: !param.isOptional(),
+                  })) ||
+                undefined
               );
             }),
             return:
@@ -139,16 +178,19 @@ const generators: GetDefinitionFn[] = [
         : {
             ...options,
             type: 'object',
-            definition: properties.reduce<ParserResult>((result, property) => {
-              const [name, definition] = getProperty(property);
+            definition: properties.reduce<PropertyDefinitions>(
+              (result, property) => {
+                const [name, definition] = getProperty(property);
 
-              return {
-                ...result,
-                ...(definition && {
-                  [name]: definition,
-                }),
-              };
-            }, {}),
+                return {
+                  ...result,
+                  ...(definition && {
+                    [name]: definition,
+                  }),
+                };
+              },
+              {}
+            ),
           };
     }
 

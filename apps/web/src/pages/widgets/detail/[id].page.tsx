@@ -40,7 +40,7 @@ export default makePerPageLayout<InitializationConfig<unknown>>(MainLayout)(
     /** Next.js /api === TEST START */
     const res = useQuery({
       queryHash: `props-${props.hash}`,
-      queryKey: ['Icon', isTutorialMode],
+      queryKey: ['Icon'],
       queryFn: getWidgetProps,
     });
     /** Next.js /api === TEST END */
