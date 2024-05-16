@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { setupTestMock, setupTutorialMock } from '../common';
 import type { HierarchyData } from '../hierarchy/hierarchy.types';
-import type { ThemePalette } from './configs.types';
+import type { ThemePalette, WidgetConfigs } from './configs.types';
 
 const setup = {
   '/service': setupTestMock,
@@ -25,6 +25,22 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
         themesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
       ];
     });
+
+    mock
+      .onGet(new RegExp(`^${baseURL}/configs/widgets/.+$`))
+      .reply((config) => {
+        const hierarchyId = config.url?.split('/').pop() as string;
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+        const widgetsDb = getDb<WidgetConfigs>('widgets');
+
+        hierarchyDb.read();
+        widgetsDb.read();
+
+        return [
+          200,
+          widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
+        ];
+      });
 
     mock
       .onPost(new RegExp(`^${baseURL}/configs/themes/.+$`))

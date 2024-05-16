@@ -1,6 +1,6 @@
-import type { ThemePalette } from '@weavcraft/common';
+import type { ThemePalette, WidgetConfigs } from '@weavcraft/common';
 
-export type { ThemePalette };
+export type { ThemePalette, WidgetConfigs };
 
 export type MutationtThemePaletteInput = {
   hierarchyId: string;
