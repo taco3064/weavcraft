@@ -1,13 +1,13 @@
 import _set from 'lodash/set';
 import { nanoid } from 'nanoid';
 
-import { setupTestMock, setupTutorialMock } from '../common';
+import { Mock } from '../common';
 import type { HierarchyData } from '../hierarchy/hierarchy.types';
 import type { ThemePalette, WidgetConfigs } from './configs.types';
 
 const setup = {
-  '/service': setupTestMock,
-  '/mocks': setupTutorialMock,
+  '/service': Mock.setupTesting,
+  '/mocks': Mock.setupTutorial,
 };
 
 Object.entries(setup).forEach(([baseURL, setupMock]) => {

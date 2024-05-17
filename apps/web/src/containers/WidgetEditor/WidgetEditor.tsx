@@ -7,8 +7,12 @@ import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import AppendNode from './WidgetEditor.AppendNode';
 import { useMainStyles } from './WidgetEditor.styles';
-import type { WidgetConfigs } from '~web/services';
+import { useWidgetRender, type RenderConfig } from '~web/hooks';
+import { usePropsDefinition, withPropsDefinition } from '~web/contexts';
+import { useNodePropsEditedOverride } from './WidgetEditor.hooks';
+import type { WidgetConfigs, WidgetType } from '~web/services';
 import type { WidgetEditorProps } from './WidgetEditor.types';
 
 import {
@@ -18,22 +22,30 @@ import {
   useTutorialMode,
 } from '~web/contexts';
 
-export default function WidgetEditor({
+export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
   config,
   marginTop,
   maxWidth,
   title,
   toolbarEl,
-}: WidgetEditorProps) {
+}) {
   const isTutorialMode = useTutorialMode();
 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
 
-  const [value, setValue] = useState<Partial<WidgetConfigs>>(() =>
+  const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
+
+  const overrideNodeProps = useNodePropsEditedOverride(AppendNode, () =>
+    setValue({ ...value })
+  );
+
+  const generate = useWidgetRender((WidgetEl, { key, props, config }) => (
+    <WidgetEl key={key} {...overrideNodeProps(props, config)} />
+  ));
 
   return (
     <Slide in direction="up" timeout={1200}>
@@ -45,7 +57,9 @@ export default function WidgetEditor({
         >
           Toolbar
         </PortalWrapper>
+
+        {generate(value)}
       </Container>
     </Slide>
   );
-}
+});

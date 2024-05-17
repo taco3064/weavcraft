@@ -1,5 +1,5 @@
 import * as Notistack from 'notistack';
-import { Display } from '@weavcraft/core';
+import Core from '@weavcraft/core';
 import { forwardRef } from 'react';
 
 import MaterialDesignContent from './Notistack.Content';
@@ -16,18 +16,13 @@ export default forwardRef<never, NotistackProviderProps>(
         ref={ref}
         anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
         iconVariant={{
-          info: <Display.Icon code="faCircleInfo" className={classes.icon} />,
-          success: (
-            <Display.Icon code="faCircleCheck" className={classes.icon} />
-          ),
+          info: <Core.Icon code="faCircleInfo" className={classes.icon} />,
+          success: <Core.Icon code="faCircleCheck" className={classes.icon} />,
           warning: (
-            <Display.Icon
-              code="faTriangleExclamation"
-              className={classes.icon}
-            />
+            <Core.Icon code="faTriangleExclamation" className={classes.icon} />
           ),
           error: (
-            <Display.Icon code="faCircleExclamation" className={classes.icon} />
+            <Core.Icon code="faCircleExclamation" className={classes.icon} />
           ),
         }}
         Components={{

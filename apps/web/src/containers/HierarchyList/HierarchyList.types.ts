@@ -1,5 +1,5 @@
+import type Core from '@weavcraft/core';
 import type { ContainerProps } from '@mui/material/Container';
-import type { Core } from '@weavcraft/core';
 import type { ReactNode } from 'react';
 
 import type { HierarchyData, SearchHierarchyParams } from '~web/services';

@@ -27,7 +27,7 @@ const getProperty: GetPropertyFn = (property) => {
 export function getParser(): CoreParser {
   source.refreshFromFileSystemSync();
 
-  const key = 'Core';
+  const key = 'default';
   const [core] = source.getExportedDeclarations().get(key) || [];
 
   const propSymbols =

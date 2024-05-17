@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getParser } from './parser.utils';
-import type { PropertyDefinitions, WidgetProps } from '~web/services';
+import type { PropsDefinition, PropertyDefinitions } from '~web/services';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET' || process.env.NODE_ENV === 'production') {
@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const propSymbol = getPropSymbol(widgetId);
   const properties = propSymbol?.getDeclaredType()?.getProperties() || [];
 
-  const data: WidgetProps = {
+  const data: PropsDefinition = {
     componentName: widgetId,
     group: getCoreGroup(widgetId),
     propsType: properties.reduce<PropertyDefinitions>((result, property) => {

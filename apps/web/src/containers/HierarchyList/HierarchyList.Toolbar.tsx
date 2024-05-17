@@ -1,7 +1,7 @@
+import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
-import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { forwardRef } from 'react';
 import { useRouter } from 'next/router';
@@ -54,7 +54,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                     size="large"
                     href={`/tutorial/${category}`}
                   >
-                    <Display.Icon code="faFlask" />
+                    <Core.Icon code="faFlask" />
                   </IconButton>
                 </Tooltip>
               }
@@ -68,7 +68,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                 size="large"
                 onClick={onMoveToSuperiorFolder}
               >
-                <Display.Icon code="faArrowUpFromBracket" />
+                <Core.Icon code="faArrowUpFromBracket" />
               </IconButton>
             </Tooltip>
           )}
@@ -86,7 +86,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                   })
                 }
               >
-                <Display.Icon code="faFolderPlus" />
+                <Core.Icon code="faFolderPlus" />
               </IconButton>
             </Tooltip>
           )}
@@ -103,7 +103,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
                 })
               }
             >
-              <Display.Icon code="faPlus" />
+              <Core.Icon code="faPlus" />
             </IconButton>
           </Tooltip>
 

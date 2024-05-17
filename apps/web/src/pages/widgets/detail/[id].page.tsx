@@ -1,7 +1,9 @@
 import Container from '@mui/material/Container';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+import { Suspense, useState } from 'react';
+import { Trans, useTranslation } from 'next-i18next';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
-import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, WidgetEditor } from '~web/containers';
@@ -57,15 +59,27 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
         }}
       />
 
-      <TutorialModeAlert />
+      <Suspense
+        fallback={
+          <>
+            <LinearProgress sx={{ width: '100%' }} />
 
-      <WidgetEditor
-        maxWidth="md"
-        config={config}
-        marginTop={16}
-        title={hierarchy.title}
-        toolbarEl={toolbarEl}
-      />
+            <Typography variant="h6" color="text.disabled">
+              <Trans i18nKey="widgets:msg-definitions-loading" />
+            </Typography>
+          </>
+        }
+      >
+        <TutorialModeAlert />
+
+        <WidgetEditor
+          maxWidth="md"
+          config={config}
+          marginTop={16}
+          title={hierarchy.title}
+          toolbarEl={toolbarEl}
+        />
+      </Suspense>
     </Container>
   );
 });

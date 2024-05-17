@@ -1,11 +1,11 @@
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
-import { Display } from '@weavcraft/core';
 import { Trans } from 'next-i18next';
 import { lazy, useState, type ComponentType } from 'react';
 
@@ -44,10 +44,10 @@ export default function UserSettings() {
             >
               <AccordionSummary
                 expandIcon={
-                  expanded === id ? null : <Display.Icon code="faAngleDown" />
+                  expanded === id ? null : <Core.Icon code="faAngleDown" />
                 }
               >
-                <Display.Icon color="primary" code={icon} />
+                <Core.Icon color="primary" code={icon} />
                 <Trans i18nKey={`lbl-${id}`} />
               </AccordionSummary>
 
@@ -72,7 +72,7 @@ export default function UserSettings() {
             variant="contained"
             color="secondary"
             size="large"
-            startIcon={<Display.Icon code="faArrowRightFromBracket" />}
+            startIcon={<Core.Icon code="faArrowRightFromBracket" />}
             onClick={signout}
           >
             <Trans i18nKey="btn-signout" />
@@ -83,7 +83,7 @@ export default function UserSettings() {
             variant="outlined"
             color="error"
             size="large"
-            startIcon={<Display.Icon code="faUserSlash" />}
+            startIcon={<Core.Icon code="faUserSlash" />}
           >
             <Trans i18nKey="btn-delete-account" />
           </Button>
@@ -95,7 +95,7 @@ export default function UserSettings() {
             variant="contained"
             color="primary"
             size="large"
-            startIcon={<Display.Icon code="faArrowRightToBracket" />}
+            startIcon={<Core.Icon code="faArrowRightToBracket" />}
             onClick={() => setOpen(true)}
           >
             <Trans i18nKey="btn-signin" />
@@ -104,7 +104,7 @@ export default function UserSettings() {
           <MenuDialog
             open={open}
             title="btn-signin"
-            indicator={<Display.Icon code="faArrowRightToBracket" />}
+            indicator={<Core.Icon code="faArrowRightToBracket" />}
             onClose={() => setOpen(false)}
             onItemClick={(e) => signin(e.replace(/^.+-/, '') as SigninMethod)}
             items={SIGNIN_OPTIONS}

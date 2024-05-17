@@ -1,2 +1,2 @@
 export * from './parser';
-export type { PropertyDefinitions, WidgetProps } from './parser.types';
+export type { PropertyDefinitions, PropsDefinition } from './parser.types';

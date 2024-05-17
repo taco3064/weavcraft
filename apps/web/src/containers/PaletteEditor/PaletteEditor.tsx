@@ -1,10 +1,10 @@
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import _set from 'lodash/set';
-import { Display } from '@weavcraft/core';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -79,7 +79,7 @@ export default function PaletteEditor({
               size="large"
               onClick={() => onPaletteApply(isPreviewMode ? undefined : value)}
             >
-              <Display.Icon
+              <Core.Icon
                 code={isPreviewMode ? 'faUndo' : 'faWandMagicSparkles'}
               />
             </IconButton>
@@ -97,7 +97,7 @@ export default function PaletteEditor({
                 })
               }
             >
-              <Display.Icon code="faSave" />
+              <Core.Icon code="faSave" />
             </IconButton>
           </Tooltip>
         </PortalWrapper>
@@ -120,7 +120,7 @@ export default function PaletteEditor({
             value={value}
             action={
               <IconButton onClick={() => onToggle(false)}>
-                <Display.Icon code="faAngleRight" />
+                <Core.Icon code="faAngleRight" />
               </IconButton>
             }
             onChange={({ name, color }) =>
