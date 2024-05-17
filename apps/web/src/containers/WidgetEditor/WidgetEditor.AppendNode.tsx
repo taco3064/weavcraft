@@ -2,9 +2,8 @@ import * as WeavcraftCore from '@weavcraft/core';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import _set from 'lodash/set';
-import { Trans, useTranslation } from 'next-i18next';
 import { useState, useTransition } from 'react';
+import { useTranslation } from 'next-i18next';
 import type CoreType from '@weavcraft/core';
 
 import { MenuDialog } from '~web/components';
@@ -22,37 +21,38 @@ const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
 };
 
 export default function AppendNode({
-  config,
-  definition,
   path,
+  variant,
   onAppend,
 }: AppendNodeProps) {
   const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
-  const { clickable = false, multiple = false } = definition || {};
   const { t } = useTranslation();
   const { classes } = useAppendNodeStyles();
 
   return (
     <>
-      {!definition ? null : !clickable ? (
+      {variant === 'action' ? (
+        <Tooltip
+          title={`${t('widgets:btn-add-trigger')}${!path ? '' : ` (${path})`}`}
+        >
+          <IconButton color="primary" className={classes.action}>
+            <Core.Icon code="faAdd" />
+          </IconButton>
+        </Tooltip>
+      ) : (
         <Button
           fullWidth
           size="large"
           variant="text"
           className={classes.node}
           startIcon={<Core.Icon code="faAdd" />}
+          sx={{ textTransform: 'capitalize' }}
           onClick={() => setOpen(true)}
         >
-          <Trans i18nKey="widgets:btn-add-widget" />
+          {`${t('widgets:btn-add-widget')}${!path ? '' : ` (${path})`}`}
         </Button>
-      ) : (
-        <Tooltip title={t('widgets:btn-add-trigger')}>
-          <IconButton color="primary" className={classes.action}>
-            <Core.Icon code="faAdd" />
-          </IconButton>
-        </Tooltip>
       )}
 
       <MenuDialog
@@ -61,11 +61,13 @@ export default function AppendNode({
         onClose={() => setOpen(false)}
         onItemClick={(e) =>
           startTransition(() => {
-            const type = e.replace(/^widgets:lbl-widgets\./, '') as WidgetType;
+            const widget = e.replace(
+              /^widgets:lbl-widgets\./,
+              ''
+            ) as WidgetType;
 
-            _set(config, 'widget', type);
             setOpen(false);
-            onAppend({ type, path, multiple });
+            onAppend(widget);
           })
         }
         items={Object.entries(CATEGORIES).map(([category, widgets]) => ({

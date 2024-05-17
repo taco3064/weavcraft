@@ -10,16 +10,16 @@ import { useTranslation } from 'next-i18next';
 import AppendNode from './WidgetEditor.AppendNode';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender, type RenderConfig } from '~web/hooks';
-import { usePropsDefinition, withPropsDefinition } from '~web/contexts';
 import { useNodePropsEditedOverride } from './WidgetEditor.hooks';
 import type { WidgetConfigs, WidgetType } from '~web/services';
 import type { WidgetEditorProps } from './WidgetEditor.types';
 
 import {
   PortalWrapper,
-  usePalettePreview,
+  usePropsDefinition,
   useTogglePortal,
   useTutorialMode,
+  withPropsDefinition,
 } from '~web/contexts';
 
 export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
@@ -39,12 +39,12 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
-  const overrideNodeProps = useNodePropsEditedOverride(AppendNode, () =>
-    setValue({ ...value })
+  const overrideNodes = useNodePropsEditedOverride(AppendNode, () =>
+    setValue(JSON.parse(JSON.stringify(value)))
   );
 
   const generate = useWidgetRender((WidgetEl, { key, props, config }) => (
-    <WidgetEl key={key} {...overrideNodeProps(props, config)} />
+    <WidgetEl key={key} {...overrideNodes(props, config)} />
   ));
 
   return (
@@ -58,7 +58,16 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
           Toolbar
         </PortalWrapper>
 
-        {generate(value)}
+        <Container disableGutters className={classes.content}>
+          {value.widget ? (
+            generate(value)
+          ) : (
+            <AppendNode
+              variant="node"
+              onAppend={(widget) => setValue({ widget })}
+            />
+          )}
+        </Container>
       </Container>
     </Slide>
   );

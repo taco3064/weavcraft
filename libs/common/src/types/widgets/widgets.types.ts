@@ -14,13 +14,14 @@ export type ValueProp = BaseProps<
   string | number | boolean | undefined
 >;
 
-type NodeConfig = undefined | string | BaseWidgetConfigs;
-
-export type NodeProp = BaseProps<'node', NodeConfig | NodeConfig[]>;
+export type NodeProp = BaseProps<
+  'node',
+  BaseWidgetConfigs | BaseWidgetConfigs[]
+>;
 
 interface BaseWidgetConfigs {
   widget: string;
-  props: {
+  props?: {
     [propPath: string]: ValueProp | NodeProp;
   };
 }

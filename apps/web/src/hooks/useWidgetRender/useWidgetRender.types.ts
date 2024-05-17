@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import type { WidgetConfigs } from '~web/services';
 
-export type RenderConfig = Partial<Pick<WidgetConfigs, 'widget' | 'props'>>;
+export type RenderConfig = Pick<WidgetConfigs, 'widget' | 'props'>;
 
 export type RenderFn = <P extends object>(
   WidgetEl: ComponentType<P>,

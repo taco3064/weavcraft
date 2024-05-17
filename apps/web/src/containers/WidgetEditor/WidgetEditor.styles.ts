@@ -10,10 +10,10 @@ export const useAppendNodeStyles = makeStyles({ name: 'AppendNode' })(
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: theme.spacing(15),
+      height: theme.spacing(6),
       border: `2px dashed ${theme.palette.divider}`,
       borderRadius: theme.spacing(2),
-      background: theme.palette.background.paper,
+      background: theme.palette.background.default,
     },
   })
 );
@@ -28,5 +28,13 @@ export const useMainStyles = makeStyles<StyleParams>({
       !Number.isNaN(marginTop)
         ? marginTop
         : 0,
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(4, 3),
+    borderRadius: theme.spacing(2),
+    background: theme.palette.background.paper,
   },
 }));
