@@ -44,6 +44,7 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
   );
 
   const generate = useWidgetRender((WidgetEl, { key, props, config }) => (
+    //! 這裡需要包覆一層 Container（擁有 minHeight），才能方便進入設定模式
     <WidgetEl key={key} {...overrideNodes(props, config)} />
   ));
 

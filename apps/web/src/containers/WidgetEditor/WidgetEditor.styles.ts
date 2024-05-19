@@ -6,15 +6,6 @@ export const useAppendNodeStyles = makeStyles({ name: 'AppendNode' })(
     action: {
       border: `2px dashed ${theme.palette.divider}`,
     },
-    node: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: theme.spacing(6),
-      border: `2px dashed ${theme.palette.divider}`,
-      borderRadius: theme.spacing(2),
-      background: theme.palette.background.default,
-    },
   })
 );
 

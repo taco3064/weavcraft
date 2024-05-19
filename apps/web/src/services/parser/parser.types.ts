@@ -1,13 +1,48 @@
+import { WidgetPropTypes } from '@weavcraft/common';
+
 import type { PropTypeDefinitions } from '../common';
 import type { WidgetType } from '../configs';
 
-export type PropertyDefinitions = Record<string, PropTypeDefinitions.PropTypes>;
+type BasePropsWithPath<
+  T extends WidgetPropTypes,
+  D extends PropTypeDefinitions.PropTypes
+> = Partial<
+  Record<
+    `${Uncapitalize<T>}Props`,
+    {
+      [Path: string]: D;
+    }
+  >
+>;
 
-export type PropsDefinition = {
+export type ElementNodePropsWithPath = BasePropsWithPath<
+  'ElementNode',
+  PropTypeDefinitions.Node
+>;
+
+export type EventCallbackPropsWithPath = BasePropsWithPath<
+  'EventCallback',
+  PropTypeDefinitions.Function
+>;
+
+export type PrimitiveValuePropsWithPath = BasePropsWithPath<
+  'PrimitiveValue',
+  | PropTypeDefinitions.Boolean
+  | PropTypeDefinitions.Data
+  | PropTypeDefinitions.Icon
+  | PropTypeDefinitions.Mapping
+  | PropTypeDefinitions.Number
+  | PropTypeDefinitions.OneOf
+  | PropTypeDefinitions.String
+>;
+
+export interface PropsDefinition
+  extends ElementNodePropsWithPath,
+    EventCallbackPropsWithPath,
+    PrimitiveValuePropsWithPath {
   componentName: string;
   group?: string;
-  propsType: PropertyDefinitions;
-};
+}
 
 export type DefinitionIDB = Record<
   'core',

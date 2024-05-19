@@ -1,31 +1,39 @@
-enum PropType {
-  value,
-  callback,
-  node,
+enum WidgetPropType {
+  ElementNode,
+  EventCallback,
+  PrimitiveValue,
 }
 
-interface BaseProps<T extends keyof typeof PropType, V> {
+export type WidgetPropTypes = keyof typeof WidgetPropType;
+
+interface BaseWidgetProps<T extends WidgetPropTypes, V> {
   type: T;
   value: V;
 }
 
-export type ValueProp = BaseProps<
-  'value',
-  string | number | boolean | undefined
+//* - Primitive Value
+type PrimitiveObject = { [x: string]: PrimitiveValue };
+type PrimitiveValue = string | number | boolean | undefined | PrimitiveObject;
+
+export type PrimitiveValueProp = BaseWidgetProps<
+  'PrimitiveValue',
+  PrimitiveValue
 >;
 
-export type NodeProp = BaseProps<
-  'node',
-  BaseWidgetConfigs | BaseWidgetConfigs[]
->;
-
-interface BaseWidgetConfigs {
+//* - Element Node
+interface ElementNodeConfig {
   widget: string;
   props?: {
-    [propPath: string]: ValueProp | NodeProp;
+    [propPath: string]: PrimitiveValueProp | ElementNodeProp;
   };
 }
 
-export interface WidgetConfigs extends BaseWidgetConfigs {
+export type ElementNodeProp = BaseWidgetProps<
+  'ElementNode',
+  ElementNodeConfig | ElementNodeConfig[]
+>;
+
+//* - Widget Configs
+export interface WidgetConfigs extends ElementNodeConfig {
   id: string;
 }

@@ -23,6 +23,7 @@ const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
 export default function AppendNode({
   path,
   variant,
+  widgetId,
   onAppend,
 }: AppendNodeProps) {
   const [, startTransition] = useTransition();
@@ -31,29 +32,26 @@ export default function AppendNode({
   const { t } = useTranslation();
   const { classes } = useAppendNodeStyles();
 
+  const label = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
+    .filter(Boolean)
+    .join(' - ');
+
   return (
     <>
-      {variant === 'action' ? (
-        <Tooltip
-          title={`${t('widgets:btn-add-trigger')}${!path ? '' : ` (${path})`}`}
-        >
-          <IconButton color="primary" className={classes.action}>
-            <Core.Icon code="faAdd" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Button
-          fullWidth
+      <Tooltip
+        title={`${t(
+          `widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`
+        )}${!label ? '' : ` (${label})`}`}
+      >
+        <IconButton
+          color="primary"
           size="large"
-          variant="text"
-          className={classes.node}
-          startIcon={<Core.Icon code="faAdd" />}
-          sx={{ textTransform: 'capitalize' }}
+          className={classes.action}
           onClick={() => setOpen(true)}
         >
-          {`${t('widgets:btn-add-widget')}${!path ? '' : ` (${path})`}`}
-        </Button>
-      )}
+          <Core.Icon code="faAdd" />
+        </IconButton>
+      </Tooltip>
 
       <MenuDialog
         title={t('widgets:ttl-select-widget')}

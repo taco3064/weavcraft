@@ -14,5 +14,6 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
 export interface AppendNodeProps {
   path?: string;
   variant: 'action' | 'node';
+  widgetId?: WidgetType;
   onAppend: (widget: WidgetType) => void;
 }

@@ -31,7 +31,8 @@ export namespace PropTypeDefinitions {
   }
 
   interface BasePropType<T extends keyof typeof PropType, D = undefined> {
-    name: string;
+    path: string;
+    aliasName?: string;
     required: boolean;
     type: T;
     definition?: D;
@@ -42,7 +43,6 @@ export namespace PropTypeDefinitions {
   export type Icon = BasePropType<'icon'>;
   export type Mapping = BasePropType<'mapping', string[]>;
   export type Number = BasePropType<'number'>;
-  export type Object = BasePropType<'object', Record<string, PropTypes>>;
   export type OneOf = BasePropType<'oneof', Exclude<JsonPrimitive, null>[]>;
   export type String = BasePropType<'string'>;
 
@@ -64,7 +64,6 @@ export namespace PropTypeDefinitions {
     | Mapping
     | Node
     | Number
-    | Object
     | OneOf
     | String;
 }

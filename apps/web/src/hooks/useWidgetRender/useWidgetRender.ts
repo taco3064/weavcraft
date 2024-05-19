@@ -7,12 +7,11 @@ import { usePropsDefinition } from '~web/contexts';
 import type { RenderConfig, RenderFn } from './useWidgetRender.types';
 
 export function useWidgetRender(render: RenderFn) {
-  const { getDefinition, getDefinitionsByType } = usePropsDefinition();
+  const { getDefinition } = usePropsDefinition();
 
   return function generate(config: RenderConfig, key?: number) {
     const WidgetEl: ComponentType = _get(Core, config.widget);
-    const definition = getDefinition(config.widget);
-    const nodeProps = getDefinitionsByType('node', definition.propsType);
+    const { elementNodeProps } = getDefinition(config.widget);
 
     return render(WidgetEl, {
       key,
@@ -20,9 +19,11 @@ export function useWidgetRender(render: RenderFn) {
       props: Object.entries(config.props || {}).reduce(
         (acc, [path, { type, value }]) => {
           switch (type) {
-            case 'node': {
+            case 'ElementNode': {
               const nodes = Array.isArray(value) ? value : [value];
-              const { multiple } = nodeProps[path];
+
+              const { multiple = false } =
+                elementNodeProps?.[path]?.definition || {};
 
               const children: ReactNode[] = nodes.map((node, i) =>
                 generate(node as RenderConfig, i)
