@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getParser } from './parser.utils';
-import type { PropertyDefinitions, WidgetProps } from '~web/services';
+import type { PropsDefinition } from '~web/services';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET' || process.env.NODE_ENV === 'production') {
@@ -11,24 +11,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       .end('Parser API Not Allowed');
   }
 
-  const { getCoreGroup, getProperty, getPropSymbol } = getParser();
+  const { getCoreGroup, getPropsDefinitions, getPropSymbol } = getParser();
   const { widgetId } = req.query as { widgetId: string };
-  const propSymbol = getPropSymbol(widgetId);
-  const properties = propSymbol?.getDeclaredType()?.getProperties() || [];
 
-  const data: WidgetProps = {
+  const data: PropsDefinition = {
     componentName: widgetId,
     group: getCoreGroup(widgetId),
-    propsType: properties.reduce<PropertyDefinitions>((result, property) => {
-      const [propName, definition] = getProperty(property);
-
-      return {
-        ...result,
-        ...(definition && {
-          [propName]: definition,
-        }),
-      };
-    }, {}),
+    ...getPropsDefinitions(getPropSymbol(widgetId)),
   };
 
   return res.status(200).json(data);

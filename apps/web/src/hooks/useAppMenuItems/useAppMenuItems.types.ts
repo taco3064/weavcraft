@@ -1,4 +1,4 @@
-import type { Core } from '@weavcraft/core';
+import type Core from '@weavcraft/core';
 import type { UrlObject } from 'url';
 
 export type Href = string | UrlObject;

@@ -52,7 +52,4 @@ export const useMainStyles = makeStyles<StyleParams>({
         ? marginTop
         : `max(${theme.spacing(6)}, calc(50vh - ${size}px))`,
   },
-  viewer: {
-    marginBottom: theme.spacing(6),
-  },
 }));

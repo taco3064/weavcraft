@@ -1,5 +1,5 @@
 import type { PieChartProps } from '@mui/x-charts';
-import type { ThemePalette } from '@weavcraft/common';
+import type { ThemePalette } from '~web/services';
 
 export type DefaultSeriesProps = Partial<PieChartProps['series'][number]>;
 export type PaletteColor = { name: ColorName; color?: string };

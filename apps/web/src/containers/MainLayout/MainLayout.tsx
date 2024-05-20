@@ -1,6 +1,7 @@
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Fade from '@mui/material/Fade';
@@ -17,7 +18,6 @@ import Paper from '@mui/material/Paper';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
-import { Display } from '@weavcraft/core';
 import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -80,7 +80,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <SwitchIconButton
                       icon={logo}
                       hoveredIcon={
-                        <Display.Icon code="faBars" fontSize="medium" />
+                        <Core.Icon code="faBars" fontSize="medium" />
                       }
                       onClick={() => setOpen('nav')}
                     />
@@ -154,7 +154,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         />
 
                         <IconButton onClick={() => setOpen(undefined)}>
-                          <Display.Icon code="faAngleLeft" />
+                          <Core.Icon code="faAngleLeft" />
                         </IconButton>
                       </ListSubheader>
 
@@ -172,7 +172,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                       >
                         <ListItemAvatar className={classes.avatar}>
                           <Avatar>
-                            <Display.Icon fontSize="large" code={icon} />
+                            <Core.Icon fontSize="large" code={icon} />
                           </Avatar>
                         </ListItemAvatar>
 

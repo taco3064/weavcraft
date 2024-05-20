@@ -1,15 +1,15 @@
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import _set from 'lodash/set';
-import { Display } from '@weavcraft/core';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
+import { useTranslation } from 'next-i18next';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
 import { PaletteViewer } from '~web/components';
@@ -66,7 +66,7 @@ export default function PaletteEditor({
   });
 
   return (
-    <Slide in direction="left" timeout={1200}>
+    <Slide in direction="up" timeout={1200}>
       <Container disableGutters className={classes.root} maxWidth={maxWidth}>
         <PortalWrapper
           WrapperComponent={Toolbar}
@@ -79,7 +79,7 @@ export default function PaletteEditor({
               size="large"
               onClick={() => onPaletteApply(isPreviewMode ? undefined : value)}
             >
-              <Display.Icon
+              <Core.Icon
                 code={isPreviewMode ? 'faUndo' : 'faWandMagicSparkles'}
               />
             </IconButton>
@@ -97,14 +97,13 @@ export default function PaletteEditor({
                 })
               }
             >
-              <Display.Icon code="faSave" />
+              <Core.Icon code="faSave" />
             </IconButton>
           </Tooltip>
         </PortalWrapper>
 
         <PaletteViewer
           disableResponsiveText
-          className={classes.viewer}
           config={value}
           size={size}
           onColorClick={(e) =>
@@ -121,7 +120,7 @@ export default function PaletteEditor({
             value={value}
             action={
               <IconButton onClick={() => onToggle(false)}>
-                <Display.Icon code="faAngleRight" />
+                <Core.Icon code="faAngleRight" />
               </IconButton>
             }
             onChange={({ name, color }) =>

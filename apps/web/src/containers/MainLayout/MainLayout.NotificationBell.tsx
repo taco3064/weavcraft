@@ -1,6 +1,6 @@
 import Badge from '@mui/material/Badge';
+import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import { Display } from '@weavcraft/core';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
@@ -19,7 +19,7 @@ export default function NotificationBell() {
     <>
       <Badge badgeContent={notifications.unread} color="error">
         <IconButton size="large" onClick={() => setOpen(true)}>
-          <Display.Icon code="faBell" />
+          <Core.Icon code="faBell" />
         </IconButton>
       </Badge>
 

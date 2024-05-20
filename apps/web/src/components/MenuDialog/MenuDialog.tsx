@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import Core from '@weavcraft/core';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,7 +10,6 @@ import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
-import { Display } from '@weavcraft/core';
 import { Trans } from 'next-i18next';
 import { Fragment, forwardRef, useState } from 'react';
 
@@ -77,9 +77,7 @@ export default function MenuDialog({
 
                 const { href, icon, label, items: subItems } = item;
 
-                const indicator = !icon ? undefined : (
-                  <Display.Icon code={icon} />
-                );
+                const indicator = !icon ? undefined : <Core.Icon code={icon} />;
 
                 return (
                   <Fragment key={label}>
@@ -117,7 +115,7 @@ export default function MenuDialog({
             variant="contained"
             color="inherit"
             size="large"
-            startIcon={<Display.Icon code="faClose" />}
+            startIcon={<Core.Icon code="faClose" />}
             onClick={onClose}
           >
             <Trans i18nKey="btn-close" />

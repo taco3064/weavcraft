@@ -7,3 +7,4 @@ export * from './notification';
 export * from './hierarchy';
 export * from './themes';
 export * from './payload';
+export * from './widgets';
