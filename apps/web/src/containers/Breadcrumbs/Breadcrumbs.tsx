@@ -1,12 +1,12 @@
 import AppBar from '@mui/material/AppBar';
+import Core from '@weavcraft/core';
 import Head from 'next/head';
 import IconButton from '@mui/material/IconButton';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Display } from '@weavcraft/core';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog, Link } from '~web/components';
@@ -34,7 +34,7 @@ export default function Breadcrumbs({
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
-  const { pathname, back } = useRouter();
+  const { back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
   const { classes } = useBreadcrumbsStyles({ stickyTop });
 
@@ -68,7 +68,7 @@ export default function Breadcrumbs({
       <AppBar position="sticky" elevation={0} className={classes.root}>
         <Toolbar variant="dense" disableGutters={disableGutters}>
           <IconButton color="secondary" onClick={back}>
-            <Display.Icon code="faArrowLeft" />
+            <Core.Icon code="faArrowLeft" />
           </IconButton>
 
           <MuiBreadcrumbs

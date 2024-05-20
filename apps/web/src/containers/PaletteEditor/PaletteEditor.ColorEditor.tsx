@@ -1,4 +1,5 @@
 import Avatar from '@mui/material/Avatar';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import Fade from '@mui/material/Fade';
 import List from '@mui/material/List';
@@ -8,7 +9,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import TextField from '@mui/material/TextField';
 import _get from 'lodash/get';
-import { Display } from '@weavcraft/core';
 import { HexAlphaColorPicker } from 'react-colorful';
 import { Trans } from 'next-i18next';
 
@@ -54,7 +54,7 @@ export default function ColorEditor({
             <ListItem key={name}>
               <ListItemAvatar className={classes.avatar}>
                 <Avatar>
-                  <Display.Icon fontSize="large" code="faPalette" />
+                  <Core.Icon fontSize="large" code="faPalette" />
                 </Avatar>
               </ListItemAvatar>
 

@@ -1,2 +1,8 @@
 export * from './parser';
-export type { PropertyDefinitions, WidgetProps } from './parser.types';
+
+export type {
+  ElementNodePropsWithPath,
+  EventCallbackPropsWithPath,
+  PrimitiveValuePropsWithPath,
+  PropsDefinition,
+} from './parser.types';

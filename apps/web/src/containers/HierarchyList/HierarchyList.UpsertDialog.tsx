@@ -1,12 +1,12 @@
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Core from '@weavcraft/core';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import _set from 'lodash/set';
-import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useEffect, useState, type FormEventHandler } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -94,7 +94,7 @@ export default function UpsertDialog<P>({
     >
       {!icon && !title ? null : (
         <DialogTitle>
-          <Display.Icon code={icon} />
+          <Core.Icon code={icon} />
           {title}
         </DialogTitle>
       )}
@@ -136,7 +136,7 @@ export default function UpsertDialog<P>({
       >
         <Button
           color="inherit"
-          startIcon={<Display.Icon code="faClose" />}
+          startIcon={<Core.Icon code="faClose" />}
           onClick={() => {
             setHierarchy(undefined);
             onClose();
@@ -148,7 +148,7 @@ export default function UpsertDialog<P>({
         <Button
           color="secondary"
           type="submit"
-          startIcon={<Display.Icon code="faCheck" />}
+          startIcon={<Core.Icon code="faCheck" />}
         >
           <Trans i18nKey="btn-confirm" />
         </Button>

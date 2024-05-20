@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Core from '@weavcraft/core';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -8,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useState, type FormEvent } from 'react';
 
@@ -42,7 +42,7 @@ export default function FilterToggle({
     <>
       <Tooltip title={<Trans i18nKey="btn-search" />}>
         <IconButton color="primary" onClick={() => setOpen(!open)}>
-          <Display.Icon code="faSearch" />
+          <Core.Icon code="faSearch" />
         </IconButton>
       </Tooltip>
 
@@ -59,7 +59,7 @@ export default function FilterToggle({
         }}
       >
         <DialogTitle>
-          <Display.Icon code="faSearch" />
+          <Core.Icon code="faSearch" />
 
           <Trans
             i18nKey="ttl-hierarchy-search"
@@ -82,7 +82,7 @@ export default function FilterToggle({
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={() => handleSubmit()}>
-                    <Display.Icon code="faUndo" />
+                    <Core.Icon code="faUndo" />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -98,7 +98,7 @@ export default function FilterToggle({
         >
           <Button
             color="inherit"
-            startIcon={<Display.Icon code="faClose" />}
+            startIcon={<Core.Icon code="faClose" />}
             onClick={() => setOpen(false)}
           >
             <Trans i18nKey="btn-cancel" />
@@ -106,7 +106,7 @@ export default function FilterToggle({
 
           <Button
             color="secondary"
-            startIcon={<Display.Icon code="faFilter" />}
+            startIcon={<Core.Icon code="faFilter" />}
             type="submit"
           >
             <Trans i18nKey="btn-filter" />

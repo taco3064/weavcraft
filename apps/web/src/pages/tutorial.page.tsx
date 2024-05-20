@@ -2,13 +2,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import NextLink from 'next/link';
-import { Display } from '@weavcraft/core';
 import { Trans, useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
@@ -44,10 +44,10 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
           >
             <AccordionSummary
               expandIcon={
-                activeId === label ? null : <Display.Icon code="faAngleDown" />
+                activeId === label ? null : <Core.Icon code="faAngleDown" />
               }
             >
-              <Display.Icon color="primary" code={icon} />
+              <Core.Icon color="primary" code={icon} />
               <Trans i18nKey={label} />
             </AccordionSummary>
 
@@ -61,7 +61,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                   sx={{ borderRadius: 2 }}
                 >
                   <ListItemIcon sx={{ minWidth: 40 }}>
-                    <Display.Icon code="faLink" />
+                    <Core.Icon code="faLink" />
                   </ListItemIcon>
 
                   <ListItemText
@@ -94,7 +94,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                         sx={{ borderRadius: 2 }}
                       >
                         <ListItemIcon>
-                          <Display.Icon code="faLink" />
+                          <Core.Icon code="faLink" />
                         </ListItemIcon>
 
                         <ListItemText

@@ -1,5 +1,6 @@
 import * as Comp from './components';
-export type * as Core from './components';
+
+export default Comp;
 
 export const Display = {
   Avatar: Comp.Avatar,

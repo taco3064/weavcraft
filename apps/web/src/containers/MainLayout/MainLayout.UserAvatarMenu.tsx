@@ -1,6 +1,6 @@
 import Avatar from '@mui/material/Avatar';
+import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import { Display } from '@weavcraft/core';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
@@ -33,7 +33,7 @@ export default function UserAvatarMenu() {
       <MenuDialog
         open={open}
         title="ttl-user-options"
-        indicator={<Display.Icon code="faTerminal" />}
+        indicator={<Core.Icon code="faTerminal" />}
         onClose={() => setOpen(false)}
         onItemClick={handleItemClick}
         items={[

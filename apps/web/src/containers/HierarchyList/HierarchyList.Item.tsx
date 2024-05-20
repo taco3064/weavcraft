@@ -4,12 +4,12 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Checkbox from '@mui/material/Checkbox';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { Display } from '@weavcraft/core';
 import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
@@ -75,7 +75,7 @@ export default function HierarchyListItem<P>({
               className={classes.dndToggle}
               {...toggleProps}
             >
-              <Display.Icon
+              <Core.Icon
                 {...(!isGroup
                   ? { code: icon, color: 'success' }
                   : {
@@ -122,7 +122,7 @@ export default function HierarchyListItem<P>({
                       })
                     }
                   >
-                    <Display.Icon code="faEdit" />
+                    <Core.Icon code="faEdit" />
                   </IconButton>
                 </Tooltip>
               )}
@@ -140,7 +140,7 @@ export default function HierarchyListItem<P>({
                   toggle={
                     <Tooltip title={t('btn-delete')}>
                       <IconButton color="primary">
-                        <Display.Icon code="faTrash" />
+                        <Core.Icon code="faTrash" />
                       </IconButton>
                     </Tooltip>
                   }
@@ -153,7 +153,7 @@ export default function HierarchyListItem<P>({
                     color="success"
                     onClick={() => onPublishClick(data)}
                   >
-                    <Display.Icon code="faShare" />
+                    <Core.Icon code="faShare" />
                   </IconButton>
                 </Tooltip>
               )}
