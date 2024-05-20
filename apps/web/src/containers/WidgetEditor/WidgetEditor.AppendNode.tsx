@@ -1,6 +1,6 @@
 import * as WeavcraftCore from '@weavcraft/core';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -12,6 +12,8 @@ import type { AppendNodeProps } from './WidgetEditor.types';
 import type { WidgetType } from '~web/services';
 
 const { default: Core, ...CATEGORIES } = WeavcraftCore;
+
+const TOGGLE_CLASS_NAME = 'AppendNode-toggle';
 
 const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
   Display: 'faTableList',
@@ -30,28 +32,30 @@ export default function AppendNode({
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
-  const { classes } = useAppendNodeStyles();
+  const { classes, cx } = useAppendNodeStyles({
+    toggleClassName: TOGGLE_CLASS_NAME,
+  });
 
   const label = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
     .filter(Boolean)
-    .join(' - ');
+    .join(' | ');
 
   return (
     <>
-      <Tooltip
-        title={`${t(
-          `widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`
-        )}${!label ? '' : ` (${label})`}`}
-      >
-        <IconButton
-          color="primary"
-          size="large"
-          className={classes.action}
-          onClick={() => setOpen(true)}
+      <Toolbar disableGutters variant="dense" className={classes.root}>
+        <Tooltip
+          title={`${t(
+            `widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`
+          )}${!label ? '' : ` (${label})`}`}
         >
-          <Core.Icon code="faAdd" />
-        </IconButton>
-      </Tooltip>
+          <IconButton
+            className={cx(classes.toggle, TOGGLE_CLASS_NAME)}
+            onClick={() => setOpen(true)}
+          >
+            <Core.Icon code="faAdd" />
+          </IconButton>
+        </Tooltip>
+      </Toolbar>
 
       <MenuDialog
         title={t('widgets:ttl-select-widget')}

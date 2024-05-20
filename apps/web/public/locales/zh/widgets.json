@@ -1,7 +1,11 @@
 {
   "btn-add-trigger": "加入點擊組件",
   "btn-add-widget": "加入組件",
+  "btn-delete-widget": "刪除組件",
+  "btn-edit-widget": "設定組件",
+  "btn-open-toolbar": "開啟工具欄 ({{ widget }})",
   "msg-definitions-loading": "載入設定中...",
+  "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
   "ttl-select-widget": "選擇組件",
   "lbl-category": {
     "Display": "資料呈現",

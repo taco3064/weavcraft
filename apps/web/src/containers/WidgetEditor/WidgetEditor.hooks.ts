@@ -1,5 +1,6 @@
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import { createElement } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
@@ -43,11 +44,12 @@ export function useNodePropsEditedOverride(
 
           _set(result, path, [
             ...nodes,
-            <AppendNode
-              {...{ path, widgetId }}
-              key="append"
-              variant={clickable ? 'action' : 'node'}
-              onAppend={(widget) => {
+            createElement(AppendNode, {
+              key: 'append',
+              path,
+              variant: clickable ? 'action' : 'node',
+              widgetId,
+              onAppend: (widget) => {
                 const value: WidgetConfigs[] =
                   _get(config, ['props', path, 'value']) || [];
 
@@ -58,8 +60,8 @@ export function useNodePropsEditedOverride(
 
                 _set(config, ['props', path], propConfig);
                 onChange();
-              }}
-            />,
+              },
+            }),
           ]);
         } else {
           const node: ReactNode = _get(props, path);
@@ -68,10 +70,11 @@ export function useNodePropsEditedOverride(
             _set(
               result,
               path,
-              <AppendNode
-                {...{ path, widgetId }}
-                variant={clickable ? 'action' : 'node'}
-                onAppend={(widget) => {
+              createElement(AppendNode, {
+                path,
+                widgetId,
+                variant: clickable ? 'action' : 'node',
+                onAppend: (widget) => {
                   const propConfig: ElementNodeProp = {
                     type: 'ElementNode',
                     value: { widget },
@@ -79,8 +82,8 @@ export function useNodePropsEditedOverride(
 
                   _set(config, ['props', path], propConfig);
                   onChange();
-                }}
-              />
+                },
+              })
             );
           }
         }

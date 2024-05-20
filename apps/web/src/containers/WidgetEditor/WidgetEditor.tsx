@@ -1,13 +1,16 @@
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
+import _get from 'lodash/get';
+import _set from 'lodash/set';
+import _unset from 'lodash/unset';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import AppendNode from './WidgetEditor.AppendNode';
+import Controller from './WidgetEditor.Controller';
+import DefaultPropsProvider from './WidgetEditor.DefaultProps';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender, type RenderConfig } from '~web/hooks';
 import { useNodePropsEditedOverride } from './WidgetEditor.hooks';
@@ -31,22 +34,64 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
 }) {
   const isTutorialMode = useTutorialMode();
 
+  const [, startTransition] = useTransition();
+  const [editing, setEditing] = useState<RenderConfig>();
+
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
+
+  const { containerEl, onToggle } = useTogglePortal(() =>
+    setEditing(undefined)
+  );
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
   const overrideNodes = useNodePropsEditedOverride(AppendNode, () =>
-    setValue(JSON.parse(JSON.stringify(value)))
+    setValue({ ...value })
   );
 
-  const generate = useWidgetRender((WidgetEl, { key, props, config }) => (
-    //! 這裡需要包覆一層 Container（擁有 minHeight），才能方便進入設定模式
-    <WidgetEl key={key} {...overrideNodes(props, config)} />
-  ));
+  const generate = useWidgetRender(
+    (WidgetEl, { config, key, paths, props }) => (
+      <Controller
+        key={key}
+        config={config}
+        onDelete={() => {
+          if (!paths.length) {
+            return setValue({} as RenderConfig);
+          }
+
+          const fullPaths = paths
+            .map((path) =>
+              typeof path === 'string' ? ['props', path, 'value'] : path
+            )
+            .flat();
+
+          if (typeof paths[paths.length - 1] === 'number') {
+            const index = fullPaths.pop() as number;
+            const nodes = _get(value, fullPaths);
+
+            nodes.splice(index, 1);
+            _set(value, fullPaths, [...nodes]);
+          } else {
+            _unset(value, fullPaths);
+          }
+
+          setValue({ ...value });
+        }}
+        onEdit={() =>
+          startTransition(() => {
+            onToggle(true);
+            setEditing(config);
+          })
+        }
+      >
+        <WidgetEl {...overrideNodes(props, config)} />
+      </Controller>
+    )
+  );
 
   return (
     <Slide in direction="up" timeout={1200}>
@@ -59,9 +104,13 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
           Toolbar
         </PortalWrapper>
 
-        <Container disableGutters className={classes.content}>
+        <Container
+          disableGutters
+          className={classes.content}
+          onContextMenu={(e) => e.preventDefault()}
+        >
           {value.widget ? (
-            generate(value)
+            <DefaultPropsProvider>{generate(value)}</DefaultPropsProvider>
           ) : (
             <AppendNode
               variant="node"
@@ -69,6 +118,10 @@ export default withPropsDefinition<WidgetEditorProps>(function WidgetEditor({
             />
           )}
         </Container>
+
+        <PortalWrapper containerEl={containerEl}>
+          Widget Props Editor
+        </PortalWrapper>
       </Container>
     </Slide>
   );

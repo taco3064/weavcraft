@@ -1,8 +1,12 @@
 import type { ContainerProps } from '@mui/material/Container';
+import type { ReactNode } from 'react';
+
 import type { PortalContainerEl } from '~web/contexts';
+import type { RenderConfig } from '~web/hooks';
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
-export type StyleParams = Pick<WidgetEditorProps, 'marginTop'>;
+export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
+export type ToggleStyleParams = { toggleClassName: string };
 
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
@@ -11,9 +15,20 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   toolbarEl?: PortalContainerEl;
 }
 
+export interface DefaultPropsProviderProps {
+  children: ReactNode;
+}
+
 export interface AppendNodeProps {
   path?: string;
   variant: 'action' | 'node';
   widgetId?: WidgetType;
   onAppend: (widget: WidgetType) => void;
+}
+
+export interface ControllerProps {
+  children: ReactNode;
+  config: RenderConfig;
+  onDelete: () => void;
+  onEdit: () => void;
 }
