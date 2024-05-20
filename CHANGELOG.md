@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/taco3064/weavcraft/compare/v0.0.23...v0.0.24) (2024-05-20)
+
+
+### Features
+
+* **web/widget-editor:** add render widget process, and append feature ([1edeaed](https://github.com/taco3064/weavcraft/commit/1edeaed4317d248ab8eb5580cebd85ee06a6052f))
+* **web/widget-editor:** add WidgetEditor ([84f339f](https://github.com/taco3064/weavcraft/commit/84f339ff52f60a03021f817d50e8bb81f4a2f3b3))
+
+
+### Bug Fixes
+
+* **web/widget-editor:** fixed bugs ([e838a5f](https://github.com/taco3064/weavcraft/commit/e838a5f8b06290f2c132677fb050f79a88ebc066))
+
 ### [0.0.23](https://github.com/taco3064/weavcraft/compare/v0.0.22...v0.0.23) (2024-05-15)
 
 
