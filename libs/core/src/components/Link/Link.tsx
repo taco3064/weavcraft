@@ -6,7 +6,7 @@ import { useGenerateProps } from '../../hooks';
 import type { LinkProps } from './Link.types';
 
 export default function Link<D extends JsonObject>(props: LinkProps<D>) {
-  const [GeneratePropsProvider, { align, icon, text, ...linkProps }] =
+  const [GeneratePropsProvider, { align, icon, text = 'Link', ...linkProps }] =
     useGenerateProps<D, LinkProps<D>>(props);
 
   return (

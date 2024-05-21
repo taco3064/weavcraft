@@ -18,12 +18,14 @@ export default function Controller({
   config,
   onDelete,
   onEdit,
+  ...props
 }: ControllerProps) {
   const [, startTransition] = useTransition();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
 
   const { widget: widgetId } = config;
   const { t } = useTranslation();
+
   const { classes, cx } = useControllerStyles({
     toggleClassName: TOGGLE_CLASS_NAME,
   });
@@ -51,7 +53,7 @@ export default function Controller({
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
         slotProps={{ paper: { className: classes.toolbar } }}
         transformOrigin={{ vertical: 'center', horizontal: 'right' }}
         onClose={() => setAnchorEl(undefined)}

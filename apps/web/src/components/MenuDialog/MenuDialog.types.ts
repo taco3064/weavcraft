@@ -13,6 +13,7 @@ export interface MenuDialogProps
   indicator?: ReactNode;
   items: (null | false | undefined | MenuItemOptions)[];
   open: boolean;
+  subtitle?: string;
   title?: string;
   onClose: () => void;
   onItemClick?: (e: string, index: number) => void;

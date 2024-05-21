@@ -26,12 +26,12 @@ export const useControllerStyles = makeStyles<ToggleStyleParams>({
   name: 'Controller',
 })((theme, { toggleClassName }) => ({
   root: {
-    width: '100%',
     marginBottom: theme.spacing(1),
     marginRight: theme.spacing(-2),
+    width: '100%',
 
     '& > *:first-child': {
-      minHeight: theme.spacing(6),
+      zIndex: 1,
     },
     [`&:has(> .${toggleClassName}:hover) > *:first-child`]: {
       filter: 'brightness(1.2)',
@@ -43,7 +43,13 @@ export const useControllerStyles = makeStyles<ToggleStyleParams>({
     border: `2px dotted ${theme.palette.secondary.main}`,
     boxShadow: theme.shadows[3],
     color: theme.palette.secondary.main,
+    opacity: 0.6,
     transform: `translateX(${theme.spacing(-2)})`,
+    zIndex: 0,
+
+    '&:hover': {
+      opacity: 1,
+    },
   },
   popover: {
     background: 'transparent',
@@ -52,7 +58,6 @@ export const useControllerStyles = makeStyles<ToggleStyleParams>({
   toolbar: {
     background: theme.palette.background.paper,
     borderRadius: `${theme.spacing(2.5)} / 50%`,
-    transform: `translateX(${theme.spacing(-1)}) !important`,
   },
 }));
 

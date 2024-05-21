@@ -24,7 +24,11 @@ export function useWidgetRender(render: RenderFn) {
     return render(WidgetEl, {
       config,
       key,
-      paths,
+      paths: paths
+        .map((path) =>
+          typeof path === 'string' ? ['props', path, 'value'] : path
+        )
+        .flat(),
       props: Object.entries(config.props || {}).reduce(
         (acc, [path, { type, value }]) => {
           switch (type) {

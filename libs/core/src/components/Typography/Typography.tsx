@@ -8,8 +8,10 @@ import type { TypographyProps } from './Typography.types';
 export default function Typography<D extends JsonObject>(
   props: TypographyProps<D>
 ) {
-  const [GeneratePropsProvider, { align, icon, text, ...typographyProps }] =
-    useGenerateProps<D, TypographyProps<D>>(props);
+  const [
+    GeneratePropsProvider,
+    { align, icon, text = 'Typography', ...typographyProps },
+  ] = useGenerateProps<D, TypographyProps<D>>(props);
 
   return (
     <GeneratePropsProvider>

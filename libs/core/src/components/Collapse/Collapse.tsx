@@ -31,7 +31,7 @@ export default function Collapse<D extends JsonObject>(
       )}
 
       <PortalContainer id={containerId}>
-        <MuiCollapse {...collapseProps} data-testid="Collapse">
+        <MuiCollapse {...collapseProps} in={expanded} data-testid="Collapse">
           {!expanded ? null : children}
         </MuiCollapse>
       </PortalContainer>

@@ -29,6 +29,7 @@ export const components: ThemeOptions['components'] = {
   MuiAccordion: {
     styleOverrides: {
       root: ({ theme }) => ({
+        width: '100%',
         borderRadius: `${theme.spacing(2)} !important`,
 
         '&::before': {
@@ -37,18 +38,18 @@ export const components: ThemeOptions['components'] = {
         '&.Mui-expanded': {
           borderRadius: `${theme.spacing(2)} !important`,
 
-          '& + :not(.Mui-expanded)': {
+          '& + :not(.Mui-expanded):not(button)': {
             borderTopLeftRadius: theme.spacing(2),
             borderTopRightRadius: theme.spacing(2),
           },
         },
-        '&:not(.Mui-expanded)': {
-          '&:has(+ :not(.Mui-expanded))': {
+        '&:not(.Mui-expanded):not(button)': {
+          '&:has(+ :not(.Mui-expanded):not(button))': {
             borderBottomLeftRadius: '0 !important',
             borderBottomRightRadius: '0 !important',
             borderBottom: `1px solid ${theme.palette.divider}`,
           },
-          '& + :not(.Mui-expanded)': {
+          '& + :not(.Mui-expanded):not(button)': {
             borderTopLeftRadius: '0 !important',
             borderTopRightRadius: '0 !important',
           },
@@ -230,6 +231,13 @@ export const components: ThemeOptions['components'] = {
         '&:hover': {
           filter: 'brightness(1.2)',
         },
+      },
+    },
+  },
+  MuiImageList: {
+    styleOverrides: {
+      root: {
+        width: '100%',
       },
     },
   },

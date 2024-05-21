@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Core from '@weavcraft/core';
 import Dialog from '@mui/material/Dialog';
@@ -28,6 +29,7 @@ export default function MenuDialog({
   indicator,
   items,
   open,
+  subtitle,
   title,
   onClose,
   onItemClick,
@@ -61,7 +63,30 @@ export default function MenuDialog({
         {!indicator && !title ? null : (
           <DialogTitle>
             {indicator}
-            {title && <Trans i18nKey={title} />}
+            {(title || subtitle) && (
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {title && (
+                  <Typography variant="inherit" color="inherit">
+                    <Trans i18nKey={title} />
+                  </Typography>
+                )}
+
+                {subtitle && (
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    fontWeight={600}
+                  >
+                    {subtitle}
+                  </Typography>
+                )}
+              </Box>
+            )}
           </DialogTitle>
         )}
 

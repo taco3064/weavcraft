@@ -19,9 +19,9 @@ export default function Chip<D extends JsonObject>(props: ChipProps<D>) {
           clickable: true,
           onClick: () => onClick(data),
         })}
+        {...(onDelete && { onDelete: () => onDelete(data) })}
         data-testid="Chip"
         avatar={indicator}
-        onDelete={() => onDelete?.(data)}
       />
     </GeneratePropsProvider>
   );

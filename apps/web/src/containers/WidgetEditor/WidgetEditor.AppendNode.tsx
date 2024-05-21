@@ -38,7 +38,7 @@ export default function AppendNode({
 
   const label = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
     .filter(Boolean)
-    .join(' | ');
+    .join(' - ');
 
   return (
     <>
@@ -59,6 +59,7 @@ export default function AppendNode({
 
       <MenuDialog
         title={t('widgets:ttl-select-widget')}
+        subtitle={label}
         open={open}
         onClose={() => setOpen(false)}
         onItemClick={(e) =>
