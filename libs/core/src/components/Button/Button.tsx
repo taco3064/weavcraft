@@ -8,7 +8,7 @@ import type { ButtonProps } from './Button.types';
 export default function Button<D extends JsonObject>(props: ButtonProps<D>) {
   const [
     GenerateDataProvider,
-    { href, icon, iconPosition = 'start', text, ...buttonProps },
+    { href, icon, iconPosition = 'start', text = 'Button', ...buttonProps },
   ] = useGenerateProps<D, ButtonProps<D>>(props);
 
   const isHrefValid = useUrlValidation(href);

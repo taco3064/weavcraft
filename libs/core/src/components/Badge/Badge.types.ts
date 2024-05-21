@@ -7,7 +7,6 @@ import type { PropsWithMappedData } from '../../hooks';
 type MuiBadgeProps = Pick<
   ComponentProps<typeof MuiBadge>,
   | 'anchorOrigin'
-  | 'badgeContent'
   | 'children'
   | 'color'
   | 'max'
@@ -24,6 +23,7 @@ export type BadgeProps<D extends JsonObject> = PropsWithMappedData<
   D,
   Omit<MuiBadgeProps, 'anchorOrigin'> & {
     anchorPosition?: `${AnchorOrigin<'vertical'>}-${AnchorOrigin<'horizontal'>}`;
+    badgeContent?: string | number;
   },
   'badgeContent' | 'children' | 'max'
 >;

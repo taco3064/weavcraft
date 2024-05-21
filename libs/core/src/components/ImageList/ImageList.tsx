@@ -2,6 +2,7 @@ import MuiImageList from '@mui/material/ImageList';
 import type { JsonObject } from 'type-fest';
 
 import ImageListItem from '../ImageListItem';
+import { useCommonStyles } from '../../styles';
 import { useSlotElement, useStoreProps } from '../../hooks';
 import type { ImageListProps } from './ImageList.types';
 
@@ -20,10 +21,15 @@ export default function ImageList<D extends JsonObject>(
   ] = useStoreProps(props);
 
   const Action = useSlotElement(itemAction, onItemActionClick);
+  const { classes } = useCommonStyles();
 
   return (
     <StoreProvider>
-      <MuiImageList {...imageListProps} data-testid="ImageList">
+      <MuiImageList
+        {...imageListProps}
+        data-testid="ImageList"
+        className={classes.minHeight}
+      >
         {records.map((item, i) => (
           <ImageListItem
             {...itemProps}

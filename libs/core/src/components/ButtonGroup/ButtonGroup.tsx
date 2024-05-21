@@ -2,6 +2,7 @@ import MuiButtonGroup from '@mui/material/ButtonGroup';
 import type { JsonObject } from 'type-fest';
 
 import Button from '../Button';
+import { useCommonStyles } from '../../styles';
 import { useStoreProps } from '../../hooks';
 import type { ButtonGroupProps } from './ButtonGroup.types';
 
@@ -19,11 +20,14 @@ export default function ButtonGroup<D extends JsonObject>(
     },
   ] = useStoreProps(props);
 
+  const { classes } = useCommonStyles();
+
   return (
     <StoreProvider>
       <MuiButtonGroup
         {...buttonGroupProps}
         data-testid="ButtonGroup"
+        className={classes.fullWidth}
         style={{
           ...(borderRadiusVariant === 'none' && {
             borderRadius: 0,

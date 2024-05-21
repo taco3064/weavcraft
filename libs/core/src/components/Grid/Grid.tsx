@@ -4,6 +4,7 @@ import { Children, cloneElement, isValidElement, useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import GridItem from '../GridItem';
+import { useCommonStyles } from '../../styles';
 import { useStoreProps } from '../../hooks';
 import type { GridItemBrakpoints, GridItemProps } from '../GridItem';
 import type { GridProps, ItemVariant } from './Grid.types';
@@ -23,6 +24,7 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
     },
   ] = useStoreProps(props);
 
+  const { classes } = useCommonStyles();
   const templates = Children.toArray(children);
   const stringifyProps = JSON.stringify(itemProps);
 
@@ -46,7 +48,13 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
 
   return (
     <StoreProvider>
-      <MuiGrid {...gridProps} data-testid="Grid" columns={columns}>
+      <MuiGrid
+        {...gridProps}
+        container
+        data-testid="Grid"
+        columns={columns}
+        className={classes.minHeight}
+      >
         {records?.map((item, i) => (
           <GridItem {...gridItemProps} key={i} data={item}>
             {(itemVariant === 'unique' ? [templates[i]] : templates).map(

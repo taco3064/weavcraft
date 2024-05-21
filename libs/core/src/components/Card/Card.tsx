@@ -7,6 +7,7 @@ import MuiCardMedia from '@mui/material/CardMedia';
 import type { JsonObject } from 'type-fest';
 
 import { WidgetWrapper } from '../../styles';
+import { useCommonStyles } from '../../styles';
 import { useGenerateProps } from '../../hooks';
 import type { CardProps } from './Card.types';
 
@@ -38,6 +39,8 @@ export default function Card<D extends JsonObject>(props: CardProps<D>) {
       onSubmit,
     },
   ] = useGenerateProps<D, CardProps<D>>(props);
+
+  const { classes } = useCommonStyles();
 
   const isHeaderVisible = [avatar, description, headerAction, title].some(
     Boolean
@@ -88,7 +91,10 @@ export default function Card<D extends JsonObject>(props: CardProps<D>) {
             {mediaPosition === 'top' ? media : null}
 
             {!children ? null : (
-              <MuiCardContent data-testid="CardContent">
+              <MuiCardContent
+                data-testid="CardContent"
+                className={classes.flexColumn}
+              >
                 {children}
               </MuiCardContent>
             )}

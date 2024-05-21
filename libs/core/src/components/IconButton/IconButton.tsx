@@ -20,7 +20,7 @@ export default function IconButton<D extends JsonObject>(
         {...iconButtonProps}
         {...(isHrefValid && { component: 'a', href })}
       >
-        {icon && <Icon fontSize="inherit" code={icon} />}
+        <Icon fontSize="inherit" code={icon} />
       </MuiIconButton>
     </GeneratePropsProvider>
   );

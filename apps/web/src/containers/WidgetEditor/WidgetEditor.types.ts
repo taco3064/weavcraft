@@ -1,22 +1,20 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 
 import type { PortalContainerEl } from '~web/contexts';
 import type { RenderConfig } from '~web/hooks';
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
+export const ControllerProps = Symbol('ControllerProps');
+
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
-export type ToggleStyleParams = { toggleClassName: string };
+export type ControllerStyleParams = { expanded: boolean };
 
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
   marginTop?: number;
   title: string;
   toolbarEl?: PortalContainerEl;
-}
-
-export interface DefaultPropsProviderProps {
-  children: ReactNode;
 }
 
 export interface AppendNodeProps {
@@ -26,9 +24,14 @@ export interface AppendNodeProps {
   onAppend: (widget: WidgetType) => void;
 }
 
-export interface ControllerProps {
-  children: ReactNode;
-  config: RenderConfig;
-  onDelete: () => void;
-  onEdit: () => void;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ControllerProps<W extends ComponentType<any>> =
+  ComponentProps<W> & {
+    'widget.editor.controller.props': {
+      WidgetEl: W;
+      config: RenderConfig;
+      hideToggle?: boolean;
+      onDelete: () => void;
+      onEdit: () => void;
+    };
+  };

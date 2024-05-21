@@ -1,16 +1,13 @@
-import type { ComponentType } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 import PropsDefinitionProvider from './PropsDefinition.Provider';
 
-export function withPropsDefinition<P>(TargetComponent: ComponentType<P>) {
-  return function PropsDefinitionWrapper(props: P) {
+export function withPropsDefinition<E extends ComponentType<any>>(
+  TargetComponent: E
+) {
+  return function PropsDefinitionWrapper(props: ComponentProps<E>) {
     return (
       <PropsDefinitionProvider>
-        <TargetComponent
-          {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ...(props as any)
-          }
-        />
+        <TargetComponent {...props} />
       </PropsDefinitionProvider>
     );
   };

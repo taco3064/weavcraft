@@ -12,7 +12,6 @@ type BasePropNames =
   | 'color'
   | 'disabled'
   | 'error'
-  | 'helperText'
   | 'label'
   | 'name'
   | 'placeholder'
@@ -40,6 +39,8 @@ export interface BaseFieldProps<
   InputProps?: BaseInputProps<C>;
   adornment?: ReactNode;
   adornmentPosition?: 'start' | 'end';
+  helperText?: string;
+  label?: string;
   value?: V;
   onChange?: (value: V | undefined, name?: string) => void;
 }
