@@ -11,13 +11,11 @@ import type { WidgetWrapperProps } from '../../styles';
 type StepVariant = 'form' | 'card';
 
 export interface ButtonParams
-  extends Pick<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    'disabled' | 'type' | 'onClick'
-  > {
+  extends Pick<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled' | 'type'> {
   'data-testid': string;
   icon: Extract<IconCode, 'faAngleLeft' | 'faAngleRight' | 'faCheck'>;
   text?: string;
+  onClick?: () => void;
 }
 
 //* Component Props
