@@ -148,7 +148,12 @@ const Generator: GetDefinitionFns = {
     (type, options) => {
       const text = trimImportText(type.getText());
 
-      if (text?.endsWith('SlotElement')) {
+      console.log('===', text);
+
+      if (
+        text?.endsWith('SlotElement') ||
+        text?.startsWith('React.ReactElement<SlotProps,')
+      ) {
         return {
           ...options,
           type: 'node',

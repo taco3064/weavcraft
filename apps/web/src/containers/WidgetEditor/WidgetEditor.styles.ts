@@ -1,49 +1,30 @@
 import { makeStyles } from 'tss-react/mui';
-import type { MainStyleParams, ToggleStyleParams } from './WidgetEditor.types';
+import type {
+  ControllerStyleParams,
+  MainStyleParams,
+} from './WidgetEditor.types';
 
-export const useAppendNodeStyles = makeStyles<ToggleStyleParams>({
+export const useAppendNodeStyles = makeStyles({
   name: 'AppendNode',
-})((theme, { toggleClassName }) => ({
-  root: {
-    borderRadius: `${theme.spacing(2.5)} / 50%`,
-    justifyContent: 'center',
-    minHeight: `${theme.spacing(5)} !important`,
-
-    [`&:has(> .${toggleClassName}:hover)`]: {
-      filter: 'brightness(1.2)',
-      background: `${theme.palette.action.hover} !important`,
-    },
-  },
+})((theme) => ({
   toggle: {
     background: theme.palette.background.paper,
     border: `2px dashed ${theme.palette.primary.main}`,
     boxShadow: theme.shadows[3],
     color: theme.palette.primary.main,
+    margin: theme.spacing(1),
   },
 }));
 
-export const useControllerStyles = makeStyles<ToggleStyleParams>({
+export const useControllerStyles = makeStyles<ControllerStyleParams>({
   name: 'Controller',
-})((theme, { toggleClassName }) => ({
-  root: {
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(-2),
-    width: '100%',
-
-    '& > *:first-child': {
-      zIndex: 1,
-    },
-    [`&:has(> .${toggleClassName}:hover) > *:first-child`]: {
-      filter: 'brightness(1.2)',
-      background: `${theme.palette.action.hover} !important`,
-    },
-  },
+})((theme, { expanded }) => ({
   toggle: {
     background: theme.palette.background.paper,
     border: `2px dotted ${theme.palette.secondary.main}`,
     boxShadow: theme.shadows[3],
     color: theme.palette.secondary.main,
-    opacity: 0.6,
+    opacity: expanded ? 0.4 : 1,
     transform: `translateX(${theme.spacing(-2)})`,
     zIndex: 0,
 
@@ -54,6 +35,13 @@ export const useControllerStyles = makeStyles<ToggleStyleParams>({
   popover: {
     background: 'transparent',
     paddingRight: theme.spacing(1),
+  },
+  standard: {
+    display: 'none',
+
+    '& + *': {
+      filter: `brightness(${expanded ? 1.2 : 1})`,
+    },
   },
   toolbar: {
     background: theme.palette.background.paper,

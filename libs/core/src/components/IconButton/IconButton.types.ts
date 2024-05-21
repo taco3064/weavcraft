@@ -16,6 +16,7 @@ export type IconButtonProps<D extends JsonObject> = PropsWithMappedData<
     'data-testid'?: string;
     href?: string;
     icon?: IconCode;
+    onClick?: () => void;
   },
   'disabled' | 'href' | 'icon'
 >;

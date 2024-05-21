@@ -1,6 +1,9 @@
 /* eslint-disable */
 export default {
+  coverageDirectory: '../../coverage/libs/core',
+  coverageReporters: ['html', 'text', 'lcov'],
   displayName: 'core',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   preset: '../../jest.preset.js',
   transform: {
     '^.+\\.[tj]sx?$': [
@@ -13,6 +16,4 @@ export default {
       },
     ],
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/core',
 };

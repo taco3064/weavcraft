@@ -1,54 +1,65 @@
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
+import Popper from '@mui/material/Popper';
 import Popover from '@mui/material/Popover';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Trans, useTranslation } from 'next-i18next';
-import { useState, useTransition } from 'react';
+import { useId, useState, useTransition, type ComponentType } from 'react';
 
 import { ConfirmToggle } from '~web/components';
 import { useControllerStyles } from './WidgetEditor.styles';
 import type { ControllerProps } from './WidgetEditor.types';
 
-const TOGGLE_CLASS_NAME = 'Controller-toggle';
-
-export default function Controller({
-  children,
-  config,
-  onDelete,
-  onEdit,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Controller<W extends ComponentType<any>>({
+  'widget.editor.controller.props': {
+    WidgetEl,
+    config,
+    hideToggle = false,
+    onDelete,
+    onEdit,
+  },
   ...props
-}: ControllerProps) {
+}: ControllerProps<W>) {
+  const standardId = useId();
+  const widget = <WidgetEl {...props} />;
+
   const [, startTransition] = useTransition();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement>();
 
   const { widget: widgetId } = config;
   const { t } = useTranslation();
-
-  const { classes, cx } = useControllerStyles({
-    toggleClassName: TOGGLE_CLASS_NAME,
-  });
+  const { classes } = useControllerStyles({ expanded: Boolean(anchorEl) });
 
   return (
     <>
-      <Toolbar disableGutters className={classes.root}>
-        {children}
+      <div id={standardId} className={classes.standard} />
+      {widget}
 
+      <Popper
+        open={!hideToggle}
+        placement="right"
+        anchorEl={() =>
+          global.document?.getElementById(standardId)
+            ?.nextElementSibling as Element
+        }
+      >
         <Tooltip
           title={t('widgets:btn-open-toolbar', {
             widget: t(`widgets:lbl-widgets.${widgetId}`),
           })}
         >
           <IconButton
-            className={cx(classes.toggle, TOGGLE_CLASS_NAME)}
-            sx={{ opacity: anchorEl ? 0.4 : 1 }}
+            size="small"
+            className={classes.toggle}
             onClick={(e) => setAnchorEl(e.currentTarget)}
           >
             <Core.Icon code="faEllipsisVertical" />
           </IconButton>
         </Tooltip>
-      </Toolbar>
+      </Popper>
 
       <Popover
         open={Boolean(anchorEl)}

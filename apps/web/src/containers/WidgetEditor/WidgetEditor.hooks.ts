@@ -62,14 +62,15 @@ export function useChangeEvents(
         return onChange({} as RenderConfig);
       }
 
-      if (typeof paths[paths.length - 1] === 'number') {
-        const index = paths.pop() as number;
+      const lastPath = paths.pop() as string | number;
+
+      if (typeof lastPath !== 'number') {
+        _unset(value, paths);
+      } else {
         const nodes = _get(value, paths);
 
-        nodes.splice(index, 1);
+        nodes.splice(lastPath, 1);
         _set(value, paths, [...nodes]);
-      } else {
-        _unset(value, paths);
       }
 
       onChange({ ...value });

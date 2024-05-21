@@ -1,6 +1,7 @@
 /* eslint-disable */
 export default {
   coverageDirectory: '../../coverage/apps/web',
+  coverageReporters: ['html', 'text', 'lcov'],
   displayName: 'web',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   preset: '../../jest.preset.js',
