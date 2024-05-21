@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.25](https://github.com/taco3064/weavcraft/compare/v0.0.24...v0.0.25) (2024-05-21)
+
+
+### Features
+
+* **@weavcraft/core:** add default props to the core components ([5abf6d4](https://github.com/taco3064/weavcraft/commit/5abf6d4b89c189454248a4c349e6e954f5fde66d))
+
+
+### Bug Fixes
+
+* **core/stepper:** fixed the type error ([9ad589b](https://github.com/taco3064/weavcraft/commit/9ad589b23abe98dd1613b36134a3f64672a088cf))
+
 ### [0.0.24](https://github.com/taco3064/weavcraft/compare/v0.0.23...v0.0.24) (2024-05-20)
 
 
