@@ -8,10 +8,8 @@ import { useGenerateProps } from '../../hooks';
 import type { IconProps } from './Icon.types';
 
 export default function Icon<D extends JsonObject>(props: IconProps<D>) {
-  const [GeneratePropsProvider, { code, ...iconProps }] = useGenerateProps<
-    D,
-    IconProps<D>
-  >(props);
+  const [GeneratePropsProvider, { code = 'faIcons', ...iconProps }] =
+    useGenerateProps<D, IconProps<D>>(props);
 
   const options = useMemo(() => {
     const icon = _get(FaIcon, [code!, 'icon']);

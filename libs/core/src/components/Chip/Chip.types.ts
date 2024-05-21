@@ -6,13 +6,14 @@ import type { PropsWithMappedData } from '../../hooks';
 
 type MuiChipProps = Pick<
   ComponentProps<typeof MuiChip>,
-  'color' | 'disabled' | 'label' | 'size' | 'variant' | 'onDelete'
+  'color' | 'disabled' | 'size' | 'variant' | 'onDelete'
 >;
 
 export type ChipProps<D extends JsonObject> = PropsWithMappedData<
   D,
   Omit<MuiChipProps, 'onDelete'> & {
     indicator?: ReactElement;
+    label?: string | number;
     onClick?: (data?: D) => void;
     onDelete?: (data?: D) => void;
   },

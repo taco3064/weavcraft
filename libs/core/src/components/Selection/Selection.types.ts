@@ -10,7 +10,7 @@ export type SelectionVariant = 'checkbox' | 'radio';
 
 type MuiFormControlLabelProps = Pick<
   ComponentProps<typeof MuiFormControlLabel>,
-  'disabled' | 'label' | 'labelPlacement' | 'required' | 'value'
+  'disabled' | 'labelPlacement' | 'required' | 'value'
 >;
 
 type BaseControlLabelProps = Partial<
@@ -27,6 +27,7 @@ export type SelectionProps<
 > = PropsWithMappedData<
   D,
   BaseControlLabelProps & {
+    label?: string;
     variant?: V;
     onChange?: (checked: boolean, data?: D) => void;
   },

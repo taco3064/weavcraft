@@ -13,7 +13,14 @@ export default function Accordion<D extends JsonObject>(
 ) {
   const [
     GenerateDataProvider,
-    { action, children, disableActionSpacing, expandIcon, expanded, title },
+    {
+      action,
+      children,
+      disableActionSpacing,
+      expandIcon = 'faAngleDown',
+      expanded,
+      title,
+    },
   ] = useGenerateProps<D, AccordionProps<D>>(props);
 
   return (
