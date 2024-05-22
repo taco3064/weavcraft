@@ -1,9 +1,8 @@
 import Container from '@mui/material/Container';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
-import _debounce from 'lodash/debounce';
-import { useEffect, useId, useMemo, useState, useTransition } from 'react';
 import { useSnackbar } from 'notistack';
+import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import AppendNode from './WidgetEditor.AppendNode';
@@ -14,6 +13,7 @@ import type { WidgetEditorProps } from './WidgetEditor.types';
 
 import {
   useChangeEvents,
+  useControllerToggleVisible,
   useNodePropsEditedOverride,
 } from './WidgetEditor.hooks';
 
@@ -32,10 +32,9 @@ export default withPropsDefinition(function WidgetEditor({
   toolbarEl,
 }: WidgetEditorProps) {
   const isTutorialMode = useTutorialMode();
-  const containerId = useId();
 
   const [, startTransition] = useTransition();
-  const [hideController, setHideController] = useState(false);
+  const [containerId, visibled] = useControllerToggleVisible();
   const [editing, setEditing] = useState<RenderConfig>();
 
   const [value, setValue] = useState<RenderConfig>(() =>
@@ -51,15 +50,6 @@ export default withPropsDefinition(function WidgetEditor({
     setEditing(undefined)
   );
 
-  const resizeObserver = useMemo(() => {
-    const refresh = _debounce(() => setHideController(false), 200);
-
-    return new ResizeObserver(() => {
-      setHideController(true);
-      refresh();
-    });
-  }, []);
-
   const overrideNodes = useNodePropsEditedOverride(AppendNode, changeEvents);
 
   const generate = useWidgetRender(
@@ -71,7 +61,7 @@ export default withPropsDefinition(function WidgetEditor({
           'widget.editor.controller.props': {
             WidgetEl,
             config,
-            hideToggle: hideController,
+            visibled,
             onDelete: () => onDeleteNode(paths),
             onEdit: () =>
               startTransition(() => {
@@ -83,16 +73,6 @@ export default withPropsDefinition(function WidgetEditor({
       />
     )
   );
-
-  useEffect(() => {
-    const el = global.document.getElementById(containerId);
-
-    if (el) {
-      resizeObserver.observe(el);
-
-      return () => resizeObserver.unobserve(el);
-    }
-  }, [containerId, resizeObserver]);
 
   return (
     <Slide in direction="up" timeout={1200}>

@@ -30,7 +30,7 @@ export type ControllerProps<W extends ComponentType<any>> =
     'widget.editor.controller.props': {
       WidgetEl: W;
       config: RenderConfig;
-      hideToggle?: boolean;
+      visibled?: boolean;
       onDelete: () => void;
       onEdit: () => void;
     };

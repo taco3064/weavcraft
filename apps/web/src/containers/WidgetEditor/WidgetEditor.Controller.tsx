@@ -17,7 +17,7 @@ export default function Controller<W extends ComponentType<any>>({
   'widget.editor.controller.props': {
     WidgetEl,
     config,
-    hideToggle = false,
+    visibled = false,
     onDelete,
     onEdit,
   },
@@ -39,7 +39,7 @@ export default function Controller<W extends ComponentType<any>>({
       {widget}
 
       <Popper
-        open={!hideToggle}
+        open={visibled}
         placement="right"
         anchorEl={() =>
           global.document?.getElementById(standardId)
@@ -90,12 +90,6 @@ export default function Controller<W extends ComponentType<any>>({
 
           <ConfirmToggle
             subject={t('ttl-delete-confirm')}
-            onConfirm={() =>
-              startTransition(() => {
-                onDelete();
-                setAnchorEl(undefined);
-              })
-            }
             message={t('widgets:msg-delete-widget-confirm', {
               widget: t(`widgets:lbl-widgets.${widgetId}`),
             })}
@@ -105,6 +99,12 @@ export default function Controller<W extends ComponentType<any>>({
                   <Core.Icon code="faTrash" />
                 </IconButton>
               </Tooltip>
+            }
+            onConfirm={() =>
+              startTransition(() => {
+                onDelete();
+                setAnchorEl(undefined);
+              })
             }
           />
         </Toolbar>

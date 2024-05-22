@@ -1,7 +1,8 @@
+import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement } from 'react';
+import { createElement, useEffect, useId, useMemo, useState } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
@@ -76,6 +77,32 @@ export function useChangeEvents(
       onChange({ ...value });
     },
   };
+}
+
+export function useControllerToggleVisible() {
+  const targetId = useId();
+  const [visible, setVisible] = useState(true);
+
+  const resizeObserver = useMemo(() => {
+    const refresh = _debounce(() => setVisible(true), 200);
+
+    return new ResizeObserver(() => {
+      setVisible(false);
+      refresh();
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = global.document.getElementById(targetId);
+
+    if (el) {
+      resizeObserver.observe(el);
+
+      return () => resizeObserver.unobserve(el);
+    }
+  }, [targetId, resizeObserver]);
+
+  return [targetId, visible] as const;
 }
 
 export function useNodePropsEditedOverride(
