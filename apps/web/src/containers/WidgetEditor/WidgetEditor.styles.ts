@@ -8,10 +8,9 @@ export const useAppendNodeStyles = makeStyles({
   name: 'AppendNode',
 })((theme) => ({
   toggle: {
-    background: theme.palette.background.paper,
-    border: `2px dashed ${theme.palette.primary.main}`,
+    background: theme.palette.secondary.main,
     boxShadow: theme.shadows[3],
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.contrastText,
     margin: theme.spacing(1),
   },
 }));
