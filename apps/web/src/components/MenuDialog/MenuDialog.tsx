@@ -17,12 +17,11 @@ import { Fragment, forwardRef, useState } from 'react';
 import { useDialogStyles } from './MenuDialog.styles';
 import type { MenuDialogProps, SubTransitionProps } from './MenuDialog.types';
 
-const SubTransition = forwardRef(function Transition(
-  props: SubTransitionProps,
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+const SubTransition = forwardRef<unknown, SubTransitionProps>(
+  function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+  }
+);
 
 export default function MenuDialog({
   TransitionComponent,
