@@ -9,7 +9,8 @@
     "@google-cloud/secret-manager": "^5.2.0",
     "@weavcraft/common": "0.0.1",
     "routing-controllers-openapi": "^4.0.0",
-    "koa": "^2.15.0"
+    "koa": "^2.15.0",
+    "lodash": "^4.17.21"
   },
   "type": "commonjs",
   "main": "./src/index.js",

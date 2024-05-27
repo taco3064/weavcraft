@@ -60,7 +60,7 @@ export interface VerifyJWTResult<T = any> {
 export class Jwt {
   constructor(
     private secret: Secret,
-    private option: SignOptions = {
+    public option: SignOptions = {
       expiresIn: 60 * 60,
     }
   ) {}

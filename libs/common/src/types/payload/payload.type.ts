@@ -1,9 +1,10 @@
-import { UpdatedDocument, CreatedDocument } from "../mongodb";
+import { UpdatedDocument, CreatedDocument } from '../mongodb';
 
 export type Payload = {
   name: string;
   description?: string;
-} & UpdatedDocument & CreatedDocument;
+} & UpdatedDocument &
+  CreatedDocument;
 
 export type PayloadData = {
   id: string;
