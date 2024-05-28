@@ -54,7 +54,7 @@ jobs:
       projectName: weavcraft
       projectSource: weavcraft
       appVersion: ${{ inputs.version }}
-      helmVersion: 0.0.${{ github.run_number }}
+      helmVersion: ${{ inputs.version }}
       environment: k8s-weavcraft
     secrets:
       HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
