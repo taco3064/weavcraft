@@ -1,15 +1,14 @@
-import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useEffect, useId, useMemo, useState } from 'react';
+import { createElement, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
 import type { AppendNodeProps } from './WidgetEditor.types';
+import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PropsDefinition, WidgetConfigs, WidgetType } from '~web/services';
-import type { RenderConfig } from '~web/hooks';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
   componentName: 'Fragment',
@@ -25,6 +24,12 @@ const FRAGMENT_DEFINITION: PropsDefinition = {
     },
   },
 };
+
+function getWidgetNodePaths(paths: ConfigPaths) {
+  return paths
+    .map((path) => (typeof path === 'string' ? ['props', path, 'value'] : path))
+    .flat();
+}
 
 export function useChangeEvents(
   value: RenderConfig,
@@ -63,46 +68,21 @@ export function useChangeEvents(
         return onChange({} as RenderConfig);
       }
 
-      const lastPath = paths.pop() as string | number;
+      const fullPaths = getWidgetNodePaths(paths);
+      const lastPath = fullPaths.pop() as string | number;
 
       if (typeof lastPath !== 'number') {
-        _unset(value, paths);
+        _unset(value, fullPaths);
       } else {
-        const nodes = _get(value, paths);
+        const nodes = _get(value, fullPaths);
 
         nodes.splice(lastPath, 1);
-        _set(value, paths, [...nodes]);
+        _set(value, fullPaths, [...nodes]);
       }
 
       onChange({ ...value });
     },
   };
-}
-
-export function useControllerToggleVisible() {
-  const targetId = useId();
-  const [visible, setVisible] = useState(true);
-
-  const resizeObserver = useMemo(() => {
-    const refresh = _debounce(() => setVisible(true), 200);
-
-    return new ResizeObserver(() => {
-      setVisible(false);
-      refresh();
-    });
-  }, []);
-
-  useEffect(() => {
-    const el = global.document.getElementById(targetId);
-
-    if (el) {
-      resizeObserver.observe(el);
-
-      return () => resizeObserver.unobserve(el);
-    }
-  }, [targetId, resizeObserver]);
-
-  return [targetId, visible] as const;
 }
 
 export function useNodePropsEditedOverride(
@@ -147,4 +127,8 @@ export function useNodePropsEditedOverride(
       props
     );
   };
+}
+
+export function useWidgetNodePaths(paths: ConfigPaths) {
+  return useMemo(() => getWidgetNodePaths(paths), [paths]);
 }

@@ -1,11 +1,12 @@
 import type { ComponentType } from 'react';
 import type { WidgetConfigs } from '~web/services';
 
+export type ConfigPaths = (string | number)[];
 export type RenderConfig = Pick<WidgetConfigs, 'widget' | 'props'>;
 
 export type GenerateOptions = {
   key?: number;
-  paths?: (string | number)[];
+  paths?: ConfigPaths;
 };
 
 export type RenderFn = <P extends object>(
@@ -14,6 +15,6 @@ export type RenderFn = <P extends object>(
     key?: number;
     props: P;
     config: RenderConfig;
-    paths: (string | number)[];
+    paths: ConfigPaths;
   }
 ) => JSX.Element;

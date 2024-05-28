@@ -1,9 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
-
-import type {
-  ControllerStyleParams,
-  MainStyleParams,
-} from './WidgetEditor.types';
+import type { MainStyleParams } from './WidgetEditor.types';
 
 export const useAppendNodeStyles = makeStyles({
   name: 'AppendNode',
@@ -13,39 +9,6 @@ export const useAppendNodeStyles = makeStyles({
     boxShadow: theme.shadows[3],
     color: theme.palette.secondary.contrastText,
     margin: theme.spacing(1),
-  },
-}));
-
-export const useControllerStyles = makeStyles<ControllerStyleParams>({
-  name: 'Controller',
-})((theme, { expanded }) => ({
-  toggle: {
-    background: theme.palette.background.paper,
-    border: `2px dotted ${theme.palette.secondary.main}`,
-    boxShadow: theme.shadows[3],
-    color: theme.palette.secondary.main,
-    opacity: expanded ? 0.4 : 1,
-    transform: `translateX(${theme.spacing(-2)})`,
-    zIndex: 0,
-
-    '&:hover': {
-      opacity: 1,
-    },
-  },
-  popover: {
-    background: 'transparent',
-    paddingRight: theme.spacing(1),
-  },
-  standard: {
-    display: 'none',
-
-    '& + *': {
-      filter: `brightness(${expanded ? 1.2 : 1})`,
-    },
-  },
-  toolbar: {
-    background: theme.palette.background.paper,
-    borderRadius: `${theme.spacing(2.5)} / 50%`,
   },
 }));
 

@@ -13,6 +13,7 @@ import { HexAlphaColorPicker } from 'react-colorful';
 import { Trans } from 'next-i18next';
 
 import ColorInput from './PaletteEditor.ColorInput';
+import { useEditorListStyles } from '~web/styles';
 import { useEditorStyles } from './PaletteEditor.styles';
 import type { ColorEditorProps } from './PaletteEditor.types';
 
@@ -22,7 +23,11 @@ export default function ColorEditor({
   value,
   onChange,
 }: ColorEditorProps) {
-  const { classes } = useEditorStyles();
+  const { classes } = useEditorListStyles();
+
+  const {
+    classes: { colorPicker: colorPickerClassName },
+  } = useEditorStyles();
 
   return (
     <Fade key={items?.join('|') || ''} in timeout={1200}>
@@ -65,7 +70,7 @@ export default function ColorEditor({
                   fontWeight: 600,
                 }}
                 secondaryTypographyProps={{
-                  className: classes.colorPicker,
+                  className: colorPickerClassName,
                   component: 'div',
                 }}
                 secondary={

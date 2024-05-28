@@ -1,14 +1,16 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { ComponentProps, ComponentType } from 'react';
 
+import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PortalContainerEl } from '~web/contexts';
-import type { RenderConfig } from '~web/hooks';
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
 export const ControllerProps = Symbol('ControllerProps');
-
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
-export type ControllerStyleParams = { expanded: boolean };
+
+type StructureEvent = {
+  target: RenderConfig;
+  paths: ConfigPaths;
+};
 
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
@@ -24,14 +26,21 @@ export interface AppendNodeProps {
   onAppend: (widget: WidgetType) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ControllerProps<W extends ComponentType<any>> =
-  ComponentProps<W> & {
-    'widget.editor.controller.props': {
-      WidgetEl: W;
-      config: RenderConfig;
-      visibled?: boolean;
-      onDelete: () => void;
-      onEdit: () => void;
-    };
-  };
+export type StructureActionProps<P extends string = 'paths'> = Record<
+  P,
+  ConfigPaths
+> & {
+  config: RenderConfig;
+  onDelete: (e: StructureEvent) => void;
+  onEdit: (e: StructureEvent) => void;
+};
+
+export interface StructureItemProps extends StructureActionProps {
+  onActive: (e: StructureEvent) => void;
+}
+
+export interface StructureProps
+  extends StructureActionProps<'active'>,
+    Pick<StructureItemProps, 'onActive'> {
+  action: React.ReactNode;
+}
