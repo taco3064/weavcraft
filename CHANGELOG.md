@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.26](https://github.com/taco3064/weavcraft/compare/v0.0.25...v0.0.26) (2024-05-29)
+
+
+### Features
+
+* **@weavcraft/common:** add auth login dto, and add supabase exception ([4626ea7](https://github.com/taco3064/weavcraft/commit/4626ea78b3a6a9915a0cc3eef510391b4638992e))
+* **@weavcraft/common:** add auth supabase dto and type ([1a3bfc4](https://github.com/taco3064/weavcraft/commit/1a3bfc4ffb6e2a10e376e4abba5c66a5fb232360))
+* **@weavcraft/common:** update KoaHttpErrorInterceptor body.status ref ctx.status & 404 exception ([70727e4](https://github.com/taco3064/weavcraft/commit/70727e40e7b66e9de630a2b03c80e08c9582709b))
+* **@weavcraft/helpers:** adjust jwt sign options public ([5429c4a](https://github.com/taco3064/weavcraft/commit/5429c4ab0b9d67a6d293b3e49c77f0bc22543866))
+* **@weavcraft/modules:** add auth and auth.supabase usecase modules ([fb054c0](https://github.com/taco3064/weavcraft/commit/fb054c06f9f7381cc154aa75ef69c801e29b6856))
+* **@weavcraft/modules:** add AuthUseCase and AuthSupabaseUseCase modules ([43067b6](https://github.com/taco3064/weavcraft/commit/43067b69ed6ec7387dfd695b3777b13c9209dcf0))
+* **apps/api:** add auth and jwt controllers, set jwt and supabaseClient ioc helpers ([e6a4d6b](https://github.com/taco3064/weavcraft/commit/e6a4d6bdfaac64874abeaa7be8542d8350ad8ae9))
+* **apps/api:** add auth controller login response schema ([e6434d0](https://github.com/taco3064/weavcraft/commit/e6434d0a718eaf76a84a4b474d99c4e8b5ba112a))
+* **apps/api:** add supabase auth controller, and set supabase ioc provider ([f57f8ed](https://github.com/taco3064/weavcraft/commit/f57f8ed51732749c0a0dce0b9fb2716be9ed632a))
+
+
+### Bug Fixes
+
+* **@weavcraft/repos:** remove hierarchy and payload mongoose schema definition ([b4dfb3d](https://github.com/taco3064/weavcraft/commit/b4dfb3da80fa1c84c674473b72f315f9471bf923))
+
 ### [0.0.25](https://github.com/taco3064/weavcraft/compare/v0.0.24...v0.0.25) (2024-05-21)
 
 
