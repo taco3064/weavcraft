@@ -50,7 +50,6 @@ jobs:
     name: Helm release - weavcraft ${{ inputs.version}}
     uses: royfuwei/rf-devops/.github/workflows/_release-helm.yml@main
     with:
-      config-path: .github/labeler.yml
       projectName: weavcraft
       projectSource: weavcraft
       appVersion: ${{ inputs.version }}
