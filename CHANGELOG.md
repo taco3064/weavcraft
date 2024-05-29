@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.32](https://github.com/taco3064/weavcraft/compare/v0.0.31...v0.0.32) (2024-05-29)
+
+
+### Features
+
+* **apps/api:** remove GCPHelper secret-manager ([72a47ad](https://github.com/taco3064/weavcraft/commit/72a47ad998da08a9b3868be28d288582403dca25))
+
 ### [0.0.31](https://github.com/taco3064/weavcraft/compare/v0.0.30...v0.0.31) (2024-05-29)
 
 
