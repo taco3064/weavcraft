@@ -2,7 +2,7 @@ import { HexColorInput } from 'react-colorful';
 import type { ComponentProps } from 'react';
 import type { ContainerProps } from '@mui/material/Container';
 
-import type { EditorSubheaderProps } from '~web/components';
+import type { EditorListProps } from '~web/components';
 import type { PortalContainerEl } from '~web/contexts';
 import type { ThemePalette } from '~web/services';
 
@@ -26,8 +26,7 @@ export interface PaletteEditorProps
   toolbarEl?: PortalContainerEl;
 }
 
-export interface ColorEditorProps
-  extends Pick<EditorSubheaderProps, 'onClose'> {
+export interface ColorEditorProps extends Pick<EditorListProps, 'onClose'> {
   items?: ColorName[];
   value: Partial<ThemePalette>;
   onChange: ({ name, color }: PaletteColor) => void;

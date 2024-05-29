@@ -7,6 +7,7 @@ import type { ElementNodeProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
+import type { EditorListClasses } from '~web/components';
 import type { PropsDefinition, WidgetConfigs } from '~web/services';
 
 import type {
@@ -115,8 +116,8 @@ export function useNodeItemsRender(
     };
   }, [widget, getDefinition]);
 
-  return nodePaths.reduce<ReturnType<typeof Children.toArray>>(
-    (items, nodePath) => {
+  return (classes: EditorListClasses) =>
+    nodePaths.reduce<ReturnType<typeof Children.toArray>>((items, nodePath) => {
       const { [nodePath]: nodes } = props;
 
       if (nodes?.value && nodes.type === 'ElementNode') {
@@ -129,15 +130,13 @@ export function useNodeItemsRender(
         widgets.length &&
           items.push(
             ...Children.toArray(
-              render({ isMultiple, nodePath, widgets, getPaths })
+              render({ classes, isMultiple, nodePath, widgets, getPaths })
             )
           );
       }
 
       return items;
-    },
-    []
-  );
+    }, []);
 }
 
 export function useNodePropsEditedOverride(

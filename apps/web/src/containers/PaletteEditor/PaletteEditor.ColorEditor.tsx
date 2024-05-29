@@ -1,7 +1,5 @@
 import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
-import Fade from '@mui/material/Fade';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,8 +9,7 @@ import { HexAlphaColorPicker } from 'react-colorful';
 import { useTranslation } from 'next-i18next';
 
 import ColorInput from './PaletteEditor.ColorInput';
-import { EditorSubheader } from '~web/components';
-import { useEditorListStyles } from '~web/styles';
+import { EditorList } from '~web/components';
 import { useEditorStyles } from './PaletteEditor.styles';
 import type { ColorEditorProps } from './PaletteEditor.types';
 
@@ -23,21 +20,18 @@ export default function ColorEditor({
   onChange,
 }: ColorEditorProps) {
   const { t } = useTranslation();
-  const { classes } = useEditorListStyles();
 
   const {
     classes: { colorPicker: colorPickerClassName },
   } = useEditorStyles();
 
   return (
-    <Fade key={items?.join('|') || ''} in timeout={1200}>
-      <List
-        className={classes.root}
-        subheader={
-          <EditorSubheader title={t('themes:ttl-editor')} onClose={onClose} />
-        }
-      >
-        {items?.map((name) => {
+    <EditorList
+      key={items?.join('|') || ''}
+      title={t('themes:ttl-editor')}
+      onClose={onClose}
+      render={(classes) =>
+        items?.map((name) => {
           const color = _get(value, name);
 
           return (
@@ -86,8 +80,8 @@ export default function ColorEditor({
               />
             </ListItem>
           );
-        })}
-      </List>
-    </Fade>
+        })
+      }
+    />
   );
 }
