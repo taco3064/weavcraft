@@ -1,18 +1,25 @@
 FROM node:20.11.1-alpine3.19 AS builder
 
 WORKDIR /build
-COPY . .
+COPY apps/api apps/api
+COPY libs libs
+COPY packages packages
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+COPY nx.json nx.json
+COPY project.json project.json
+COPY tsconfig.base.json tsconfig.base.json
 
-RUN npm ci \
+RUN npm ci --ignore-scripts \
     && npx nx run api:build:production \
-    && rm -rf node_modules \
-    && npm ci
+    && npm prune --production \
+    && npm cache clean --force
 
 
-FROM node:20.10.0-alpine3.19
+FROM node:20.11.1-alpine3.19
 RUN apk update \
     && apk upgrade \
-    && apk add tzdata
+    && apk --no-cache add tzdata
 
 RUN cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime
 RUN echo "Asia/Taipei" >  /etc/timezone
