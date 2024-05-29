@@ -1,0 +1,82 @@
+name: CD flow - Build & Publish
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+    secrets:
+      envPAT:
+        required: true
+      KUBE_CONFIG:
+        required: true
+      HARBOR_HOST:
+        required: true
+      HARBOR_USERNAME:
+        required: true
+      HARBOR_TOKEN:
+        required: true
+      # env secrets
+      ENV_DB_MONGO_URI:
+        required: true
+      ENV_PUBLIC_SUPABASE_URL:
+        required: true
+      ENV_PUBLIC_SUPABASE_ANON_KEY:
+        required: true
+      ENV_JWT_SECRET:
+        required: true
+      ENV_JWT_EXPIRES_IN:
+        required: true
+
+jobs:
+  docker-build-api:
+    name: Docker release - weavcraft-api
+    uses: royfuwei/rf-devops/.github/workflows/_release-docker.yml@main
+    with:
+      projectName: api
+      projectSource: weavcraft
+      version: ${{ inputs.version }}
+      buildPath: apps/api/Dockerfile
+      environment: k8s-weavcraft
+    secrets:
+      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+      envPAT: ${{ secrets.envPAT }}
+
+  helm-release:
+    needs: [docker-build-api]
+    name: Helm release - weavcraft ${{ inputs.version}}
+    uses: royfuwei/rf-devops/.github/workflows/_release-helm.yml@main
+    with:
+      projectName: weavcraft
+      projectSource: weavcraft
+      appVersion: ${{ inputs.version }}
+      helmVersion: ${{ inputs.version }}
+      environment: k8s-weavcraft
+    secrets:
+      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+      envPAT: ${{ secrets.envPAT }}
+
+  deploy-weavcraft:
+    needs: helm-release
+    name: Deploy local
+    uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
+    with:
+      projectName: weavcraft
+      projectSource: weavcraft
+      environment: k8s-weavcraft
+    secrets:
+      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      envPAT: ${{ secrets.GIT_TOKEN }}
+      ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
+      ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
+      ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
+      ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
+      ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
