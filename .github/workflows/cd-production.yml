@@ -168,7 +168,7 @@ jobs:
   deploy-local-k8s:
     name: Deploy local k8s
     if: github.event.pull_request.merged == true
-    needs: standard-version
+    needs: release
     uses: ./.github/workflows/deploy-local-k8s.yml
     with:
       version: ${{ needs.standard-version.outputs.current-version }}
