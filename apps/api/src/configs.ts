@@ -40,12 +40,20 @@ export class Configs {
   public get cfgs() {
     return {
       env: this._env.NODE_ENV,
+      jwt: {
+        secret: this._env.JWT_SECRET,
+        expiresIn: Number(this._env.JWT_EXPIRES_IN) || 3600,
+      },
       app: {
         host: this._env.HOST || 'localhost',
         port: Number(this._env.APP_API_PORT) || 7001,
       },
       mongodb: {
         uri: this._env.MONGO_DEV_URI ?? this._env.DB_MONGO_URI,
+      },
+      supabase: {
+        url: process.env['PUBLIC_SUPABASE_URL'],
+        key: process.env['PUBLIC_SUPABASE_ANON_KEY'],
       },
     };
   }

@@ -1,0 +1,50 @@
+name: CD flow - Build & Publish
+
+on:
+  workflow_call:
+    secrets:
+      SONAR_HOST_URL:
+        required: true
+      SONAR_API_TOKEN:
+        required: true
+      SONAR_WEB_TOKEN:
+        required: true
+      SONAR_LIBS_TOKEN:
+        required: true
+
+jobs:
+  sonarqube-scan-api:
+    uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
+    name: Scan apps/api
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
+    with:
+      projectKey: weavcraft-api
+      projectName: weavcraft/api
+      projectSource: apps/api
+      environment: actions
+
+  sonarqube-scan-web:
+    uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
+    name: Scan apps/web
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
+    with:
+      projectKey: weavcraft-web
+      projectName: weavcraft/web
+      projectSource: apps/web
+      environment: actions
+
+  sonarqube-scan-libs:
+    uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
+    name: Scan libs
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
+    with:
+      projectKey: weavcraft-libs
+      projectName: weavcraft/libs
+      projectSource: libs
+      environment: actions
