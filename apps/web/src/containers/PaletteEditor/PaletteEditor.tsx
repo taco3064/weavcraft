@@ -116,11 +116,7 @@ export default function PaletteEditor({
           <ColorEditor
             items={editing}
             value={value}
-            action={
-              <IconButton size="large" onClick={() => onToggle(false)}>
-                <Core.Icon code="faAngleRight" />
-              </IconButton>
-            }
+            onClose={() => onToggle(false)}
             onChange={({ name, color }) =>
               setValue({ ..._set(value, name, color?.toUpperCase()) })
             }

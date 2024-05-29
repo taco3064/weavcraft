@@ -9,7 +9,8 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import AppendNode from './WidgetEditor.AppendNode';
-import Structure from './WidgetEditor.Structure';
+import ElementNode from './WidgetEditor.ElementNode';
+import PrimitiveValue from './WidgetEditor.PrimitiveValue';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
@@ -51,7 +52,10 @@ export default withPropsDefinition(function WidgetEditor({
   const { onDeleteNode, ...changeEvents } = useChangeEvents(value, setValue);
 
   const { containerEl, onToggle } = useTogglePortal(() =>
-    setEditing(undefined)
+    startTransition(() => {
+      setPortalMode(undefined);
+      setEditing(undefined);
+    })
   );
 
   const overrideNodes = useNodePropsEditedOverride(AppendNode, changeEvents);
@@ -101,10 +105,11 @@ export default withPropsDefinition(function WidgetEditor({
 
         <PortalWrapper containerEl={containerEl}>
           {portalMode === 'treeView' && (
-            <Structure
-              config={value}
+            <ElementNode
               active={active}
+              config={value}
               onActive={(paths) => setActive(paths)}
+              onClose={() => onToggle(false)}
               onDelete={({ paths }) =>
                 startTransition(() => {
                   const active = paths.slice(
@@ -124,12 +129,11 @@ export default withPropsDefinition(function WidgetEditor({
                   setEditing(target);
                 })
               }
-              action={
-                <IconButton size="large" onClick={() => onToggle(false)}>
-                  <Core.Icon code="faAngleRight" />
-                </IconButton>
-              }
             />
+          )}
+
+          {portalMode === 'props' && (
+            <PrimitiveValue config={editing} onClose={() => onToggle(false)} />
           )}
         </PortalWrapper>
       </Container>

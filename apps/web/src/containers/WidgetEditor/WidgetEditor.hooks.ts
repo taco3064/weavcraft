@@ -87,6 +87,59 @@ export function useChangeEvents(
   };
 }
 
+export function useNodeItemsRender(
+  render: StructureItemsRenderFn,
+  config?: RenderConfig
+) {
+  const { widget, props = {} } = config || {};
+  const { getDefinition } = usePropsDefinition();
+
+  const { nodePaths, getPaths } = useMemo<{
+    nodePaths: string[];
+    getPaths: GetPathsFn;
+  }>(() => {
+    const { elementNodeProps = {} } = getDefinition(widget) || {};
+
+    return {
+      nodePaths: Object.keys(elementNodeProps),
+
+      getPaths: (nodePath, index, paths = []) => {
+        const result: ConfigPaths = [...paths, nodePath];
+
+        if (elementNodeProps[nodePath]?.definition?.multiple) {
+          result.push(index);
+        }
+
+        return result;
+      },
+    };
+  }, [widget, getDefinition]);
+
+  return nodePaths.reduce<ReturnType<typeof Children.toArray>>(
+    (items, nodePath) => {
+      const { [nodePath]: nodes } = props;
+
+      if (nodes?.value && nodes.type === 'ElementNode') {
+        const isMultiple = Array.isArray(nodes.value);
+
+        const widgets = (
+          isMultiple ? nodes.value : [nodes.value]
+        ) as RenderConfig[];
+
+        widgets.length &&
+          items.push(
+            ...Children.toArray(
+              render({ isMultiple, nodePath, widgets, getPaths })
+            )
+          );
+      }
+
+      return items;
+    },
+    []
+  );
+}
+
 export function useNodePropsEditedOverride(
   AppendNode: ComponentType<AppendNodeProps>,
   {
@@ -129,58 +182,6 @@ export function useNodePropsEditedOverride(
       props
     );
   };
-}
-
-export function useStructureItemsRender(
-  config: RenderConfig,
-  render: StructureItemsRenderFn
-) {
-  const { widget, props = {} } = config;
-  const { getDefinition } = usePropsDefinition();
-
-  const { nodePaths, getPaths } = useMemo<{
-    nodePaths: string[];
-    getPaths: GetPathsFn;
-  }>(() => {
-    const { elementNodeProps = {} } = getDefinition(widget);
-
-    return {
-      nodePaths: Object.keys(elementNodeProps),
-
-      getPaths: (nodePath, index, paths = []) => {
-        const result: ConfigPaths = [...paths, nodePath];
-
-        if (elementNodeProps[nodePath]?.definition?.multiple) {
-          result.push(index);
-        }
-
-        return result;
-      },
-    };
-  }, [widget, getDefinition]);
-
-  return nodePaths.reduce<ReturnType<typeof Children.toArray>>(
-    (items, nodePath) => {
-      const { [nodePath]: nodes } = props;
-
-      if (nodes?.value && nodes.type === 'ElementNode') {
-        const isMultiple = Array.isArray(nodes.value);
-
-        const widgets = (
-          isMultiple ? nodes.value : [nodes.value]
-        ) as RenderConfig[];
-
-        items.push(
-          ...Children.toArray(
-            render({ isMultiple, nodePath, widgets, getPaths })
-          )
-        );
-      }
-
-      return items;
-    },
-    []
-  );
 }
 
 export function useWidgetNodePaths(paths: ConfigPaths) {

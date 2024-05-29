@@ -7,8 +7,9 @@
   "btn-widget-structure": "View Structure",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",
+  "ttl-element-node": "Widget Structure",
+  "ttl-primitive-value": "Widget Settings",
   "ttl-select-widget": "Select Widget",
-  "ttl-structure": "Widget Structure",
   "lbl-category": {
     "Display": "Display",
     "Input": "Input",

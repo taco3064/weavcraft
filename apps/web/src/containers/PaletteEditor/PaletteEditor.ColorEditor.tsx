@@ -1,28 +1,28 @@
 import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
-import Divider from '@mui/material/Divider';
 import Fade from '@mui/material/Fade';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import TextField from '@mui/material/TextField';
 import _get from 'lodash/get';
 import { HexAlphaColorPicker } from 'react-colorful';
-import { Trans } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
 import ColorInput from './PaletteEditor.ColorInput';
+import { EditorSubheader } from '~web/components';
 import { useEditorListStyles } from '~web/styles';
 import { useEditorStyles } from './PaletteEditor.styles';
 import type { ColorEditorProps } from './PaletteEditor.types';
 
 export default function ColorEditor({
-  action,
   items,
   value,
+  onClose,
   onChange,
 }: ColorEditorProps) {
+  const { t } = useTranslation();
   const { classes } = useEditorListStyles();
 
   const {
@@ -34,25 +34,10 @@ export default function ColorEditor({
       <List
         className={classes.root}
         subheader={
-          <>
-            <ListSubheader>
-              {action && <ListItemAvatar>{action}</ListItemAvatar>}
-
-              <ListItemText
-                primary={<Trans i18nKey="themes:ttl-editor" />}
-                primaryTypographyProps={{
-                  variant: 'h6',
-                  color: 'text.primary',
-                  fontWeight: 600,
-                }}
-              />
-            </ListSubheader>
-
-            <Divider />
-          </>
+          <EditorSubheader title={t('themes:ttl-editor')} onClose={onClose} />
         }
       >
-        {items?.map((name, i) => {
+        {items?.map((name) => {
           const color = _get(value, name);
 
           return (
@@ -64,7 +49,7 @@ export default function ColorEditor({
               </ListItemAvatar>
 
               <ListItemText
-                primary={<Trans i18nKey={`themes:lbl-color.${name}`} />}
+                primary={t(`themes:lbl-color.${name}`)}
                 primaryTypographyProps={{
                   color: 'secondary',
                   fontWeight: 600,
@@ -84,7 +69,7 @@ export default function ColorEditor({
                       fullWidth
                       variant="outlined"
                       size="small"
-                      label={<Trans i18nKey="themes:lbl-color-code" />}
+                      label={t('themes:lbl-color-code')}
                       onChange={(e) => onChange({ name, color: e.toString() })}
                       InputLabelProps={{ shrink: true }}
                       InputProps={{

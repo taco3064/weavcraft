@@ -2,6 +2,7 @@ import type { ContainerProps } from '@mui/material/Container';
 import type { ReactNode } from 'react';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
+import type { EditorSubheaderProps } from '~web/components';
 import type { PortalContainerEl } from '~web/contexts';
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
@@ -52,7 +53,7 @@ export interface AppendNodeProps {
   onAppend: (widget: WidgetType) => void;
 }
 
-export type StructureActionProps<P extends string = 'paths'> = Record<
+export type NodeActionProps<P extends string = 'paths'> = Record<
   P,
   ConfigPaths
 > & {
@@ -61,12 +62,13 @@ export type StructureActionProps<P extends string = 'paths'> = Record<
   onEdit: (e: StructureEvent) => void;
 };
 
-export interface StructureItemProps extends StructureActionProps {
+export interface ElementNodeProps
+  extends NodeActionProps<'active'>,
+    Pick<EditorSubheaderProps, 'onClose'> {
   onActive: (e: ConfigPaths) => void;
 }
 
-export interface StructureProps
-  extends StructureActionProps<'active'>,
-    Pick<StructureItemProps, 'onActive'> {
-  action: React.ReactNode;
+export interface PrimitiveValueProps
+  extends Pick<EditorSubheaderProps, 'onClose'> {
+  config?: RenderConfig;
 }
