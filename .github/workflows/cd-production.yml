@@ -164,22 +164,3 @@ jobs:
                 } \
               }"
           done
-
-  deploy-local-k8s:
-    name: Deploy local k8s
-    if: github.event.pull_request.merged == true
-    needs: release
-    uses: ./.github/workflows/deploy-local-k8s.yml
-    with:
-      version: ${{ needs.standard-version.outputs.current-version }}
-    secrets:
-      envPAT: ${{ secrets.GIT_TOKEN }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
-      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
-      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
-      ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
-      ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
-      ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
-      ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
-      ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
