@@ -24,6 +24,8 @@ export default function StructureItem({
   const { t } = useTranslation();
   const { classes } = useEditorListStyles();
 
+  console.log(paths);
+
   const items = useStructureItemsRender(
     config,
     ({ isMultiple, nodePath, widgets, getPaths }) => (
@@ -74,7 +76,14 @@ export default function StructureItem({
           ) : (
             <IconButton
               size="large"
-              onClick={() => onActive(paths.slice(0, -2))}
+              onClick={() =>
+                onActive(
+                  paths.slice(
+                    0,
+                    typeof paths[paths.length - 1] === 'string' ? -1 : -2
+                  )
+                )
+              }
             >
               <Core.Icon code="faChevronLeft" />
             </IconButton>
