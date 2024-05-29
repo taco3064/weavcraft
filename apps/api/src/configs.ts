@@ -1,14 +1,8 @@
-import { GCPHelper } from '@weavcraft/helpers';
 import dotenvFlow from 'dotenv-flow';
 
 export class Configs {
   private static _instance: Configs;
   private _env: Record<string, string>;
-  private gcpSecrets: string[] = [
-    'MONGO_DEV_URI',
-    'OAUTH_GOOGLE_CLIENT_ID',
-    'OAUTH_GOOGLE_CLIENT_SECRET',
-  ];
 
   private flowEnv = dotenvFlow.config({
     node_env: process.env.NODE_ENV,
@@ -29,8 +23,7 @@ export class Configs {
   }
 
   public async loadGCPEnv() {
-    const gcpEnv = await GCPHelper.getSecretEnvironments(...this.gcpSecrets);
-    this._env = { ...this._env, ...gcpEnv };
+    this._env = { ...this._env };
   }
 
   public get env() {
