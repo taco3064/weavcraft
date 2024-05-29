@@ -34,11 +34,11 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
   release-deploy-k8s:
-    name: Deploy local k8s ${{ needs.standard-version.outputs.current-version }}
+    name: Deploy local k8s ${{ needs.release.outputs.current-version }}
     needs: release
     uses: ./.github/workflows/deploy-local-k8s.yml
     with:
-      version: ${{ needs.standard-version.outputs.current-version }}
+      version: ${{ needs.release.outputs.current-version }}
     secrets:
       envPAT: ${{ secrets.GIT_TOKEN }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
