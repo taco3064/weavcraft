@@ -30,7 +30,7 @@ jobs:
     name: Scan apps/web
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      SONAR_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
     with:
       projectKey: weavcraft-web
       projectName: weavcraft/web
