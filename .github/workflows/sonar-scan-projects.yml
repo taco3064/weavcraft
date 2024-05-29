@@ -1,3 +1,5 @@
+name: CD flow - Sonar
+
 on:
   workflow_call:
     secrets:
