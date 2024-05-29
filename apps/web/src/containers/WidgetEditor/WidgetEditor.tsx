@@ -104,7 +104,7 @@ export default withPropsDefinition(function WidgetEditor({
             <Structure
               config={value}
               active={active}
-              onActive={({ paths }) => setActive(paths)}
+              onActive={(paths) => setActive(paths)}
               onDelete={({ paths }) =>
                 startTransition(() => {
                   const active = paths.slice(
@@ -120,6 +120,7 @@ export default withPropsDefinition(function WidgetEditor({
               onEdit={({ target }) =>
                 startTransition(() => {
                   onToggle(true);
+                  setPortalMode('props');
                   setEditing(target);
                 })
               }

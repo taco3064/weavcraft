@@ -39,7 +39,7 @@ export const useEditorListStyles = makeStyles({ name: 'EditorList' })(
       marginRight: theme.spacing(1),
     },
     subitem: {
-      paddingLeft: theme.spacing(4),
+      paddingLeft: theme.spacing(9),
     },
   })
 );

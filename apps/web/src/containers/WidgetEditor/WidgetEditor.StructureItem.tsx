@@ -1,15 +1,17 @@
+import Badge from '@mui/material/Badge';
 import Core from '@weavcraft/core';
+import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useMemo, type ReactNode } from 'react';
+import ListSubheader from '@mui/material/ListSubheader';
+import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import StructureAction from './WidgetEditor.StructureAction';
 import { useEditorListStyles } from '~web/styles';
-import { usePropsDefinition } from '~web/contexts';
-import type { RenderConfig } from '~web/hooks';
+import { useStructureItemsRender } from './WidgetEditor.hooks';
 import type { StructureItemProps } from './WidgetEditor.types';
 
 export default function StructureItem({
@@ -20,87 +22,67 @@ export default function StructureItem({
   onEdit,
 }: StructureItemProps) {
   const { t } = useTranslation();
-  const { getDefinition } = usePropsDefinition();
   const { classes } = useEditorListStyles();
-  const { widget, props = {} } = config;
 
-  const nodeProps = useMemo(() => {
-    const { elementNodeProps = {} } = getDefinition(widget);
+  const items = useStructureItemsRender(
+    config,
+    ({ isMultiple, nodePath, widgets, getPaths }) => (
+      <Fragment key={nodePath}>
+        <ListSubheader disableSticky className={classes.subitem}>
+          {nodePath}
+        </ListSubheader>
 
-    return Object.entries(elementNodeProps);
-  }, [widget, getDefinition]);
+        {widgets.map((config, i) => (
+          <ListItemButton
+            key={`${nodePath}-${i}`}
+            className={classes.subitem}
+            onClick={() => onActive(getPaths(nodePath, i, paths))}
+          >
+            <ListItemIcon className={classes.icon}>
+              <Badge badgeContent={!isMultiple ? 0 : i + 1} color="default">
+                <Core.Icon color="warning" code="faPuzzlePiece" />
+              </Badge>
+            </ListItemIcon>
 
-  const children = nodeProps.reduce<ReactNode[]>(
-    (children, [nodePath, { definition }]) => {
-      const { [nodePath]: nodes } = props;
+            <ListItemText
+              primary={t(`widgets:lbl-widgets.${config.widget}`)}
+              primaryTypographyProps={{
+                color: 'text.primary',
+                fontWeight: 600,
+              }}
+            />
 
-      if (nodes?.value && nodes.type === 'ElementNode') {
-        const widgets = (
-          Array.isArray(nodes.value) ? nodes.value : [nodes.value]
-        ) as RenderConfig[];
-
-        children.push(
-          ...widgets.map((config, i) => {
-            const subPaths = [
-              ...paths,
-              nodePath,
-              ...(definition?.multiple ? [i] : []),
-            ];
-
-            return (
-              <ListItemButton
-                key={`${nodePath}-${i}`}
-                className={classes.subitem}
-                onClick={() =>
-                  onActive({
-                    target: config,
-                    paths: subPaths,
-                  })
-                }
-              >
-                <ListItemIcon className={classes.icon}>
-                  <Core.Icon color="warning" code="faPuzzlePiece" />
-                </ListItemIcon>
-
-                <ListItemText
-                  primary={t(`widgets:lbl-widgets.${config.widget}`)}
-                  secondary={`${nodePath}${
-                    definition?.multiple ? `[${i}]` : ''
-                  }`}
-                  primaryTypographyProps={{
-                    color: 'text.primary',
-                    fontWeight: 600,
-                  }}
-                  secondaryTypographyProps={{
-                    variant: 'caption',
-                    color: 'text.secondary',
-                  }}
-                />
-
-                <StructureAction
-                  {...{ config, onDelete, onEdit }}
-                  paths={subPaths}
-                />
-              </ListItemButton>
-            );
-          })
-        );
-      }
-
-      return children;
-    },
-    []
+            <StructureAction
+              {...{ config, onDelete, onEdit }}
+              paths={getPaths(nodePath, i, paths)}
+            />
+          </ListItemButton>
+        ))}
+      </Fragment>
+    )
   );
 
   return (
     <>
       <ListItem>
         <ListItemIcon className={classes.icon}>
-          <Core.Icon code={children.length ? 'faChevronDown' : 'faMinus'} />
+          {!paths.length ? (
+            <Core.Icon
+              color="disabled"
+              code={items.length ? 'faChevronDown' : 'faMinus'}
+            />
+          ) : (
+            <IconButton
+              size="large"
+              onClick={() => onActive(paths.slice(0, -2))}
+            >
+              <Core.Icon code="faChevronLeft" />
+            </IconButton>
+          )}
         </ListItemIcon>
 
         <ListItemText
-          primary={t(`widgets:lbl-widgets.${widget}`)}
+          primary={t(`widgets:lbl-widgets.${config.widget}`)}
           primaryTypographyProps={{
             color: 'text.primary',
             fontWeight: 600,
@@ -110,7 +92,7 @@ export default function StructureItem({
         <StructureAction {...{ config, paths, onDelete, onEdit }} />
       </ListItem>
 
-      {children}
+      {items}
     </>
   );
 }

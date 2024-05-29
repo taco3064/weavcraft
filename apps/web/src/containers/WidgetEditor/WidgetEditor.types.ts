@@ -1,4 +1,5 @@
 import type { ContainerProps } from '@mui/material/Container';
+import type { ReactNode } from 'react';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PortalContainerEl } from '~web/contexts';
@@ -12,6 +13,31 @@ type StructureEvent = {
   paths: ConfigPaths;
 };
 
+export type GetPathsFn = (
+  nodePath: string,
+  index: number,
+  paths?: ConfigPaths
+) => ConfigPaths;
+
+export type StructureItemsRenderFn = (options: {
+  isMultiple: boolean;
+  nodePath: string;
+  widgets: RenderConfig[];
+  getPaths: GetPathsFn;
+}) => ReactNode;
+
+export interface ChangeEvents {
+  onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
+  onDeleteNode: (paths: ConfigPaths) => void;
+
+  onAddLastChild: (
+    config: RenderConfig,
+    path: string,
+    widget: WidgetType
+  ) => void;
+}
+
+//* Component Prop Types
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
   marginTop?: number;
@@ -36,7 +62,7 @@ export type StructureActionProps<P extends string = 'paths'> = Record<
 };
 
 export interface StructureItemProps extends StructureActionProps {
-  onActive: (e: StructureEvent) => void;
+  onActive: (e: ConfigPaths) => void;
 }
 
 export interface StructureProps

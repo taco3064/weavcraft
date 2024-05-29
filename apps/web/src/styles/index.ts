@@ -1,1 +1,1 @@
-export * from './editor-list';
+export * from './useEditorList';

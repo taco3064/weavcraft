@@ -24,8 +24,6 @@ export default function Structure({
   const { classes } = useEditorListStyles();
 
   const paths = useWidgetNodePaths(active);
-  console.log('===', active, paths, config);
-
   const widget: RenderConfig = !paths.length ? config : _get(config, paths);
 
   return (

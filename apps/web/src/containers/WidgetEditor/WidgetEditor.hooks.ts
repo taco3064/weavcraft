@@ -1,14 +1,20 @@
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo } from 'react';
+import { Children, createElement, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
-import type { AppendNodeProps } from './WidgetEditor.types';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { PropsDefinition, WidgetConfigs, WidgetType } from '~web/services';
+import type { PropsDefinition, WidgetConfigs } from '~web/services';
+
+import type {
+  AppendNodeProps,
+  ChangeEvents,
+  GetPathsFn,
+  StructureItemsRenderFn,
+} from './WidgetEditor.types';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
   componentName: 'Fragment',
@@ -34,9 +40,9 @@ function getWidgetNodePaths(paths: ConfigPaths) {
 export function useChangeEvents(
   value: RenderConfig,
   onChange: (value: RenderConfig) => void
-) {
+): ChangeEvents {
   return {
-    onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => {
+    onAddChild: (config, path, widget) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
         value: { widget },
@@ -46,11 +52,7 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
-    onAddLastChild: (
-      config: RenderConfig,
-      path: string,
-      widget: WidgetType
-    ) => {
+    onAddLastChild: (config, path, widget) => {
       const nodes: WidgetConfigs[] =
         _get(config, ['props', path, 'value']) || [];
 
@@ -63,7 +65,7 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
-    onDeleteNode: (paths: (string | number)[]) => {
+    onDeleteNode: (paths) => {
       if (!paths.length) {
         return onChange({} as RenderConfig);
       }
@@ -90,7 +92,7 @@ export function useNodePropsEditedOverride(
   {
     onAddChild,
     onAddLastChild,
-  }: Pick<ReturnType<typeof useChangeEvents>, 'onAddChild' | 'onAddLastChild'>
+  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
   const { getDefinition } = usePropsDefinition();
 
@@ -127,6 +129,58 @@ export function useNodePropsEditedOverride(
       props
     );
   };
+}
+
+export function useStructureItemsRender(
+  config: RenderConfig,
+  render: StructureItemsRenderFn
+) {
+  const { widget, props = {} } = config;
+  const { getDefinition } = usePropsDefinition();
+
+  const { nodePaths, getPaths } = useMemo<{
+    nodePaths: string[];
+    getPaths: GetPathsFn;
+  }>(() => {
+    const { elementNodeProps = {} } = getDefinition(widget);
+
+    return {
+      nodePaths: Object.keys(elementNodeProps),
+
+      getPaths: (nodePath, index, paths = []) => {
+        const result: ConfigPaths = [...paths, nodePath];
+
+        if (elementNodeProps[nodePath]?.definition?.multiple) {
+          result.push(index);
+        }
+
+        return result;
+      },
+    };
+  }, [widget, getDefinition]);
+
+  return nodePaths.reduce<ReturnType<typeof Children.toArray>>(
+    (items, nodePath) => {
+      const { [nodePath]: nodes } = props;
+
+      if (nodes?.value && nodes.type === 'ElementNode') {
+        const isMultiple = Array.isArray(nodes.value);
+
+        const widgets = (
+          isMultiple ? nodes.value : [nodes.value]
+        ) as RenderConfig[];
+
+        items.push(
+          ...Children.toArray(
+            render({ isMultiple, nodePath, widgets, getPaths })
+          )
+        );
+      }
+
+      return items;
+    },
+    []
+  );
 }
 
 export function useWidgetNodePaths(paths: ConfigPaths) {
