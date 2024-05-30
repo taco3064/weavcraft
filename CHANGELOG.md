@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.34](https://github.com/taco3064/weavcraft/compare/v0.0.33...v0.0.34) (2024-05-30)
+
+
+### Features
+
+* **web/editor-subheader:** add new component: EditorSubheader ([d4deab0](https://github.com/taco3064/weavcraft/commit/d4deab00d1bcc149d456105374741eccc19255d8))
+* **web/widget-editor:** add back button to back the parent widget ([f783294](https://github.com/taco3064/weavcraft/commit/f783294e067e76abd3b104fa49179f8ca09863f5))
+* **web/widget-editor:** add primitive props editor ([44f1e86](https://github.com/taco3064/weavcraft/commit/44f1e860c84f9a8e2fc9ac04286036aef82c8047))
+
+
+### Bug Fixes
+
+* **web/widget-editor:** add widget structure tree view ([ec71761](https://github.com/taco3064/weavcraft/commit/ec717610d8998d828d11ad0d7186e79b2704185f))
+* **web/widget-editor:** fixed the error in back button click event ([e60c0c2](https://github.com/taco3064/weavcraft/commit/e60c0c257988323902c70b8077a86b04993705cf))
+* **web/widget-editor:** refactor the program structure and consolidate related applications ([7d65ba3](https://github.com/taco3064/weavcraft/commit/7d65ba310b237b8f68bbeaaa04956e66d09f6be6))
+
 ### [0.0.33](https://github.com/taco3064/weavcraft/compare/v0.0.32...v0.0.33) (2024-05-30)
 
 ### [0.0.32](https://github.com/taco3064/weavcraft/compare/v0.0.31...v0.0.32) (2024-05-29)
