@@ -33,7 +33,7 @@ export default function ToggleButtonGroup<
         {...groupProps}
         data-testid="ToggleButtonGroup"
         exclusive={variant !== 'multiple'}
-        value={(value || []) as never}
+        value={(value ?? []) as never}
         onChange={(_e, newValue) => onChange?.(newValue, name)}
       >
         {records?.map((option, i) => {
