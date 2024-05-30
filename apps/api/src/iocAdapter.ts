@@ -4,12 +4,10 @@ import { IocLogger } from './common/helpers/logger.helper';
 import {
   INJECT_EXTERNAL_SUPABASE,
   INJECT_INSTANCE_JWT,
-  INJECT_MONGO_CLIENT_DEMO,
   INJECT_REPO_TEST,
   ITestRepository,
-  TestRepository,
+  MockTestRepository,
 } from '@weavcraft/modules';
-import { DemoDbMongoClient } from './common/database/mongodb/testDB';
 import supabaseClient from './common/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Jwt } from '@weavcraft/helpers';
@@ -32,14 +30,9 @@ export class TsyringeAdapter implements IocAdapter {
       supabaseClient
     );
 
-    this.container.registerSingleton<DemoDbMongoClient>(
-      INJECT_MONGO_CLIENT_DEMO,
-      DemoDbMongoClient
-    );
-
     this.container.registerSingleton<ITestRepository>(
       INJECT_REPO_TEST,
-      TestRepository
+      MockTestRepository
     );
   }
 
