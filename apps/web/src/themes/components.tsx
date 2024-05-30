@@ -5,6 +5,9 @@ import type { ThemeOptions } from '@mui/material/styles';
 
 import type { TransitionProps } from './themes.types';
 
+const NONE_IMPORTANT = '0 !important';
+const BRIGHTNESS_HIGHLIGHT = 'brightness(1.2)';
+
 //* Dialog Transition
 const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
@@ -45,13 +48,13 @@ export const components: ThemeOptions['components'] = {
         },
         '&:not(.Mui-expanded):not(button)': {
           '&:has(+ :not(.Mui-expanded):not(button))': {
-            borderBottomLeftRadius: '0 !important',
-            borderBottomRightRadius: '0 !important',
+            borderBottomLeftRadius: NONE_IMPORTANT,
+            borderBottomRightRadius: NONE_IMPORTANT,
             borderBottom: `1px solid ${theme.palette.divider}`,
           },
           '& + :not(.Mui-expanded):not(button)': {
-            borderTopLeftRadius: '0 !important',
-            borderTopRightRadius: '0 !important',
+            borderTopLeftRadius: NONE_IMPORTANT,
+            borderTopRightRadius: NONE_IMPORTANT,
           },
         },
       }),
@@ -125,7 +128,7 @@ export const components: ThemeOptions['components'] = {
         userSelect: 'none',
 
         '&:hover': {
-          filter: 'brightness(1.2)',
+          filter: BRIGHTNESS_HIGHLIGHT,
         },
       },
       containedInherit: ({ theme }) => ({
@@ -150,7 +153,7 @@ export const components: ThemeOptions['components'] = {
             borderRadius: theme.spacing(0, 0, 2, 0),
           },
           '& > *': {
-            margin: '0 !important',
+            margin: NONE_IMPORTANT,
             height: theme.spacing(6),
           },
         }),
@@ -229,7 +232,7 @@ export const components: ThemeOptions['components'] = {
         userSelect: 'none',
 
         '&:hover': {
-          filter: 'brightness(1.2)',
+          filter: BRIGHTNESS_HIGHLIGHT,
         },
       },
     },
@@ -254,7 +257,7 @@ export const components: ThemeOptions['components'] = {
         fontWeight: 500,
 
         '&:hover': {
-          filter: 'brightness(1.2)',
+          filter: BRIGHTNESS_HIGHLIGHT,
           fontWeight: 600,
         },
         '&:disabled': {

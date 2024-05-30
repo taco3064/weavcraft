@@ -28,12 +28,11 @@ export function getSwaggerSpec(
       refPointerPrefix: '#/components/schemas/',
     });
 
-    const spec = routingControllersToSpec(storage, routingControllerOptions, {
+    return routingControllersToSpec(storage, routingControllerOptions, {
       components: {
         schemas: Object(schemas),
       },
     });
-    return spec;
   } catch (err) {
     const errInfo = `[DOC][getSwaggerSpec] error: ${err}`;
     LoggerHelper.log.error(errInfo);

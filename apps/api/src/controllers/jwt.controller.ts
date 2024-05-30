@@ -5,8 +5,7 @@ import jwtHelper from '../common/helpers/jwt.helper';
 export class JwtController {
   @Get('/verify')
   async valify(@QueryParam('token') token: string) {
-    const data = jwtHelper.verifyToken(token);
-    return data;
+    return jwtHelper.verifyToken(token);
   }
 
   @Get('/decode')

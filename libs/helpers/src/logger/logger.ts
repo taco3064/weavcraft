@@ -42,8 +42,8 @@ export const loggerFormat = (isColor = true) =>
       const pidFormat = isColor ? colorize(level, `${pid}`) : pid;
       const levelFormat = isColor ? colorize(level, `${levelStr}`) : levelStr;
       const messageFormat = isColor ? colorize(level, `${message}`) : message;
-      const formattedMessage = `${serviceFormat} ${pidFormat} - ${timestamp}${levelFormat}${contextFormat}${messageFormat}`;
-      return formattedMessage;
+
+      return `${serviceFormat} ${pidFormat} - ${timestamp}${levelFormat}${contextFormat}${messageFormat}`;
     })
   );
 

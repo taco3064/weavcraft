@@ -48,8 +48,7 @@ export class AuthSupabaseController {
     const { redirectTo } = body;
     const data = await this.authSupabaseUase.getOAuthProviders(redirectTo);
 
-    const result = APIHelper.apiResDataList<AuthSupabaseSignInResDTO>(data);
-    return result;
+    return APIHelper.apiResDataList<AuthSupabaseSignInResDTO>(data);
   }
 
   @OpenAPI({
@@ -62,8 +61,7 @@ export class AuthSupabaseController {
       access_token: accessToken,
       refresh_token: refreshToken,
     });
-    const data = await this.supabase.auth.signOut();
-    return data;
+    return await this.supabase.auth.signOut();
   }
 
   @OpenAPI({
