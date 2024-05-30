@@ -274,13 +274,6 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
-  MuiListItemButton: {
-    styleOverrides: {
-      root: ({ theme }) => ({
-        gap: theme.spacing(1),
-      }),
-    },
-  },
   MuiMenu: {
     styleOverrides: {
       paper: {

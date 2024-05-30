@@ -37,7 +37,10 @@ export default withPropsDefinition(function WidgetEditor({
   const [editing, setEditing] = useState<RenderConfig>();
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
-  const [portalMode, setPortalMode] = useState<'treeView' | 'props'>();
+
+  const [portalMode, setPortalMode] = useState<'treeView' | 'props'>(
+    'treeView'
+  );
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
@@ -48,17 +51,11 @@ export default withPropsDefinition(function WidgetEditor({
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
+  const { containerEl, onToggle } = useTogglePortal();
 
   const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
     value,
     setValue
-  );
-
-  const { containerEl, onToggle } = useTogglePortal(() =>
-    startTransition(() => {
-      setPortalMode(undefined);
-      setEditing(undefined);
-    })
   );
 
   const withAppendNode = useNodeAppend(AppendNode, changeEvents);
@@ -79,12 +76,7 @@ export default withPropsDefinition(function WidgetEditor({
             <IconButton
               size="large"
               disabled={!value.widget}
-              onClick={() =>
-                startTransition(() => {
-                  onToggle(true);
-                  setPortalMode('treeView');
-                })
-              }
+              onClick={() => onToggle(true)}
             >
               <Core.Icon code="faCode" />
             </IconButton>
@@ -141,7 +133,12 @@ export default withPropsDefinition(function WidgetEditor({
               config={editing}
               paths={activePrimitive}
               onChange={onPrimitiveChange}
-              onClose={() => setPortalMode('treeView')}
+              onClose={() =>
+                startTransition(() => {
+                  setPortalMode('treeView');
+                  setEditing(undefined);
+                })
+              }
             />
           )}
         </PortalWrapper>

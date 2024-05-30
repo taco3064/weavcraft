@@ -14,8 +14,8 @@ import type {
   AppendNodeProps,
   ChangeEvents,
   ChildrenArray,
-  GetPathsFn,
   NodeItemsRenderFn,
+  NodePaths,
   PrimitiveItemsRenderFn,
 } from './WidgetEditor.types';
 
@@ -156,15 +156,30 @@ export function useNodeItemsRender(
   const { widget, props = {} } = config || {};
   const { getDefinition } = usePropsDefinition();
 
-  const { nodePaths, getPaths } = useMemo<{
-    nodePaths: string[];
-    getPaths: GetPathsFn;
-  }>(() => {
+  const { nodePaths, getChildWidgets, getPaths } = useMemo<NodePaths>(() => {
     const { elementNodeProps = {} } = getDefinition(widget) || {};
 
     return {
       nodePaths: Object.keys(elementNodeProps),
 
+      getChildWidgets: ({ widget, props = {} }) => {
+        const { elementNodeProps = {} } = getDefinition(widget) || {};
+        const nodePaths = Object.keys(elementNodeProps);
+
+        return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
+          const { [nodePath]: nodes } = props;
+
+          if (nodes?.value && nodes.type === 'ElementNode') {
+            const isMultiple = Array.isArray(nodes.value);
+
+            result.push(
+              ...((isMultiple ? nodes.value : [nodes.value]) as RenderConfig[])
+            );
+          }
+
+          return result;
+        }, []);
+      },
       getPaths: (nodePath, index, paths = []) => {
         const result: ConfigPaths = [...paths, nodePath];
 
@@ -191,7 +206,14 @@ export function useNodeItemsRender(
         widgets.length &&
           items.push(
             ...Children.toArray(
-              render({ classes, isMultiple, nodePath, widgets, getPaths })
+              render({
+                classes,
+                isMultiple,
+                nodePath,
+                widgets,
+                getChildWidgets,
+                getPaths,
+              })
             )
           );
       }

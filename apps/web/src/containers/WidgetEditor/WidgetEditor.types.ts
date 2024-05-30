@@ -25,17 +25,26 @@ type StructureEvent = {
   paths: ConfigPaths;
 };
 
-export type GetPathsFn = (
+type GetChildWidgetsFn = (config: RenderConfig) => RenderConfig[];
+
+type GetPathsFn = (
   nodePath: string,
   index: number,
   paths?: ConfigPaths
 ) => ConfigPaths;
+
+export type NodePaths = {
+  nodePaths: string[];
+  getChildWidgets: GetChildWidgetsFn;
+  getPaths: GetPathsFn;
+};
 
 export type NodeItemsRenderFn = (options: {
   classes: EditorListClasses;
   isMultiple: boolean;
   nodePath: string;
   widgets: RenderConfig[];
+  getChildWidgets: GetChildWidgetsFn;
   getPaths: GetPathsFn;
 }) => ReactNode;
 

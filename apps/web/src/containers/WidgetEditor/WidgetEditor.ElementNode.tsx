@@ -36,38 +36,56 @@ export default function ElementNode({
   const node: RenderConfig = !paths.length ? config : _get(config, paths);
 
   const renderItems = useNodeItemsRender(
-    ({ classes, isMultiple, nodePath, widgets, getPaths }) => (
+    ({ classes, isMultiple, nodePath, widgets, getChildWidgets, getPaths }) => (
       <Fragment key={nodePath}>
-        <ListSubheader disableSticky className={classes.subitem}>
+        <ListSubheader
+          disableSticky
+          className={classes.subitem}
+          sx={{ lineHeight: 1.2 }}
+        >
           {nodePath}
         </ListSubheader>
 
-        {widgets.map((config, i) => (
-          <ListItemButton
-            key={`${nodePath}-${i}`}
-            className={classes.subitem}
-            onClick={() => onActive(getPaths(nodePath, i, active))}
-          >
-            <ListItemIcon className={classes.icon}>
-              <Badge badgeContent={!isMultiple ? 0 : i + 1} color="default">
-                <Core.Icon color="warning" code="faPuzzlePiece" />
-              </Badge>
-            </ListItemIcon>
+        {widgets.map((config, i) => {
+          const hasChildren = getChildWidgets(config).length > 0;
 
-            <ListItemText
-              primary={t(`widgets:lbl-widgets.${config.widget}`)}
-              primaryTypographyProps={{
-                color: 'text.primary',
-                fontWeight: 600,
-              }}
-            />
+          const content = (
+            <>
+              <ListItemIcon className={classes.icon}>
+                <Badge badgeContent={!isMultiple ? 0 : i + 1} color="default">
+                  <Core.Icon color="warning" code="faPuzzlePiece" />
+                </Badge>
+              </ListItemIcon>
 
-            <NodeAction
-              {...{ config, onDelete, onEdit }}
-              paths={getPaths(nodePath, i, active)}
-            />
-          </ListItemButton>
-        ))}
+              <ListItemText
+                primary={t(`widgets:lbl-widgets.${config.widget}`)}
+                primaryTypographyProps={{
+                  color: hasChildren ? 'secondary' : 'text.primary',
+                  fontWeight: hasChildren ? 550 : 500,
+                }}
+              />
+
+              <NodeAction
+                {...{ config, onDelete, onEdit }}
+                paths={getPaths(nodePath, i, active)}
+              />
+            </>
+          );
+
+          return !hasChildren ? (
+            <ListItem key={`${nodePath}-${i}`} className={classes.subitem}>
+              {content}
+            </ListItem>
+          ) : (
+            <ListItemButton
+              key={`${nodePath}-${i}`}
+              className={classes.subitem}
+              onClick={() => onActive(getPaths(nodePath, i, active))}
+            >
+              {content}
+            </ListItemButton>
+          );
+        })}
       </Fragment>
     ),
     node

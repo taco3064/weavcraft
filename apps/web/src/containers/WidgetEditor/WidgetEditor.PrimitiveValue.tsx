@@ -60,7 +60,7 @@ export default function PrimitiveValue({
           input = (
             <Core.NumericField
               {...baseProps}
-              adornmentPosition="end"
+              adornmentPosition="start"
               adornment={<DialpadIcon color="disabled" />}
             />
           );
@@ -71,7 +71,7 @@ export default function PrimitiveValue({
           input = (
             <Core.TextField
               {...baseProps}
-              adornmentPosition="end"
+              adornmentPosition="start"
               adornment={<TextFieldsIcon color="disabled" />}
             />
           );
