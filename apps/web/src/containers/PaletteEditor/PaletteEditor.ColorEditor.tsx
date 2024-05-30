@@ -27,7 +27,7 @@ export default function ColorEditor({
 
   return (
     <EditorList
-      key={items?.join('|') || ''}
+      key={items?.join('|')}
       title={t('themes:ttl-editor')}
       onClose={onClose}
       render={(classes) =>

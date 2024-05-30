@@ -7,6 +7,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SwipeIcon from '@mui/icons-material/Swipe';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { useTranslation } from 'next-i18next';
+import type { ReactNode } from 'react';
 
 import { EditorList } from '~web/components';
 import { usePrimitiveValueStyles } from './WidgetEditor.styles';
@@ -31,73 +32,85 @@ export default function PrimitiveValue({
   const { row: rowClassName } = classes;
 
   const renderItems = usePrimitiveItemsRender(
-    ({ classes, proptypes, primitivePath, value }) => (
-      <ListItem key={primitivePath} onClick={(e) => e.stopPropagation()}>
-        <ListItemIcon className={classes.icon} />
+    ({ classes, proptypes, primitivePath, value }) => {
+      let input: ReactNode = null;
 
-        <ListItemText
-          disableTypography
-          className={rowClassName}
-          primary={(() => {
-            const baseProps = {
-              variant: 'outlined' as const,
-              size: 'small' as const,
-              required: proptypes.required,
-              label: primitivePath,
-              value,
-              onChange: (value: unknown) =>
-                onChange(config as RenderConfig, primitivePath, value),
-            };
+      const baseProps = {
+        variant: 'outlined' as const,
+        size: 'small' as const,
+        required: proptypes.required,
+        label: primitivePath,
+        value,
+        onChange: (value: unknown) =>
+          onChange(config as RenderConfig, primitivePath, value),
+      };
 
-            switch (proptypes.type) {
-              case 'boolean':
-                return (
-                  <Core.SwitchField
-                    {...baseProps}
-                    adornment={<SwipeIcon color="disabled" />}
-                  />
-                );
+      switch (proptypes.type) {
+        case 'boolean': {
+          input = (
+            <Core.SwitchField
+              {...baseProps}
+              adornment={<SwipeIcon color="disabled" />}
+            />
+          );
 
-              case 'number':
-                return (
-                  <Core.NumericField
-                    {...baseProps}
-                    adornmentPosition="end"
-                    adornment={<DialpadIcon color="disabled" />}
-                  />
-                );
+          break;
+        }
+        case 'number': {
+          input = (
+            <Core.NumericField
+              {...baseProps}
+              adornmentPosition="end"
+              adornment={<DialpadIcon color="disabled" />}
+            />
+          );
 
-              case 'string':
-                return (
-                  <Core.TextField
-                    {...baseProps}
-                    adornmentPosition="end"
-                    adornment={<TextFieldsIcon color="disabled" />}
-                  />
-                );
+          break;
+        }
+        case 'string': {
+          input = (
+            <Core.TextField
+              {...baseProps}
+              adornmentPosition="end"
+              adornment={<TextFieldsIcon color="disabled" />}
+            />
+          );
 
-              case 'oneof':
-                return !Array.isArray(proptypes.definition) ? null : (
-                  <Core.SingleSelectField
-                    {...baseProps}
-                    adornment={<MenuOpenIcon color="disabled" />}
-                    records={proptypes.definition.map((value) => ({ value }))}
-                    optionProps={{
-                      propMapping: {
-                        primary: 'value',
-                        value: 'value',
-                      },
-                    }}
-                  />
-                );
+          break;
+        }
+        case 'oneof': {
+          input = !Array.isArray(proptypes.definition) ? null : (
+            <Core.SingleSelectField
+              {...baseProps}
+              adornment={<MenuOpenIcon color="disabled" />}
+              records={proptypes.definition.map((value) => ({ value }))}
+              optionProps={{
+                propMapping: {
+                  primary: 'value',
+                  value: 'value',
+                },
+              }}
+            />
+          );
 
-              default:
-                return 'Primitive Value';
-            }
-          })()}
-        />
-      </ListItem>
-    ),
+          break;
+        }
+        default:
+          input = 'Primitive Value';
+      }
+
+      return (
+        <ListItem key={primitivePath} onClick={(e) => e.stopPropagation()}>
+          <ListItemIcon className={classes.icon} />
+
+          <ListItemText
+            disableTypography
+            className={rowClassName}
+            primary={input}
+          />
+        </ListItem>
+      );
+    },
     config
   );
 
