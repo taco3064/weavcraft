@@ -17,7 +17,7 @@ import type { TabProps, TabsProps } from './Tabs.types';
 
 export default function Tabs({
   maxWidth,
-  height = '100vh',
+  height = '40vh',
   items,
   tabIconPosition,
   ...props

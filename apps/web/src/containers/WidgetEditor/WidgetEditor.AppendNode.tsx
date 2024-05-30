@@ -1,6 +1,5 @@
 import * as WeavcraftCore from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import _get from 'lodash/get';
 import { useState, useTransition } from 'react';
@@ -43,9 +42,14 @@ export default function AppendNode({
   return (
     <>
       <Tooltip
-        title={`${t(
-          `widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`
-        )}${!label ? '' : ` (${label})`}`}
+        title={
+          <>
+            {t(
+              `widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`
+            )}
+            {!label ? '' : ` (${label})`}
+          </>
+        }
       >
         <IconButton className={classes.toggle} onClick={() => setOpen(true)}>
           <Core.Icon code="faAdd" />

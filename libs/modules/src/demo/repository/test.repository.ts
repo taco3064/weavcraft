@@ -19,8 +19,7 @@ export class TestRepository implements ITestRepository {
 
   async getTestDate(): Promise<TestData[]> {
     const tests = await this.model.find();
-    const data = tests.map((test) => test.toJSON());
-    return data;
+    return tests.map((test) => test.toJSON());
   }
 }
 

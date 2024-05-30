@@ -76,33 +76,24 @@ describe('@weavcraft/core/components/ToggleButtonGroup', () => {
   });
 
   it('supports multiple selection', () => {
-    const value: string[] = [];
-    const max = 2;
     const onChange = jest.fn();
 
     const { getAllByTestId } = render(
       <ToggleButtonGroup
         records={records}
+        value={[records[0].value]}
         optionProps={{ propMapping: { text: 'label', value: 'value' } }}
         variant="multiple"
         onChange={onChange}
       />
     );
 
-    const buttons = getAllByTestId('ToggleButton');
+    fireEvent.click(getAllByTestId('ToggleButton')[1]);
 
-    Array.from({ length: max }).forEach(() => {
-      const [button] = buttons.splice(
-        Math.floor(Math.random() * buttons.length),
-        1
-      );
-
-      fireEvent.click(button);
-      expect(onChange).toHaveBeenCalledWith(
-        value.concat(button.getAttribute('value') as string),
-        undefined
-      );
-    });
+    expect(onChange).toHaveBeenCalledWith(
+      [records[0].value, records[1].value],
+      undefined
+    );
   });
 
   const records = [

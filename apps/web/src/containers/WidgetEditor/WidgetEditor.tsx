@@ -1,21 +1,21 @@
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
+import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
-import _debounce from 'lodash/debounce';
-import { useEffect, useId, useMemo, useState, useTransition } from 'react';
+import Tooltip from '@mui/material/Tooltip';
 import { useSnackbar } from 'notistack';
+import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import AppendNode from './WidgetEditor.AppendNode';
-import Controller from './WidgetEditor.Controller';
+import ElementNode from './WidgetEditor.ElementNode';
+import PrimitiveValue from './WidgetEditor.PrimitiveValue';
+import { useChangeEvents, useNodeAppend } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
-import { useWidgetRender, type RenderConfig } from '~web/hooks';
+import { useWidgetRender } from '~web/hooks';
+import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { WidgetEditorProps } from './WidgetEditor.types';
-
-import {
-  useChangeEvents,
-  useNodePropsEditedOverride,
-} from './WidgetEditor.hooks';
 
 import {
   PortalWrapper,
@@ -32,82 +32,63 @@ export default withPropsDefinition(function WidgetEditor({
   toolbarEl,
 }: WidgetEditorProps) {
   const isTutorialMode = useTutorialMode();
-  const containerId = useId();
 
   const [, startTransition] = useTransition();
-  const [hideController, setHideController] = useState(false);
   const [editing, setEditing] = useState<RenderConfig>();
+  const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
+  const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
+  const [portalMode, setPortalMode] = useState<'treeView' | 'props'>();
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
+  console.log(value);
+
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
-  const { onDeleteNode, ...changeEvents } = useChangeEvents(value, setValue);
+
+  const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
+    value,
+    setValue
+  );
 
   const { containerEl, onToggle } = useTogglePortal(() =>
-    setEditing(undefined)
+    startTransition(() => {
+      setPortalMode(undefined);
+      setEditing(undefined);
+    })
   );
 
-  const resizeObserver = useMemo(() => {
-    const refresh = _debounce(() => setHideController(false), 200);
+  const withAppendNode = useNodeAppend(AppendNode, changeEvents);
 
-    return new ResizeObserver(() => {
-      setHideController(true);
-      refresh();
-    });
-  }, []);
-
-  const overrideNodes = useNodePropsEditedOverride(AppendNode, changeEvents);
-
-  const generate = useWidgetRender(
-    (WidgetEl, { config, key, paths, props }) => (
-      <Controller
-        key={key}
-        {...{
-          ...overrideNodes(props, config),
-          'widget.editor.controller.props': {
-            WidgetEl,
-            config,
-            hideToggle: hideController,
-            onDelete: () => onDeleteNode(paths),
-            onEdit: () =>
-              startTransition(() => {
-                onToggle(true);
-                setEditing(config);
-              }),
-          },
-        }}
-      />
-    )
-  );
-
-  useEffect(() => {
-    const el = global.document.getElementById(containerId);
-
-    if (el) {
-      resizeObserver.observe(el);
-
-      return () => resizeObserver.unobserve(el);
-    }
-  }, [containerId, resizeObserver]);
+  const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
+    <WidgetEl key={key} {...withAppendNode(props, config)} />
+  ));
 
   return (
     <Slide in direction="up" timeout={1200}>
-      <Container
-        disableGutters
-        id={containerId}
-        className={classes.root}
-        maxWidth={maxWidth}
-      >
+      <Container disableGutters className={classes.root} maxWidth={maxWidth}>
         <PortalWrapper
           WrapperComponent={Toolbar}
           containerEl={toolbarEl}
           variant="dense"
         >
-          Toolbar
+          <Tooltip title={t('widgets:btn-widget-structure')}>
+            <IconButton
+              size="large"
+              disabled={!value.widget}
+              onClick={() =>
+                startTransition(() => {
+                  onToggle(true);
+                  setPortalMode('treeView');
+                })
+              }
+            >
+              <Core.Icon code="faCode" />
+            </IconButton>
+          </Tooltip>
         </PortalWrapper>
 
         <Container
@@ -126,7 +107,43 @@ export default withPropsDefinition(function WidgetEditor({
         </Container>
 
         <PortalWrapper containerEl={containerEl}>
-          Widget Props Editor
+          {portalMode === 'treeView' && (
+            <ElementNode
+              active={activeNode}
+              config={value}
+              onActive={(paths) => setActiveNode(paths)}
+              onClose={() => onToggle(false)}
+              onDelete={({ paths }) =>
+                startTransition(() => {
+                  const active = paths.slice(
+                    0,
+                    typeof paths[paths.length - 1] === 'string' ? -1 : -2
+                  );
+
+                  onDeleteNode(paths);
+                  onToggle(paths.length > 0);
+                  setActiveNode(active);
+                })
+              }
+              onEdit={({ target, paths }) =>
+                startTransition(() => {
+                  onToggle(true);
+                  setActivePrimitive(paths);
+                  setPortalMode('props');
+                  setEditing(target);
+                })
+              }
+            />
+          )}
+
+          {portalMode === 'props' && (
+            <PrimitiveValue
+              config={editing}
+              paths={activePrimitive}
+              onChange={onPrimitiveChange}
+              onClose={() => setPortalMode('treeView')}
+            />
+          )}
         </PortalWrapper>
       </Container>
     </Slide>

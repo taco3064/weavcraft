@@ -31,25 +31,25 @@ export function useWidgetRender(render: RenderFn) {
         .flat(),
       props: Object.entries(config.props || {}).reduce(
         (acc, [path, { type, value }]) => {
-          switch (type) {
-            case 'ElementNode': {
-              const nodes = Array.isArray(value) ? value : [value];
+          if (type === 'ElementNode') {
+            const nodes = Array.isArray(value) ? value : [value];
 
-              const { multiple = false } =
-                elementNodeProps?.[path]?.definition || {};
+            const { multiple = false } =
+              elementNodeProps?.[path]?.definition || {};
 
-              const children: ReactNode[] = nodes.map((node, i) =>
-                generate(node as RenderConfig, {
-                  key: i,
-                  paths: [...paths, path, ...(multiple ? [i] : [])],
-                })
-              );
+            const children: ReactNode[] = nodes.map((node, i) =>
+              generate(node as RenderConfig, {
+                key: i,
+                paths: [...paths, path, ...(multiple ? [i] : [])],
+              })
+            );
 
-              return _set(acc, path, multiple ? children : children[0]);
-            }
-            default:
-              return _set(acc, path, value);
+            _set(acc, path, multiple ? children : children[0]);
+          } else {
+            _set(acc, path, value);
           }
+
+          return acc;
         },
         {}
       ),

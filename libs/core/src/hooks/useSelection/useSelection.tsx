@@ -1,5 +1,4 @@
 import MuiMenuItem from '@mui/material/MenuItem';
-import MuiListItem from '@mui/material/ListItem';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
@@ -107,32 +106,30 @@ export function useOptionsRender<
     return (
       <MuiMenuItem
         key={i}
-        disableGutters
         disabled={disabled}
         value={value as string}
         data-testid="SingleSelectFieldOption"
       >
-        <MuiListItem component="div">
-          {!ItemIndicator.Slot ? null : (
-            <MuiListItemIcon>
-              <ItemIndicator.Slot {...ItemIndicator.getSlotProps(data)} />
-            </MuiListItemIcon>
-          )}
+        {!ItemIndicator.Slot ? null : (
+          <MuiListItemIcon>
+            <ItemIndicator.Slot {...ItemIndicator.getSlotProps(data)} />
+          </MuiListItemIcon>
+        )}
 
-          <MuiListItemText
-            {...{ primary, secondary }}
-            primaryTypographyProps={{
-              className: 'primary',
-              variant: 'body1',
-              color: 'textPrimary',
-            }}
-            secondaryTypographyProps={{
-              className: 'secondary',
-              variant: 'body2',
-              color: 'textSecondary',
-            }}
-          />
-        </MuiListItem>
+        <MuiListItemText
+          {...{ primary, secondary }}
+          sx={{ margin: 0 }}
+          primaryTypographyProps={{
+            className: 'primary',
+            variant: 'body1',
+            color: 'textPrimary',
+          }}
+          secondaryTypographyProps={{
+            className: 'secondary',
+            variant: 'body2',
+            color: 'textSecondary',
+          }}
+        />
       </MuiMenuItem>
     );
   });
