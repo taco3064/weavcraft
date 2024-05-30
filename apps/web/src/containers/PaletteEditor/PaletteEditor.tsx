@@ -59,9 +59,7 @@ export default function PaletteEditor({
     onSuccess: () =>
       enqueueSnackbar(
         t(`msg-success-${!config ? 'create' : 'update'}`, { name: title }),
-        {
-          variant: 'success',
-        }
+        { variant: 'success' }
       ),
   });
 
@@ -118,11 +116,7 @@ export default function PaletteEditor({
           <ColorEditor
             items={editing}
             value={value}
-            action={
-              <IconButton onClick={() => onToggle(false)}>
-                <Core.Icon code="faAngleRight" />
-              </IconButton>
-            }
+            onClose={() => onToggle(false)}
             onChange={({ name, color }) =>
               setValue({ ..._set(value, name, color?.toUpperCase()) })
             }

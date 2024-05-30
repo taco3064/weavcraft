@@ -31,8 +31,6 @@ export default function PaletteViewer({
   size,
   onColorClick,
 }: PaletteViewerProps) {
-  const theme = useTheme();
-
   const { t } = useTranslation();
   const { background, divider, text } = config || {};
 
@@ -44,6 +42,9 @@ export default function PaletteViewer({
     disableResponsiveText,
     size,
   });
+
+  const theme = useTheme();
+  const noneText = t('themes:lbl-none');
 
   const defaultSeriesProps = useMemo<DefaultSeriesProps>(
     () => ({
@@ -82,7 +83,7 @@ export default function PaletteViewer({
           }}
         >
           <span>Default</span>
-          <strong>{background?.default || t('themes:lbl-none')}</strong>
+          <strong>{background?.default || noneText}</strong>
         </Grid>
 
         <Grid
@@ -99,7 +100,7 @@ export default function PaletteViewer({
           }}
         >
           <span>Paper</span>
-          <strong>{background?.paper || t('themes:lbl-none')}</strong>
+          <strong>{background?.paper || noneText}</strong>
         </Grid>
       </Grid>
 
@@ -116,7 +117,7 @@ export default function PaletteViewer({
         }}
       >
         <span>Divider</span>
-        <strong>{divider || t('themes:lbl-none')}</strong>
+        <strong>{divider || noneText}</strong>
       </Divider>
 
       <PieChart
@@ -131,8 +132,7 @@ export default function PaletteViewer({
             outerRadius: (size / 10) * 3,
             startAngle: -90,
             valueFormatter: ({ id }) =>
-              _get(config, [id as PrimaryColor, 'main']) ||
-              t('themes:lbl-none'),
+              _get(config, [id as PrimaryColor, 'main']) || noneText,
             data: primaries.map((id) => {
               const { main = theme.palette.divider, contrastText } =
                 _get(config, id) || {};
@@ -151,8 +151,7 @@ export default function PaletteViewer({
             innerRadius: (size / 10) * 3 + size / 20,
             outerRadius: size / 2,
             valueFormatter: ({ id }) =>
-              _get(config, [id as SecondaryColor, 'main']) ||
-              t('themes:lbl-none'),
+              _get(config, [id as SecondaryColor, 'main']) || noneText,
             data: secondaries.map((id) => {
               const { main = theme.palette.divider, contrastText } =
                 _get(config, id) || {};

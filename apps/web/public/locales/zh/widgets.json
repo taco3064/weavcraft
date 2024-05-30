@@ -4,8 +4,11 @@
   "btn-delete-widget": "刪除組件",
   "btn-edit-widget": "設定組件",
   "btn-open-toolbar": "開啟工具欄 ({{ widget }})",
+  "btn-widget-structure": "查看組件結構",
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
+  "ttl-element-node": "組建結構",
+  "ttl-primitive-value": "{{ widget }}設定",
   "ttl-select-widget": "選擇組件",
   "lbl-category": {
     "Display": "資料呈現",

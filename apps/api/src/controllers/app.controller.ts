@@ -17,27 +17,22 @@ export class AppController {
   @APIHelper.ApiResDataSchema(TestDataDTO)
   async getAppData(): Promise<ApiResDataDTO<TestDataDTO>> {
     const data = await this.demoUCase.getTests();
-    const result = APIHelper.apiResData<TestDataDTO>(data[0]);
-    return result;
+
+    return APIHelper.apiResData<TestDataDTO>(data[0]);
   }
 
   @Get('/data/list')
   @APIHelper.ApiResDataListSchema(TestDataDTO, { status: httpStatus.CREATED })
   async getAppDataList(): Promise<ApiResDataDTO<TestDataDTO>> {
     const data = await this.demoUCase.getTests();
-    const result = APIHelper.apiResDataList<TestDataDTO>(
-      data,
-      httpStatus.CREATED
-    );
-    return result;
+    return APIHelper.apiResDataList<TestDataDTO>(data, httpStatus.CREATED);
   }
 
   @Get('/data/paginated')
   @APIHelper.ApiResPaginatedSchema(TestDataDTO)
   async getAppPaginated() {
     const data = await this.demoUCase.getTests();
-    const result = APIHelper.apiResPaginated<TestDataDTO>(data, data.length);
-    return result;
+    return APIHelper.apiResPaginated<TestDataDTO>(data, data.length);
   }
 
   @Get('/error')

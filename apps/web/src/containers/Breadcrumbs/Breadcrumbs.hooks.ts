@@ -13,15 +13,10 @@ export const useBreadcrumbs = (() => {
     const queryValue = query[queryKey as string];
 
     if (queryKey && queryValue) {
-      return Array.isArray(queryValue)
-        ? {
-            key: queryKey,
-            value: queryValue,
-          }
-        : {
-            key: queryKey,
-            value: queryValue,
-          };
+      return {
+        key: queryKey,
+        value: queryValue,
+      };
     }
   }
 

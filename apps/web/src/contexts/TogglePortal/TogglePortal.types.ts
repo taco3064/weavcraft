@@ -21,6 +21,7 @@ export interface TogglePortalProviderProps
   onToggle: ToggleEventHandler;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PortalWrapperProps<W extends ComponentType<any>> =
   ComponentProps<W> & {
     children: ReactNode;

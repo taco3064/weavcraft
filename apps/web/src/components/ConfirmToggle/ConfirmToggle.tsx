@@ -24,6 +24,7 @@ export default function ConfirmToggle({
         onClick: (e: MouseEvent) => {
           e.stopPropagation();
           e.preventDefault();
+
           setOpen(true);
         },
       })}

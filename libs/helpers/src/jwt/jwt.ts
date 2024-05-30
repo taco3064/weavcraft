@@ -80,8 +80,7 @@ export class Jwt {
   }
 
   decodeToken<T = any>(token: string): T {
-    const payload = decode(token) as T;
-    return payload;
+    return decode(token) as T;
   }
 
   verifyToken<T = any>(

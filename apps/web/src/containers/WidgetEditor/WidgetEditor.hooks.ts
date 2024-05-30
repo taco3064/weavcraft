@@ -1,14 +1,23 @@
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement } from 'react';
+import { Children, createElement, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
-import type { ElementNodeProp } from '@weavcraft/common';
+import type { ElementNodeProp, PrimitiveValueProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
-import type { AppendNodeProps } from './WidgetEditor.types';
-import type { PropsDefinition, WidgetConfigs, WidgetType } from '~web/services';
-import type { RenderConfig } from '~web/hooks';
+import type { ConfigPaths, RenderConfig } from '~web/hooks';
+import type { EditorListClasses } from '~web/components';
+import type { PropsDefinition, WidgetConfigs } from '~web/services';
+
+import type {
+  AppendNodeProps,
+  ChangeEvents,
+  ChildrenArray,
+  GetPathsFn,
+  NodeItemsRenderFn,
+  PrimitiveItemsRenderFn,
+} from './WidgetEditor.types';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
   componentName: 'Fragment',
@@ -25,12 +34,18 @@ const FRAGMENT_DEFINITION: PropsDefinition = {
   },
 };
 
+function getWidgetNodePaths(paths: ConfigPaths) {
+  return paths
+    .map((path) => (typeof path === 'string' ? ['props', path, 'value'] : path))
+    .flat();
+}
+
 export function useChangeEvents(
   value: RenderConfig,
   onChange: (value: RenderConfig) => void
-) {
+): ChangeEvents {
   return {
-    onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => {
+    onAddChild: (config, path, widget) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
         value: { widget },
@@ -40,11 +55,7 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
-    onAddLastChild: (
-      config: RenderConfig,
-      path: string,
-      widget: WidgetType
-    ) => {
+    onAddLastChild: (config, path, widget) => {
       const nodes: WidgetConfigs[] =
         _get(config, ['props', path, 'value']) || [];
 
@@ -57,20 +68,36 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
-    onDeleteNode: (paths: (string | number)[]) => {
+    onDeleteNode: (paths) => {
       if (!paths.length) {
         return onChange({} as RenderConfig);
       }
 
-      const lastPath = paths.pop() as string | number;
+      const fullPaths = getWidgetNodePaths(paths);
+      const lastPath = fullPaths.pop() as string | number;
 
       if (typeof lastPath !== 'number') {
-        _unset(value, paths);
+        _unset(value, fullPaths);
       } else {
-        const nodes = _get(value, paths);
+        const nodes = _get(value, fullPaths);
 
         nodes.splice(lastPath, 1);
-        _set(value, paths, [...nodes]);
+        _set(value, fullPaths, [...nodes]);
+      }
+
+      onChange({ ...value });
+    },
+
+    onPrimitiveChange: (config, propPath, newValue) => {
+      if (newValue) {
+        const propConfig: PrimitiveValueProp = {
+          type: 'PrimitiveValue',
+          value: newValue,
+        };
+
+        _set(config, ['props', propPath], propConfig);
+      } else {
+        _unset(config, ['props', propPath]);
       }
 
       onChange({ ...value });
@@ -78,12 +105,12 @@ export function useChangeEvents(
   };
 }
 
-export function useNodePropsEditedOverride(
+export function useNodeAppend(
   AppendNode: ComponentType<AppendNodeProps>,
   {
     onAddChild,
     onAddLastChild,
-  }: Pick<ReturnType<typeof useChangeEvents>, 'onAddChild' | 'onAddLastChild'>
+  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
   const { getDefinition } = usePropsDefinition();
 
@@ -120,4 +147,100 @@ export function useNodePropsEditedOverride(
       props
     );
   };
+}
+
+export function useNodeItemsRender(
+  render: NodeItemsRenderFn,
+  config?: RenderConfig
+) {
+  const { widget, props = {} } = config || {};
+  const { getDefinition } = usePropsDefinition();
+
+  const { nodePaths, getPaths } = useMemo<{
+    nodePaths: string[];
+    getPaths: GetPathsFn;
+  }>(() => {
+    const { elementNodeProps = {} } = getDefinition(widget) || {};
+
+    return {
+      nodePaths: Object.keys(elementNodeProps),
+
+      getPaths: (nodePath, index, paths = []) => {
+        const result: ConfigPaths = [...paths, nodePath];
+
+        if (elementNodeProps[nodePath]?.definition?.multiple) {
+          result.push(index);
+        }
+
+        return result;
+      },
+    };
+  }, [widget, getDefinition]);
+
+  return (classes: EditorListClasses) =>
+    nodePaths.reduce<ChildrenArray>((items, nodePath) => {
+      const { [nodePath]: nodes } = props;
+
+      if (nodes?.value && nodes.type === 'ElementNode') {
+        const isMultiple = Array.isArray(nodes.value);
+
+        const widgets = (
+          isMultiple ? nodes.value : [nodes.value]
+        ) as RenderConfig[];
+
+        widgets.length &&
+          items.push(
+            ...Children.toArray(
+              render({ classes, isMultiple, nodePath, widgets, getPaths })
+            )
+          );
+      }
+
+      return items;
+    }, []);
+}
+
+export function usePathDescription(paths: ConfigPaths) {
+  const stringify = JSON.stringify(paths);
+
+  return useMemo(() => {
+    const paths: ConfigPaths = JSON.parse(stringify);
+    const lastIndex = paths.length - 1;
+    const isMultiple = typeof paths[lastIndex] === 'number';
+
+    return [
+      paths[isMultiple ? lastIndex - 1 : lastIndex],
+      !isMultiple ? '' : `[${paths[lastIndex]}]`,
+    ].join('');
+  }, [stringify]);
+}
+
+export function usePrimitiveItemsRender(
+  render: PrimitiveItemsRenderFn,
+  config?: RenderConfig
+) {
+  const { widget, props = {} } = config || {};
+  const { getDefinition } = usePropsDefinition();
+
+  const primitiveProps = useMemo(() => {
+    const { primitiveValueProps = {} } = getDefinition(widget) || {};
+
+    return Object.entries(primitiveValueProps);
+  }, [widget, getDefinition]);
+
+  return (classes: EditorListClasses) =>
+    primitiveProps.map<ReactNode>(([primitivePath, proptypes]) => {
+      const { [primitivePath]: primitive } = props;
+
+      return render({
+        classes,
+        proptypes,
+        primitivePath,
+        value: primitive?.value,
+      });
+    });
+}
+
+export function useWidgetNodePaths(paths: ConfigPaths) {
+  return useMemo(() => getWidgetNodePaths(paths), [paths]);
 }

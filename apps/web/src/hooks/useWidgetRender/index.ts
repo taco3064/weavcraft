@@ -1,2 +1,2 @@
 export * from './useWidgetRender';
-export type { RenderConfig } from './useWidgetRender.types';
+export type { ConfigPaths, RenderConfig } from './useWidgetRender.types';

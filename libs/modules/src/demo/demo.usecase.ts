@@ -10,7 +10,6 @@ export class DemoUseCase {
   ) {}
 
   async getTests() {
-    const data = this.testRepo.getTestDate();
-    return data;
+    return this.testRepo.getTestDate();
   }
 }

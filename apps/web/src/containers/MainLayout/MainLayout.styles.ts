@@ -106,7 +106,7 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         },
       },
       custom: {
-        background: 'transparent',
+        background: 'inherit',
         height: '100%',
         overflow: 'hidden auto',
       },
