@@ -12,6 +12,16 @@ export const useAppendNodeStyles = makeStyles({
   },
 }));
 
+export const usePrimitiveValueStyles = makeStyles({ name: 'PrimitiveValue' })(
+  (theme) => ({
+    row: {
+      '& > *': {
+        margin: '0 !important',
+      },
+    },
+  })
+);
+
 export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'WidgetEditor',
 })((theme, { marginTop }) => ({

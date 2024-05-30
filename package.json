@@ -35,6 +35,7 @@
     "@google-cloud/secret-manager": "^5.2.0",
     "@koa/multer": "^3.0.2",
     "@koa/router": "^12.0.1",
+    "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.11",
     "@mui/x-charts": "^7.1.1",
     "@mui/x-date-pickers": "^6.19.5",

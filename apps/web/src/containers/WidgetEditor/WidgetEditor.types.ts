@@ -1,13 +1,24 @@
+import { Children, type ReactNode } from 'react';
 import type { ContainerProps } from '@mui/material/Container';
-import type { ReactNode } from 'react';
+import type { Get } from 'type-fest';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { EditorListClasses, EditorListProps } from '~web/components';
 import type { PortalContainerEl } from '~web/contexts';
-import type { WidgetConfigs, WidgetType } from '~web/services';
+
+import type {
+  PrimitiveValuePropsWithPath,
+  WidgetConfigs,
+  WidgetType,
+} from '~web/services';
 
 export const ControllerProps = Symbol('ControllerProps');
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
+export type ChildrenArray = ReturnType<typeof Children.toArray>;
+
+type PrimitiveProps = NonNullable<
+  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+>;
 
 type StructureEvent = {
   target: RenderConfig;
@@ -20,12 +31,20 @@ export type GetPathsFn = (
   paths?: ConfigPaths
 ) => ConfigPaths;
 
-export type StructureItemsRenderFn = (options: {
+export type NodeItemsRenderFn = (options: {
   classes: EditorListClasses;
   isMultiple: boolean;
   nodePath: string;
   widgets: RenderConfig[];
   getPaths: GetPathsFn;
+}) => ReactNode;
+
+export type PrimitiveItemsRenderFn = (options: {
+  classes: EditorListClasses;
+  proptypes: PrimitiveProps;
+  primitivePath: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value?: any;
 }) => ReactNode;
 
 export interface ChangeEvents {
@@ -36,6 +55,13 @@ export interface ChangeEvents {
     config: RenderConfig,
     path: string,
     widget: WidgetType
+  ) => void;
+
+  onPrimitiveChange: (
+    config: RenderConfig,
+    propPath: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value?: any
   ) => void;
 }
 
@@ -69,6 +95,9 @@ export interface ElementNodeProps
   onActive: (e: ConfigPaths) => void;
 }
 
-export interface PrimitiveValueProps extends Pick<EditorListProps, 'onClose'> {
+export interface PrimitiveValueProps
+  extends Pick<NodeActionProps, 'paths'>,
+    Pick<EditorListProps, 'onClose'> {
   config?: RenderConfig;
+  onChange: Get<ChangeEvents, 'onPrimitiveChange'>;
 }

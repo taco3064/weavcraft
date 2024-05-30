@@ -16,6 +16,10 @@ export const useMainStyles = makeStyles({ name: 'EditorList' })((theme) => ({
       alignItems: 'center',
     },
   },
+  subheader: {
+    background: 'inherit',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
   avatar: {
     display: 'flex',
     justifyContent: 'center',

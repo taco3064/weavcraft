@@ -12,9 +12,14 @@ import { useTranslation } from 'next-i18next';
 
 import NodeAction from './WidgetEditor.NodeAction';
 import { EditorList } from '~web/components';
-import { useNodeItemsRender, useWidgetNodePaths } from './WidgetEditor.hooks';
 import type { ElementNodeProps } from './WidgetEditor.types';
 import type { RenderConfig } from '~web/hooks';
+
+import {
+  useNodeItemsRender,
+  usePathDescription,
+  useWidgetNodePaths,
+} from './WidgetEditor.hooks';
 
 export default function ElementNode({
   config,
@@ -27,6 +32,7 @@ export default function ElementNode({
   const { t } = useTranslation();
 
   const paths = useWidgetNodePaths(active);
+  const description = usePathDescription(active);
   const node: RenderConfig = !paths.length ? config : _get(config, paths);
 
   const renderItems = useNodeItemsRender(
@@ -69,9 +75,9 @@ export default function ElementNode({
 
   return !node ? null : (
     <EditorList
+      {...{ description, onClose }}
       key={active.join('|')}
       title={t('widgets:ttl-element-node')}
-      onClose={onClose}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
         const items = renderItems(classes);

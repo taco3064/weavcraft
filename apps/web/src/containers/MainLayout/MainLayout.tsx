@@ -115,7 +115,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
             }}
           >
             {open === 'custom' && (
-              <ClickAwayListener onClickAway={() => setOpen(undefined)}>
+              <ClickAwayListener
+                onClickAway={(e) => {
+                  if (e.target !== global.document?.body) {
+                    setOpen(undefined);
+                  }
+                }}
+              >
                 <Paper
                   ref={containerRef}
                   className={classes.custom}

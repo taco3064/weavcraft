@@ -11,15 +11,11 @@ import { useTranslation } from 'next-i18next';
 import AppendNode from './WidgetEditor.AppendNode';
 import ElementNode from './WidgetEditor.ElementNode';
 import PrimitiveValue from './WidgetEditor.PrimitiveValue';
+import { useChangeEvents, useNodeAppend } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { WidgetEditorProps } from './WidgetEditor.types';
-
-import {
-  useChangeEvents,
-  useNodePropsEditedOverride,
-} from './WidgetEditor.hooks';
 
 import {
   PortalWrapper,
@@ -39,17 +35,24 @@ export default withPropsDefinition(function WidgetEditor({
 
   const [, startTransition] = useTransition();
   const [editing, setEditing] = useState<RenderConfig>();
-  const [active, setActive] = useState<ConfigPaths>([]);
+  const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
+  const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
   const [portalMode, setPortalMode] = useState<'treeView' | 'props'>();
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
+  console.log(value);
+
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
-  const { onDeleteNode, ...changeEvents } = useChangeEvents(value, setValue);
+
+  const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
+    value,
+    setValue
+  );
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     startTransition(() => {
@@ -58,10 +61,10 @@ export default withPropsDefinition(function WidgetEditor({
     })
   );
 
-  const overrideNodes = useNodePropsEditedOverride(AppendNode, changeEvents);
+  const withAppendNode = useNodeAppend(AppendNode, changeEvents);
 
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
-    <WidgetEl key={key} {...overrideNodes(props, config)} />
+    <WidgetEl key={key} {...withAppendNode(props, config)} />
   ));
 
   return (
@@ -106,9 +109,9 @@ export default withPropsDefinition(function WidgetEditor({
         <PortalWrapper containerEl={containerEl}>
           {portalMode === 'treeView' && (
             <ElementNode
-              active={active}
+              active={activeNode}
               config={value}
-              onActive={(paths) => setActive(paths)}
+              onActive={(paths) => setActiveNode(paths)}
               onClose={() => onToggle(false)}
               onDelete={({ paths }) =>
                 startTransition(() => {
@@ -119,12 +122,13 @@ export default withPropsDefinition(function WidgetEditor({
 
                   onDeleteNode(paths);
                   onToggle(paths.length > 0);
-                  setActive(active);
+                  setActiveNode(active);
                 })
               }
-              onEdit={({ target }) =>
+              onEdit={({ target, paths }) =>
                 startTransition(() => {
                   onToggle(true);
+                  setActivePrimitive(paths);
                   setPortalMode('props');
                   setEditing(target);
                 })
@@ -133,7 +137,12 @@ export default withPropsDefinition(function WidgetEditor({
           )}
 
           {portalMode === 'props' && (
-            <PrimitiveValue config={editing} onClose={() => onToggle(false)} />
+            <PrimitiveValue
+              config={editing}
+              paths={activePrimitive}
+              onChange={onPrimitiveChange}
+              onClose={() => setPortalMode('treeView')}
+            />
           )}
         </PortalWrapper>
       </Container>

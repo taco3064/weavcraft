@@ -1,5 +1,4 @@
 import Core from '@weavcraft/core';
-import Divider from '@mui/material/Divider';
 import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
@@ -11,6 +10,7 @@ import { useMainStyles } from './EditorList.styles';
 import type { EditorListProps } from './EditorList.types';
 
 export default function EditorList({
+  description,
   title,
   render,
   onClose,
@@ -22,28 +22,29 @@ export default function EditorList({
       <List
         className={classes.root}
         subheader={
-          <>
-            <ListSubheader>
-              {onClose && (
-                <ListItemIcon className={classes.icon}>
-                  <IconButton size="large" onClick={onClose}>
-                    <Core.Icon code="faAngleRight" />
-                  </IconButton>
-                </ListItemIcon>
-              )}
+          <ListSubheader className={classes.subheader}>
+            {onClose && (
+              <ListItemIcon className={classes.icon}>
+                <IconButton size="large" onClick={onClose}>
+                  <Core.Icon code="faAngleRight" />
+                </IconButton>
+              </ListItemIcon>
+            )}
 
-              <ListItemText
-                primary={title}
-                primaryTypographyProps={{
-                  variant: 'h6',
-                  color: 'text.primary',
-                  fontWeight: 600,
-                }}
-              />
-            </ListSubheader>
-
-            <Divider />
-          </>
+            <ListItemText
+              primary={title}
+              secondary={description}
+              primaryTypographyProps={{
+                variant: 'h6',
+                color: 'text.primary',
+                fontWeight: 600,
+              }}
+              secondaryTypographyProps={{
+                variant: 'caption',
+                color: 'text.secondary',
+              }}
+            />
+          </ListSubheader>
         }
       >
         {render(classes)}
