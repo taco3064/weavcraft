@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { server } from './server';
 import { LoggerHelper } from './common/helpers/logger.helper';
-import { GCPHelper } from '@weavcraft/helpers';
 import { Configs } from './configs';
 
 async function main() {
