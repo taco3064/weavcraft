@@ -1,5 +1,4 @@
 import MuiMenuItem from '@mui/material/MenuItem';
-import MuiListItem from '@mui/material/ListItem';
 import MuiListItemIcon from '@mui/material/ListItemIcon';
 import MuiListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
