@@ -36,11 +36,13 @@ jobs:
   release-deploy-k8s:
     name: Deploy local k8s ${{ needs.release.outputs.current-version }}
     needs: release
-    uses: ./.github/workflows/deploy-local-k8s.yml
+    uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
     with:
-      version: ${{ needs.release.outputs.current-version }}
+      appVersion: ${{ needs.release.outputs.current-version }}
+      helmVersion: ${{ needs.release.outputs.current-version }}
+      environment: k8s-weavcraft
     secrets:
-      envPAT: ${{ secrets.GIT_TOKEN }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
       HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
