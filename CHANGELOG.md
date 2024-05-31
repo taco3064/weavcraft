@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://github.com/taco3064/weavcraft/compare/v0.0.35...v0.0.36) (2024-05-31)
+
+
+### Features
+
+* **apps/api:** ioc BaseMongoClient inject mongodb instance ([2622ced](https://github.com/taco3064/weavcraft/commit/2622ced034cb7840a80bafa5045dae454abaf21b))
+
 ### [0.0.35](https://github.com/taco3064/weavcraft/compare/v0.0.34...v0.0.35) (2024-05-31)
 
 ### [0.0.34](https://github.com/taco3064/weavcraft/compare/v0.0.33...v0.0.34) (2024-05-30)
