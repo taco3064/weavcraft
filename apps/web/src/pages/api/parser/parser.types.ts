@@ -3,6 +3,7 @@ import type * as Tsm from 'ts-morph';
 import type { Get } from 'type-fest';
 
 import type {
+  DataBindingPropsWithPath,
   ElementNodePropsWithPath,
   EventCallbackPropsWithPath,
   PrimitiveValuePropsWithPath,
@@ -11,6 +12,7 @@ import type {
 } from '~web/services';
 
 type WidgetPropTypeDefinitions = {
+  DataBinding: Get<DataBindingPropsWithPath, ['dataBindingProps', string]>;
   ElementNode: Get<ElementNodePropsWithPath, ['elementNodeProps', string]>;
 
   EventCallback: Get<

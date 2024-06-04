@@ -3,7 +3,7 @@ import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { Children, createElement, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
-import type { ElementNodeProp, PrimitiveValueProp } from '@weavcraft/common';
+import type { ElementNodeProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
@@ -11,12 +11,12 @@ import type { EditorListClasses } from '~web/components';
 import type { PropsDefinition, WidgetConfigs } from '~web/services';
 
 import type {
-  AppendNodeProps,
   ChangeEvents,
   ChildrenArray,
-  NodeItemsRenderFn,
+  NodeCreateButtonProps,
+  NodeItemProps,
   NodePaths,
-  PrimitiveItemsRenderFn,
+  PrimitiveItemProps,
 } from './WidgetEditor.types';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
@@ -88,14 +88,9 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
-    onPrimitiveChange: (config, propPath, newValue) => {
-      if (newValue) {
-        const propConfig: PrimitiveValueProp = {
-          type: 'PrimitiveValue',
-          value: newValue,
-        };
-
-        _set(config, ['props', propPath], propConfig);
+    onConfigChange: (config, propPath, propValue) => {
+      if (propValue) {
+        _set(config, ['props', propPath], propValue);
       } else {
         _unset(config, ['props', propPath]);
       }
@@ -105,13 +100,12 @@ export function useChangeEvents(
   };
 }
 
-export function useNodeAppend(
-  AppendNode: ComponentType<AppendNodeProps>,
+export function useNodeCreate(
+  AppendNode: ComponentType<NodeCreateButtonProps>,
   {
     onAddChild,
     onAddLastChild,
-  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>,
-  defaultProps?: Partial<AppendNodeProps>
+  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
   const { getDefinition } = usePropsDefinition();
 
@@ -126,12 +120,11 @@ export function useNodeAppend(
         const target = _get(props, path);
 
         const appendNode = createElement(AppendNode, {
-          ...defaultProps,
           key: 'append',
           path,
           variant: clickable ? 'action' : 'node',
           widgetId,
-          onAppend: (widget) => {
+          onClick: (widget) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
             onAdd(config, path, widget);
@@ -151,52 +144,59 @@ export function useNodeAppend(
   };
 }
 
-export function useNodeItemsRender(
-  render: NodeItemsRenderFn,
+export function useNodeItems(
+  ElementNodeItem: ComponentType<NodeItemProps>,
+  defaultProps: Pick<
+    NodeItemProps,
+    'active' | 'onActive' | 'onDelete' | 'onEdit'
+  >,
   config?: RenderConfig
 ) {
   const { widget, props = {} } = config || {};
   const { getDefinition } = usePropsDefinition();
 
-  const { nodePaths, getChildWidgets, getPaths } = useMemo<NodePaths>(() => {
-    const { elementNodeProps = {} } = getDefinition(widget) || {};
+  const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
+    useMemo<NodePaths>(() => {
+      const { elementNodeProps = {} } = getDefinition(widget) || {};
 
-    return {
-      nodePaths: Object.keys(elementNodeProps),
+      return {
+        nodePaths: Object.keys(elementNodeProps),
 
-      getChildWidgets: ({ widget, props = {} }) => {
-        const { elementNodeProps = {} } = getDefinition(widget) || {};
-        const nodePaths = Object.keys(elementNodeProps);
+        onPathsGenerate: (nodePath, index, paths = []) => {
+          const result: ConfigPaths = [...paths, nodePath];
 
-        return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
-          const { [nodePath]: nodes } = props;
-
-          if (nodes?.value && nodes.type === 'ElementNode') {
-            const isMultiple = Array.isArray(nodes.value);
-
-            result.push(
-              ...((isMultiple ? nodes.value : [nodes.value]) as RenderConfig[])
-            );
+          if (elementNodeProps[nodePath]?.definition?.multiple) {
+            result.push(index);
           }
 
           return result;
-        }, []);
-      },
-      getPaths: (nodePath, index, paths = []) => {
-        const result: ConfigPaths = [...paths, nodePath];
+        },
+        onWidgetChildrenGenerate: ({ widget, props = {} }) => {
+          const { elementNodeProps = {} } = getDefinition(widget) || {};
+          const nodePaths = Object.keys(elementNodeProps);
 
-        if (elementNodeProps[nodePath]?.definition?.multiple) {
-          result.push(index);
-        }
+          return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
+            const { [nodePath]: nodes } = props;
 
-        return result;
-      },
-    };
-  }, [widget, getDefinition]);
+            if (nodes?.value && nodes.type === 'ElementNode') {
+              const isMultiple = Array.isArray(nodes.value);
+
+              result.push(
+                ...((isMultiple
+                  ? nodes.value
+                  : [nodes.value]) as RenderConfig[])
+              );
+            }
+
+            return result;
+          }, []);
+        },
+      };
+    }, [widget, getDefinition]);
 
   return (classes: EditorListClasses) =>
-    nodePaths.reduce<ChildrenArray>((items, nodePath) => {
-      const { [nodePath]: nodes } = props;
+    nodePaths.reduce<ChildrenArray>((items, path) => {
+      const { [path]: nodes } = props;
 
       if (nodes?.value && nodes.type === 'ElementNode') {
         const isMultiple = Array.isArray(nodes.value);
@@ -208,13 +208,15 @@ export function useNodeItemsRender(
         widgets.length &&
           items.push(
             ...Children.toArray(
-              render({
+              createElement(ElementNodeItem, {
+                ...defaultProps,
                 classes,
                 isMultiple,
-                nodePath,
+                key: path,
+                path,
                 widgets,
-                getChildWidgets,
-                getPaths,
+                onPathsGenerate,
+                onWidgetChildrenGenerate,
               })
             )
           );
@@ -239,9 +241,9 @@ export function usePathDescription(paths: ConfigPaths) {
   }, [stringify]);
 }
 
-export function usePrimitiveItemsRender(
-  render: PrimitiveItemsRenderFn,
-  config?: RenderConfig
+export function usePrimitiveItems(
+  PrimitiveItem: ComponentType<PrimitiveItemProps>,
+  { config, onChange }: Pick<PrimitiveItemProps, 'config' | 'onChange'>
 ) {
   const { widget, props = {} } = config || {};
   const { getDefinition } = usePropsDefinition();
@@ -253,14 +255,17 @@ export function usePrimitiveItemsRender(
   }, [widget, getDefinition]);
 
   return (classes: EditorListClasses) =>
-    primitiveProps.map<ReactNode>(([primitivePath, proptypes]) => {
-      const { [primitivePath]: primitive } = props;
+    primitiveProps.map<ReactNode>(([path, proptypes]) => {
+      const { [path]: primitive } = props;
 
-      return render({
+      return createElement(PrimitiveItem, {
+        config,
         classes,
+        key: path,
         proptypes,
-        primitivePath,
+        path,
         value: primitive?.value,
+        onChange,
       });
     });
 }

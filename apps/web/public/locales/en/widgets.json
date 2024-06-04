@@ -8,13 +8,17 @@
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",
   "ttl-element-node": "Widget Structure",
-  "ttl-primitive-value": "{{ widget }} Settings",
   "ttl-select-widget": "Select Widget",
+  "ttl-settings": "{{ widget }} Settings",
   "lbl-category": {
     "Display": "Display",
     "Input": "Input",
     "Interaction": "Interaction",
     "Layout": "Layout"
+  },
+  "lbl-settings": {
+    "data-binding": "Data Binding",
+    "primitive-value": "Layout"
   },
   "lbl-widgets": {
     "Accordion": "Accordion",

@@ -8,10 +8,10 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import AppendNode from './WidgetEditor.AppendNode';
-import ElementNode from './WidgetEditor.ElementNode';
-import PrimitiveValue from './WidgetEditor.PrimitiveValue';
-import { useChangeEvents, useNodeAppend } from './WidgetEditor.hooks';
+import NodeCreateButton from './WidgetEditor.NodeCreateButton';
+import NodeList from './WidgetEditor.NodeList';
+import SettingTabs from './WidgetEditor.SettingTabs';
+import { useChangeEvents, useNodeCreate } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
@@ -51,12 +51,12 @@ export default withPropsDefinition(function WidgetEditor({
   const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
 
-  const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
+  const { onDeleteNode, onConfigChange, ...changeEvents } = useChangeEvents(
     value,
     setValue
   );
 
-  const withAppendNode = useNodeAppend(AppendNode, changeEvents);
+  const withAppendNode = useNodeCreate(NodeCreateButton, changeEvents);
 
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
     <WidgetEl key={key} {...withAppendNode(props, config)} />
@@ -89,16 +89,16 @@ export default withPropsDefinition(function WidgetEditor({
           {value.widget ? (
             generate(value)
           ) : (
-            <AppendNode
+            <NodeCreateButton
               variant="node"
-              onAppend={(widget) => setValue({ widget })}
+              onClick={(widget) => setValue({ widget })}
             />
           )}
         </Container>
 
         <PortalWrapper containerEl={containerEl}>
           {portalMode === 'treeView' && (
-            <ElementNode
+            <NodeList
               active={activeNode}
               config={value}
               onActive={(paths) => setActiveNode(paths)}
@@ -127,10 +127,10 @@ export default withPropsDefinition(function WidgetEditor({
           )}
 
           {portalMode === 'setting' && (
-            <PrimitiveValue
+            <SettingTabs
               config={editing}
               paths={activePrimitive}
-              onChange={onPrimitiveChange}
+              onChange={onConfigChange}
               onClose={() =>
                 startTransition(() => {
                   setPortalMode('treeView');

@@ -8,13 +8,17 @@
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
   "ttl-element-node": "組建結構",
-  "ttl-primitive-value": "{{ widget }}設定",
   "ttl-select-widget": "選擇組件",
+  "ttl-settings": "{{ widget }}設定",
   "lbl-category": {
     "Display": "資料呈現",
     "Input": "表單輸入",
     "Interaction": "互動操作",
     "Layout": "版面配置"
+  },
+  "lbl-settings": {
+    "data-binding": "資料綁定",
+    "primitive-value": "外觀設定"
   },
   "lbl-widgets": {
     "Accordion": "手風琴式選單",

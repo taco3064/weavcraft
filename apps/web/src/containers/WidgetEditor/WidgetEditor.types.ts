@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Children, type ReactNode } from 'react';
 import type { ContainerProps } from '@mui/material/Container';
 import type { Get } from 'type-fest';
+import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { EditorListClasses, EditorListProps } from '~web/components';
@@ -12,51 +14,54 @@ import type {
   WidgetType,
 } from '~web/services';
 
+type ConfigProps = DataBindingProp | PrimitiveValueProp;
+
 export const ControllerProps = Symbol('ControllerProps');
 export type ChildrenArray = ReturnType<typeof Children.toArray>;
+export type ConfigType = ConfigProps['type'];
 
 type PrimitiveProps = NonNullable<
   Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
 >;
 
-type StructureEvent = {
+export interface NodePaths {
+  nodePaths: string[];
+  onWidgetChildrenGenerate: WidgetChildrenGenerateFn;
+  onPathsGenerate: PathsGenerateFn;
+}
+
+interface StructureEvent {
   target: RenderConfig;
   paths: ConfigPaths;
-};
+}
 
-type GetChildWidgetsFn = (config: RenderConfig) => RenderConfig[];
+type WidgetChildrenGenerateFn = (config: RenderConfig) => RenderConfig[];
 
-type GetPathsFn = (
+type PathsGenerateFn = (
   nodePath: string,
   index: number,
   paths?: ConfigPaths
 ) => ConfigPaths;
 
-export type NodePaths = {
-  nodePaths: string[];
-  getChildWidgets: GetChildWidgetsFn;
-  getPaths: GetPathsFn;
-};
+type ConfigChangeHandler<V extends ConfigProps = ConfigProps> = (
+  config: RenderConfig,
+  propPath: string,
+  propValue?: V
+) => void;
 
+/** @deprecated */
 export type NodeItemsRenderFn = (options: {
   classes: EditorListClasses;
   isMultiple: boolean;
   nodePath: string;
   widgets: RenderConfig[];
-  getChildWidgets: GetChildWidgetsFn;
-  getPaths: GetPathsFn;
-}) => ReactNode;
-
-export type PrimitiveItemsRenderFn = (options: {
-  classes: EditorListClasses;
-  proptypes: PrimitiveProps;
-  primitivePath: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value?: any;
+  getChildWidgets: WidgetChildrenGenerateFn;
+  getPaths: PathsGenerateFn;
 }) => ReactNode;
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
+  onConfigChange: ConfigChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
 
   onAddLastChild: (
@@ -64,19 +69,14 @@ export interface ChangeEvents {
     path: string,
     widget: WidgetType
   ) => void;
-
-  onPrimitiveChange: (
-    config: RenderConfig,
-    propPath: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value?: any
-  ) => void;
 }
 
 //* Style Params Types
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 
 //* Component Prop Types
+type EditorListCloseHandlerProps = Pick<EditorListProps, 'onClose'>;
+
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
   marginTop?: number;
@@ -84,11 +84,11 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   toolbarEl?: PortalContainerEl;
 }
 
-export interface AppendNodeProps {
+export interface NodeCreateButtonProps {
   path?: string;
   variant: 'action' | 'node';
   widgetId?: WidgetType;
-  onAppend: (widget: WidgetType) => void;
+  onClick: (widget: WidgetType) => void;
 }
 
 export type NodeActionProps<P extends string = 'paths'> = Record<
@@ -100,15 +100,34 @@ export type NodeActionProps<P extends string = 'paths'> = Record<
   onEdit: (e: StructureEvent) => void;
 };
 
-export interface ElementNodeProps
-  extends NodeActionProps<'active'>,
-    Pick<EditorListProps, 'onClose'> {
+export interface NodeListProps
+  extends EditorListCloseHandlerProps,
+    NodeActionProps<'active'> {
   onActive: (e: ConfigPaths) => void;
 }
 
-export interface PrimitiveValueProps
-  extends Pick<NodeActionProps, 'paths'>,
-    Pick<EditorListProps, 'onClose'> {
+export interface SettingTabsProps
+  extends EditorListCloseHandlerProps,
+    Pick<NodeActionProps, 'paths'> {
   config?: RenderConfig;
-  onChange: Get<ChangeEvents, 'onPrimitiveChange'>;
+  onChange: ConfigChangeHandler;
+}
+
+export interface NodeItemProps
+  extends Pick<NodeListProps, 'active' | 'onActive' | 'onDelete' | 'onEdit'> {
+  classes: EditorListClasses;
+  isMultiple: boolean;
+  path: string;
+  widgets: RenderConfig[];
+  onPathsGenerate: PathsGenerateFn;
+  onWidgetChildrenGenerate: WidgetChildrenGenerateFn;
+}
+
+export interface PrimitiveItemProps {
+  classes: EditorListClasses;
+  config?: RenderConfig;
+  path: string;
+  proptypes: PrimitiveProps;
+  value?: any;
+  onChange: ConfigChangeHandler<PrimitiveValueProp>;
 }

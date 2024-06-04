@@ -12,11 +12,27 @@ export const useAppendNodeStyles = makeStyles({
   },
 }));
 
-export const usePrimitiveValueStyles = makeStyles({ name: 'PrimitiveValue' })(
+export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
   (theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: `calc(100% - ${theme.spacing(8)})`,
+      overflow: 'hidden auto',
+
+      '& > *': {
+        width: '100%',
+      },
+    },
     row: {
       '& > *': {
         margin: '0 !important',
+      },
+    },
+    tabs: {
+      '& + *': {
+        height: '100%',
+        overflow: 'hidden auto',
       },
     },
   })

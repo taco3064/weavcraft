@@ -1,93 +1,40 @@
-import Badge from '@mui/material/Badge';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import _get from 'lodash/get';
-import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import NodeAction from './WidgetEditor.NodeAction';
+import NodeItem from './WidgetEditor.NodeItem';
 import { EditorList } from '~web/components';
-import type { ElementNodeProps } from './WidgetEditor.types';
+import type { NodeListProps } from './WidgetEditor.types';
 import type { RenderConfig } from '~web/hooks';
 
 import {
-  useNodeItemsRender,
+  useNodeItems,
   usePathDescription,
   useWidgetNodePaths,
 } from './WidgetEditor.hooks';
 
-export default function ElementNode({
+export default function NodeList({
   config,
   active,
   onActive,
   onClose,
   onDelete,
   onEdit,
-}: ElementNodeProps) {
+}: NodeListProps) {
   const { t } = useTranslation();
 
   const paths = useWidgetNodePaths(active);
   const description = usePathDescription(active);
   const node: RenderConfig = !paths.length ? config : _get(config, paths);
 
-  const renderItems = useNodeItemsRender(
-    ({ classes, isMultiple, nodePath, widgets, getChildWidgets, getPaths }) => (
-      <Fragment key={nodePath}>
-        <ListSubheader
-          disableSticky
-          className={classes.subitem}
-          sx={{ lineHeight: 1.2 }}
-        >
-          {nodePath}
-        </ListSubheader>
-
-        {widgets.map((config, i) => {
-          const hasChildren = getChildWidgets(config).length > 0;
-
-          const content = (
-            <>
-              <ListItemIcon className={classes.icon}>
-                <Badge badgeContent={!isMultiple ? 0 : i + 1} color="default">
-                  <Core.Icon color="warning" code="faPuzzlePiece" />
-                </Badge>
-              </ListItemIcon>
-
-              <ListItemText
-                primary={t(`widgets:lbl-widgets.${config.widget}`)}
-                primaryTypographyProps={{
-                  color: hasChildren ? 'secondary' : 'text.primary',
-                  fontWeight: hasChildren ? 550 : 500,
-                }}
-              />
-
-              <NodeAction
-                {...{ config, onDelete, onEdit }}
-                paths={getPaths(nodePath, i, active)}
-              />
-            </>
-          );
-
-          return !hasChildren ? (
-            <ListItem key={`${nodePath}-${i}`} className={classes.subitem}>
-              {content}
-            </ListItem>
-          ) : (
-            <ListItemButton
-              key={`${nodePath}-${i}`}
-              className={classes.subitem}
-              onClick={() => onActive(getPaths(nodePath, i, active))}
-            >
-              {content}
-            </ListItemButton>
-          );
-        })}
-      </Fragment>
-    ),
+  const renderWithClasses = useNodeItems(
+    NodeItem,
+    { active, onActive, onDelete, onEdit },
     node
   );
 
@@ -98,7 +45,7 @@ export default function ElementNode({
       title={t('widgets:ttl-element-node')}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
-        const items = renderItems(classes);
+        const items = renderWithClasses(classes);
 
         return (
           <>

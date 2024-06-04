@@ -10,8 +10,8 @@ import type CoreType from '@weavcraft/core';
 import { MenuDialog } from '~web/components';
 import { useAppendNodeStyles } from './WidgetEditor.styles';
 import { usePropsDefinition } from '~web/contexts';
-import type { AppendNodeProps } from './WidgetEditor.types';
 import type { MenuItemOptions } from '~web/hooks';
+import type { NodeCreateButtonProps } from './WidgetEditor.types';
 import type { WidgetType } from '~web/services';
 
 const { default: Core, ...CATEGORIES } = WeavcraftCore;
@@ -38,12 +38,12 @@ const GLOBAL_STYLES = (
   />
 );
 
-export default function AppendNode({
+export default function NodeCreateButton({
   path,
   variant,
   widgetId,
-  onAppend,
-}: AppendNodeProps) {
+  onClick,
+}: NodeCreateButtonProps) {
   const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
@@ -90,7 +90,7 @@ export default function AppendNode({
             ) as WidgetType;
 
             setOpen(false);
-            onAppend(widget);
+            onClick(widget);
           })
         }
         items={Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(

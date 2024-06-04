@@ -143,6 +143,28 @@ export function getParser(): CoreParser {
 }
 
 const Generator: GetDefinitionFns = {
+  DataBinding: [
+    //* - Special Prop Types
+    (type, options) => {
+      const text = trimImportText(type.getText());
+
+      if (
+        text === 'D' &&
+        trimImportText(type.getApparentType().getText()) === 'JsonObject'
+      ) {
+        return { ...options, type: 'data', definition: { multiple: false } };
+      } else if (
+        text === 'D[]' &&
+        trimImportText(
+          type.getArrayElementType()?.getApparentType().getText()
+        ) === 'JsonObject'
+      ) {
+        return { ...options, type: 'data', definition: { multiple: true } };
+      }
+
+      return false;
+    },
+  ],
   ElementNode: [
     //* - Special Prop Types
     (type, options) => {
@@ -205,23 +227,7 @@ const Generator: GetDefinitionFns = {
     (type, options) => {
       const text = trimImportText(type.getText());
 
-      if (text === 'IconCode') {
-        return { ...options, type: 'icon' };
-      } else if (
-        text === 'D' &&
-        trimImportText(type.getApparentType().getText()) === 'JsonObject'
-      ) {
-        return { ...options, type: 'data', definition: { multiple: false } };
-      } else if (
-        text === 'D[]' &&
-        trimImportText(
-          type.getArrayElementType()?.getApparentType().getText()
-        ) === 'JsonObject'
-      ) {
-        return { ...options, type: 'data', definition: { multiple: true } };
-      }
-
-      return false;
+      return text === 'IconCode' ? { ...options, type: 'icon' } : false;
     },
 
     //* - Literal Prop Types
