@@ -148,8 +148,6 @@ const Generator: GetDefinitionFns = {
     (type, options) => {
       const text = trimImportText(type.getText());
 
-      console.log('===', text);
-
       if (
         text?.endsWith('SlotElement') ||
         text?.startsWith('React.ReactElement<SlotProps,')
@@ -245,17 +243,15 @@ const Generator: GetDefinitionFns = {
       type.isNumber() ? { ...options, type: 'number' } : false,
 
     //* - String Prop Types
-    (type, options) =>
-      type.isString() ? { ...options, type: 'string' } : false,
+    (type, options) => {
+      if (trimImportText(type.getText()) === 'String') {
+        return { ...options, type: 'string', definition: { multiple: true } };
+      } else if (type.isString()) {
+        return { ...options, type: 'string', definition: { multiple: false } };
+      }
 
-    // //* - Object Prop Types
-    // (type, options) => {
-    //   if (type.isObject() && !type.isArray()) {
-
-    //   }
-
-    //   return false;
-    // },
+      return false;
+    },
 
     //* - Union Prop Types
     (type, options) => {

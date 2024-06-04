@@ -13,7 +13,6 @@ import type {
 } from '~web/services';
 
 export const ControllerProps = Symbol('ControllerProps');
-export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 export type ChildrenArray = ReturnType<typeof Children.toArray>;
 
 type PrimitiveProps = NonNullable<
@@ -73,6 +72,9 @@ export interface ChangeEvents {
     value?: any
   ) => void;
 }
+
+//* Style Params Types
+export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 
 //* Component Prop Types
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {

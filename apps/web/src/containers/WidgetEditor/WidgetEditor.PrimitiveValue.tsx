@@ -36,11 +36,11 @@ export default function PrimitiveValue({
       let input: ReactNode = null;
 
       const baseProps = {
-        variant: 'outlined' as const,
-        size: 'small' as const,
-        required: proptypes.required,
         label: primitivePath,
+        required: proptypes.required,
+        size: 'small' as const,
         value,
+        variant: 'outlined' as const,
         onChange: (value: unknown) =>
           onChange(config as RenderConfig, primitivePath, value),
       };
@@ -68,7 +68,17 @@ export default function PrimitiveValue({
           break;
         }
         case 'string': {
-          input = (
+          const { definition } = proptypes;
+
+          input = definition?.multiple ? (
+            <Core.TextAreaField
+              {...baseProps}
+              maxRows={3}
+              minRows={3}
+              adornmentPosition="start"
+              adornment={<TextFieldsIcon color="disabled" />}
+            />
+          ) : (
             <Core.TextField
               {...baseProps}
               adornmentPosition="start"

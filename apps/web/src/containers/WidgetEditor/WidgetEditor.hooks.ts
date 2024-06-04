@@ -110,7 +110,8 @@ export function useNodeAppend(
   {
     onAddChild,
     onAddLastChild,
-  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
+  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>,
+  defaultProps?: Partial<AppendNodeProps>
 ) {
   const { getDefinition } = usePropsDefinition();
 
@@ -125,6 +126,7 @@ export function useNodeAppend(
         const target = _get(props, path);
 
         const appendNode = createElement(AppendNode, {
+          ...defaultProps,
           key: 'append',
           path,
           variant: clickable ? 'action' : 'node',

@@ -38,7 +38,7 @@ export default withPropsDefinition(function WidgetEditor({
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
 
-  const [portalMode, setPortalMode] = useState<'treeView' | 'props'>(
+  const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
     'treeView'
   );
 
@@ -46,12 +46,10 @@ export default withPropsDefinition(function WidgetEditor({
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
-  console.log(value);
-
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { classes } = useMainStyles({ marginTop });
   const { containerEl, onToggle } = useTogglePortal();
+  const { classes } = useMainStyles({ marginTop });
 
   const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
     value,
@@ -121,14 +119,14 @@ export default withPropsDefinition(function WidgetEditor({
                 startTransition(() => {
                   onToggle(true);
                   setActivePrimitive(paths);
-                  setPortalMode('props');
+                  setPortalMode('setting');
                   setEditing(target);
                 })
               }
             />
           )}
 
-          {portalMode === 'props' && (
+          {portalMode === 'setting' && (
             <PrimitiveValue
               config={editing}
               paths={activePrimitive}

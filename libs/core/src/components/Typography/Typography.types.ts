@@ -7,21 +7,26 @@ import type { PropsWithMappedData } from '../../hooks';
 
 type MuiTypographyProps = Pick<
   ComponentProps<typeof MuiTypography>,
-  | 'align'
-  | 'color'
-  | 'fontWeight'
-  | 'gutterBottom'
-  | 'noWrap'
-  | 'paragraph'
-  | 'variant'
-  | 'whiteSpace'
+  'align' | 'fontWeight' | 'paragraph' | 'variant' | 'whiteSpace'
 >;
 
 export type TypographyProps<D extends JsonObject> = PropsWithMappedData<
   D,
   MuiTypographyProps & {
     icon?: IconCode;
-    text?: string;
+    text?: String;
+
+    color?:
+      | 'inherit'
+      | 'error'
+      | 'info'
+      | 'primary'
+      | 'secondary'
+      | 'success'
+      | 'warning'
+      | 'text.disabled'
+      | 'text.primary'
+      | 'text.secondary';
   },
   'icon' | 'text'
 >;
