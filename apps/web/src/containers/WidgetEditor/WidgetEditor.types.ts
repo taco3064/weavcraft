@@ -113,21 +113,14 @@ export interface SettingTabsProps
   onChange: ConfigChangeHandler;
 }
 
-export interface NodeItemProps
+export interface NodeItemsProps
   extends Pick<NodeListProps, 'active' | 'onActive' | 'onDelete' | 'onEdit'> {
   classes: EditorListClasses;
-  isMultiple: boolean;
-  path: string;
-  widgets: RenderConfig[];
-  onPathsGenerate: PathsGenerateFn;
-  onWidgetChildrenGenerate: WidgetChildrenGenerateFn;
+  config: RenderConfig;
 }
 
-export interface PrimitiveItemProps {
+export interface PrimitiveItemsProps {
   classes: EditorListClasses;
-  config?: RenderConfig;
-  path: string;
-  proptypes: PrimitiveProps;
-  value?: any;
+  config: RenderConfig;
   onChange: ConfigChangeHandler<PrimitiveValueProp>;
 }

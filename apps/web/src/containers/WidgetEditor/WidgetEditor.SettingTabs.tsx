@@ -8,9 +8,9 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import PrimitiveItem from './WidgetEditor.PrimitiveItem';
+import PrimitiveItems from './WidgetEditor.PrimitiveItems';
 import { EditorList } from '~web/components';
-import { usePathDescription, usePrimitiveItems } from './WidgetEditor.hooks';
+import { usePathDescription } from './WidgetEditor.hooks';
 import { useSettingStyles } from './WidgetEditor.styles';
 import type { ConfigType, SettingTabsProps } from './WidgetEditor.types';
 
@@ -26,11 +26,6 @@ export default function SettingTabs({
   const { t } = useTranslation();
   const { classes } = useSettingStyles();
   const { root: rootClassName, tabs: tabsClassName } = classes;
-
-  const renderWithClasses = usePrimitiveItems(PrimitiveItem, {
-    config,
-    onChange,
-  });
 
   return !config ? null : (
     <EditorList
@@ -64,7 +59,9 @@ export default function SettingTabs({
 
           <Fade key={active} in>
             <List>
-              {active === 'PrimitiveValue' && renderWithClasses(classes)}
+              {active === 'PrimitiveValue' && (
+                <PrimitiveItems {...{ config, onChange }} classes={classes} />
+              )}
             </List>
           </Fade>
         </ListItem>

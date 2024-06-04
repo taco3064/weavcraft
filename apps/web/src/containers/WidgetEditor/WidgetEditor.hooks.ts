@@ -1,23 +1,14 @@
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { Children, createElement, useMemo } from 'react';
+import { createElement, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
+import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { EditorListClasses } from '~web/components';
 import type { PropsDefinition, WidgetConfigs } from '~web/services';
-
-import type {
-  ChangeEvents,
-  ChildrenArray,
-  NodeCreateButtonProps,
-  NodeItemProps,
-  NodePaths,
-  PrimitiveItemProps,
-} from './WidgetEditor.types';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
   componentName: 'Fragment',
@@ -144,88 +135,6 @@ export function useNodeCreate(
   };
 }
 
-export function useNodeItems(
-  ElementNodeItem: ComponentType<NodeItemProps>,
-  defaultProps: Pick<
-    NodeItemProps,
-    'active' | 'onActive' | 'onDelete' | 'onEdit'
-  >,
-  config?: RenderConfig
-) {
-  const { widget, props = {} } = config || {};
-  const { getDefinition } = usePropsDefinition();
-
-  const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
-    useMemo<NodePaths>(() => {
-      const { elementNodeProps = {} } = getDefinition(widget) || {};
-
-      return {
-        nodePaths: Object.keys(elementNodeProps),
-
-        onPathsGenerate: (nodePath, index, paths = []) => {
-          const result: ConfigPaths = [...paths, nodePath];
-
-          if (elementNodeProps[nodePath]?.definition?.multiple) {
-            result.push(index);
-          }
-
-          return result;
-        },
-        onWidgetChildrenGenerate: ({ widget, props = {} }) => {
-          const { elementNodeProps = {} } = getDefinition(widget) || {};
-          const nodePaths = Object.keys(elementNodeProps);
-
-          return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
-            const { [nodePath]: nodes } = props;
-
-            if (nodes?.value && nodes.type === 'ElementNode') {
-              const isMultiple = Array.isArray(nodes.value);
-
-              result.push(
-                ...((isMultiple
-                  ? nodes.value
-                  : [nodes.value]) as RenderConfig[])
-              );
-            }
-
-            return result;
-          }, []);
-        },
-      };
-    }, [widget, getDefinition]);
-
-  return (classes: EditorListClasses) =>
-    nodePaths.reduce<ChildrenArray>((items, path) => {
-      const { [path]: nodes } = props;
-
-      if (nodes?.value && nodes.type === 'ElementNode') {
-        const isMultiple = Array.isArray(nodes.value);
-
-        const widgets = (
-          isMultiple ? nodes.value : [nodes.value]
-        ) as RenderConfig[];
-
-        widgets.length &&
-          items.push(
-            ...Children.toArray(
-              createElement(ElementNodeItem, {
-                ...defaultProps,
-                classes,
-                isMultiple,
-                key: path,
-                path,
-                widgets,
-                onPathsGenerate,
-                onWidgetChildrenGenerate,
-              })
-            )
-          );
-      }
-
-      return items;
-    }, []);
-}
-
 export function usePathDescription(paths: ConfigPaths) {
   const stringify = JSON.stringify(paths);
 
@@ -239,35 +148,6 @@ export function usePathDescription(paths: ConfigPaths) {
       !isMultiple ? '' : `[${paths[lastIndex]}]`,
     ].join('');
   }, [stringify]);
-}
-
-export function usePrimitiveItems(
-  PrimitiveItem: ComponentType<PrimitiveItemProps>,
-  { config, onChange }: Pick<PrimitiveItemProps, 'config' | 'onChange'>
-) {
-  const { widget, props = {} } = config || {};
-  const { getDefinition } = usePropsDefinition();
-
-  const primitiveProps = useMemo(() => {
-    const { primitiveValueProps = {} } = getDefinition(widget) || {};
-
-    return Object.entries(primitiveValueProps);
-  }, [widget, getDefinition]);
-
-  return (classes: EditorListClasses) =>
-    primitiveProps.map<ReactNode>(([path, proptypes]) => {
-      const { [path]: primitive } = props;
-
-      return createElement(PrimitiveItem, {
-        config,
-        classes,
-        key: path,
-        proptypes,
-        path,
-        value: primitive?.value,
-        onChange,
-      });
-    });
 }
 
 export function useWidgetNodePaths(paths: ConfigPaths) {

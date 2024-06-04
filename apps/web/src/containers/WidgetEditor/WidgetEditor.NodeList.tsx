@@ -7,16 +7,11 @@ import _get from 'lodash/get';
 import { useTranslation } from 'next-i18next';
 
 import NodeAction from './WidgetEditor.NodeAction';
-import NodeItem from './WidgetEditor.NodeItem';
+import NodeItems from './WidgetEditor.NodeItems';
 import { EditorList } from '~web/components';
+import { usePathDescription, useWidgetNodePaths } from './WidgetEditor.hooks';
 import type { NodeListProps } from './WidgetEditor.types';
 import type { RenderConfig } from '~web/hooks';
-
-import {
-  useNodeItems,
-  usePathDescription,
-  useWidgetNodePaths,
-} from './WidgetEditor.hooks';
 
 export default function NodeList({
   config,
@@ -32,12 +27,6 @@ export default function NodeList({
   const description = usePathDescription(active);
   const node: RenderConfig = !paths.length ? config : _get(config, paths);
 
-  const renderWithClasses = useNodeItems(
-    NodeItem,
-    { active, onActive, onDelete, onEdit },
-    node
-  );
-
   return !node ? null : (
     <EditorList
       {...{ description, onClose }}
@@ -45,17 +34,13 @@ export default function NodeList({
       title={t('widgets:ttl-element-node')}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
-        const items = renderWithClasses(classes);
 
         return (
           <>
             <ListItem>
               <ListItemIcon className={classes.icon}>
                 {!active.length ? (
-                  <Core.Icon
-                    color="disabled"
-                    code={items.length ? 'faChevronDown' : 'faMinus'}
-                  />
+                  <Core.Icon color="disabled" code="faMinus" />
                 ) : (
                   <IconButton
                     size="large"
@@ -83,7 +68,10 @@ export default function NodeList({
               />
             </ListItem>
 
-            {items}
+            <NodeItems
+              {...{ active, classes, onActive, onDelete, onEdit }}
+              config={node}
+            />
           </>
         );
       }}
