@@ -8,24 +8,24 @@ import ListSubheader from '@mui/material/ListSubheader';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import NodeAction from './WidgetEditor.NodeAction';
+import Action from './ElementNodeList.Action';
 import { usePropsDefinition } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 
 import type {
   ChildrenArray,
-  NodeItemsProps,
+  ItemsProps,
   NodePaths,
-} from './WidgetEditor.types';
+} from './ElementNodeList.types';
 
-export default function NodeItems({
+export default function Items({
   active,
   classes,
   config,
   onActive,
   onDelete,
   onEdit,
-}: NodeItemsProps) {
+}: ItemsProps) {
   const { widget, props = {} } = config;
   const { t } = useTranslation();
   const { getDefinition } = usePropsDefinition();
@@ -112,7 +112,7 @@ export default function NodeItems({
                     }}
                   />
 
-                  <NodeAction
+                  <Action
                     {...{ config, onDelete, onEdit }}
                     paths={onPathsGenerate(path, i, active)}
                   />

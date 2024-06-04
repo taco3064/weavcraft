@@ -10,7 +10,7 @@ import { useTranslation } from 'next-i18next';
 
 import PrimitiveItems from './WidgetEditor.PrimitiveItems';
 import { EditorList } from '~web/components';
-import { usePathDescription } from './WidgetEditor.hooks';
+import { usePathDescription } from '~web/hooks';
 import { useSettingStyles } from './WidgetEditor.styles';
 import type { ConfigType, SettingTabsProps } from './WidgetEditor.types';
 

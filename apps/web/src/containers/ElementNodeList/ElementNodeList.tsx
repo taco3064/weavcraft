@@ -6,21 +6,25 @@ import ListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
 import { useTranslation } from 'next-i18next';
 
-import NodeAction from './WidgetEditor.NodeAction';
-import NodeItems from './WidgetEditor.NodeItems';
+import Action from './ElementNodeList.Action';
+import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
-import { usePathDescription, useWidgetNodePaths } from './WidgetEditor.hooks';
-import type { NodeListProps } from './WidgetEditor.types';
-import type { RenderConfig } from '~web/hooks';
+import type { ElementNodeListProps } from './ElementNodeList.types';
 
-export default function NodeList({
+import {
+  usePathDescription,
+  useWidgetNodePaths,
+  type RenderConfig,
+} from '~web/hooks';
+
+export default function ElementNodeList({
   config,
   active,
   onActive,
   onClose,
   onDelete,
   onEdit,
-}: NodeListProps) {
+}: ElementNodeListProps) {
   const { t } = useTranslation();
 
   const paths = useWidgetNodePaths(active);
@@ -61,14 +65,10 @@ export default function NodeList({
                 }}
               />
 
-              <NodeAction
-                {...{ onDelete, onEdit }}
-                config={node}
-                paths={active}
-              />
+              <Action {...{ onDelete, onEdit }} config={node} paths={active} />
             </ListItem>
 
-            <NodeItems
+            <Items
               {...{ active, classes, onActive, onDelete, onEdit }}
               config={node}
             />

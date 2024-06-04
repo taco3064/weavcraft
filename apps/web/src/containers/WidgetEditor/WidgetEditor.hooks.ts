@@ -1,14 +1,15 @@
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo } from 'react';
+import { createElement } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
+import { getWidgetNodePaths } from '~web/hooks';
 import { usePropsDefinition } from '~web/contexts';
 import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PropsDefinition, WidgetConfigs } from '~web/services';
+import type { RenderConfig } from '~web/hooks';
 
 const FRAGMENT_DEFINITION: PropsDefinition = {
   componentName: 'Fragment',
@@ -24,12 +25,6 @@ const FRAGMENT_DEFINITION: PropsDefinition = {
     },
   },
 };
-
-function getWidgetNodePaths(paths: ConfigPaths) {
-  return paths
-    .map((path) => (typeof path === 'string' ? ['props', path, 'value'] : path))
-    .flat();
-}
 
 export function useChangeEvents(
   value: RenderConfig,
@@ -133,23 +128,4 @@ export function useNodeCreate(
       props
     );
   };
-}
-
-export function usePathDescription(paths: ConfigPaths) {
-  const stringify = JSON.stringify(paths);
-
-  return useMemo(() => {
-    const paths: ConfigPaths = JSON.parse(stringify);
-    const lastIndex = paths.length - 1;
-    const isMultiple = typeof paths[lastIndex] === 'number';
-
-    return [
-      paths[isMultiple ? lastIndex - 1 : lastIndex],
-      !isMultiple ? '' : `[${paths[lastIndex]}]`,
-    ].join('');
-  }, [stringify]);
-}
-
-export function useWidgetNodePaths(paths: ConfigPaths) {
-  return useMemo(() => getWidgetNodePaths(paths), [paths]);
 }

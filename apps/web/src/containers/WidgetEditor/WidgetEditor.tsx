@@ -8,8 +8,8 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import NodeList from './WidgetEditor.NodeList';
 import SettingTabs from './WidgetEditor.SettingTabs';
 import { useChangeEvents, useNodeCreate } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
@@ -98,7 +98,7 @@ export default withPropsDefinition(function WidgetEditor({
 
         <PortalWrapper containerEl={containerEl}>
           {portalMode === 'treeView' && (
-            <NodeList
+            <ElementNodeList
               active={activeNode}
               config={value}
               onActive={(paths) => setActiveNode(paths)}

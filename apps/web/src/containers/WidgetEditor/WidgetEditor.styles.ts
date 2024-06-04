@@ -1,8 +1,8 @@
 import { makeStyles } from 'tss-react/mui';
 import type { MainStyleParams } from './WidgetEditor.types';
 
-export const useAppendNodeStyles = makeStyles({
-  name: 'AppendNode',
+export const useNodeCreateButtonStyles = makeStyles({
+  name: 'NodeCreateButton',
 })((theme) => ({
   toggle: {
     background: theme.palette.secondary.main,

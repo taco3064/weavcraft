@@ -8,14 +8,14 @@ import { useTranslation } from 'next-i18next';
 import type CoreType from '@weavcraft/core';
 
 import { MenuDialog } from '~web/components';
-import { useAppendNodeStyles } from './WidgetEditor.styles';
+import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
 import { usePropsDefinition } from '~web/contexts';
 import type { MenuItemOptions } from '~web/hooks';
 import type { NodeCreateButtonProps } from './WidgetEditor.types';
 import type { WidgetType } from '~web/services';
 
 const { default: Core, ...CATEGORIES } = WeavcraftCore;
-const CLASS_NAME = 'AppendNode-toggle';
+const CLASS_NAME = 'NodeCreateButton-root';
 
 const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
   Display: 'faTableList',
@@ -49,7 +49,7 @@ export default function NodeCreateButton({
 
   const { t } = useTranslation();
   const { getDefinition } = usePropsDefinition();
-  const { classes, cx } = useAppendNodeStyles();
+  const { classes, cx } = useNodeCreateButtonStyles();
 
   const label = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
     .filter(Boolean)

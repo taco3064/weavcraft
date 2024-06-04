@@ -1,63 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Children, type ReactNode } from 'react';
 import type { ContainerProps } from '@mui/material/Container';
-import type { Get } from 'type-fest';
 import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { EditorListClasses, EditorListProps } from '~web/components';
 import type { PortalContainerEl } from '~web/contexts';
 
-import type {
-  PrimitiveValuePropsWithPath,
-  WidgetConfigs,
-  WidgetType,
-} from '~web/services';
+import type { WidgetConfigs, WidgetType } from '~web/services';
 
 type ConfigProps = DataBindingProp | PrimitiveValueProp;
-
-export const ControllerProps = Symbol('ControllerProps');
-export type ChildrenArray = ReturnType<typeof Children.toArray>;
 export type ConfigType = ConfigProps['type'];
-
-type PrimitiveProps = NonNullable<
-  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
->;
-
-export interface NodePaths {
-  nodePaths: string[];
-  onWidgetChildrenGenerate: WidgetChildrenGenerateFn;
-  onPathsGenerate: PathsGenerateFn;
-}
-
-interface StructureEvent {
-  target: RenderConfig;
-  paths: ConfigPaths;
-}
-
-type WidgetChildrenGenerateFn = (config: RenderConfig) => RenderConfig[];
-
-type PathsGenerateFn = (
-  nodePath: string,
-  index: number,
-  paths?: ConfigPaths
-) => ConfigPaths;
 
 type ConfigChangeHandler<V extends ConfigProps = ConfigProps> = (
   config: RenderConfig,
   propPath: string,
   propValue?: V
 ) => void;
-
-/** @deprecated */
-export type NodeItemsRenderFn = (options: {
-  classes: EditorListClasses;
-  isMultiple: boolean;
-  nodePath: string;
-  widgets: RenderConfig[];
-  getChildWidgets: WidgetChildrenGenerateFn;
-  getPaths: PathsGenerateFn;
-}) => ReactNode;
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
@@ -75,8 +33,6 @@ export interface ChangeEvents {
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 
 //* Component Prop Types
-type EditorListCloseHandlerProps = Pick<EditorListProps, 'onClose'>;
-
 export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
   config?: WidgetConfigs;
   marginTop?: number;
@@ -91,36 +47,18 @@ export interface NodeCreateButtonProps {
   onClick: (widget: WidgetType) => void;
 }
 
-export type NodeActionProps<P extends string = 'paths'> = Record<
-  P,
-  ConfigPaths
-> & {
-  config: RenderConfig;
-  onDelete: (e: StructureEvent) => void;
-  onEdit: (e: StructureEvent) => void;
-};
-
-export interface NodeListProps
-  extends EditorListCloseHandlerProps,
-    NodeActionProps<'active'> {
-  onActive: (e: ConfigPaths) => void;
-}
-
-export interface SettingTabsProps
-  extends EditorListCloseHandlerProps,
-    Pick<NodeActionProps, 'paths'> {
+export interface SettingTabsProps extends Pick<EditorListProps, 'onClose'> {
   config?: RenderConfig;
+  paths: ConfigPaths;
   onChange: ConfigChangeHandler;
-}
-
-export interface NodeItemsProps
-  extends Pick<NodeListProps, 'active' | 'onActive' | 'onDelete' | 'onEdit'> {
-  classes: EditorListClasses;
-  config: RenderConfig;
 }
 
 export interface PrimitiveItemsProps {
   classes: EditorListClasses;
   config: RenderConfig;
   onChange: ConfigChangeHandler<PrimitiveValueProp>;
+}
+
+export interface DataBindingProps {
+  classes: EditorListClasses;
 }
