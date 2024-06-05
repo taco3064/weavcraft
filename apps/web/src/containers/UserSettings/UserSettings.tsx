@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Trans } from 'next-i18next';
 import { lazy, useState, type ComponentType } from 'react';
 
@@ -39,14 +40,9 @@ export default function UserSettings() {
               key={id}
               id={id}
               expanded={expanded === id}
-              slotProps={{ transition: { timeout: 600 } }}
               onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
             >
-              <AccordionSummary
-                expandIcon={
-                  expanded === id ? null : <Core.Icon code="faAngleDown" />
-                }
-              >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Core.Icon color="primary" code={icon} />
                 <Trans i18nKey={`lbl-${id}`} />
               </AccordionSummary>

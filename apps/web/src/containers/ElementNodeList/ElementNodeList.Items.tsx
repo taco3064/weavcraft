@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
+import Typography from '@mui/material/Typography';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
@@ -87,7 +88,9 @@ export default function Items({
               className={classes.subitem}
               sx={{ lineHeight: 1.2 }}
             >
-              {path}
+              <Typography variant="subtitle2" color="secondary">
+                {path}
+              </Typography>
             </ListSubheader>
 
             {widgets.map((config, i) => {

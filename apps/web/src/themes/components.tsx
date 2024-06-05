@@ -30,6 +30,9 @@ export const components: ThemeOptions['components'] = {
     },
   },
   MuiAccordion: {
+    defaultProps: {
+      slotProps: { transition: { timeout: 600 } },
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         width: '100%',

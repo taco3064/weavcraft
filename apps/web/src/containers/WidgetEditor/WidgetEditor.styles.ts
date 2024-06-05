@@ -30,6 +30,7 @@ export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
       },
     },
     tabs: {
+      marginBottom: theme.spacing(2),
       '& + *': {
         height: '100%',
         overflow: 'hidden auto',

@@ -1,4 +1,5 @@
 {
+  "btn-add-data": "Add Data",
   "btn-add-trigger": "Add Trigger Widget",
   "btn-add-widget": "Add Widget",
   "btn-delete-widget": "Delete Widget",
@@ -7,7 +8,10 @@
   "btn-widget-structure": "View Structure",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",
+  "msg-prop-mapping-placeholder": "Input the data field name or path.",
   "ttl-element-node": "Widget Structure",
+  "ttl-force-data": "Fixed Data",
+  "ttl-prop-mapping": "Data Binding",
   "ttl-select-widget": "Select Widget",
   "ttl-settings": "{{ widget }} Settings",
   "lbl-category": {

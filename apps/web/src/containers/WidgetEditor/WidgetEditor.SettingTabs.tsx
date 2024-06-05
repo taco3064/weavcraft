@@ -7,6 +7,7 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import DataBinding from './WidgetEditor.DataBinding';
 import PrimitiveList from './WidgetEditor.PrimitiveList';
 import { EditorList } from '~web/components';
 import { usePathDescription } from '~web/hooks';
@@ -66,7 +67,13 @@ export default function SettingTabs({
 
           {active === 'DataBinding' && (
             <Fade in>
-              <div />
+              <DataBinding
+                {...{ config, onChange }}
+                classes={{
+                  ...editorClasses,
+                  row: classes.row,
+                }}
+              />
             </Fade>
           )}
         </ListItem>

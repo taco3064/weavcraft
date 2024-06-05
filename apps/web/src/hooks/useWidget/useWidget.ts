@@ -45,7 +45,7 @@ export function useWidgetRender(render: RenderFn) {
     config: RenderConfig,
     { key, paths = [] }: GenerateOptions = {}
   ) {
-    const WidgetEl: ComponentType = _get(Core, config.widget);
+    const WidgetEl = _get(Core, config.widget) as ComponentType;
     const { elementNodeProps } = getDefinition(config.widget);
 
     return render(WidgetEl, {

@@ -46,12 +46,6 @@ export type GetDefinitionFns<T extends WidgetPropTypes = WidgetPropTypes> = {
   ) => WidgetPropTypeDefinitions[K] | false)[];
 };
 
-export type GetPropertyFn = (
-  propsType: WidgetPropTypes,
-  property: Tsm.Symbol,
-  prefixPath?: string
-) => [string, WidgetPropTypeDefinitions[typeof propsType] | null];
-
 export type GetPropertyWithAllTypesFn = (
   property: Tsm.Symbol,
   prefixPath?: string

@@ -7,10 +7,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import _set from 'lodash/set';
-import { Trans, useTranslation } from 'next-i18next';
 import { useEffect, useState, type FormEventHandler } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'next-i18next';
 
 import { createHierarchyData, updateHierarchyData } from '~web/services';
 import { useTutorialMode } from '~web/contexts';
@@ -107,14 +107,9 @@ export default function UpsertDialog<P>({
           color="secondary"
           name="title"
           defaultValue={data?.title}
-          label={
-            <Trans
-              i18nKey={`lbl-hierarchy-name.${data?.type}`}
-              values={{
-                category: categoryLabel,
-              }}
-            />
-          }
+          label={t(`lbl-hierarchy-name.${data?.type}`, {
+            category: categoryLabel,
+          })}
         />
 
         <TextField
@@ -124,7 +119,7 @@ export default function UpsertDialog<P>({
           color="secondary"
           name="description"
           defaultValue={data?.description}
-          label={<Trans i18nKey="lbl-description" />}
+          label={t('lbl-description')}
         />
       </DialogContent>
 
@@ -142,7 +137,7 @@ export default function UpsertDialog<P>({
             onClose();
           }}
         >
-          <Trans i18nKey="btn-cancel" />
+          {t('btn-cancel')}
         </Button>
 
         <Button
@@ -150,7 +145,7 @@ export default function UpsertDialog<P>({
           type="submit"
           startIcon={<Core.Icon code="faCheck" />}
         >
-          <Trans i18nKey="btn-confirm" />
+          {t('btn-confirm')}
         </Button>
       </ButtonGroup>
     </Dialog>

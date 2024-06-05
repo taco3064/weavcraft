@@ -9,8 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import { Trans, useTranslation } from 'next-i18next';
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'next-i18next';
 
 import { useFilterStyles } from './HierarchyList.styles';
 import type { FilterToggleProps } from './HierarchyList.types';
@@ -40,7 +40,7 @@ export default function FilterToggle({
 
   return !containerEl ? null : (
     <>
-      <Tooltip title={<Trans i18nKey="btn-search" />}>
+      <Tooltip title={t('btn-search')}>
         <IconButton color="primary" onClick={() => setOpen(!open)}>
           <Core.Icon code="faSearch" />
         </IconButton>
@@ -61,10 +61,9 @@ export default function FilterToggle({
         <DialogTitle>
           <Core.Icon code="faSearch" />
 
-          <Trans
-            i18nKey="ttl-hierarchy-search"
-            values={{ name: t(`ttl-breadcrumbs.${values.category}.label`) }}
-          />
+          {t('ttl-hierarchy-search', {
+            name: t(`ttl-breadcrumbs.${values.category}.label`),
+          })}
         </DialogTitle>
 
         <DialogContent>
@@ -101,7 +100,7 @@ export default function FilterToggle({
             startIcon={<Core.Icon code="faClose" />}
             onClick={() => setOpen(false)}
           >
-            <Trans i18nKey="btn-cancel" />
+            {t('btn-cancel')}
           </Button>
 
           <Button
@@ -109,7 +108,7 @@ export default function FilterToggle({
             startIcon={<Core.Icon code="faFilter" />}
             type="submit"
           >
-            <Trans i18nKey="btn-filter" />
+            {t('btn-filter')}
           </Button>
         </ButtonGroup>
       </Dialog>

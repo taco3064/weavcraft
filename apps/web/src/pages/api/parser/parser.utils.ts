@@ -10,12 +10,12 @@ import type {
   CoreParser,
   GetDefinitionFn,
   GetDefinitionFns,
-  GetPropertyFn,
   GetPropertyWithAllTypesFn,
   GetPropsDefinitionsReturn,
 } from './parser.types';
 
 const WIDGET_PROP_TYPES: WidgetPropTypes[] = [
+  'DataBinding',
   'ElementNode',
   'EventCallback',
   'PrimitiveValue',
@@ -37,24 +37,18 @@ const getDefinition: GetDefinitionFn = (propsType, type, options) => {
   );
 };
 
-const getProperty: GetPropertyFn = (propsType, property, prefixPath = '') => {
-  const path = [prefixPath, property.getName()].filter(Boolean).join('.');
-  const type = property.getTypeAtLocation(source);
-
-  const definition = getDefinition(propsType, type, {
-    path,
-    required: !property.isOptional(),
-  });
-
-  return [path, !definition ? null : definition];
-};
-
 const getPropertyWithAllTypes: GetPropertyWithAllTypesFn = (
   property,
   prefixPath = ''
 ) => {
   for (const propsType of WIDGET_PROP_TYPES) {
-    const [propPath, definition] = getProperty(propsType, property, prefixPath);
+    const propPath = [prefixPath, property.getName()].filter(Boolean).join('.');
+    const type = property.getTypeAtLocation(source);
+
+    const definition = getDefinition(propsType, type, {
+      path: propPath,
+      required: !property.isOptional(),
+    });
 
     if (definition) {
       return [{ propsType, propPath, definition }];
@@ -64,25 +58,17 @@ const getPropertyWithAllTypes: GetPropertyWithAllTypesFn = (
   const name = property.getName();
   const path = [prefixPath, name].filter(Boolean).join('.');
   const type = property.getTypeAtLocation(source);
+  const isPlainObject = type.isObject() && !type.isArray();
 
-  if (type.isObject() && !type.isArray()) {
-    const properties = type.getProperties();
+  return !isPlainObject
+    ? []
+    : type
+        .getProperties()
+        .reduce<ReturnType<GetPropertyWithAllTypesFn>>((acc, property) => {
+          acc.push(...getPropertyWithAllTypes(property, path));
 
-    return name === 'propMapping'
-      ? properties
-          .map((property) => getPropertyWithAllTypes(property, path))
-          .flat()
-      : properties.reduce<ReturnType<GetPropertyWithAllTypesFn>>(
-          (acc, property) => {
-            acc.push(...getPropertyWithAllTypes(property, path));
-
-            return acc;
-          },
-          []
-        );
-  }
-
-  return [];
+          return acc;
+        }, []);
 };
 
 export function getParser(): CoreParser {
@@ -160,6 +146,18 @@ const Generator: GetDefinitionFns = {
         ) === 'JsonObject'
       ) {
         return { ...options, type: 'data', definition: { multiple: true } };
+      } else if (
+        type.isObject() &&
+        !type.isArray() &&
+        /(^|\.)propMapping$/.test(options.path)
+      ) {
+        return {
+          ...options,
+          type: 'mapping',
+          definition: type
+            .getProperties()
+            .map((property) => property.getName()),
+        };
       }
 
       return false;

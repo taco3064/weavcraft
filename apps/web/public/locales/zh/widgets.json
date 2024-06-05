@@ -1,4 +1,5 @@
 {
+  "btn-add-data": "加入資料",
   "btn-add-trigger": "加入點擊組件",
   "btn-add-widget": "加入組件",
   "btn-delete-widget": "刪除組件",
@@ -7,7 +8,10 @@
   "btn-widget-structure": "查看組件結構",
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
+  "msg-prop-mapping-placeholder": "請輸入資料名稱或路徑。",
   "ttl-element-node": "組建結構",
+  "ttl-force-data": "注入資料",
+  "ttl-prop-mapping": "資料綁定設置",
   "ttl-select-widget": "選擇組件",
   "ttl-settings": "{{ widget }}設定",
   "lbl-category": {

@@ -15,17 +15,9 @@ interface BaseWidgetProps<T extends WidgetPropTypes, V> {
 }
 
 //* - Data Binding
-interface DataBindingValue {
-  data?: JsonObject;
-  records?: JsonArray;
-  propMapping?: Record<string, string>;
-}
-
 export type DataBindingProp = BaseWidgetProps<
   'DataBinding',
-  DataBindingValue & {
-    [K in `${string}.propMapping`]: Record<string, string>;
-  }
+  Record<string, string>
 >;
 
 //* - Primitive Value

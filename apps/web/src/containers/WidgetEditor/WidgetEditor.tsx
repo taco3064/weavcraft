@@ -62,6 +62,8 @@ export default withPropsDefinition(function WidgetEditor({
     <WidgetEl key={key} {...withAppendNode(props, config)} />
   ));
 
+  console.log('===', value);
+
   return (
     <Slide in direction="up" timeout={1200}>
       <Container disableGutters className={classes.root} maxWidth={maxWidth}>
