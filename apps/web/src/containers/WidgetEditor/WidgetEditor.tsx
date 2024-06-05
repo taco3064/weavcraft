@@ -10,7 +10,7 @@ import { useTranslation } from 'next-i18next';
 
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import SettingTabs from './WidgetEditor.SettingTabs';
+import PropsSettingTabs from '../PropsSettingTabs';
 import { useChangeEvents, useNodeCreate } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
@@ -131,7 +131,7 @@ export default withPropsDefinition(function WidgetEditor({
           )}
 
           {portalMode === 'setting' && (
-            <SettingTabs
+            <PropsSettingTabs
               config={editing}
               paths={activePrimitive}
               onChange={onConfigChange}

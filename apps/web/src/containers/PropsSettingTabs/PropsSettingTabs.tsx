@@ -7,24 +7,28 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import DataBinding from './WidgetEditor.DataBinding';
-import PrimitiveList from './WidgetEditor.PrimitiveList';
+import DataBinding from './PropsSettingTabs.DataBinding';
+import PrimitiveList from './PropsSettingTabs.PrimitiveList';
 import { EditorList } from '~web/components';
 import { usePathDescription } from '~web/hooks';
-import { useSettingStyles } from './WidgetEditor.styles';
-import type { ConfigType, SettingTabsProps } from './WidgetEditor.types';
+import { useMainStyles } from './PropsSettingTabs.styles';
 
-export default function SettingTabs({
+import type {
+  ConfigType,
+  PropsSettingTabsProps,
+} from './PropsSettingTabs.types';
+
+export default function PropsSettingTabs({
   config,
   paths,
   onChange,
   onClose,
-}: SettingTabsProps) {
+}: PropsSettingTabsProps) {
   const description = usePathDescription(paths);
   const [active, setActive] = useState<ConfigType>('PrimitiveValue');
 
   const { t } = useTranslation();
-  const { classes } = useSettingStyles();
+  const { classes } = useMainStyles();
 
   return !config ? null : (
     <EditorList

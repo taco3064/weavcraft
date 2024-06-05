@@ -15,11 +15,15 @@ import { forwardRef, useMemo, type ReactNode } from 'react';
 import type { PrimitiveValueProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
-import type { PrimitiveFields, SettingPanelProps } from './WidgetEditor.types';
+
+import type {
+  PrimitiveFields,
+  PropsSettingProps,
+} from './PropsSettingTabs.types';
 
 export default forwardRef<
   HTMLUListElement,
-  SettingPanelProps<PrimitiveValueProp>
+  PropsSettingProps<PrimitiveValueProp>
 >(function PrimitiveList({ classes, config, onChange }, ref) {
   const { widget, props = {} } = config;
   const { getDefinition } = usePropsDefinition();

@@ -1,5 +1,3 @@
-import type { JsonArray, JsonObject } from 'type-fest';
-
 enum WidgetPropType {
   DataBinding,
   ElementNode,

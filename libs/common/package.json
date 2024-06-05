@@ -6,7 +6,6 @@
   "typings": "./src/index.d.ts",
   "dependencies": {
     "tslib": "^2.3.0",
-    "type-fest": "^4.18.1",
     "http-status": "^1.7.4",
     "class-validator": "^0.14.1",
     "class-validator-jsonschema": "^5.0.0",

@@ -24,11 +24,11 @@ import type { DataBindingProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
 import type { PropTypeDefinitions } from '~web/services';
-import type { SettingPanelProps } from './WidgetEditor.types';
+import type { PropsSettingProps } from './PropsSettingTabs.types';
 
 const ELEVATION = 4;
 
-export default forwardRef<HTMLDivElement, SettingPanelProps<DataBindingProp>>(
+export default forwardRef<HTMLDivElement, PropsSettingProps<DataBindingProp>>(
   function DataBinding({ classes, config, onChange }, ref) {
     const [expanded, setExpanded] = useState<number | 'data'>(0);
 
