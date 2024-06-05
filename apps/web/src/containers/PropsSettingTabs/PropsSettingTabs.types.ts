@@ -50,3 +50,9 @@ export interface PropsSettingProps<V extends ConfigProps> {
   config: RenderConfig;
   onChange: ConfigChangeHandler<V>;
 }
+
+export interface DataBindingProps extends PropsSettingProps<DataBindingProp> {
+  elevation?: number;
+  expanded: number | 'data';
+  onExpand: (panel: number | 'data') => void;
+}

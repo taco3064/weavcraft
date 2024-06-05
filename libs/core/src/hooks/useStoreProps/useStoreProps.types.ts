@@ -1,4 +1,4 @@
-import type { ConditionalExcept, JsonObject } from 'type-fest';
+import type { JsonObject } from 'type-fest';
 import type { MappableProps } from '../usePropsGetter';
 
 export type PropsWithStore<D extends JsonObject, P = {}> = P & {
@@ -17,14 +17,11 @@ export type PropsWithMappedStore<
 > = PropsWithStore<
   D,
   P &
-    MappableProps<
-      {},
-      Extract<
-        | 'records'
-        | (K extends 'records'
-            ? never
-            : keyof ConditionalExcept<Required<P>, Function>),
-        string
-      >
+    Pick<
+      MappableProps<
+        {},
+        Extract<'records' | (K extends 'records' ? never : K), string>
+      >,
+      'propMapping'
     >
 >;
