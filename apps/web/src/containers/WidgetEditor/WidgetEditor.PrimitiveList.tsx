@@ -68,7 +68,7 @@ export default forwardRef<
   );
 });
 
-const FILTER_OPTIONS = createFilterOptions<{ label: Core.IconCode }>({
+const FILTER_OPTIONS = createFilterOptions<{ label: string }>({
   limit: 20,
 });
 
@@ -85,13 +85,13 @@ const PRIMITIVE_FIELDS: PrimitiveFields = {
       fullWidth
       filterOptions={FILTER_OPTIONS}
       renderInput={(params) => <TextField {...params} {...defaultProps} />}
-      options={(Object.keys(Core.FaIcon) as Core.IconCode[]).map((label) => ({
+      options={Object.keys(Core.FaIcon).map((label) => ({
         label,
       }))}
       renderOption={(props, { label }) => (
         <MneuItem {...props}>
           <ListItemIcon>
-            <Core.Icon code={label} />
+            <Core.Icon code={label as Core.IconCode} />
           </ListItemIcon>
 
           <ListItemText primary={label} />
