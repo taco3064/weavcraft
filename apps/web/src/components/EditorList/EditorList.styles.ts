@@ -42,6 +42,6 @@ export const useMainStyles = makeStyles({ name: 'EditorList' })((theme) => ({
     marginRight: theme.spacing(1),
   },
   subitem: {
-    paddingLeft: theme.spacing(9),
+    paddingLeft: theme.spacing(7.5),
   },
 }));

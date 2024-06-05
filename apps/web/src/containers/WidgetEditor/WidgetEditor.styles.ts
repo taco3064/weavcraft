@@ -1,8 +1,8 @@
 import { makeStyles } from 'tss-react/mui';
 import type { MainStyleParams } from './WidgetEditor.types';
 
-export const useAppendNodeStyles = makeStyles({
-  name: 'AppendNode',
+export const useNodeCreateButtonStyles = makeStyles({
+  name: 'NodeCreateButton',
 })((theme) => ({
   toggle: {
     background: theme.palette.secondary.main,
@@ -12,11 +12,28 @@ export const useAppendNodeStyles = makeStyles({
   },
 }));
 
-export const usePrimitiveValueStyles = makeStyles({ name: 'PrimitiveValue' })(
+export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
   (theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: `calc(100% - ${theme.spacing(8)})`,
+      overflow: 'hidden auto',
+
+      '& > *': {
+        width: '100%',
+      },
+    },
     row: {
       '& > *': {
         margin: '0 !important',
+      },
+    },
+    tabs: {
+      marginBottom: theme.spacing(2),
+      '& + *': {
+        height: '100%',
+        overflow: 'hidden auto',
       },
     },
   })

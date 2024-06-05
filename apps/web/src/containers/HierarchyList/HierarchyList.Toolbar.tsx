@@ -2,9 +2,9 @@ import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
-import { Trans, useTranslation } from 'next-i18next';
 import { forwardRef } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle, Link } from '~web/components';
 import { EnumHierarchyType } from '~web/services';
@@ -74,7 +74,7 @@ export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(
           )}
 
           {!disableGroup && (
-            <Tooltip title={<Trans i18nKey="btn-add-group" />}>
+            <Tooltip title={t('btn-add-group')}>
               <IconButton
                 color="warning"
                 size="large"

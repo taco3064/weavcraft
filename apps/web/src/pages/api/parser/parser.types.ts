@@ -3,6 +3,7 @@ import type * as Tsm from 'ts-morph';
 import type { Get } from 'type-fest';
 
 import type {
+  DataBindingPropsWithPath,
   ElementNodePropsWithPath,
   EventCallbackPropsWithPath,
   PrimitiveValuePropsWithPath,
@@ -11,6 +12,7 @@ import type {
 } from '~web/services';
 
 type WidgetPropTypeDefinitions = {
+  DataBinding: Get<DataBindingPropsWithPath, ['dataBindingProps', string]>;
   ElementNode: Get<ElementNodePropsWithPath, ['elementNodeProps', string]>;
 
   EventCallback: Get<
@@ -43,12 +45,6 @@ export type GetDefinitionFns<T extends WidgetPropTypes = WidgetPropTypes> = {
     ...[type, options]: GetDefinitionArgs
   ) => WidgetPropTypeDefinitions[K] | false)[];
 };
-
-export type GetPropertyFn = (
-  propsType: WidgetPropTypes,
-  property: Tsm.Symbol,
-  prefixPath?: string
-) => [string, WidgetPropTypeDefinitions[typeof propsType] | null];
 
 export type GetPropertyWithAllTypesFn = (
   property: Tsm.Symbol,

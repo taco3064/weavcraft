@@ -4,6 +4,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -24,7 +25,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   const { classes } = usePageStyles();
 
   const tutorials = useTutorialLessons();
-  const [activeId, setActiveId] = useState(tutorials[0].id);
+  const [expanded, setExpanded] = useState(tutorials[0].id);
 
   return (
     <Container component="main" maxWidth="sm" className={classes.root}>
@@ -38,15 +39,10 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
           <Accordion
             key={id}
             id={id}
-            expanded={activeId === id}
-            slotProps={{ transition: { timeout: 600 } }}
-            onChange={(_e, isExpanded) => isExpanded && setActiveId(id)}
+            expanded={expanded === id}
+            onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
           >
-            <AccordionSummary
-              expandIcon={
-                activeId === label ? null : <Core.Icon code="faAngleDown" />
-              }
-            >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Core.Icon color="primary" code={icon} />
               <Trans i18nKey={label} />
             </AccordionSummary>

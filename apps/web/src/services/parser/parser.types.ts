@@ -6,13 +6,11 @@ import type { WidgetType } from '../configs';
 type BasePropsWithPath<
   T extends WidgetPropTypes,
   D extends PropTypeDefinitions.PropTypes
-> = Partial<
-  Record<
-    `${Uncapitalize<T>}Props`,
-    {
-      [Path: string]: D;
-    }
-  >
+> = Partial<Record<`${Uncapitalize<T>}Props`, { [Path: string]: D }>>;
+
+export type DataBindingPropsWithPath = BasePropsWithPath<
+  'DataBinding',
+  PropTypeDefinitions.Data | PropTypeDefinitions.Mapping
 >;
 
 export type ElementNodePropsWithPath = BasePropsWithPath<
@@ -28,16 +26,15 @@ export type EventCallbackPropsWithPath = BasePropsWithPath<
 export type PrimitiveValuePropsWithPath = BasePropsWithPath<
   'PrimitiveValue',
   | PropTypeDefinitions.Boolean
-  | PropTypeDefinitions.Data
   | PropTypeDefinitions.Icon
-  | PropTypeDefinitions.Mapping
   | PropTypeDefinitions.Number
   | PropTypeDefinitions.OneOf
   | PropTypeDefinitions.String
 >;
 
 export interface PropsDefinition
-  extends ElementNodePropsWithPath,
+  extends DataBindingPropsWithPath,
+    ElementNodePropsWithPath,
     EventCallbackPropsWithPath,
     PrimitiveValuePropsWithPath {
   componentName: string;

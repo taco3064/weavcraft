@@ -2,8 +2,8 @@ import Container from '@mui/material/Container';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import { Suspense, useState } from 'react';
-import { Trans, useTranslation } from 'next-i18next';
 import { nanoid } from 'nanoid';
+import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, WidgetEditor } from '~web/containers';
@@ -65,7 +65,7 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
             <LinearProgress sx={{ width: '100%' }} />
 
             <Typography variant="h6" color="text.disabled">
-              <Trans i18nKey="widgets:msg-definitions-loading" />
+              {t('widgets:msg-definitions-loading')}
             </Typography>
           </>
         }

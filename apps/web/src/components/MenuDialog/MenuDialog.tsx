@@ -12,7 +12,7 @@ import NextLink from 'next/link';
 import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import { Trans } from 'next-i18next';
-import { Fragment, forwardRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 
 import { useDialogStyles } from './MenuDialog.styles';
 import type { MenuDialogProps, SubTransitionProps } from './MenuDialog.types';
@@ -104,29 +104,28 @@ export default function MenuDialog({
                 const indicator = !icon ? undefined : <Core.Icon code={icon} />;
 
                 return (
-                  <Fragment key={label}>
-                    <MenuItem
-                      {...(href && { component: NextLink, href })}
-                      className={classes.item}
-                      onClick={() => {
-                        if (subItems?.length) {
-                          setSubProps({
-                            indicator,
-                            title: label,
-                            items: subItems,
-                          });
-                        } else {
-                          onItemClick?.(label, i);
-                          onClose();
-                        }
-                      }}
-                    >
-                      <Typography variant="subtitle1" color="text.primary">
-                        {indicator}
-                        <Trans i18nKey={label} />
-                      </Typography>
-                    </MenuItem>
-                  </Fragment>
+                  <MenuItem
+                    {...(href && { component: NextLink, href })}
+                    key={label}
+                    className={classes.item}
+                    onClick={() => {
+                      if (subItems?.length) {
+                        setSubProps({
+                          indicator,
+                          title: label,
+                          items: subItems,
+                        });
+                      } else {
+                        onItemClick?.(label, i);
+                        onClose();
+                      }
+                    }}
+                  >
+                    <Typography variant="subtitle1" color="text.primary">
+                      {indicator}
+                      <Trans i18nKey={label} />
+                    </Typography>
+                  </MenuItem>
                 );
               })}
             </MenuList>

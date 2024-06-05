@@ -44,7 +44,7 @@ export namespace PropTypeDefinitions {
   export type Mapping = BasePropType<'mapping', string[]>;
   export type Number = BasePropType<'number'>;
   export type OneOf = BasePropType<'oneof', Exclude<JsonPrimitive, null>[]>;
-  export type String = BasePropType<'string'>;
+  export type String = BasePropType<'string', { multiple: boolean }>;
 
   export type Function = BasePropType<
     'function',

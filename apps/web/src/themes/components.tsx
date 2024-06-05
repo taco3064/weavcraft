@@ -30,6 +30,9 @@ export const components: ThemeOptions['components'] = {
     },
   },
   MuiAccordion: {
+    defaultProps: {
+      slotProps: { transition: { timeout: 600 } },
+    },
     styleOverrides: {
       root: ({ theme }) => ({
         width: '100%',
@@ -274,13 +277,6 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
-  MuiListItemButton: {
-    styleOverrides: {
-      root: ({ theme }) => ({
-        gap: theme.spacing(1),
-      }),
-    },
-  },
   MuiMenu: {
     styleOverrides: {
       paper: {
@@ -306,6 +302,13 @@ export const components: ThemeOptions['components'] = {
       fontSizeSmall: {
         fontSize: '1rem',
       },
+    },
+  },
+  MuiTab: {
+    styleOverrides: {
+      labelIcon: ({ theme }) => ({
+        minHeight: theme.spacing(8),
+      }),
     },
   },
   MuiTextField: {

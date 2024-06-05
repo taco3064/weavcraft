@@ -1,4 +1,5 @@
 enum WidgetPropType {
+  DataBinding,
   ElementNode,
   EventCallback,
   PrimitiveValue,
@@ -11,9 +12,14 @@ interface BaseWidgetProps<T extends WidgetPropTypes, V> {
   value: V;
 }
 
+//* - Data Binding
+export type DataBindingProp = BaseWidgetProps<
+  'DataBinding',
+  Record<string, string>
+>;
+
 //* - Primitive Value
-type PrimitiveObject = { [x: string]: PrimitiveValue };
-type PrimitiveValue = string | number | boolean | undefined | PrimitiveObject;
+type PrimitiveValue = string | number | boolean | undefined;
 
 export type PrimitiveValueProp = BaseWidgetProps<
   'PrimitiveValue',
@@ -24,7 +30,7 @@ export type PrimitiveValueProp = BaseWidgetProps<
 interface ElementNodeConfig {
   widget: string;
   props?: {
-    [propPath: string]: PrimitiveValueProp | ElementNodeProp;
+    [propPath: string]: DataBindingProp | ElementNodeProp | PrimitiveValueProp;
   };
 }
 
