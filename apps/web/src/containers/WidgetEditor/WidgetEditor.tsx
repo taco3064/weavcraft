@@ -71,13 +71,15 @@ export default withPropsDefinition(function WidgetEditor({
           variant="dense"
         >
           <Tooltip title={t('widgets:btn-widget-structure')}>
-            <IconButton
-              size="large"
-              disabled={!value.widget}
-              onClick={() => onToggle(true)}
-            >
-              <Core.Icon code="faCode" />
-            </IconButton>
+            <span>
+              <IconButton
+                size="large"
+                disabled={!value.widget}
+                onClick={() => onToggle(true)}
+              >
+                <Core.Icon code="faCode" />
+              </IconButton>
+            </span>
           </Tooltip>
         </PortalWrapper>
 

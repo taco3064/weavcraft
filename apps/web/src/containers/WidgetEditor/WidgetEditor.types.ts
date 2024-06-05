@@ -1,13 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type Core from '@weavcraft/core';
 import type { ContainerProps } from '@mui/material/Container';
 import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
+import type { Get } from 'type-fest';
+import type { ReactNode } from 'react';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { EditorListClasses, EditorListProps } from '~web/components';
 import type { PortalContainerEl } from '~web/contexts';
 
-import type { WidgetConfigs, WidgetType } from '~web/services';
+import type {
+  PrimitiveValuePropsWithPath,
+  WidgetConfigs,
+  WidgetType,
+} from '~web/services';
 
+//* Config Types
 type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type ConfigType = ConfigProps['type'];
 
@@ -28,6 +35,26 @@ export interface ChangeEvents {
     widget: WidgetType
   ) => void;
 }
+
+//* Primitive Input Item Type
+type PrimitiveProps = NonNullable<
+  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+>;
+
+type PrimitiveType = Get<PrimitiveProps, ['type']>;
+
+export type DefaultPrimitiveFieldProps = Pick<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Core.BaseFieldProps<any>,
+  'label' | 'required' | 'size' | 'value' | 'variant' | 'onChange'
+>;
+
+export type PrimitiveFields = {
+  [K in PrimitiveType]: (
+    defaultProps: DefaultPrimitiveFieldProps,
+    definition: Get<Extract<PrimitiveProps, { type: K }>, ['definition']>
+  ) => ReactNode;
+};
 
 //* Style Params Types
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
@@ -53,12 +80,8 @@ export interface SettingTabsProps extends Pick<EditorListProps, 'onClose'> {
   onChange: ConfigChangeHandler;
 }
 
-export interface PrimitiveItemsProps {
-  classes: EditorListClasses;
+export interface SettingPanelProps<V extends ConfigProps> {
+  classes: EditorListClasses & { row?: string };
   config: RenderConfig;
-  onChange: ConfigChangeHandler<PrimitiveValueProp>;
-}
-
-export interface DataBindingProps {
-  classes: EditorListClasses;
+  onChange: ConfigChangeHandler<V>;
 }

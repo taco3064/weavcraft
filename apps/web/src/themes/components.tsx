@@ -301,6 +301,13 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
+  MuiTab: {
+    styleOverrides: {
+      labelIcon: ({ theme }) => ({
+        minHeight: theme.spacing(8),
+      }),
+    },
+  },
   MuiTextField: {
     defaultProps: {
       margin: 'normal',

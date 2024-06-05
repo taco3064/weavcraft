@@ -250,7 +250,9 @@ const Generator: GetDefinitionFns = {
 
     //* - String Prop Types
     (type, options) => {
-      if (trimImportText(type.getText()) === 'String') {
+      if (options.path === 'className') {
+        return false;
+      } else if (trimImportText(type.getText()) === 'String') {
         return { ...options, type: 'string', definition: { multiple: true } };
       } else if (type.isString()) {
         return { ...options, type: 'string', definition: { multiple: false } };

@@ -1,6 +1,5 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Fade from '@mui/material/Fade';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import StorageIcon from '@mui/icons-material/Storage';
 import Tab from '@mui/material/Tab';
@@ -8,7 +7,7 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import PrimitiveItems from './WidgetEditor.PrimitiveItems';
+import PrimitiveList from './WidgetEditor.PrimitiveList';
 import { EditorList } from '~web/components';
 import { usePathDescription } from '~web/hooks';
 import { useSettingStyles } from './WidgetEditor.styles';
@@ -25,17 +24,16 @@ export default function SettingTabs({
 
   const { t } = useTranslation();
   const { classes } = useSettingStyles();
-  const { root: rootClassName, tabs: tabsClassName } = classes;
 
   return !config ? null : (
     <EditorList
       {...{ description, onClose }}
       title={t('widgets:ttl-settings', { widget: config.widget })}
-      render={(classes) => (
-        <ListItem disableGutters disablePadding className={rootClassName}>
+      render={(editorClasses) => (
+        <ListItem disableGutters disablePadding className={classes.root}>
           <Tabs
             centered
-            className={tabsClassName}
+            className={classes.tabs}
             indicatorColor="secondary"
             textColor="secondary"
             variant="fullWidth"
@@ -57,13 +55,20 @@ export default function SettingTabs({
             />
           </Tabs>
 
-          <Fade key={active} in>
-            <List>
-              {active === 'PrimitiveValue' && (
-                <PrimitiveItems {...{ config, onChange }} classes={classes} />
-              )}
-            </List>
-          </Fade>
+          {active === 'PrimitiveValue' && (
+            <Fade in>
+              <PrimitiveList
+                {...{ config, onChange }}
+                classes={{ ...editorClasses, row: classes.row }}
+              />
+            </Fade>
+          )}
+
+          {active === 'DataBinding' && (
+            <Fade in>
+              <div />
+            </Fade>
+          )}
         </ListItem>
       )}
     />
