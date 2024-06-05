@@ -16,7 +16,6 @@ import type { PrimitiveValueProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
 import type { PrimitiveFields, SettingPanelProps } from './WidgetEditor.types';
-import type { RenderConfig } from '~web/hooks';
 
 export default forwardRef<
   HTMLUListElement,
@@ -86,8 +85,8 @@ const PRIMITIVE_FIELDS: PrimitiveFields = {
       fullWidth
       filterOptions={FILTER_OPTIONS}
       renderInput={(params) => <TextField {...params} {...defaultProps} />}
-      options={Object.keys(Core.FaIcon).map((icon) => ({
-        label: icon as Core.IconCode,
+      options={(Object.keys(Core.FaIcon) as Core.IconCode[]).map((label) => ({
+        label,
       }))}
       renderOption={(props, { label }) => (
         <MneuItem {...props}>
