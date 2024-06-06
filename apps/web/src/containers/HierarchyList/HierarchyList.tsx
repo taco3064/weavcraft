@@ -5,10 +5,10 @@ import ImageList from '@mui/material/ImageList';
 import Typography from '@mui/material/Typography';
 import { DndContext } from '@dnd-kit/core';
 import { Fragment, useId, useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'next-i18next';
 import { nanoid } from 'nanoid';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'next-i18next';
 
 import FilterToggle from './HierarchyList.FilterToggle';
 import HierarchyListItem from './HierarchyList.Item';
@@ -132,7 +132,7 @@ export default function HierarchyList<P>({
                   color="text.disabled"
                   justifyContent="center"
                 >
-                  <Trans i18nKey="msg-no-data" />
+                  {t('msg-no-data')}
                 </Typography>
               ) : (
                 <ImageList

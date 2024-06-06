@@ -1,4 +1,5 @@
 import * as WeavcraftCore from '@weavcraft/core';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import _get from 'lodash/get';
@@ -7,13 +8,14 @@ import { useTranslation } from 'next-i18next';
 import type CoreType from '@weavcraft/core';
 
 import { MenuDialog } from '~web/components';
-import { useAppendNodeStyles } from './WidgetEditor.styles';
+import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
 import { usePropsDefinition } from '~web/contexts';
-import type { AppendNodeProps } from './WidgetEditor.types';
 import type { MenuItemOptions } from '~web/hooks';
+import type { NodeCreateButtonProps } from './WidgetEditor.types';
 import type { WidgetType } from '~web/services';
 
 const { default: Core, ...CATEGORIES } = WeavcraftCore;
+const CLASS_NAME = 'NodeCreateButton-root';
 
 const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
   Display: 'faTableList',
@@ -22,18 +24,32 @@ const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
   Layout: 'faBorderNone',
 };
 
-export default function AppendNode({
+const GLOBAL_STYLES = (
+  <GlobalStyles
+    styles={(theme) => ({
+      [`*:has(> .${CLASS_NAME})`]: {
+        border: `1px dashed ${theme.palette.divider}`,
+        borderRadius: theme.spacing(0.5),
+      },
+      [`*:has(> .${CLASS_NAME}:hover)`]: {
+        background: theme.palette.background.paper,
+      },
+    })}
+  />
+);
+
+export default function NodeCreateButton({
   path,
   variant,
   widgetId,
-  onAppend,
-}: AppendNodeProps) {
+  onClick,
+}: NodeCreateButtonProps) {
   const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
   const { getDefinition } = usePropsDefinition();
-  const { classes } = useAppendNodeStyles();
+  const { classes, cx } = useNodeCreateButtonStyles();
 
   const label = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
     .filter(Boolean)
@@ -41,6 +57,8 @@ export default function AppendNode({
 
   return (
     <>
+      {GLOBAL_STYLES}
+
       <Tooltip
         title={
           <>
@@ -51,7 +69,10 @@ export default function AppendNode({
           </>
         }
       >
-        <IconButton className={classes.toggle} onClick={() => setOpen(true)}>
+        <IconButton
+          className={cx(classes.toggle, CLASS_NAME)}
+          onClick={() => setOpen(true)}
+        >
           <Core.Icon code="faAdd" />
         </IconButton>
       </Tooltip>
@@ -69,7 +90,7 @@ export default function AppendNode({
             ) as WidgetType;
 
             setOpen(false);
-            onAppend(widget);
+            onClick(widget);
           })
         }
         items={Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
@@ -84,9 +105,7 @@ export default function AppendNode({
                 _get(definition, 'eventCallbackProps.onClick.type') ===
                   'function'
               ) {
-                result.push({
-                  label: `widgets:lbl-widgets.${widgetId}`,
-                });
+                result.push({ label: `widgets:lbl-widgets.${widgetId}` });
               }
 
               return result;

@@ -1,4 +1,5 @@
 {
+  "btn-add-data": "Add Data",
   "btn-add-trigger": "Add Trigger Widget",
   "btn-add-widget": "Add Widget",
   "btn-delete-widget": "Delete Widget",
@@ -7,14 +8,25 @@
   "btn-widget-structure": "View Structure",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",
+  "msg-fixed-data-description": "The data bound to the widget is dynamically loaded by default when the webpage is running. However, you can also inject fixed data here to bypass the dynamic loading process, thereby enhancing the performance of the webpage.",
+  "msg-no-data": "No Data Available",
+  "msg-primitive-description": "Change the display result of the widget by adjusting its layout and appearance settings.",
+  "msg-prop-mapping-description": "These are the data binding configuration items for {{ widget }}. You can enter the name or path of the data field you want to bind, to inject the data value into the {{ widget }} settings.",
+  "msg-prop-mapping-placeholder": "Enter the name or path of the data field",
   "ttl-element-node": "Widget Structure",
-  "ttl-primitive-value": "{{ widget }} Settings",
+  "ttl-fixed-data": "Fixed Data",
+  "ttl-prop-mapping": "Data Binding",
   "ttl-select-widget": "Select Widget",
+  "ttl-settings": "{{ widget }} Settings",
   "lbl-category": {
     "Display": "Display",
     "Input": "Input",
     "Interaction": "Interaction",
     "Layout": "Layout"
+  },
+  "lbl-settings": {
+    "data-binding": "Data Binding",
+    "primitive-value": "Layout"
   },
   "lbl-widgets": {
     "Accordion": "Accordion",

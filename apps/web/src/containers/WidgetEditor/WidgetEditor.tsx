@@ -8,10 +8,10 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import AppendNode from './WidgetEditor.AppendNode';
-import ElementNode from './WidgetEditor.ElementNode';
-import PrimitiveValue from './WidgetEditor.PrimitiveValue';
-import { useChangeEvents, useNodeAppend } from './WidgetEditor.hooks';
+import ElementNodeList from '../ElementNodeList';
+import NodeCreateButton from './WidgetEditor.NodeCreateButton';
+import PropsSettingTabs from '../PropsSettingTabs';
+import { useChangeEvents, useNodeCreate } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
@@ -37,35 +37,32 @@ export default withPropsDefinition(function WidgetEditor({
   const [editing, setEditing] = useState<RenderConfig>();
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
-  const [portalMode, setPortalMode] = useState<'treeView' | 'props'>();
+
+  const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
+    'treeView'
+  );
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
-  console.log(value);
-
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+  const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
 
-  const { onDeleteNode, onPrimitiveChange, ...changeEvents } = useChangeEvents(
+  const { onDeleteNode, onConfigChange, ...changeEvents } = useChangeEvents(
     value,
     setValue
   );
 
-  const { containerEl, onToggle } = useTogglePortal(() =>
-    startTransition(() => {
-      setPortalMode(undefined);
-      setEditing(undefined);
-    })
-  );
-
-  const withAppendNode = useNodeAppend(AppendNode, changeEvents);
+  const withAppendNode = useNodeCreate(NodeCreateButton, changeEvents);
 
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
     <WidgetEl key={key} {...withAppendNode(props, config)} />
   ));
+
+  console.log('===', value);
 
   return (
     <Slide in direction="up" timeout={1200}>
@@ -76,18 +73,15 @@ export default withPropsDefinition(function WidgetEditor({
           variant="dense"
         >
           <Tooltip title={t('widgets:btn-widget-structure')}>
-            <IconButton
-              size="large"
-              disabled={!value.widget}
-              onClick={() =>
-                startTransition(() => {
-                  onToggle(true);
-                  setPortalMode('treeView');
-                })
-              }
-            >
-              <Core.Icon code="faCode" />
-            </IconButton>
+            <span>
+              <IconButton
+                size="large"
+                disabled={!value.widget}
+                onClick={() => onToggle(true)}
+              >
+                <Core.Icon code="faCode" />
+              </IconButton>
+            </span>
           </Tooltip>
         </PortalWrapper>
 
@@ -99,16 +93,16 @@ export default withPropsDefinition(function WidgetEditor({
           {value.widget ? (
             generate(value)
           ) : (
-            <AppendNode
+            <NodeCreateButton
               variant="node"
-              onAppend={(widget) => setValue({ widget })}
+              onClick={(widget) => setValue({ widget })}
             />
           )}
         </Container>
 
         <PortalWrapper containerEl={containerEl}>
           {portalMode === 'treeView' && (
-            <ElementNode
+            <ElementNodeList
               active={activeNode}
               config={value}
               onActive={(paths) => setActiveNode(paths)}
@@ -129,19 +123,24 @@ export default withPropsDefinition(function WidgetEditor({
                 startTransition(() => {
                   onToggle(true);
                   setActivePrimitive(paths);
-                  setPortalMode('props');
+                  setPortalMode('setting');
                   setEditing(target);
                 })
               }
             />
           )}
 
-          {portalMode === 'props' && (
-            <PrimitiveValue
+          {portalMode === 'setting' && (
+            <PropsSettingTabs
               config={editing}
               paths={activePrimitive}
-              onChange={onPrimitiveChange}
-              onClose={() => setPortalMode('treeView')}
+              onChange={onConfigChange}
+              onClose={() =>
+                startTransition(() => {
+                  setPortalMode('treeView');
+                  setEditing(undefined);
+                })
+              }
             />
           )}
         </PortalWrapper>

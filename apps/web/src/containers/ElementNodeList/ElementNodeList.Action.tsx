@@ -5,14 +5,14 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from 'next-i18next';
 
 import { ConfirmToggle } from '~web/components';
-import type { NodeActionProps } from './WidgetEditor.types';
+import type { ActionProps } from './ElementNodeList.types';
 
-export default function NodeAction({
+export default function Action({
   config,
   paths,
   onDelete,
   onEdit,
-}: NodeActionProps) {
+}: ActionProps) {
   const { t } = useTranslation();
   const { widget } = config;
 

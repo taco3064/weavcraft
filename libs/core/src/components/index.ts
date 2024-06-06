@@ -42,3 +42,5 @@ export * from './ToggleButtonGroup';
 export * from './Toolbar';
 export * from './Tooltip';
 export * from './Typography';
+
+export type { BaseFieldWithoutInputProps as BaseFieldProps } from './BaseField';
