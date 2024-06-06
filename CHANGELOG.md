@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.37](https://github.com/taco3064/weavcraft/compare/v0.0.36...v0.0.37) (2024-06-06)
+
+
+### Features
+
+* **web/element-node-list:** optimize and refactor code, add new container: ElementNodeList ([8ca4324](https://github.com/taco3064/weavcraft/commit/8ca4324debb24d237c502cf0dda4325680110027))
+* **web/widget-editor:** add new feature to set data binding config ([c8d08c5](https://github.com/taco3064/weavcraft/commit/c8d08c55f62e4fbe41cc1f6029911789fbab0694))
+* **web/widget-editor:** add operation instructions ([80cf1c9](https://github.com/taco3064/weavcraft/commit/80cf1c9f8595d03e5b95914103f2b53558879937))
+
+
+### Bug Fixes
+
+* **@weavcraft/core:** fixed the invalid type: PropsWithMappedStore ([abf003a](https://github.com/taco3064/weavcraft/commit/abf003af99ef58f48add8a0d5767e1d6eeaea63d))
+* **web/*:** fixed the sornar qube issue ([b83bb94](https://github.com/taco3064/weavcraft/commit/b83bb94c5ea0d6a5b5408b1ed8de4d2e5899fbfb))
+* **web/widget-editor:** change the ux of WidgetEditor ([490dedb](https://github.com/taco3064/weavcraft/commit/490dedb3f8100263436f53ce8ec64e94506ff708))
+* **web/widget-editor:** optimize and refactor code ([e934bbc](https://github.com/taco3064/weavcraft/commit/e934bbcd548775f3ef337630cf1820e1b204a4aa))
+
 ### [0.0.36](https://github.com/taco3064/weavcraft/compare/v0.0.35...v0.0.36) (2024-05-31)
 
 
