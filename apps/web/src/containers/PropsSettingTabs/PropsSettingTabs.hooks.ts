@@ -4,17 +4,54 @@ import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { useMemo } from 'react';
 import type { DataBindingProp } from '@weavcraft/common';
+import type { JsonObject } from 'type-fest';
 
 import { usePropsDefinition } from '~web/contexts';
-import type { ConfigChangeHandler } from './PropsSettingTabs.types';
-import type { PropTypeDefinitions } from '~web/services';
+import type { PropTypeDefinitions, WidgetType } from '~web/services';
 import type { RenderConfig } from '~web/hooks';
 
-export function useFixedData(config: RenderConfig) {
+import type {
+  ConfigChangeHandler,
+  DataField,
+  SourcePaths,
+} from './PropsSettingTabs.types';
+
+export function useDataCreate(
+  widget: WidgetType,
+  bindingFields: Record<string, string>
+) {
+  const { getDefinition } = usePropsDefinition();
+  const stringify = JSON.stringify(bindingFields);
+
+  return useMemo(() => {
+    const { primitiveValueProps = {} } = getDefinition(widget) || {};
+    const bindingFields: Record<string, string> = JSON.parse(stringify);
+
+    return Object.entries(bindingFields).reduce<DataField>(
+      (acc, [propPath, fieldName]) => {
+        const { [propPath]: propTypes } = primitiveValueProps;
+
+        return {
+          ...acc,
+          ...(fieldName &&
+            propTypes && {
+              [fieldName]: propTypes,
+            }),
+        };
+      },
+      {}
+    );
+  }, [widget, stringify, getDefinition]);
+}
+
+export function useFixedData(
+  config: RenderConfig,
+  onChange: ConfigChangeHandler<DataBindingProp>
+) {
   const { widget, props = {} } = config;
   const { getDefinition } = usePropsDefinition();
 
-  const sourcePaths = useMemo(() => {
+  const sourcePaths = useMemo<SourcePaths>(() => {
     const { dataBindingProps = {} } = getDefinition(widget) || {};
     const configs = Object.entries(dataBindingProps);
 
@@ -26,26 +63,48 @@ export function useFixedData(config: RenderConfig) {
     );
 
     return {
-      /**
-       * * The source path of the binding,
-       * * used to determine whether it has been set
-       * * and whether the data content can be edited.
-       */
       binding: configs.find(([path]) =>
         isRecordsCase ? path.endsWith('.propMapping') : path === 'propMapping'
-      )?.[0] as string,
+      )?.[0] as SourcePaths['binding'],
 
-      /**
-       * * The source path for storing data,
-       * * the actual storage location in the data editing interface (data / records).
-       */
       data: isRecordsCase ? 'records' : 'data',
     };
   }, [widget, getDefinition]);
 
+  const bindingFields = (_get(props, [sourcePaths.binding, 'value']) ||
+    {}) as Record<string, string>;
+
   return {
-    disabled: _isEmpty(_get(props, [sourcePaths.binding, 'value'])),
-    data: _get(props, [sourcePaths.data, 'value']),
+    bindingFields,
+    disabled: _isEmpty(bindingFields),
+    data: _get(props, [sourcePaths.data, 'value']) as JsonObject | JsonObject[],
+
+    onDataChange: (e: JsonObject | number | undefined) => {
+      if (sourcePaths.data === 'data') {
+        if (e) {
+          _set(props, [sourcePaths.data, 'value'], e);
+        } else {
+          _unset(props, [sourcePaths.data, 'value']);
+        }
+
+        onChange(config, sourcePaths.data, {
+          type: 'DataBinding',
+          value: _get(props, [sourcePaths.data, 'value']) as JsonObject,
+        });
+      } else {
+        const value = (_get(props, [sourcePaths.data, 'value']) ||
+          []) as JsonObject[];
+
+        if (typeof e === 'number') {
+          value.splice(e, 1);
+        } else {
+          value.push(e as JsonObject);
+        }
+
+        _set(props, [sourcePaths.data, 'value'], [...value]);
+        onChange(config, sourcePaths.data, { type: 'DataBinding', value });
+      }
+    },
   };
 }
 

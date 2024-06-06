@@ -27,8 +27,8 @@ export default function FilterToggle({
   const { classes } = useFilterStyles();
 
   const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e?.currentTarget);
-    const keyword = formData.get('keyword')?.toString().trim() || undefined;
+    const formdata = new FormData(e?.currentTarget);
+    const keyword = formdata.get('keyword')?.toString().trim() || undefined;
 
     e?.preventDefault();
     setOpen(false);
