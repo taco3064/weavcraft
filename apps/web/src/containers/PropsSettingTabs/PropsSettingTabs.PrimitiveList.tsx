@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Core from '@weavcraft/core';
 import DialpadIcon from '@mui/icons-material/Dialpad';
@@ -11,7 +10,6 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SwipeIcon from '@mui/icons-material/Swipe';
 import TextField from '@mui/material/TextField';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-import Typography from '@mui/material/Typography';
 import { forwardRef, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { PrimitiveValueProp } from '@weavcraft/common';
@@ -69,6 +67,7 @@ export default forwardRef<
                   size: 'small',
                   value: primitive?.value,
                   variant: 'outlined',
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onChange: (value: any) =>
                     onChange(config, path, {
                       type: 'PrimitiveValue',
