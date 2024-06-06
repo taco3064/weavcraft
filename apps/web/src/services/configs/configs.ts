@@ -24,7 +24,7 @@ export const getWidgetConfigs = withConnRefusedCatch(async function ({
   queryKey: [hierarchyId, isTutorialMode],
 }: QueryFunctionParams<[string]>) {
   const { data } = await axios.get<WidgetConfigs>(
-    `/configs/widget/${hierarchyId}`,
+    `/configs/widgets/${hierarchyId}`,
     {
       baseURL: isTutorialMode ? '/mocks' : '/service',
     }
