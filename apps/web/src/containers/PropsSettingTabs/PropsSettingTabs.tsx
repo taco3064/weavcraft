@@ -1,4 +1,5 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import Container from '@mui/material/Container';
 import Fade from '@mui/material/Fade';
 import ListItem from '@mui/material/ListItem';
 import StorageIcon from '@mui/icons-material/Storage';
@@ -7,8 +8,9 @@ import Tabs from '@mui/material/Tabs';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import DataBinding from './PropsSettingTabs.DataBinding';
+import FixedData from './PropsSettingTabs.FixedData';
 import PrimitiveList from './PropsSettingTabs.PrimitiveList';
+import PropMapping from './PropsSettingTabs.PropMapping';
 import { EditorList } from '~web/components';
 import { usePathDescription } from '~web/hooks';
 import { useMainStyles } from './PropsSettingTabs.styles';
@@ -18,6 +20,8 @@ import type {
   PropsSettingTabsProps,
 } from './PropsSettingTabs.types';
 
+const ELEVATION = 4;
+
 export default function PropsSettingTabs({
   config,
   paths,
@@ -26,6 +30,7 @@ export default function PropsSettingTabs({
 }: PropsSettingTabsProps) {
   const description = usePathDescription(paths);
   const [active, setActive] = useState<ConfigType>('PrimitiveValue');
+  const [expanded, setExpanded] = useState<number | 'data'>(0);
 
   const { t } = useTranslation();
   const { classes } = useMainStyles();
@@ -71,13 +76,21 @@ export default function PropsSettingTabs({
 
           {active === 'DataBinding' && (
             <Fade in>
-              <DataBinding
-                {...{ config, onChange }}
-                classes={{
-                  ...editorClasses,
-                  row: classes.row,
-                }}
-              />
+              <Container maxWidth={false}>
+                <PropMapping
+                  {...{ config, expanded, onChange }}
+                  classes={{ ...editorClasses, row: classes.row }}
+                  elevation={ELEVATION}
+                  onExpand={setExpanded}
+                />
+
+                <FixedData
+                  {...{ config, expanded, onChange }}
+                  classes={{ ...editorClasses, row: classes.row }}
+                  elevation={ELEVATION}
+                  onExpand={setExpanded}
+                />
+              </Container>
             </Fade>
           )}
         </ListItem>

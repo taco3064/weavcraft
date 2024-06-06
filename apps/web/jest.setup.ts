@@ -38,3 +38,7 @@ jest.mock('@mui/x-charts', () => ({
 jest.mock('@mui/material/styles/createPalette', () => ({
   default: jest.fn().mockImplementation(({ children }) => children),
 }));
+
+jest.mock('react-json-tree', () => ({
+  JSONTree: jest.fn().mockImplementation(({ children }) => children),
+}));
