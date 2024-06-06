@@ -88,6 +88,7 @@ export function useChangeEvents(
 
 export function useNodeCreate(
   AppendNode: ComponentType<NodeCreateButtonProps>,
+  disabled: boolean,
   {
     onAddChild,
     onAddLastChild,
@@ -96,6 +97,10 @@ export function useNodeCreate(
   const { getDefinition } = usePropsDefinition();
 
   return <P extends object>(props: P, config: RenderConfig): P => {
+    if (disabled) {
+      return props;
+    }
+
     const { widget: widgetId } = config;
     const definition = getDefinition(widgetId) || FRAGMENT_DEFINITION;
     const { elementNodeProps } = definition;
