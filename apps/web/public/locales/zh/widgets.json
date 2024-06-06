@@ -5,6 +5,7 @@
   "btn-delete-widget": "刪除組件",
   "btn-edit-widget": "設定組件",
   "btn-open-toolbar": "開啟工具欄 ({{ widget }})",
+  "btn-widget-preview": "預覽輸出結果",
   "btn-widget-structure": "查看組件結構",
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",

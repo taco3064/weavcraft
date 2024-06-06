@@ -5,6 +5,7 @@
   "btn-delete-widget": "Delete Widget",
   "btn-edit-widget": "Edit Widget",
   "btn-open-toolbar": "Expand Toolbar ({{ widget }})",
+  "btn-widget-preview": "Preview Widget",
   "btn-widget-structure": "View Structure",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",

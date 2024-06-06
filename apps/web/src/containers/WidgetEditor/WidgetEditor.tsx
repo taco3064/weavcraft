@@ -2,6 +2,7 @@ import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
+import Switch from '@mui/material/Switch';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { useSnackbar } from 'notistack';
@@ -35,6 +36,7 @@ export default withPropsDefinition(function WidgetEditor({
 
   const [, startTransition] = useTransition();
   const [editing, setEditing] = useState<RenderConfig>();
+  const [previewMode, setPreviewMode] = useState(false);
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
 
@@ -56,7 +58,11 @@ export default withPropsDefinition(function WidgetEditor({
     setValue
   );
 
-  const withAppendNode = useNodeCreate(NodeCreateButton, changeEvents);
+  const withAppendNode = useNodeCreate(
+    NodeCreateButton,
+    previewMode,
+    changeEvents
+  );
 
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
     <WidgetEl key={key} {...withAppendNode(props, config)} />
@@ -72,11 +78,23 @@ export default withPropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
+          <Tooltip title={t('widgets:btn-widget-preview')}>
+            <span>
+              <Switch
+                color="secondary"
+                size="small"
+                checked={previewMode}
+                disabled={!value.widget}
+                onChange={(e) => setPreviewMode(e.target.checked)}
+              />
+            </span>
+          </Tooltip>
+
           <Tooltip title={t('widgets:btn-widget-structure')}>
             <span>
               <IconButton
                 size="large"
-                disabled={!value.widget}
+                disabled={previewMode || !value.widget}
                 onClick={() => onToggle(true)}
               >
                 <Core.Icon code="faCode" />
