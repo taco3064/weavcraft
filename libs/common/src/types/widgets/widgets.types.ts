@@ -1,3 +1,5 @@
+import type { JsonObject } from 'type-fest';
+
 enum WidgetPropType {
   DataBinding,
   ElementNode,
@@ -15,7 +17,7 @@ interface BaseWidgetProps<T extends WidgetPropTypes, V> {
 //* - Data Binding
 export type DataBindingProp = BaseWidgetProps<
   'DataBinding',
-  Record<string, string>
+  Record<string, string> | JsonObject | JsonObject[]
 >;
 
 //* - Primitive Value

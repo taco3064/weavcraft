@@ -1,11 +1,11 @@
 import type Core from '@weavcraft/core';
 import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
-import type { Get } from 'type-fest';
+import type { Get, JsonObject } from 'type-fest';
 import type { ReactNode } from 'react';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { EditorListClasses, EditorListProps } from '~web/components';
-import type { PrimitiveValuePropsWithPath } from '~web/services';
+import type { PrimitiveValuePropsWithPath, WidgetType } from '~web/services';
 
 //* Config Types
 type ConfigProps = DataBindingProp | PrimitiveValueProp;
@@ -16,6 +16,15 @@ export type ConfigChangeHandler<V extends ConfigProps = ConfigProps> = (
   propPath: string,
   propValue?: V
 ) => void;
+
+//* Data Create Types
+export type DataField = Record<string, PrimitiveProps>;
+
+//* Fixed Data Types
+export type SourcePaths = {
+  binding: 'propMapping' | `${string}.propMapping`;
+  data: 'records' | 'data';
+};
 
 //* Primitive Input Item Type
 type PrimitiveProps = NonNullable<
@@ -55,4 +64,13 @@ export interface DataBindingProps extends PropsSettingProps<DataBindingProp> {
   elevation?: number;
   expanded: number | 'data';
   onExpand: (panel: number | 'data') => void;
+}
+
+export interface DataCreateModalProps {
+  bindingFields: Record<string, string>;
+  data?: JsonObject;
+  open: boolean;
+  widget: WidgetType;
+  onChange: (data: JsonObject) => void;
+  onClose: () => void;
 }

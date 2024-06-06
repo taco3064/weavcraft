@@ -27,22 +27,6 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
     });
 
     mock
-      .onGet(new RegExp(`^${baseURL}/configs/widgets/.+$`))
-      .reply((config) => {
-        const hierarchyId = config.url?.split('/').pop() as string;
-        const hierarchyDb = getDb<HierarchyData>('hierarchy');
-        const widgetsDb = getDb<WidgetConfigs>('widgets');
-
-        hierarchyDb.read();
-        widgetsDb.read();
-
-        return [
-          200,
-          widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
-        ];
-      });
-
-    mock
       .onPost(new RegExp(`^${baseURL}/configs/themes/.+$`))
       .reply((config) => {
         const hierarchyId = config.url?.split('/').pop() as string;
@@ -64,6 +48,24 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
         hierarchyDb.write();
 
         return [200, input];
+      });
+  });
+
+  setupMock('widgets', {}, ({ mock, getDb }) => {
+    mock
+      .onGet(new RegExp(`^${baseURL}/configs/widgets/.+$`))
+      .reply((config) => {
+        const hierarchyId = config.url?.split('/').pop() as string;
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+        const widgetsDb = getDb<WidgetConfigs>('widgets');
+
+        hierarchyDb.read();
+        widgetsDb.read();
+
+        return [
+          200,
+          widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
+        ];
       });
   });
 });
