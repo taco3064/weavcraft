@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.38](https://github.com/taco3064/weavcraft/compare/v0.0.37...v0.0.38) (2024-06-06)
+
+
+### Features
+
+* **web/widget-editor:** add new container component: DataCreateModal ([4748bc4](https://github.com/taco3064/weavcraft/commit/4748bc42d3e9c3cd7894eee3f8531c8e794b03f5))
+* **web/widget-editor:** add widget preview feature ([83391a4](https://github.com/taco3064/weavcraft/commit/83391a41e9babfefecadb6b97ff06ae593855c72))
+
+
+### Bug Fixes
+
+* **web/configs.mock:** fixed the invalid mock setup ([04f621d](https://github.com/taco3064/weavcraft/commit/04f621d63752020072eb46d5d0fc30b4e14c2a29))
+* **web/configs:** fixed the invalid request url ([3cceaba](https://github.com/taco3064/weavcraft/commit/3cceaba1459d54c3b272094657943211a91ce884))
+
 ### [0.0.37](https://github.com/taco3064/weavcraft/compare/v0.0.36...v0.0.37) (2024-06-06)
 
 
