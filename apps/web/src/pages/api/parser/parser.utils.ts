@@ -45,10 +45,12 @@ const getPropertyWithAllTypes: GetPropertyWithAllTypesFn = (
     const propPath = [prefixPath, property.getName()].filter(Boolean).join('.');
     const type = property.getTypeAtLocation(source);
 
-    const definition = getDefinition(propsType, type, {
-      path: propPath,
-      required: !property.isOptional(),
-    });
+    const definition = /(^|\.)(className|component)$/.test(propPath)
+      ? false
+      : getDefinition(propsType, type, {
+          path: propPath,
+          required: !property.isOptional(),
+        });
 
     if (definition) {
       return [{ propsType, propPath, definition }];
@@ -248,9 +250,7 @@ const Generator: GetDefinitionFns = {
 
     //* - String Prop Types
     (type, options) => {
-      if (options.path === 'className') {
-        return false;
-      } else if (trimImportText(type.getText()) === 'String') {
+      if (trimImportText(type.getText()) === 'String') {
         return { ...options, type: 'string', definition: { multiple: true } };
       } else if (type.isString()) {
         return { ...options, type: 'string', definition: { multiple: false } };

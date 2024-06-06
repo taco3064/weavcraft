@@ -13,13 +13,10 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import _get from 'lodash/get';
-import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { useDataBindingChangeEvent } from './PropsSettingTabs.hooks';
-import { usePropsDefinition } from '~web/contexts';
+import { usePropMapping } from './PropsSettingTabs.hooks';
 import type { DataBindingProps } from './PropsSettingTabs.types';
-import type { PropTypeDefinitions } from '~web/services';
 
 export default function PropMapping({
   classes,
@@ -29,24 +26,11 @@ export default function PropMapping({
   onChange,
   onExpand,
 }: DataBindingProps) {
-  const handleChange = useDataBindingChangeEvent(config, onChange);
-
   const { widget, props = {} } = config;
-  const { getDefinition } = usePropsDefinition();
   const { t } = useTranslation();
+  const { items, onMappingChange } = usePropMapping(config, onChange);
 
-  const mappingItems = useMemo(() => {
-    const { dataBindingProps = {} } = getDefinition(widget) || {};
-
-    return Object.entries(dataBindingProps)
-      .filter(([, { type }]) => type === 'mapping')
-      .sort(([path1], [path2]) => path1.length - path2.length) as [
-      string,
-      PropTypeDefinitions.Mapping
-    ][];
-  }, [widget, getDefinition]);
-
-  return mappingItems.map(([path, { definition }], i) => (
+  return items.map(([path, { definition }], i) => (
     <Accordion
       key={path}
       component={Paper}
@@ -94,7 +78,7 @@ export default function PropMapping({
                       placeholder={t('widgets:msg-prop-mapping-placeholder')}
                       value={value}
                       onChange={(e) =>
-                        handleChange(path, propName, e.target.value)
+                        onMappingChange(path, propName, e.target.value)
                       }
                       InputProps={{
                         endAdornment: !value ? null : (
@@ -103,7 +87,9 @@ export default function PropMapping({
                               variant="text"
                               color="inherit"
                               size="small"
-                              onClick={() => handleChange(path, propName, '')}
+                              onClick={() =>
+                                onMappingChange(path, propName, '')
+                              }
                             >
                               {t('btn-reset')}
                             </Button>

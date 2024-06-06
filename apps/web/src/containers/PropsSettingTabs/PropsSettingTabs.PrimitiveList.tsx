@@ -11,7 +11,9 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SwipeIcon from '@mui/icons-material/Swipe';
 import TextField from '@mui/material/TextField';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
+import Typography from '@mui/material/Typography';
 import { forwardRef, useMemo, type ReactNode } from 'react';
+import { useTranslation } from 'next-i18next';
 import type { PrimitiveValueProp } from '@weavcraft/common';
 
 import { usePropsDefinition } from '~web/contexts';
@@ -26,6 +28,7 @@ export default forwardRef<
   PropsSettingProps<PrimitiveValueProp>
 >(function PrimitiveList({ classes, config, onChange }, ref) {
   const { widget, props = {} } = config;
+  const { t } = useTranslation();
   const { getDefinition } = usePropsDefinition();
 
   const items = useMemo(() => {
@@ -37,7 +40,17 @@ export default forwardRef<
   }, [widget, getDefinition]);
 
   return (
-    <List ref={ref}>
+    <List disablePadding ref={ref}>
+      <ListItem>
+        <ListItemText
+          primary={t('widgets:msg-primitive-description')}
+          primaryTypographyProps={{
+            variant: 'caption',
+            color: 'text.secondary',
+          }}
+        />
+      </ListItem>
+
       {items.map<ReactNode>(([path, { type, definition, required }]) => {
         const { [path]: primitive } = props;
         const { [type]: render } = PRIMITIVE_FIELDS;

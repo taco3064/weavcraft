@@ -7,14 +7,11 @@ import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Paper from '@mui/material/Paper';
-import _get from 'lodash/get';
-import _isEmpty from 'lodash/isEmpty';
+import Typography from '@mui/material/Typography';
 import { JSONTree } from 'react-json-tree';
-import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { useDataBindingChangeEvent } from './PropsSettingTabs.hooks';
-import { usePropsDefinition } from '~web/contexts';
+import { useFixedData } from './PropsSettingTabs.hooks';
 import type { DataBindingProps } from './PropsSettingTabs.types';
 
 export default function FixedData({
@@ -24,49 +21,50 @@ export default function FixedData({
   onChange,
   onExpand,
 }: DataBindingProps) {
-  const handleChange = useDataBindingChangeEvent(config, onChange);
-
-  const { widget, props = {} } = config;
-  const { getDefinition } = usePropsDefinition();
   const { t } = useTranslation();
-
-  const { isRecordsCase, dataSource } = useMemo(() => {
-    const { dataBindingProps = {} } = getDefinition(widget) || {};
-
-    const isRecordsCase = Boolean(
-      Object.values(dataBindingProps).find(
-        ({ type, definition }) => type === 'data' && definition?.multiple
-      )
-    );
-
-    return {
-      isRecordsCase,
-
-      dataSource: Object.keys(dataBindingProps).find((path) =>
-        isRecordsCase ? path.endsWith('.propMapping') : path === 'propMapping'
-      ) as string,
-    };
-  }, [widget, getDefinition]);
+  const { disabled, data } = useFixedData(config);
 
   return (
     <Accordion
       component={Paper}
-      disabled={_isEmpty(_get(props, [dataSource, 'value']))}
+      disabled={disabled}
       elevation={elevation}
       expanded={expanded === 'data'}
       onChange={(_e, isExpanded) => isExpanded && onExpand('data')}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Core.Icon code="faDatabase" />
-        {t('widgets:ttl-force-data')}
+        {t('widgets:ttl-fixed-data')}
       </AccordionSummary>
 
       <Divider />
 
-      <AccordionDetails>{isRecordsCase ? 'recoreds' : 'data'}</AccordionDetails>
+      <AccordionDetails>
+        {!data ? (
+          <Typography
+            paragraph
+            variant="subtitle1"
+            color="text.disabled"
+            justifyContent="center"
+            fontWeight={600}
+          >
+            {t('widgets:msg-no-data')}
+          </Typography>
+        ) : (
+          <JSONTree hideRoot theme="monokai" data={data} />
+        )}
+
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          {t('widgets:msg-fixed-data-description')}
+        </Typography>
+      </AccordionDetails>
 
       <AccordionActions>
-        <Button color="secondary" variant="contained">
+        <Button
+          color="secondary"
+          variant="contained"
+          startIcon={<Core.Icon code="faPlus" />}
+        >
           {t('widgets:btn-add-data')}
         </Button>
       </AccordionActions>
