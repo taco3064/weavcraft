@@ -51,6 +51,18 @@ export function useChangeEvents(
       onChange({ ...value });
     },
 
+    onConfigChange: (config, propPath, propValue) => {
+      if (propPath) {
+        if (propValue) {
+          _set(config, ['props', propPath], propValue);
+        } else {
+          _unset(config, ['props', propPath]);
+        }
+      }
+
+      onChange({ ...value });
+    },
+
     onDeleteNode: (paths) => {
       if (!paths.length) {
         return onChange({} as RenderConfig);
@@ -66,16 +78,6 @@ export function useChangeEvents(
 
         nodes.splice(lastPath, 1);
         _set(value, fullPaths, [...nodes]);
-      }
-
-      onChange({ ...value });
-    },
-
-    onConfigChange: (config, propPath, propValue) => {
-      if (propValue) {
-        _set(config, ['props', propPath], propValue);
-      } else {
-        _unset(config, ['props', propPath]);
       }
 
       onChange({ ...value });

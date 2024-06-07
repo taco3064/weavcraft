@@ -14,6 +14,7 @@
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-data-confirm": "確定要刪除目標資料嗎？",
   "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
+  "msg-external-injection": "勾選以允許在外部引用組件時可再次配置，而原本已配置的設定值將作為預設值使用。",
   "msg-fixed-data-description": "{{widget}}組件所綁定的資料預設在網頁運行時動態載入，也可以透過此處注入特定資料。",
   "msg-no-data": "未注入資料",
   "msg-primitive-description": "透過調整組件的佈局和外觀設定，來改變組件的顯示結果。",
