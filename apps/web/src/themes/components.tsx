@@ -167,6 +167,7 @@ export const components: ThemeOptions['components'] = {
     defaultProps: {
       TransitionComponent: Transition,
       transitionDuration: 400,
+      onPointerDown: (e) => e.stopPropagation(),
     },
     styleOverrides: {
       paper: ({ theme }) => ({

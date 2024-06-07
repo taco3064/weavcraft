@@ -10,11 +10,13 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
+import StorageIcon from '@mui/icons-material/Storage';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import _get from 'lodash/get';
 import { useTranslation } from 'next-i18next';
 
+import { PrimitiveIcons } from '~web/components';
 import { usePropMapping } from './PropsSettingTabs.hooks';
 import type { DataBindingProps } from './PropsSettingTabs.types';
 
@@ -28,88 +30,134 @@ export default function PropMapping({
 }: DataBindingProps) {
   const { widget, props = {} } = config;
   const { t } = useTranslation();
-  const { items, onMappingChange } = usePropMapping(config, onChange);
+  const { groups, invalid, onMappingChange } = usePropMapping(config, onChange);
 
-  return items.map(([path, { definition }], i) => (
-    <Accordion
-      key={path}
-      component={Paper}
-      elevation={elevation}
-      expanded={expanded === i}
-      onChange={(_e, isExpanded) => isExpanded && onExpand(i)}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Core.Icon code="faArrowRightArrowLeft" />
+  return (
+    <>
+      <Typography
+        paragraph
+        variant="caption"
+        color="text.secondary"
+        whiteSpace="pre-line"
+      >
+        {t('widgets:msg-prop-mapping-description', {
+          widget: t(`widgets:lbl-widgets.${widget}`),
+        })}
+      </Typography>
 
-        <Typography
-          variant="inherit"
-          display="flex"
-          flexDirection="column"
-          alignItems="flex-start"
-          gap={0}
-        >
-          {t('widgets:ttl-prop-mapping')}
+      {groups.map(([mappingPath, items], i) => {
+        const { [mappingPath]: errors = [] } = invalid;
 
-          <Typography variant="subtitle1" color="secondary">
-            {path}
-          </Typography>
-        </Typography>
-      </AccordionSummary>
+        return (
+          <Accordion
+            key={mappingPath}
+            component={Paper}
+            elevation={elevation}
+            expanded={expanded === i}
+            onChange={(_e, isExpanded) => isExpanded && onExpand(i)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Core.Icon code="faArrowRightArrowLeft" />
 
-      <Divider />
+              <Typography
+                variant="inherit"
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-start"
+                gap={0}
+              >
+                {t('widgets:ttl-prop-mapping')}
 
-      <AccordionDetails>
-        <List>
-          {definition?.sort().map((propName) => {
-            const value = _get(props, [path, 'value', propName]) || '';
+                <Typography variant="subtitle1" color="secondary">
+                  {mappingPath}
+                </Typography>
+              </Typography>
+            </AccordionSummary>
 
-            return (
-              <ListItem disableGutters key={propName}>
-                <ListItemText
-                  disableTypography
-                  className={classes.row}
-                  primary={
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      margin="none"
-                      label={propName}
-                      placeholder={t('widgets:msg-prop-mapping-placeholder')}
-                      value={value}
-                      onChange={(e) =>
-                        onMappingChange(path, propName, e.target.value)
-                      }
-                      InputProps={{
-                        endAdornment: !value ? null : (
-                          <InputAdornment position="end">
-                            <Button
-                              variant="text"
-                              color="inherit"
-                              size="small"
-                              onClick={() =>
-                                onMappingChange(path, propName, '')
-                              }
-                            >
-                              {t('btn-reset')}
-                            </Button>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  }
-                />
-              </ListItem>
-            );
-          })}
-        </List>
+            <Divider />
 
-        <Typography variant="caption" color="text.secondary" gutterBottom>
-          {t('widgets:msg-prop-mapping-description', {
-            widget: t(`widgets:lbl-widgets.${widget}`),
-          })}
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-  ));
+            <AccordionDetails>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                whiteSpace="pre-line"
+              >
+                {t('widgets:msg-prop-mapping-placeholder')}
+              </Typography>
+
+              <List>
+                {items.map(({ propPath, type }) => {
+                  const error = errors.includes(propPath);
+
+                  const value =
+                    _get(props, [mappingPath, 'value', propPath]) || '';
+
+                  return (
+                    <ListItem disableGutters key={propPath}>
+                      <ListItemText
+                        disableTypography
+                        className={classes.row}
+                        primary={
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            margin="none"
+                            label={propPath}
+                            error={error}
+                            helperText={
+                              !error
+                                ? undefined
+                                : t('widgets:msg-prop-mapping-conflict')
+                            }
+                            defaultValue={value}
+                            onChange={(e) =>
+                              onMappingChange(
+                                mappingPath,
+                                propPath,
+                                e.target.value
+                              )
+                            }
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  {PrimitiveIcons[type] || (
+                                    <StorageIcon color="disabled" />
+                                  )}
+                                </InputAdornment>
+                              ),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <Button
+                                    variant="text"
+                                    color={value ? 'error' : 'secondary'}
+                                    size="small"
+                                    onClick={() =>
+                                      onMappingChange(
+                                        mappingPath,
+                                        propPath,
+                                        value ? '' : propPath
+                                      )
+                                    }
+                                  >
+                                    {value
+                                      ? t('btn-reset')
+                                      : t('widgets:btn-set-as-prop-name')}
+                                  </Button>
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        }
+                      />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
+    </>
+  );
 }

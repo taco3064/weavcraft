@@ -18,8 +18,8 @@ export default function ListItem<D extends JsonObject>(
       disabled,
       href,
       indicator,
-      nested,
-      nestedId,
+      nestedContent,
+      id,
       primary,
       secondary,
       selected,
@@ -88,9 +88,9 @@ export default function ListItem<D extends JsonObject>(
         </MuiListItemButton>
       )}
 
-      {!nested && !nestedId ? null : (
-        <MuiListItem disableGutters id={nestedId} data-testid="ListItemNested">
-          {nested}
+      {!nestedContent && !id ? null : (
+        <MuiListItem disableGutters id={id} data-testid="ListItemNested">
+          {nestedContent}
         </MuiListItem>
       )}
     </GeneratePropsProvider>

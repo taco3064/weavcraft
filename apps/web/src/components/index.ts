@@ -4,5 +4,6 @@ export * from './FallbackTrans';
 export * from './Link';
 export * from './MenuDialog';
 export * from './PaletteViewer';
+export * from './PrimitiveFields';
 export * from './SwitchIconButton';
 export * from './TutorialModeAlert';

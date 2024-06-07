@@ -7,14 +7,12 @@ import type { BaseItemProps, PropsWithMappedData } from '../../hooks';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
-type MuiListItemProps = Pick<
-  ComponentProps<typeof MuiListItem>,
-  'alignItems' | 'dense' | 'disableGutters' | 'divider'
->;
+type BasePropNames = 'alignItems' | 'dense' | 'disableGutters' | 'divider';
+type MuiListItemProps = Pick<ComponentProps<typeof MuiListItem>, BasePropNames>;
 
 type MuiListItemButtonProps = Pick<
   ComponentProps<typeof MuiListItemButton>,
-  'alignItems' | 'dense' | 'disableGutters' | 'divider'
+  BasePropNames
 >;
 
 type BasePropName = Extract<
@@ -28,8 +26,8 @@ interface BaseListItemProps<
 > extends BaseItemProps,
     Pick<MuiListItemProps & MuiListItemButtonProps, BasePropName> {
   href?: V extends 'link' ? string : undefined;
-  nested?: ReactNode;
-  nestedId?: string;
+  id?: string;
+  nestedContent?: ReactNode;
   selected?: V extends 'button' ? boolean : undefined;
 
   action?: ReactElement;
@@ -43,11 +41,10 @@ interface BaseListItemProps<
 export type ListItemProps<D extends JsonObject> = PropsWithMappedData<
   D,
   BaseListItemProps<D, ListItemVariant>,
-  | Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>
   | 'disabled'
+  | 'id'
   | 'href'
-  | 'nestedId'
-  | 'nested'
+  | 'nestedContent'
   | 'primary'
   | 'secondary'
   | 'selected'

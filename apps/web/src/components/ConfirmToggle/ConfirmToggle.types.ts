@@ -1,12 +1,15 @@
 import type { AlertProps } from '@mui/material/Alert';
-import type { ForwardedRef, MouseEvent, ReactElement, ReactNode } from 'react';
+import type { MouseEvent, ReactElement, ReactNode } from 'react';
 
-export interface ConfirmToggleProps extends Pick<AlertProps, 'severity'> {
+export type ToggleProps<T extends string> = {
+  [K in T]: (e: MouseEvent) => void;
+};
+
+export interface ConfirmToggleProps<T extends string>
+  extends Pick<AlertProps, 'severity'> {
   message: ReactNode;
   subject?: ReactNode;
-  toggle: ReactElement<{
-    ref?: ForwardedRef<HTMLButtonElement>;
-    onClick: (e: MouseEvent) => void;
-  }>;
+  triggerBy?: T;
+  toggle: ReactElement<ToggleProps<T>>;
   onConfirm: () => void;
 }

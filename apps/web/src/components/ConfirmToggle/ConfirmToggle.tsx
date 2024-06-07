@@ -6,28 +6,29 @@ import { Trans } from 'next-i18next';
 import { isValidElement, cloneElement, useState, type MouseEvent } from 'react';
 
 import { useToggleStyles } from './ConfirmToggle.styles';
-import type { ConfirmToggleProps } from './ConfirmToggle.types';
+import type { ConfirmToggleProps, ToggleProps } from './ConfirmToggle.types';
 
-export default function ConfirmToggle({
+export default function ConfirmToggle<T extends string>({
   message,
   severity = 'warning',
   subject,
+  triggerBy = 'onClick' as T,
   toggle,
   onConfirm,
-}: ConfirmToggleProps) {
+}: ConfirmToggleProps<T>) {
   const { classes } = useToggleStyles();
   const [open, setOpen] = useState(false);
 
   return !isValidElement(toggle) ? null : (
     <>
       {cloneElement(toggle, {
-        onClick: (e: MouseEvent) => {
+        [triggerBy]: (e: MouseEvent) => {
           e.stopPropagation();
           e.preventDefault();
 
           setOpen(true);
         },
-      })}
+      } as ToggleProps<T>)}
 
       <Dialog
         fullWidth
@@ -39,7 +40,14 @@ export default function ConfirmToggle({
         <Alert
           severity={severity}
           action={
-            <Button variant="text" color={severity} onClick={onConfirm}>
+            <Button
+              variant="text"
+              color={severity}
+              onClick={() => {
+                setOpen(false);
+                onConfirm();
+              }}
+            >
               <Trans i18nKey="btn-confirm" />
             </Button>
           }

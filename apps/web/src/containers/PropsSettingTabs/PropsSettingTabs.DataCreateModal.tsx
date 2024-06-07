@@ -6,17 +6,21 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import _get from 'lodash/get';
+import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
 import { Trans } from 'next-i18next';
+import { useState } from 'react';
 import type { FormEvent, MouseEvent } from 'react';
 import type { JsonObject } from 'type-fest';
 
+import { PrimitiveFields } from '~web/components';
 import { useDataCreate } from './PropsSettingTabs.hooks';
 import type { DataCreateModalProps } from './PropsSettingTabs.types';
 
 export default function DataCreateModal({
+  basePropPath,
   bindingFields,
   data,
   open,
@@ -24,13 +28,21 @@ export default function DataCreateModal({
   onChange,
   onClose,
 }: DataCreateModalProps) {
-  const dataFields = useDataCreate(widget, bindingFields);
-
-  console.log(TextField, dataFields);
+  const dataFields = useDataCreate(widget, basePropPath, bindingFields);
+  const [input, setInput] = useState<JsonObject>(data || {});
 
   const handleClose = (e: MouseEvent) => {
     e.stopPropagation();
     onClose();
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onClose();
+
+    if (!_isEmpty(input)) {
+      onChange(input);
+    }
   };
 
   return (
@@ -41,15 +53,7 @@ export default function DataCreateModal({
       onClose={handleClose}
       PaperProps={{
         component: 'form',
-        onSubmit: (e: FormEvent<HTMLFormElement>) => {
-          const formdata = new FormData(e.currentTarget);
-          const input: JsonObject = {};
-
-          e.preventDefault();
-          formdata.forEach((value, key) => _set(input, key, value));
-          onChange(input);
-          onClose();
-        },
+        onSubmit: handleSubmit,
       }}
     >
       <DialogTitle>
@@ -67,7 +71,26 @@ export default function DataCreateModal({
         </Box>
       </DialogTitle>
 
-      <DialogContent></DialogContent>
+      <DialogContent>
+        {dataFields.map(([fieldName, { type, definition, required }]) => {
+          const { [type]: render } = PrimitiveFields;
+
+          return render(
+            {
+              label: fieldName,
+              name: fieldName,
+              required,
+              size: 'small',
+              value: _get(input, fieldName, ''),
+              variant: 'outlined',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              onChange: (value: any) =>
+                setInput({ ..._set(input, fieldName, value) }),
+            },
+            definition as never
+          );
+        })}
+      </DialogContent>
 
       <ButtonGroup
         fullWidth
