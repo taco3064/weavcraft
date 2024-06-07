@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.40](https://github.com/taco3064/weavcraft/compare/v0.0.39...v0.0.40) (2024-06-07)
+
+
+### Bug Fixes
+
+* **web/*:** skip FaIcon and do not process with definition parser ([2f809f7](https://github.com/taco3064/weavcraft/commit/2f809f7bda48a83f2c1530bfc72c751ba45abdb9))
+
 ### [0.0.39](https://github.com/taco3064/weavcraft/compare/v0.0.38...v0.0.39) (2024-06-07)
 
 
