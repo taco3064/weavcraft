@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.41](https://github.com/taco3064/weavcraft/compare/v0.0.40...v0.0.41) (2024-06-07)
+
+
+### Bug Fixes
+
+* **web/*:** fixed the dialog error ([c1adb23](https://github.com/taco3064/weavcraft/commit/c1adb23e294dbaaafd2d3dd8df8b857336d0525f))
+* **web/*:** fixed the sonar qube issues ([5f8e26f](https://github.com/taco3064/weavcraft/commit/5f8e26f280feb7d0c1a562f5be64c2a99a8480c7))
+
 ### [0.0.40](https://github.com/taco3064/weavcraft/compare/v0.0.39...v0.0.40) (2024-06-07)
 
 
