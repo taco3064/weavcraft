@@ -33,7 +33,7 @@ export default function Items({
 
   const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
     useMemo<NodePaths>(() => {
-      const { elementNodeProps = {} } = getDefinition(widget) || {};
+      const { elementNodeProps = {} } = getDefinition(widget);
 
       return {
         nodePaths: Object.keys(elementNodeProps),
@@ -48,7 +48,7 @@ export default function Items({
           return result;
         },
         onWidgetChildrenGenerate: ({ widget, props = {} }) => {
-          const { elementNodeProps = {} } = getDefinition(widget) || {};
+          const { elementNodeProps = {} } = getDefinition(widget);
           const nodePaths = Object.keys(elementNodeProps);
 
           return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {

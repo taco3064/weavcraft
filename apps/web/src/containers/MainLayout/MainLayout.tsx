@@ -1,5 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
@@ -17,7 +18,6 @@ import NextLink from 'next/link';
 import Paper from '@mui/material/Paper';
 import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
-import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -116,6 +116,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           >
             {open === 'custom' && (
               <ClickAwayListener
+                mouseEvent="onPointerDown"
                 onClickAway={(e) => {
                   if (e.target !== global.document?.body) {
                     setOpen(undefined);
@@ -141,7 +142,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             }}
           >
             {open === 'nav' && (
-              <ClickAwayListener onClickAway={() => setOpen(undefined)}>
+              <ClickAwayListener
+                mouseEvent="onPointerDown"
+                onClickAway={() => setOpen(undefined)}
+              >
                 <List
                   role="navigation"
                   subheader={

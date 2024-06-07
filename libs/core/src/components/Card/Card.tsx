@@ -94,6 +94,7 @@ export default function Card<D extends JsonObject>(props: CardProps<D>) {
               <MuiCardContent
                 data-testid="CardContent"
                 className={classes.flexColumn}
+                sx={{ whiteSpace: 'pre-line' }}
               >
                 {children}
               </MuiCardContent>

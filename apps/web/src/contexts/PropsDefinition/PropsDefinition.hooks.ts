@@ -13,7 +13,7 @@ export function usePropsDefinition() {
     definitions,
 
     getDefinition: useCallback(
-      (widgetId?: WidgetType) =>
+      (widgetId: WidgetType) =>
         definitions.find(
           ({ componentName }) => componentName === widgetId
         ) as PropsDefinition,
