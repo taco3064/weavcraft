@@ -6,7 +6,7 @@ import type {
 } from '@weavcraft/common';
 
 export type { ThemePalette };
-export type WidgetType = keyof typeof Core;
+export type WidgetType = Exclude<keyof typeof Core, 'FaIcon'>;
 
 export type MutationtThemePaletteInput = {
   hierarchyId: string;
