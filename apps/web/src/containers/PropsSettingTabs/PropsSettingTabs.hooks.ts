@@ -4,7 +4,6 @@ import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { useMemo, useState, useTransition } from 'react';
-import type { DataBindingProp } from '@weavcraft/common';
 import type { JsonObject } from 'type-fest';
 
 import { usePropsDefinition } from '~web/contexts';

@@ -126,7 +126,7 @@ export default function Intro() {
                   </Grid>
                 </Fade>
 
-                {i % 2 === 0 ? content : content.reverse()}
+                {i % 2 === 0 ? content : [...content].reverse()}
               </Grid>
             );
           }}
