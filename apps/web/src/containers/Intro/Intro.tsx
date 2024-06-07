@@ -72,46 +72,66 @@ export default function Intro() {
         </Fade>
       </Grid>
 
-      <InView triggerOnce>
-        {({ inView, ref }) => (
-          <Grid container ref={ref} className={classes.paragraph} spacing={2}>
-            <Fade in={inView} timeout={BASE_TIMEOUT}>
-              <Grid item xs={12}>
-                <Typography
-                  paragraph
-                  variant={subjectVariant}
-                  color="secondary"
-                  fontWeight={600}
-                >
-                  <FallbackTrans i18nKey="intro:ttl-themes" value={size} />
-                </Typography>
-              </Grid>
-            </Fade>
+      {['themes', 'widgets'].map((label, i) => (
+        <InView triggerOnce key={label}>
+          {({ inView, ref }) => {
+            const content = [
+              <Fade key="img" in={inView} timeout={BASE_TIMEOUT * 2}>
+                <Grid item xs={12} sm={6}>
+                  <Slide
+                    in={inView}
+                    direction={i % 2 === 0 ? 'right' : 'left'}
+                    timeout={BASE_TIMEOUT * 2}
+                  >
+                    <Image
+                      alt={`intro ${label}`}
+                      src={`/imgs/intro-${label}.png`}
+                      width={1800}
+                      height={1646}
+                      style={{ transform: 'scale(0.8)' }}
+                    />
+                  </Slide>
+                </Grid>
+              </Fade>,
 
-            <Fade in={inView} timeout={BASE_TIMEOUT * 2}>
-              <Grid item xs={12} sm={6}>
-                <Slide in={inView} direction="right" timeout={BASE_TIMEOUT * 2}>
-                  <Image
-                    alt="Intro"
-                    src="/imgs/intro-themes.png"
-                    width={1800}
-                    height={1646}
-                    style={{ transform: 'scale(0.8)' }}
-                  />
-                </Slide>
-              </Grid>
-            </Fade>
+              <Fade key="description" in={inView} timeout={BASE_TIMEOUT * 2}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant={contentVariant} lineHeight={2}>
+                    <Trans i18nKey={`intro:msg-${label}`} />
+                  </Typography>
+                </Grid>
+              </Fade>,
+            ];
 
-            <Fade in={inView} timeout={BASE_TIMEOUT * 2}>
-              <Grid item xs={12} sm={6}>
-                <Typography variant={contentVariant} lineHeight={2}>
-                  <Trans i18nKey="intro:msg-themes" />
-                </Typography>
+            return (
+              <Grid
+                container
+                ref={ref}
+                className={classes.paragraph}
+                spacing={2}
+              >
+                <Fade in={inView} timeout={BASE_TIMEOUT}>
+                  <Grid item xs={12}>
+                    <Typography
+                      paragraph
+                      variant={subjectVariant}
+                      color="secondary"
+                      fontWeight={600}
+                    >
+                      <FallbackTrans
+                        i18nKey={`intro:ttl-${label}`}
+                        value={size}
+                      />
+                    </Typography>
+                  </Grid>
+                </Fade>
+
+                {i % 2 === 0 ? content : content.reverse()}
               </Grid>
-            </Fade>
-          </Grid>
-        )}
-      </InView>
+            );
+          }}
+        </InView>
+      ))}
     </Container>
   );
 }

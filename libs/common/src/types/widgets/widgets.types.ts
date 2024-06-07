@@ -31,6 +31,7 @@ export type PrimitiveValueProp = BaseWidgetProps<
 //* - Element Node
 interface ElementNodeConfig {
   widget: string;
+  externalInjection?: string[];
   props?: {
     [propPath: string]: DataBindingProp | ElementNodeProp | PrimitiveValueProp;
   };

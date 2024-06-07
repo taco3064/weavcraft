@@ -21,7 +21,7 @@ import type {
 function useDataChangeHandler(
   config: RenderConfig,
   dataPath: SourcePaths['data'],
-  onChange: ConfigChangeHandler<DataBindingProp>
+  onChange: ConfigChangeHandler
 ) {
   const { props = {} } = config;
 
@@ -110,7 +110,7 @@ export function useDataCreate(
 
 export function useFixedData(
   config: RenderConfig,
-  onChange: ConfigChangeHandler<DataBindingProp>
+  onChange: ConfigChangeHandler
 ) {
   const { widget, props = {} } = config;
   const sourcePaths = useSourcePaths(widget);
