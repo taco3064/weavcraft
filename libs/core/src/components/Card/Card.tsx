@@ -4,7 +4,6 @@ import MuiCardActions from '@mui/material/CardActions';
 import MuiCardContent from '@mui/material/CardContent';
 import MuiCardHeader from '@mui/material/CardHeader';
 import MuiCardMedia from '@mui/material/CardMedia';
-import MuiTypography from '@mui/material/Typography';
 import type { JsonObject } from 'type-fest';
 
 import { WidgetWrapper } from '../../styles';

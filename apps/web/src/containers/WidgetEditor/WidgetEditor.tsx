@@ -2,7 +2,6 @@ import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
-import Switch from '@mui/material/Switch';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import { useSnackbar } from 'notistack';

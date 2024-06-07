@@ -48,8 +48,4 @@ export type ListItemProps<D extends JsonObject> = PropsWithMappedData<
   | 'primary'
   | 'secondary'
   | 'selected'
-  | Exclude<
-      Extract<keyof MuiListItemProps, keyof MuiListItemButtonProps>,
-      BasePropNames
-    >
 >;
