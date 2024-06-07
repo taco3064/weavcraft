@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://github.com/taco3064/weavcraft/compare/v0.0.38...v0.0.39) (2024-06-07)
+
+
+### Features
+
+* **web/props-setting-tabs:** complete all props editing functionality ([c5dc963](https://github.com/taco3064/weavcraft/commit/c5dc9634b44e957c954af04a5020306291852039))
+
+
+### Bug Fixes
+
+* **web, core:** fixed the sonar qube issues ([40a57ac](https://github.com/taco3064/weavcraft/commit/40a57ac9e86a9cdf209e02a89f4f7d9a63c81506))
+
 ### [0.0.38](https://github.com/taco3064/weavcraft/compare/v0.0.37...v0.0.38) (2024-06-06)
 
 
