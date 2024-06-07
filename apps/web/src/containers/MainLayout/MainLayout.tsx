@@ -117,6 +117,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             {open === 'custom' && (
               <ClickAwayListener
                 mouseEvent="onPointerDown"
+                touchEvent="onTouchEnd"
                 onClickAway={(e) => {
                   if (e.target !== global.document?.body) {
                     setOpen(undefined);
@@ -144,6 +145,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             {open === 'nav' && (
               <ClickAwayListener
                 mouseEvent="onPointerDown"
+                touchEvent="onTouchEnd"
                 onClickAway={() => setOpen(undefined)}
               >
                 <List

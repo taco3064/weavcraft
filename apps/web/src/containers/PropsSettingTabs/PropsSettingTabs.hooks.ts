@@ -4,7 +4,6 @@ import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { useMemo, useState, useTransition } from 'react';
-import type { DataBindingProp } from '@weavcraft/common';
 import type { JsonObject } from 'type-fest';
 
 import { usePropsDefinition } from '~web/contexts';
@@ -21,7 +20,7 @@ import type {
 function useDataChangeHandler(
   config: RenderConfig,
   dataPath: SourcePaths['data'],
-  onChange: ConfigChangeHandler<DataBindingProp>
+  onChange: ConfigChangeHandler
 ) {
   const { props = {} } = config;
 
@@ -110,7 +109,7 @@ export function useDataCreate(
 
 export function useFixedData(
   config: RenderConfig,
-  onChange: ConfigChangeHandler<DataBindingProp>
+  onChange: ConfigChangeHandler
 ) {
   const { widget, props = {} } = config;
   const sourcePaths = useSourcePaths(widget);

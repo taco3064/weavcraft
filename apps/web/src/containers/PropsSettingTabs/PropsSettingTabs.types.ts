@@ -15,10 +15,10 @@ import type {
 type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type ConfigType = ConfigProps['type'];
 
-export type ConfigChangeHandler<V extends ConfigProps = ConfigProps> = (
+export type ConfigChangeHandler = (
   config: RenderConfig,
-  propPath: string,
-  propValue?: V
+  propPath?: string,
+  propValue?: ConfigProps
 ) => void;
 
 //* Data Binding Types
@@ -36,6 +36,12 @@ export type SourcePaths = {
 };
 
 //* Component Props Type
+interface BaseSettingProps {
+  classes: EditorListClasses & { row?: string };
+  config: RenderConfig;
+  onChange: ConfigChangeHandler;
+}
+
 export interface PropsSettingTabsProps
   extends Pick<EditorListProps, 'onClose'> {
   config?: RenderConfig;
@@ -43,13 +49,13 @@ export interface PropsSettingTabsProps
   onChange: ConfigChangeHandler;
 }
 
-export interface PropsSettingProps<V extends ConfigProps = ConfigProps> {
+export interface PrimitiveListProps extends BaseSettingProps {
   classes: EditorListClasses & { row?: string };
   config: RenderConfig;
-  onChange: ConfigChangeHandler<V>;
+  onChange: ConfigChangeHandler;
 }
 
-export interface DataBindingProps extends PropsSettingProps {
+export interface DataBindingProps extends BaseSettingProps {
   elevation?: number;
   expanded: number | 'data';
   onExpand: (panel: number | 'data') => void;
