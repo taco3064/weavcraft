@@ -1,11 +1,15 @@
-import type Core from '@weavcraft/core';
 import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
-import type { Get, JsonObject } from 'type-fest';
-import type { ReactNode } from 'react';
+import type { JsonObject } from 'type-fest';
 
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { EditorListClasses, EditorListProps } from '~web/components';
-import type { PrimitiveValuePropsWithPath, WidgetType } from '~web/services';
+import type { WidgetType } from '~web/services';
+
+import type {
+  EditorListClasses,
+  EditorListProps,
+  PrimitiveProps,
+  PrimitiveType,
+} from '~web/components';
 
 //* Config Types
 type ConfigProps = DataBindingProp | PrimitiveValueProp;
@@ -17,33 +21,18 @@ export type ConfigChangeHandler<V extends ConfigProps = ConfigProps> = (
   propValue?: V
 ) => void;
 
-//* Data Create Types
-export type DataField = Record<string, PrimitiveProps>;
+//* Data Binding Types
+export type DataFields = Record<string, PrimitiveProps>;
+
+export type PropMappingItems = Record<
+  string,
+  { propPath: string; type: PrimitiveType }[]
+>;
 
 //* Fixed Data Types
 export type SourcePaths = {
   binding: 'propMapping' | `${string}.propMapping`;
   data: 'records' | 'data';
-};
-
-//* Primitive Input Item Type
-type PrimitiveProps = NonNullable<
-  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
->;
-
-type PrimitiveType = Get<PrimitiveProps, ['type']>;
-
-export type DefaultPrimitiveFieldProps = Pick<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Core.BaseFieldProps<any>,
-  'label' | 'required' | 'size' | 'value' | 'variant' | 'onChange'
->;
-
-export type PrimitiveFields = {
-  [K in PrimitiveType]: (
-    defaultProps: DefaultPrimitiveFieldProps,
-    definition: Get<Extract<PrimitiveProps, { type: K }>, ['definition']>
-  ) => ReactNode;
 };
 
 //* Component Props Type
@@ -54,19 +43,20 @@ export interface PropsSettingTabsProps
   onChange: ConfigChangeHandler;
 }
 
-export interface PropsSettingProps<V extends ConfigProps> {
+export interface PropsSettingProps<V extends ConfigProps = ConfigProps> {
   classes: EditorListClasses & { row?: string };
   config: RenderConfig;
   onChange: ConfigChangeHandler<V>;
 }
 
-export interface DataBindingProps extends PropsSettingProps<DataBindingProp> {
+export interface DataBindingProps extends PropsSettingProps {
   elevation?: number;
   expanded: number | 'data';
   onExpand: (panel: number | 'data') => void;
 }
 
 export interface DataCreateModalProps {
+  basePropPath: string;
   bindingFields: Record<string, string>;
   data?: JsonObject;
   open: boolean;

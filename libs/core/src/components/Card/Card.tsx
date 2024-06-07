@@ -4,6 +4,7 @@ import MuiCardActions from '@mui/material/CardActions';
 import MuiCardContent from '@mui/material/CardContent';
 import MuiCardHeader from '@mui/material/CardHeader';
 import MuiCardMedia from '@mui/material/CardMedia';
+import MuiTypography from '@mui/material/Typography';
 import type { JsonObject } from 'type-fest';
 
 import { WidgetWrapper } from '../../styles';
@@ -94,6 +95,7 @@ export default function Card<D extends JsonObject>(props: CardProps<D>) {
               <MuiCardContent
                 data-testid="CardContent"
                 className={classes.flexColumn}
+                sx={{ whiteSpace: 'pre-line' }}
               >
                 {children}
               </MuiCardContent>

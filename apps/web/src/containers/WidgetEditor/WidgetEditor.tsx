@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingTabs from '../PropsSettingTabs';
-import { useChangeEvents, useNodeCreate } from './WidgetEditor.hooks';
+import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
@@ -58,7 +58,7 @@ export default withPropsDefinition(function WidgetEditor({
     setValue
   );
 
-  const withAppendNode = useNodeCreate(
+  const withAppendNode = useNodeCreateButton(
     NodeCreateButton,
     previewMode,
     changeEvents
@@ -78,29 +78,29 @@ export default withPropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          <Tooltip title={t('widgets:btn-widget-preview')}>
-            <span>
-              <Switch
-                color="secondary"
-                size="small"
-                checked={previewMode}
-                disabled={!value.widget}
-                onChange={(e) => setPreviewMode(e.target.checked)}
-              />
-            </span>
-          </Tooltip>
-
-          <Tooltip title={t('widgets:btn-widget-structure')}>
-            <span>
-              <IconButton
-                size="large"
-                disabled={previewMode || !value.widget}
-                onClick={() => onToggle(true)}
-              >
+          {!previewMode && value.widget && (
+            <Tooltip title={t('widgets:btn-widget-structure')}>
+              <IconButton size="large" onClick={() => onToggle(true)}>
                 <Core.Icon code="faCode" />
               </IconButton>
-            </span>
-          </Tooltip>
+            </Tooltip>
+          )}
+
+          {value.widget && (
+            <Tooltip
+              title={
+                previewMode ? t('btn-undo') : t('widgets:btn-widget-preview')
+              }
+            >
+              <IconButton
+                color="secondary"
+                size="large"
+                onClick={() => setPreviewMode(!previewMode)}
+              >
+                <Core.Icon code={previewMode ? 'faUndo' : 'faEye'} />
+              </IconButton>
+            </Tooltip>
+          )}
         </PortalWrapper>
 
         <Container

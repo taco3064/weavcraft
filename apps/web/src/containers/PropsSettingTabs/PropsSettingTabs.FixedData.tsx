@@ -2,12 +2,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -15,7 +14,6 @@ import _get from 'lodash/get';
 import { JSONTree } from 'react-json-tree';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
-import type { JsonObject } from 'type-fest';
 
 import DataCreateModal from './PropsSettingTabs.DataCreateModal';
 import { ConfirmToggle } from '~web/components';
@@ -30,23 +28,26 @@ export default function FixedData({
   onExpand,
 }: DataBindingProps) {
   const [, startTransition] = useTransition();
-  const [editing, setEditing] = useState<JsonObject>();
+  const [editing, setEditing] = useState<number>();
   const [open, setOpen] = useState(false);
 
   const { widget, props = {} } = config;
   const { t } = useTranslation();
 
-  const { bindingFields, disabled, data, onDataChange } = useFixedData(
-    config,
-    onChange
-  );
+  const { basePropPath, bindingFields, disabled, data, handleChange } =
+    useFixedData(config, onChange);
 
   return (
     <>
       <DataCreateModal
-        {...{ bindingFields, open, widget }}
-        data={editing}
-        onChange={onDataChange}
+        {...{ basePropPath, bindingFields, open, widget }}
+        key={open ? 'open' : 'close'}
+        data={_get(props, ['records', 'value', editing as number])}
+        onChange={(e) =>
+          typeof editing === 'number'
+            ? handleChange.update(e, editing)
+            : handleChange.create(e)
+        }
         onClose={() =>
           startTransition(() => {
             setOpen(false);
@@ -72,11 +73,11 @@ export default function FixedData({
         <AccordionDetails>
           {!data ? (
             <Typography
-              paragraph
               variant="subtitle1"
               color="text.disabled"
               justifyContent="center"
               fontWeight={600}
+              lineHeight={3}
             >
               {t('widgets:msg-no-data')}
             </Typography>
@@ -85,57 +86,52 @@ export default function FixedData({
               hideRoot
               theme="monokai"
               data={data}
-              labelRenderer={(keyPath, _nodeType, expanded) => {
+              shouldExpandNodeInitially={() => true}
+              labelRenderer={(keyPath) => {
                 const showActions =
-                  keyPath.length === 1 &&
-                  typeof keyPath[0] === 'number' &&
-                  expanded;
+                  keyPath.length === 1 && typeof keyPath[0] === 'number';
 
-                return (
-                  <Box display="flex" gap={1} alignItems="center">
-                    {keyPath[0]}:
-                    {showActions && (
-                      <>
-                        <Tooltip title={t('widgets:btn-edit-data')}>
-                          <IconButton
-                            size="small"
-                            color="secondary"
-                            onClick={() =>
-                              startTransition(() => {
-                                setOpen(true);
+                return !showActions ? (
+                  `${keyPath[0]}:`
+                ) : (
+                  <ConfirmToggle
+                    triggerBy="onDelete"
+                    subject={t('ttl-delete-confirm')}
+                    onConfirm={() => handleChange.delete(keyPath[0] as number)}
+                    message={t('widgets:msg-delete-data-confirm')}
+                    toggle={
+                      <Tooltip title={t('widgets:btn-edit-data')}>
+                        <Chip
+                          color="warning"
+                          label={t('widgets:lbl-row', {
+                            index: (keyPath[0] as number) + 1,
+                          })}
+                          onClick={(e) =>
+                            startTransition(() => {
+                              e.stopPropagation();
 
-                                setEditing(
-                                  _get(props, ['records', 'value', keyPath[0]])
-                                );
-                              })
-                            }
-                          >
-                            <Core.Icon code="faEdit" fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-
-                        <ConfirmToggle
-                          subject={t('ttl-delete-confirm')}
-                          onConfirm={() => onDataChange(keyPath[0] as number)}
-                          message={t('widgets:msg-delete-data-confirm')}
-                          toggle={
-                            <Tooltip title={t('widgets:btn-delete-data')}>
-                              <IconButton size="small" color="error">
-                                <Core.Icon code="faRemove" fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
+                              setOpen(true);
+                              setEditing(keyPath[0] as number);
+                            })
                           }
                         />
-                      </>
-                    )}
-                  </Box>
+                      </Tooltip>
+                    }
+                  />
                 );
               }}
             />
           )}
 
-          <Typography variant="caption" color="text.secondary" gutterBottom>
-            {t('widgets:msg-fixed-data-description')}
+          <Typography
+            paragraph
+            variant="caption"
+            color="text.secondary"
+            whiteSpace="pre-line"
+          >
+            {t('widgets:msg-fixed-data-description', {
+              widget: t(`widgets:lbl-widgets.${widget}`),
+            })}
           </Typography>
         </AccordionDetails>
 
@@ -143,7 +139,7 @@ export default function FixedData({
           {data && !Array.isArray(data) && (
             <ConfirmToggle
               subject={t('ttl-delete-confirm')}
-              onConfirm={() => onDataChange(undefined)}
+              onConfirm={handleChange.delete}
               message={t('widgets:msg-delete-data-confirm')}
               toggle={
                 <Button
@@ -161,15 +157,7 @@ export default function FixedData({
             color="secondary"
             variant="contained"
             startIcon={<Core.Icon code="faPlus" />}
-            onClick={() =>
-              startTransition(() => {
-                setOpen(true);
-
-                if (data && !Array.isArray(data)) {
-                  setEditing(data);
-                }
-              })
-            }
+            onClick={() => setOpen(true)}
           >
             {data && !Array.isArray(data)
               ? t('widgets:btn-edit-data')

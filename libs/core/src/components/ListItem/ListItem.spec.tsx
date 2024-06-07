@@ -80,7 +80,7 @@ describe('@weavcraft/core/components/ListItem', () => {
 
   it('should render nested items correctly', () => {
     const { getByTestId } = renderWithList(
-      <ListItem nested={<div>Nested Content</div>} />
+      <ListItem nestedContent={<div>Nested Content</div>} />
     );
 
     const el = getByTestId('ListItem');
@@ -91,36 +91,8 @@ describe('@weavcraft/core/components/ListItem', () => {
     expect(nestedEl).toHaveTextContent('Nested Content');
   });
 
-  it('should assign nestedId correctly', () => {
-    const { getByTestId } = renderWithList(
-      <ListItem nestedId="testNestedId" />
-    );
-
-    const el = getByTestId('ListItem');
-    const nestedEl = getByTestId('ListItemNested');
-
-    expect(el).toBeTruthy();
-    expect(nestedEl).toBeTruthy();
-    expect(nestedEl).toHaveAttribute('id', 'testNestedId');
-  });
-
-  it('should render nested items correctly', () => {
-    const { getByTestId } = renderWithList(
-      <ListItem nested={<div>Nested Content</div>} />
-    );
-
-    const el = getByTestId('ListItem');
-    const nestedEl = getByTestId('ListItemNested');
-
-    expect(el).toBeTruthy();
-    expect(nestedEl).toBeTruthy();
-    expect(nestedEl).toHaveTextContent('Nested Content');
-  });
-
-  it('should assign nestedId correctly', () => {
-    const { getByTestId } = renderWithList(
-      <ListItem nestedId="testNestedId" />
-    );
+  it('should assign id correctly', () => {
+    const { getByTestId } = renderWithList(<ListItem id="testNestedId" />);
 
     const el = getByTestId('ListItem');
     const nestedEl = getByTestId('ListItemNested');

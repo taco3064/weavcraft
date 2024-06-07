@@ -1,25 +1,14 @@
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import Core from '@weavcraft/core';
-import DialpadIcon from '@mui/icons-material/Dialpad';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MneuItem from '@mui/material/MenuItem';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import SwipeIcon from '@mui/icons-material/Swipe';
-import TextField from '@mui/material/TextField';
-import TextFieldsIcon from '@mui/icons-material/TextFields';
 import { forwardRef, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { PrimitiveValueProp } from '@weavcraft/common';
 
+import { PrimitiveFields } from '~web/components';
 import { usePropsDefinition } from '~web/contexts';
-
-import type {
-  PrimitiveFields,
-  PropsSettingProps,
-} from './PropsSettingTabs.types';
+import type { PropsSettingProps } from './PropsSettingTabs.types';
 
 export default forwardRef<
   HTMLUListElement,
@@ -30,7 +19,7 @@ export default forwardRef<
   const { getDefinition } = usePropsDefinition();
 
   const items = useMemo(() => {
-    const { primitiveValueProps = {} } = getDefinition(widget) || {};
+    const { primitiveValueProps = {} } = getDefinition(widget);
 
     return Object.entries(primitiveValueProps).sort(([key1], [key2]) =>
       key1.localeCompare(key2)
@@ -45,13 +34,14 @@ export default forwardRef<
           primaryTypographyProps={{
             variant: 'caption',
             color: 'text.secondary',
+            whiteSpace: 'pre-line',
           }}
         />
       </ListItem>
 
       {items.map<ReactNode>(([path, { type, definition, required }]) => {
         const { [path]: primitive } = props;
-        const { [type]: render } = PRIMITIVE_FIELDS;
+        const { [type]: render } = PrimitiveFields;
 
         return (
           <ListItem key={path} onClick={(e) => e.stopPropagation()}>
@@ -83,73 +73,3 @@ export default forwardRef<
     </List>
   );
 });
-
-const FILTER_OPTIONS = createFilterOptions<{ label: string }>({
-  limit: 20,
-});
-
-const PRIMITIVE_FIELDS: PrimitiveFields = {
-  boolean: (defaultProps) => (
-    <Core.SwitchField
-      {...defaultProps}
-      adornment={<SwipeIcon color="disabled" />}
-    />
-  ),
-  icon: (defaultProps) => (
-    <Autocomplete
-      disablePortal
-      fullWidth
-      filterOptions={FILTER_OPTIONS}
-      renderInput={(params) => <TextField {...params} {...defaultProps} />}
-      options={Object.keys(Core.FaIcon).map((label) => ({
-        label,
-      }))}
-      renderOption={(props, { label }) => (
-        <MneuItem {...props}>
-          <ListItemIcon>
-            <Core.Icon code={label as Core.IconCode} />
-          </ListItemIcon>
-
-          <ListItemText primary={label} />
-        </MneuItem>
-      )}
-    />
-  ),
-  number: (defaultProps) => (
-    <Core.NumericField
-      {...defaultProps}
-      adornmentPosition="start"
-      adornment={<DialpadIcon color="disabled" />}
-    />
-  ),
-  oneof: (defaultProps, definition) =>
-    !Array.isArray(definition) ? null : (
-      <Core.SingleSelectField
-        {...defaultProps}
-        adornment={<MenuOpenIcon color="disabled" />}
-        records={definition.map((value) => ({ value }))}
-        optionProps={{
-          propMapping: {
-            primary: 'value',
-            value: 'value',
-          },
-        }}
-      />
-    ),
-  string: (defaultProps, definition) =>
-    definition?.multiple ? (
-      <Core.TextAreaField
-        {...defaultProps}
-        maxRows={3}
-        minRows={3}
-        adornmentPosition="start"
-        adornment={<TextFieldsIcon color="disabled" />}
-      />
-    ) : (
-      <Core.TextField
-        {...defaultProps}
-        adornmentPosition="start"
-        adornment={<TextFieldsIcon color="disabled" />}
-      />
-    ),
-};

@@ -6,6 +6,8 @@ import type { PortalContainerEl } from '~web/contexts';
 
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
+export type NodeCreateVariant = 'action' | 'node';
+
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
   onConfigChange: ConfigChangeHandler;
@@ -31,7 +33,7 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
 
 export interface NodeCreateButtonProps {
   path?: string;
-  variant: 'action' | 'node';
+  variant: NodeCreateVariant;
   widgetId?: WidgetType;
   onClick: (widget: WidgetType) => void;
 }
