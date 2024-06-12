@@ -23,15 +23,13 @@ describe('@weavcraft/core/hooks/useSlotElement', () => {
     expect(button).toHaveTextContent('text');
   });
 
-  it('should pass the original props', () => {
-    const value = 'text';
-
+  it('should override props by data value', () => {
     const { getByText } = renderSlot(
-      <Dummy text={value} propMapping={{ text: 'name' }} />,
+      <Dummy text="text" propMapping={{ text: 'name' }} />,
       { name: 'any' }
     );
 
-    expect(getByText(value)).toBeTruthy();
+    expect(getByText('any')).toBeTruthy();
   });
 
   it('calls onClick & onItemToggle when button is clicked', () => {

@@ -20,8 +20,8 @@ export function usePropsGetter<D extends JsonObject>() {
       const propValue = _get(props, key);
       const dataValue = _get(data, path as string);
 
-      //* - The prop value must be undefined
-      if (propValue === undefined && dataValue !== undefined) {
+      //* - The prop value is default value, if the data value is undefined.
+      if (dataValue !== undefined) {
         set(root, [...paths, key], dataValue);
 
         return { ...result, [key]: dataValue };

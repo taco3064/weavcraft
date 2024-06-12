@@ -17,7 +17,7 @@ describe('@weavcraft/core/hooks/useGenerateProps', () => {
     expect(getByTestId('dummy')).toHaveTextContent(value);
   });
 
-  it('should pass the original props', () => {
+  it('should override props by data value', () => {
     const value = 'Johnny Smith';
 
     const { getByTestId } = render(
@@ -28,7 +28,7 @@ describe('@weavcraft/core/hooks/useGenerateProps', () => {
       />
     );
 
-    expect(getByTestId('dummy')).toHaveTextContent(value);
+    expect(getByTestId('dummy')).toHaveTextContent('Tom White');
   });
 
   it('should useGenerateProps works correctly in nested structure', () => {
