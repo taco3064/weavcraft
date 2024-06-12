@@ -4,6 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -11,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingTabs from '../PropsSettingTabs';
+import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
@@ -48,6 +51,7 @@ export default withPropsDefinition(function WidgetEditor({
   );
 
   const { t } = useTranslation();
+  const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
@@ -66,6 +70,16 @@ export default withPropsDefinition(function WidgetEditor({
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
     <WidgetEl key={key} {...withAppendNode(props, config)} />
   ));
+
+  const { mutate: upsert } = useMutation({
+    mutationFn: upsertWidgetConfig,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: () =>
+      enqueueSnackbar(
+        t(`msg-success-${!config ? 'create' : 'update'}`, { name: title }),
+        { variant: 'success' }
+      ),
+  });
 
   console.log('===', value);
 
@@ -100,6 +114,22 @@ export default withPropsDefinition(function WidgetEditor({
               </IconButton>
             </Tooltip>
           )}
+
+          <Tooltip title={t('btn-save')}>
+            <IconButton
+              color="secondary"
+              size="large"
+              onClick={() =>
+                upsert({
+                  hierarchyId: query.id as string,
+                  input: value as WidgetConfigs,
+                  isTutorialMode,
+                })
+              }
+            >
+              <Core.Icon code="faSave" />
+            </IconButton>
+          </Tooltip>
         </PortalWrapper>
 
         <Container
