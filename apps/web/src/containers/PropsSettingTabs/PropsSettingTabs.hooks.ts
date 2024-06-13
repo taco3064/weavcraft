@@ -186,16 +186,18 @@ export function usePropMapping(
 
     return _debounce((mapping: Record<string, string>) => {
       const fieldPaths = [...new Set(Object.values(mapping))];
+      const target = _get(props, [sourcePaths.data, 'value']);
 
-      if (sourcePaths.data === 'data') {
-        const data = _get(props, [sourcePaths.data, 'value']) as JsonObject;
+      if (target) {
+        if (sourcePaths.data === 'data') {
+          const data = target as JsonObject;
 
-        handleChange(refreshData(fieldPaths, data));
-      } else {
-        const records = (_get(props, [sourcePaths.data, 'value']) ||
-          []) as JsonObject[];
+          handleChange(refreshData(fieldPaths, data));
+        } else {
+          const records = target as JsonObject[];
 
-        handleChange(records.map((data) => refreshData(fieldPaths, data)));
+          handleChange(records.map((data) => refreshData(fieldPaths, data)));
+        }
       }
     }, 200);
   }, [sourcePaths.data, props, handleChange]);

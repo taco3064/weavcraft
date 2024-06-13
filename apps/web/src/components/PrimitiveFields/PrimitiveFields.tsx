@@ -35,7 +35,7 @@ const Primitive: PrimitiveFields = {
       disablePortal
       fullWidth
       onChange={(_e, value) => onChange?.(value?.label)}
-      options={Object.keys(Core.FaIcon).map((label) => ({
+      options={Object.keys(Core.fontawesomes).map((label) => ({
         label,
       }))}
       renderOption={(props, { label }) => (

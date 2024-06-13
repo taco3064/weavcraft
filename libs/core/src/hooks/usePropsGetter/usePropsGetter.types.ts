@@ -1,7 +1,5 @@
 import type { IsNever, JsonObject, Paths } from 'type-fest';
 
-//* keyof ConditionalExcept<Required<P>, Function>
-
 export interface MappableProps<
   D extends JsonObject,
   PropName extends string = string

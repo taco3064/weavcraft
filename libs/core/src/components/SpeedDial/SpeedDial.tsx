@@ -34,57 +34,52 @@ const ORIGIN: Origin = {
 export default function SpeedDial<D extends JsonObject>(
   props: SpeedDialProps<D>
 ) {
-  const [
-    StoreProvider,
-    {
-      ariaLabel = 'SpeedDial',
-      containerId,
-      icon,
-      itemProps,
-      openIcon,
-      position = 'bottom-left',
-      records,
-      onItemClick,
-    },
-  ] = useStoreProps(props);
+  const {
+    ariaLabel = 'SpeedDial',
+    containerId,
+    icon,
+    itemProps,
+    openIcon,
+    position = 'bottom-left',
+    records,
+    onItemClick,
+  } = useStoreProps(props);
 
   const [cssPosition, setCssPosition] = useState<Property.Position>('fixed');
   const [vertical, horizontal] = position.split('-') as PositionSplit;
   const { direction, tooltipPlacement } = ORIGIN[`${vertical}-${horizontal}`];
 
   return (
-    <StoreProvider>
-      <PortalContainer
-        id={containerId}
-        onContainerRetrieved={(container) => {
-          setCssPosition('absolute');
-          container.style.position = 'relative';
-        }}
+    <PortalContainer
+      id={containerId}
+      onContainerRetrieved={(container) => {
+        setCssPosition('absolute');
+        container.style.position = 'relative';
+      }}
+    >
+      <MuiSpeedDial
+        data-testid="SpeedDial"
+        ariaLabel={ariaLabel}
+        direction={direction}
+        icon={<Icon code={icon} />}
+        openIcon={<Icon code={openIcon} />}
+        sx={(theme) => ({
+          position: cssPosition,
+          [vertical]: theme.spacing(1),
+          [horizontal]: theme.spacing(1),
+        })}
       >
-        <MuiSpeedDial
-          data-testid="SpeedDial"
-          ariaLabel={ariaLabel}
-          direction={direction}
-          icon={<Icon code={icon} />}
-          openIcon={<Icon code={openIcon} />}
-          sx={(theme) => ({
-            position: cssPosition,
-            [vertical]: theme.spacing(1),
-            [horizontal]: theme.spacing(1),
-          })}
-        >
-          {records?.map((item, i) => (
-            <SpeedDialAction
-              {...itemProps}
-              data-testid="SpeedDialAction"
-              key={i}
-              data={item}
-              tooltipPlacement={tooltipPlacement}
-              onClick={() => onItemClick?.(item)}
-            />
-          ))}
-        </MuiSpeedDial>
-      </PortalContainer>
-    </StoreProvider>
+        {records?.map((item, i) => (
+          <SpeedDialAction
+            {...itemProps}
+            data-testid="SpeedDialAction"
+            key={i}
+            data={item}
+            tooltipPlacement={tooltipPlacement}
+            onClick={() => onItemClick?.(item)}
+          />
+        ))}
+      </MuiSpeedDial>
+    </PortalContainer>
   );
 }

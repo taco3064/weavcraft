@@ -4,13 +4,16 @@ import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import PropsSettingTabs from '../PropsSettingTabs';
+import PropsSettingTabs, { type ConfigType } from '../PropsSettingTabs';
+import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
@@ -37,6 +40,7 @@ export default withPropsDefinition(function WidgetEditor({
   const [editing, setEditing] = useState<RenderConfig>();
   const [previewMode, setPreviewMode] = useState(false);
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
+  const [activeProps, setActiveProps] = useState<ConfigType>('PrimitiveValue');
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
 
   const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
@@ -48,6 +52,7 @@ export default withPropsDefinition(function WidgetEditor({
   );
 
   const { t } = useTranslation();
+  const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
@@ -67,7 +72,15 @@ export default withPropsDefinition(function WidgetEditor({
     <WidgetEl key={key} {...withAppendNode(props, config)} />
   ));
 
-  console.log('===', value);
+  const { mutate: upsert } = useMutation({
+    mutationFn: upsertWidgetConfig,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: () =>
+      enqueueSnackbar(
+        t(`msg-success-${!config ? 'create' : 'update'}`, { name: title }),
+        { variant: 'success' }
+      ),
+  });
 
   return (
     <Slide in direction="up" timeout={1200}>
@@ -79,7 +92,11 @@ export default withPropsDefinition(function WidgetEditor({
         >
           {!previewMode && value.widget && (
             <Tooltip title={t('widgets:btn-widget-structure')}>
-              <IconButton size="large" onClick={() => onToggle(true)}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() => onToggle(true)}
+              >
                 <Core.Icon code="faCode" />
               </IconButton>
             </Tooltip>
@@ -92,7 +109,7 @@ export default withPropsDefinition(function WidgetEditor({
               }
             >
               <IconButton
-                color="secondary"
+                color="primary"
                 size="large"
                 onClick={() => setPreviewMode(!previewMode)}
               >
@@ -100,6 +117,22 @@ export default withPropsDefinition(function WidgetEditor({
               </IconButton>
             </Tooltip>
           )}
+
+          <Tooltip title={t('btn-save')}>
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() =>
+                upsert({
+                  hierarchyId: query.id as string,
+                  input: value as WidgetConfigs,
+                  isTutorialMode,
+                })
+              }
+            >
+              <Core.Icon code="faSave" />
+            </IconButton>
+          </Tooltip>
         </PortalWrapper>
 
         <Container
@@ -140,6 +173,7 @@ export default withPropsDefinition(function WidgetEditor({
                 startTransition(() => {
                   onToggle(true);
                   setActivePrimitive(paths);
+                  setActiveProps('PrimitiveValue');
                   setPortalMode('setting');
                   setEditing(target);
                 })
@@ -149,8 +183,10 @@ export default withPropsDefinition(function WidgetEditor({
 
           {portalMode === 'setting' && (
             <PropsSettingTabs
+              active={activeProps}
               config={editing}
               paths={activePrimitive}
+              onActiveChange={setActiveProps}
               onChange={onConfigChange}
               onClose={() =>
                 startTransition(() => {

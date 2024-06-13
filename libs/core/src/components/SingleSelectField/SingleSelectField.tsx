@@ -9,10 +9,8 @@ export default function SingleSelectField<
   D extends JsonObject,
   Path extends Extract<Paths<D>, string>
 >(props: SingleSelectFieldProps<D, Path>) {
-  const [
-    StoreProvider,
-    { emptyText, optionIndicator, optionProps, records, ...fieldProps },
-  ] = useStoreProps(props);
+  const { emptyText, optionIndicator, optionProps, records, ...fieldProps } =
+    useStoreProps(props);
 
   const displayEmpty = Boolean(emptyText);
 
@@ -23,27 +21,25 @@ export default function SingleSelectField<
   });
 
   return (
-    <StoreProvider>
-      <BaseField
-        {...fieldProps}
-        select
-        data-testid="SingleSelectField"
-        adornmentPosition="start"
-        SelectProps={{
-          displayEmpty,
-          MenuProps: {
-            PaperProps: { 'data-testid': 'SingleSelectFieldMenu' },
-          },
-        }}
-      >
-        {displayEmpty && (
-          <MuiMenuItem value="" data-testid="SingleSelectFieldEmptyOption">
-            {emptyText}
-          </MuiMenuItem>
-        )}
+    <BaseField
+      {...fieldProps}
+      select
+      data-testid="SingleSelectField"
+      adornmentPosition="start"
+      SelectProps={{
+        displayEmpty,
+        MenuProps: {
+          PaperProps: { 'data-testid': 'SingleSelectFieldMenu' },
+        },
+      }}
+    >
+      {displayEmpty && (
+        <MuiMenuItem value="" data-testid="SingleSelectFieldEmptyOption">
+          {emptyText}
+        </MuiMenuItem>
+      )}
 
-        {children}
-      </BaseField>
-    </StoreProvider>
+      {children}
+    </BaseField>
   );
 }

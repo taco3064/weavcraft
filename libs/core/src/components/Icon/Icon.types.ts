@@ -7,7 +7,7 @@ import type { JsonObject } from 'type-fest';
 
 import type { PropsWithMappedData } from '../../hooks';
 
-export const FaIcon = { ...FaSolid, ...FaBrands } as const;
+export const fontawesomes = { ...FaSolid, ...FaBrands } as const;
 
 type FortawesomeCode<T> = {
   [K in keyof T]: T[K] extends IconDefinition ? K : never;
@@ -18,7 +18,7 @@ type MuiIconProps = Pick<
   'className' | 'color' | 'fontSize'
 >;
 
-export type IconCode = FortawesomeCode<typeof FaIcon>;
+export type IconCode = FortawesomeCode<typeof fontawesomes>;
 
 export type IconProps<D extends JsonObject> = PropsWithMappedData<
   D,
