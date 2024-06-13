@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.42](https://github.com/taco3064/weavcraft/compare/v0.0.41...v0.0.42) (2024-06-13)
+
+
+### Features
+
+* **web/services:** add upsert method of widgets ([e104f22](https://github.com/taco3064/weavcraft/commit/e104f22ce1966d47f4006037612c52e4ee397f40))
+
+
+### Bug Fixes
+
+* **@weavcraft/core:** change operation logic ([a7bc52b](https://github.com/taco3064/weavcraft/commit/a7bc52bc01a9bc9388a4af8e43bce8c251add4e1))
+
 ### [0.0.41](https://github.com/taco3064/weavcraft/compare/v0.0.40...v0.0.41) (2024-06-07)
 
 
