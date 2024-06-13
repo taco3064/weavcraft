@@ -10,17 +10,15 @@ import type { MenuItemVariant, MenuProps } from './Menu.types';
 export default function Menu<D extends JsonObject, V extends MenuItemVariant>(
   props: MenuProps<D, V>
 ) {
-  const [
-    StoreProvider,
-    { toggle, itemProps, itemVariant, records, onItemClick, ...menuProps },
-  ] = useStoreProps(props);
+  const { toggle, itemProps, itemVariant, records, onItemClick, ...menuProps } =
+    useStoreProps(props);
 
   const { type: Toggle, props: toggleProps } = toggle || {};
   const [open, setOpen] = useState(false);
   const id = useId();
 
   return (
-    <StoreProvider>
+    <>
       {Toggle && (
         <Toggle
           {...toggleProps}
@@ -59,6 +57,6 @@ export default function Menu<D extends JsonObject, V extends MenuItemVariant>(
           </MuiMenuItem>
         ))}
       </MuiMenu>
-    </StoreProvider>
+    </>
   );
 }

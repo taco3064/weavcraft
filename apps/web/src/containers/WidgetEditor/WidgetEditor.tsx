@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import PropsSettingTabs from '../PropsSettingTabs';
+import PropsSettingTabs, { type ConfigType } from '../PropsSettingTabs';
 import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
@@ -40,6 +40,7 @@ export default withPropsDefinition(function WidgetEditor({
   const [editing, setEditing] = useState<RenderConfig>();
   const [previewMode, setPreviewMode] = useState(false);
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
+  const [activeProps, setActiveProps] = useState<ConfigType>('PrimitiveValue');
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
 
   const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
@@ -81,8 +82,6 @@ export default withPropsDefinition(function WidgetEditor({
       ),
   });
 
-  console.log('===', value);
-
   return (
     <Slide in direction="up" timeout={1200}>
       <Container disableGutters className={classes.root} maxWidth={maxWidth}>
@@ -93,7 +92,11 @@ export default withPropsDefinition(function WidgetEditor({
         >
           {!previewMode && value.widget && (
             <Tooltip title={t('widgets:btn-widget-structure')}>
-              <IconButton size="large" onClick={() => onToggle(true)}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() => onToggle(true)}
+              >
                 <Core.Icon code="faCode" />
               </IconButton>
             </Tooltip>
@@ -106,7 +109,7 @@ export default withPropsDefinition(function WidgetEditor({
               }
             >
               <IconButton
-                color="secondary"
+                color="primary"
                 size="large"
                 onClick={() => setPreviewMode(!previewMode)}
               >
@@ -117,7 +120,7 @@ export default withPropsDefinition(function WidgetEditor({
 
           <Tooltip title={t('btn-save')}>
             <IconButton
-              color="secondary"
+              color="primary"
               size="large"
               onClick={() =>
                 upsert({
@@ -170,6 +173,7 @@ export default withPropsDefinition(function WidgetEditor({
                 startTransition(() => {
                   onToggle(true);
                   setActivePrimitive(paths);
+                  setActiveProps('PrimitiveValue');
                   setPortalMode('setting');
                   setEditing(target);
                 })
@@ -179,8 +183,10 @@ export default withPropsDefinition(function WidgetEditor({
 
           {portalMode === 'setting' && (
             <PropsSettingTabs
+              active={activeProps}
               config={editing}
               paths={activePrimitive}
+              onActiveChange={setActiveProps}
               onChange={onConfigChange}
               onClose={() =>
                 startTransition(() => {

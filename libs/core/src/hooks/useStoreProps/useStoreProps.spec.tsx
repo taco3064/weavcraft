@@ -65,16 +65,14 @@ describe('makeStoreProps', () => {
   }
 
   function Dummies(props: PropsWithMappedStore<{ name: string }>) {
-    const [StoreProvider, { records }] = useStoreProps(props);
+    const { records } = useStoreProps(props);
 
     return (
-      <StoreProvider>
-        <div data-testid="dummies">
-          {records?.map(({ name }, i) => (
-            <span key={i}>{name}</span>
-          ))}
-        </div>
-      </StoreProvider>
+      <div data-testid="dummies">
+        {records?.map(({ name }, i) => (
+          <span key={i}>{name}</span>
+        ))}
+      </div>
     );
   }
 

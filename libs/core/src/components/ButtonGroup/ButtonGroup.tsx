@@ -9,48 +9,43 @@ import type { ButtonGroupProps } from './ButtonGroup.types';
 export default function ButtonGroup<D extends JsonObject>(
   props: ButtonGroupProps<D>
 ) {
-  const [
-    StoreProvider,
-    {
-      borderRadiusVariant,
-      itemProps,
-      records,
-      onItemClick,
-      ...buttonGroupProps
-    },
-  ] = useStoreProps(props);
+  const {
+    borderRadiusVariant,
+    itemProps,
+    records,
+    onItemClick,
+    ...buttonGroupProps
+  } = useStoreProps(props);
 
   const { classes } = useCommonStyles();
 
   return (
-    <StoreProvider>
-      <MuiButtonGroup
-        {...buttonGroupProps}
-        data-testid="ButtonGroup"
-        className={classes.fullWidth}
-        style={{
-          ...(borderRadiusVariant === 'none' && {
-            borderRadius: 0,
-          }),
-          ...(borderRadiusVariant === 'top' && {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }),
-          ...(borderRadiusVariant === 'bottom' && {
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-          }),
-        }}
-      >
-        {records?.map((item, i) => (
-          <Button
-            {...itemProps}
-            key={i}
-            data={item}
-            onClick={() => onItemClick?.(item)}
-          />
-        ))}
-      </MuiButtonGroup>
-    </StoreProvider>
+    <MuiButtonGroup
+      {...buttonGroupProps}
+      data-testid="ButtonGroup"
+      className={classes.fullWidth}
+      style={{
+        ...(borderRadiusVariant === 'none' && {
+          borderRadius: 0,
+        }),
+        ...(borderRadiusVariant === 'top' && {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+        }),
+        ...(borderRadiusVariant === 'bottom' && {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        }),
+      }}
+    >
+      {records?.map((item, i) => (
+        <Button
+          {...itemProps}
+          key={i}
+          data={item}
+          onClick={() => onItemClick?.(item)}
+        />
+      ))}
+    </MuiButtonGroup>
   );
 }

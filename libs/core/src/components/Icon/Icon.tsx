@@ -3,7 +3,7 @@ import _get from 'lodash/get';
 import { useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { FaIcon } from './Icon.types';
+import { fontawesomes } from './Icon.types';
 import { useGenerateProps } from '../../hooks';
 import type { IconProps } from './Icon.types';
 
@@ -12,7 +12,7 @@ export default function Icon<D extends JsonObject>(props: IconProps<D>) {
     useGenerateProps<D, IconProps<D>>(props);
 
   const options = useMemo(() => {
-    const icon = _get(FaIcon, [code!, 'icon']);
+    const icon = _get(fontawesomes, [code!, 'icon']);
 
     if (icon) {
       const [width, height, , , svgPathData] = icon;

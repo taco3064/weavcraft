@@ -11,8 +11,7 @@ export default function RadioGroup<
   D extends JsonObject,
   Path extends Extract<Paths<D>, string>
 >(props: RadioGroupProps<D, Path>) {
-  const [StoreProvider, radioGroupProps] = useStoreProps(props);
-
+  const radioGroupProps = useStoreProps(props);
   const { name, title, optionProps, records } = radioGroupProps;
 
   const { selected, onChange } = useSingleSelection<D, Path, BaseRadioProps<D>>(
@@ -20,24 +19,22 @@ export default function RadioGroup<
   );
 
   return (
-    <StoreProvider>
-      <MuiFormControl component="fieldset" data-testid="RadioGroup">
-        {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
+    <MuiFormControl component="fieldset" data-testid="RadioGroup">
+      {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
 
-        <MuiFormGroup>
-          {records?.map((data, i) => (
-            <Selection
-              name={name}
-              {...optionProps}
-              variant="radio"
-              key={i}
-              checked={selected[i]}
-              data={data}
-              onChange={(checked, data) => onChange(checked, data as D)}
-            />
-          ))}
-        </MuiFormGroup>
-      </MuiFormControl>
-    </StoreProvider>
+      <MuiFormGroup>
+        {records?.map((data, i) => (
+          <Selection
+            name={name}
+            {...optionProps}
+            variant="radio"
+            key={i}
+            checked={selected[i]}
+            data={data}
+            onChange={(checked, data) => onChange(checked, data as D)}
+          />
+        ))}
+      </MuiFormGroup>
+    </MuiFormControl>
   );
 }

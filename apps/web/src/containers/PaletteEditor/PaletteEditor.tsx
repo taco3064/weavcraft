@@ -71,7 +71,7 @@ export default function PaletteEditor({
         >
           <Tooltip title={t(`btn-${isPreviewMode ? 'undo' : 'preview'}`)}>
             <IconButton
-              color="secondary"
+              color="primary"
               size="large"
               onClick={() => onPaletteApply(isPreviewMode ? undefined : value)}
             >
@@ -83,7 +83,7 @@ export default function PaletteEditor({
 
           <Tooltip title={t('btn-save')}>
             <IconButton
-              color="secondary"
+              color="primary"
               size="large"
               onClick={() =>
                 upsert({

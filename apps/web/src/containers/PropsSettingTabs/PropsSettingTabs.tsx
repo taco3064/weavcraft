@@ -14,22 +14,19 @@ import PropMapping from './PropsSettingTabs.PropMapping';
 import { EditorList } from '~web/components';
 import { usePathDescription } from '~web/hooks';
 import { useMainStyles } from './PropsSettingTabs.styles';
-
-import type {
-  ConfigType,
-  PropsSettingTabsProps,
-} from './PropsSettingTabs.types';
+import type { PropsSettingTabsProps } from './PropsSettingTabs.types';
 
 const ELEVATION = 4;
 
 export default function PropsSettingTabs({
+  active,
   config,
   paths,
+  onActiveChange,
   onChange,
   onClose,
 }: PropsSettingTabsProps) {
   const description = usePathDescription(paths);
-  const [active, setActive] = useState<ConfigType>('PrimitiveValue');
   const [expanded, setExpanded] = useState<number | 'data'>(0);
 
   const { t } = useTranslation();
@@ -48,7 +45,7 @@ export default function PropsSettingTabs({
             textColor="secondary"
             variant="fullWidth"
             value={active}
-            onChange={(_e, value) => setActive(value)}
+            onChange={(_e, value) => onActiveChange(value)}
           >
             <Tab
               iconPosition="start"
