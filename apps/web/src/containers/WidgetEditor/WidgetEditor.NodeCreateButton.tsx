@@ -28,21 +28,22 @@ const GLOBAL_STYLES = (
 );
 
 export default function NodeCreateButton({
+  config,
   path,
   variant,
-  widgetId,
   onClick,
 }: NodeCreateButtonProps) {
   const [, startTransition] = useTransition();
+  const [visible, setVisible] = useState(true);
   const [open, setOpen] = useState(false);
 
   const { t } = useTranslation();
   const { classes, cx } = useNodeCreateButtonStyles();
 
   const { subtitle, tooltip, items } = useNodeCreate({
+    config,
     path,
     variant,
-    widgetId,
   });
 
   return (
@@ -52,7 +53,17 @@ export default function NodeCreateButton({
       <Tooltip title={tooltip}>
         <IconButton
           className={cx(classes.toggle, CLASS_NAME)}
+          size="small"
+          sx={{ display: visible ? null : 'none' }}
           onClick={() => setOpen(true)}
+          ref={(el) =>
+            /**
+             * * If the parent element of the Button has an id,
+             * * it indicates that it is rendered through the createPortal method from @weavcraft/core,
+             * * hence the create button does not need to be displayed.
+             */
+            setVisible(!el?.parentElement?.hasAttribute('id'))
+          }
         >
           <Core.Icon code="faAdd" />
         </IconButton>

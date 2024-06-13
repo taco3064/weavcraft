@@ -3,7 +3,6 @@ import type { ContainerProps } from '@mui/material/Container';
 import type { ConfigChangeHandler } from '../PropsSettingTabs';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PortalContainerEl } from '~web/contexts';
-
 import type { WidgetConfigs, WidgetType } from '~web/services';
 
 export type NodeCreateVariant = 'action' | 'node';
@@ -32,8 +31,8 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
 }
 
 export interface NodeCreateButtonProps {
+  config?: RenderConfig;
   path?: string;
   variant: NodeCreateVariant;
-  widgetId?: WidgetType;
   onClick: (widget: WidgetType) => void;
 }

@@ -2,7 +2,7 @@ import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo } from 'react';
+import { createElement, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
@@ -86,14 +86,15 @@ export function useChangeEvents(
 }
 
 export function useNodeCreate({
+  config,
   path,
   variant,
-  widgetId,
-}: Pick<NodeCreateButtonProps, 'path' | 'variant' | 'widgetId'>) {
+}: Pick<NodeCreateButtonProps, 'config' | 'path' | 'variant'>) {
   const { t } = useTranslation();
   const { getDefinition } = usePropsDefinition();
+  const { widget } = config || {};
 
-  const subtitle = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
+  const subtitle = [widget && t(`widgets:lbl-widgets.${widget}`), path]
     .filter(Boolean)
     .join(' - ');
 
@@ -116,6 +117,7 @@ export function useNodeCreate({
                 getDefinition(widget);
 
               if (
+                /^(Avatar|Icon)$/.test(widget) ||
                 variant !== 'action' ||
                 'onClick' in eventCallbackProps ||
                 _get(elementNodeProps, 'toggle.definition.clickable')
@@ -170,8 +172,8 @@ export function useNodeCreateButton(
         const appendNode = createElement(AppendNode, {
           key: 'append',
           path,
+          config,
           variant: clickable ? 'action' : 'node',
-          widgetId: widget,
           onClick: (widget) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
