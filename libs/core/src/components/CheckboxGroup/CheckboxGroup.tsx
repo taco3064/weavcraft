@@ -15,7 +15,7 @@ export default function CheckboxGroup<
   D extends JsonObject,
   Path extends Extract<Paths<D>, string>
 >(props: CheckboxGroupProps<D, Path>) {
-  const [StoreProvider, checkboxGroupProps] = useStoreProps(props);
+  const checkboxGroupProps = useStoreProps(props);
   const { name, title, optionProps, records } = checkboxGroupProps;
 
   const { selected, onChange } = useMultipleSelection<
@@ -25,24 +25,22 @@ export default function CheckboxGroup<
   >(checkboxGroupProps);
 
   return (
-    <StoreProvider>
-      <MuiFormControl component="fieldset" data-testid="CheckboxGroup">
-        {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
+    <MuiFormControl component="fieldset" data-testid="CheckboxGroup">
+      {title && <MuiFormLabel component="legend">{title}</MuiFormLabel>}
 
-        <MuiFormGroup>
-          {records?.map((data, i) => (
-            <Selection
-              name={name}
-              {...optionProps}
-              variant="checkbox"
-              key={i}
-              checked={selected[i]}
-              data={data}
-              onChange={(checked, data) => onChange(checked, data as D)}
-            />
-          ))}
-        </MuiFormGroup>
-      </MuiFormControl>
-    </StoreProvider>
+      <MuiFormGroup>
+        {records?.map((data, i) => (
+          <Selection
+            name={name}
+            {...optionProps}
+            variant="checkbox"
+            key={i}
+            checked={selected[i]}
+            data={data}
+            onChange={(checked, data) => onChange(checked, data as D)}
+          />
+        ))}
+      </MuiFormGroup>
+    </MuiFormControl>
   );
 }

@@ -67,5 +67,29 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
           widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
         ];
       });
+
+    mock
+      .onPost(new RegExp(`^${baseURL}/configs/widgets/.+$`))
+      .reply((config) => {
+        const hierarchyId = config.url?.split('/').pop() as string;
+        const input = JSON.parse(config.data) as WidgetConfigs;
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+        const widgetsDb = getDb<WidgetConfigs>('widgets');
+
+        hierarchyDb.update((hierarchyStore) => {
+          const payloadId = hierarchyStore[hierarchyId]?.payloadId || nanoid();
+
+          _set(hierarchyStore, [hierarchyId, 'payloadId'], payloadId);
+
+          widgetsDb.update((widgetStore) => {
+            _set(widgetStore, payloadId, { ...input, id: payloadId });
+          });
+        });
+
+        widgetsDb.write();
+        hierarchyDb.write();
+
+        return [200, input];
+      });
   });
 });

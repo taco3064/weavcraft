@@ -12,12 +12,10 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
-import { PaletteViewer } from '~web/components';
-import { upsertThemePalette } from '~web/services';
+import { PaletteViewer, type ColorName } from '~web/components';
+import { upsertThemePalette, type ThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
-import type { ColorName } from '~web/components';
 import type { PaletteEditorProps } from './PaletteEditor.types';
-import type { ThemePalette } from '~web/services';
 
 import {
   PortalWrapper,
@@ -73,7 +71,7 @@ export default function PaletteEditor({
         >
           <Tooltip title={t(`btn-${isPreviewMode ? 'undo' : 'preview'}`)}>
             <IconButton
-              color="secondary"
+              color="primary"
               size="large"
               onClick={() => onPaletteApply(isPreviewMode ? undefined : value)}
             >
@@ -85,7 +83,7 @@ export default function PaletteEditor({
 
           <Tooltip title={t('btn-save')}>
             <IconButton
-              color="secondary"
+              color="primary"
               size="large"
               onClick={() =>
                 upsert({

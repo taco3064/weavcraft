@@ -23,7 +23,8 @@ export type SpeedDialProps<D extends JsonObject> = PropsWithMappedStore<
     openIcon?: IconCode;
     position?: `${PositionOrigin<'vertical'>}-${PositionOrigin<'horizontal'>}`;
     onItemClick?: (item: D) => void;
-  }
+  },
+  'containerId' | 'icon' | 'openIcon'
 >;
 
 //* - Variables

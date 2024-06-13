@@ -280,6 +280,10 @@ export const components: ThemeOptions['components'] = {
     },
   },
   MuiMenu: {
+    defaultProps: {
+      onPointerDown: (e) => e.stopPropagation(),
+      onTouchEnd: (e) => e.stopPropagation(),
+    },
     styleOverrides: {
       paper: {
         borderRadius: 12,

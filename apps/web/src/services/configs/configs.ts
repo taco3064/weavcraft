@@ -1,8 +1,8 @@
 import axios from 'axios';
-
 import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
+
 import type {
-  MutationtThemePaletteInput,
+  MutationtConfigInput,
   ThemePalette,
   WidgetConfigs,
 } from './configs.types';
@@ -37,9 +37,23 @@ export const upsertThemePalette = withConnRefusedCatch(async function ({
   hierarchyId,
   input,
   isTutorialMode,
-}: MutationtThemePaletteInput) {
+}: MutationtConfigInput<ThemePalette>) {
   const { data } = await axios.post<ThemePalette>(
     `/configs/themes/${hierarchyId}`,
+    input,
+    { baseURL: isTutorialMode ? '/mocks' : '/service' }
+  );
+
+  return data;
+});
+
+export const upsertWidgetConfig = withConnRefusedCatch(async function ({
+  hierarchyId,
+  input,
+  isTutorialMode,
+}: MutationtConfigInput<WidgetConfigs>) {
+  const { data } = await axios.post<WidgetConfigs>(
+    `/configs/widgets/${hierarchyId}`,
     input,
     { baseURL: isTutorialMode ? '/mocks' : '/service' }
   );

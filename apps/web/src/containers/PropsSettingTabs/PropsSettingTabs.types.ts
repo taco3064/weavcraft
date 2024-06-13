@@ -44,8 +44,10 @@ interface BaseSettingProps {
 
 export interface PropsSettingTabsProps
   extends Pick<EditorListProps, 'onClose'> {
+  active: ConfigType;
   config?: RenderConfig;
   paths: ConfigPaths;
+  onActiveChange: (active: ConfigType) => void;
   onChange: ConfigChangeHandler;
 }
 

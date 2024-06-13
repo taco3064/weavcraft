@@ -12,17 +12,14 @@ import type { GridProps, ItemVariant } from './Grid.types';
 export default function Grid<D extends JsonObject, V extends ItemVariant>(
   props: GridProps<D, V>
 ) {
-  const [
-    StoreProvider,
-    {
-      children,
-      columns = 12,
-      itemVariant,
-      itemProps = {},
-      records = [],
-      ...gridProps
-    },
-  ] = useStoreProps(props);
+  const {
+    children,
+    columns = 12,
+    itemVariant,
+    itemProps = {},
+    records = [],
+    ...gridProps
+  } = useStoreProps(props);
 
   const { classes } = useCommonStyles();
   const templates = Children.toArray(children);
@@ -47,25 +44,23 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
   }, [columns, stringifyProps]);
 
   return (
-    <StoreProvider>
-      <MuiGrid
-        {...gridProps}
-        container
-        data-testid="Grid"
-        columns={columns}
-        className={classes.minHeight}
-      >
-        {records?.map((item, i) => (
-          <GridItem {...gridItemProps} key={i} data={item}>
-            {(itemVariant === 'unique' ? [templates[i]] : templates).map(
-              (template, ii) =>
-                !isValidElement(template)
-                  ? null
-                  : cloneElement(template, { key: ii })
-            )}
-          </GridItem>
-        ))}
-      </MuiGrid>
-    </StoreProvider>
+    <MuiGrid
+      {...gridProps}
+      container
+      data-testid="Grid"
+      columns={columns}
+      className={classes.minHeight}
+    >
+      {records?.map((item, i) => (
+        <GridItem {...gridItemProps} key={i} data={item}>
+          {(itemVariant === 'unique' ? [templates[i]] : templates).map(
+            (template, ii) =>
+              !isValidElement(template)
+                ? null
+                : cloneElement(template, { key: ii })
+          )}
+        </GridItem>
+      ))}
+    </MuiGrid>
   );
 }

@@ -35,7 +35,7 @@ describe('makeStoreProps', () => {
     );
   });
 
-  it('should pass the original props', () => {
+  it('should override props by data value', () => {
     const override = [...records, { name: 'John Doe' }];
 
     const { getByTestId } = render(
@@ -45,7 +45,7 @@ describe('makeStoreProps', () => {
     );
 
     expect(getByTestId('dummies').querySelectorAll('span')).toHaveLength(
-      records.length
+      records.length + 1
     );
   });
 
@@ -65,16 +65,14 @@ describe('makeStoreProps', () => {
   }
 
   function Dummies(props: PropsWithMappedStore<{ name: string }>) {
-    const [StoreProvider, { records }] = useStoreProps(props);
+    const { records } = useStoreProps(props);
 
     return (
-      <StoreProvider>
-        <div data-testid="dummies">
-          {records?.map(({ name }, i) => (
-            <span key={i}>{name}</span>
-          ))}
-        </div>
-      </StoreProvider>
+      <div data-testid="dummies">
+        {records?.map(({ name }, i) => (
+          <span key={i}>{name}</span>
+        ))}
+      </div>
     );
   }
 

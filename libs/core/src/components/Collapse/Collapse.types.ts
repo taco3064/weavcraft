@@ -15,5 +15,5 @@ export type CollapseProps<D extends JsonObject> = PropsWithMappedData<
     containerId?: string;
     toggle?: ReactElement<SlotProps>;
   },
-  keyof MuiCollapseProps
+  'containerId' | keyof MuiCollapseProps
 >;

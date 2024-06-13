@@ -6,11 +6,11 @@ import type {
 } from '@weavcraft/common';
 
 export type { ThemePalette };
-export type WidgetType = Exclude<keyof typeof Core, 'FaIcon'>;
+export type WidgetType = Exclude<keyof typeof Core, Lowercase<string>>;
 
-export type MutationtThemePaletteInput = {
+export type MutationtConfigInput<T> = {
   hierarchyId: string;
-  input: ThemePalette;
+  input: T;
   isTutorialMode?: boolean;
 };
 

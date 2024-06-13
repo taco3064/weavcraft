@@ -99,18 +99,17 @@ export default function PropMapping({
                         className={classes.row}
                         primary={
                           <TextField
+                            {...{ error, value }}
                             fullWidth
                             variant="outlined"
                             size="small"
                             margin="none"
                             label={propPath}
-                            error={error}
                             helperText={
                               !error
                                 ? undefined
                                 : t('widgets:msg-prop-mapping-conflict')
                             }
-                            defaultValue={value}
                             onChange={(e) =>
                               onMappingChange(
                                 mappingPath,

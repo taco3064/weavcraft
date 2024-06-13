@@ -8,16 +8,13 @@ import type { AvatarGroupProps } from './AvatarGroup.types';
 export default function AvatarGroup<D extends JsonObject>(
   props: AvatarGroupProps<D>
 ) {
-  const [StoreProvider, { itemProps, records, ...avatarGroupProps }] =
-    useStoreProps(props);
+  const { itemProps, records, ...avatarGroupProps } = useStoreProps(props);
 
   return (
-    <StoreProvider>
-      <MuiAvatarGroup {...avatarGroupProps}>
-        {records?.map((item, i) => (
-          <Avatar key={i} {...itemProps} data={item} />
-        ))}
-      </MuiAvatarGroup>
-    </StoreProvider>
+    <MuiAvatarGroup {...avatarGroupProps}>
+      {records?.map((item, i) => (
+        <Avatar key={i} {...itemProps} data={item} />
+      ))}
+    </MuiAvatarGroup>
   );
 }

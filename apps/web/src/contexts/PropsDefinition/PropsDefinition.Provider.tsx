@@ -8,7 +8,7 @@ import type { PropsDefinitionProviderProps } from './PropsDefinition.types';
 export default lazy(async () => {
   const definitions = await Promise.all(
     Object.keys(Core)
-      .filter((widgetId) => widgetId !== 'FaIcon')
+      .filter((widgetId) => widgetId !== 'fontawesomes')
       .map((widgetId) => getPropsDefinition(widgetId as WidgetType))
   );
 
