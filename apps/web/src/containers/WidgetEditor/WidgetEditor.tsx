@@ -62,14 +62,14 @@ export default withPropsDefinition(function WidgetEditor({
     setValue
   );
 
-  const withAppendNode = useNodeCreateButton(
+  const withNodeCreateButton = useNodeCreateButton(
     NodeCreateButton,
     previewMode,
     changeEvents
   );
 
   const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
-    <WidgetEl key={key} {...withAppendNode(props, config)} />
+    <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
   ));
 
   const { mutate: upsert } = useMutation({
@@ -188,6 +188,7 @@ export default withPropsDefinition(function WidgetEditor({
               active={activeProps}
               config={editing}
               paths={activePrimitive}
+              widget={value as WidgetConfigs}
               onActiveChange={setActiveProps}
               onChange={onConfigChange}
               onClose={() =>

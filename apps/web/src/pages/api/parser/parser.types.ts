@@ -12,9 +12,15 @@ import type {
 } from '~web/services';
 
 type WidgetPropTypeDefinitions = {
-  DataBinding: Get<DataBindingPropsWithPath, ['dataBindingProps', string]>;
   ElementNode: Get<ElementNodePropsWithPath, ['elementNodeProps', string]>;
 
+  DataBinding: Get<
+    DataBindingPropsWithPath,
+    [
+      'dataBindingProps',
+      'data' | 'records' | 'propMapping' | `${string}.propMapping`
+    ]
+  >;
   EventCallback: Get<
     EventCallbackPropsWithPath,
     ['eventCallbackProps', string]

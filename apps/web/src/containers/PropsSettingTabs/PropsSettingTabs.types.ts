@@ -1,8 +1,12 @@
-import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 import type { JsonObject } from 'type-fest';
+import type { WidgetConfigs, WidgetType } from '~web/services';
 
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { WidgetType } from '~web/services';
+import type {
+  ConfigChangeHandler,
+  ConfigPaths,
+  ConfigProps,
+  RenderConfig,
+} from '~web/hooks';
 
 import type {
   EditorListClasses,
@@ -12,14 +16,7 @@ import type {
 } from '~web/components';
 
 //* Config Types
-type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type ConfigType = ConfigProps['type'];
-
-export type ConfigChangeHandler = (
-  config: RenderConfig,
-  propPath?: string,
-  propValue?: ConfigProps
-) => void;
 
 //* Data Binding Types
 export type DataFields = Record<string, PrimitiveProps>;
@@ -28,12 +25,6 @@ export type PropMappingItems = Record<
   string,
   { propPath: string; type: PrimitiveType }[]
 >;
-
-//* Fixed Data Types
-export type SourcePaths = {
-  binding: 'propMapping' | `${string}.propMapping`;
-  data: 'records' | 'data';
-};
 
 //* Component Props Type
 interface BaseSettingProps {
@@ -47,6 +38,7 @@ export interface PropsSettingTabsProps
   active: ConfigType;
   config?: RenderConfig;
   paths: ConfigPaths;
+  widget: WidgetConfigs;
   onActiveChange: (active: ConfigType) => void;
   onChange: ConfigChangeHandler;
 }
@@ -60,6 +52,8 @@ export interface PrimitiveListProps extends BaseSettingProps {
 export interface DataBindingProps extends BaseSettingProps {
   elevation?: number;
   expanded: number | 'data';
+  paths: ConfigPaths;
+  widget: WidgetConfigs;
   onExpand: (panel: number | 'data') => void;
 }
 

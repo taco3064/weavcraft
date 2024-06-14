@@ -21,28 +21,30 @@ import { useFixedData } from './PropsSettingTabs.hooks';
 import type { DataBindingProps } from './PropsSettingTabs.types';
 
 export default function FixedData({
-  config,
   elevation,
   expanded,
-  onChange,
+  paths,
+  widget,
   onExpand,
+  ...props
 }: DataBindingProps) {
+  const { config } = props;
+  const { t } = useTranslation();
+
   const [, startTransition] = useTransition();
   const [editing, setEditing] = useState<number>();
   const [open, setOpen] = useState(false);
 
-  const { widget, props = {} } = config;
-  const { t } = useTranslation();
-
   const { basePropPath, bindingFields, disabled, data, handleChange } =
-    useFixedData(config, onChange);
+    useFixedData(props);
 
   return (
     <>
       <DataCreateModal
-        {...{ basePropPath, bindingFields, open, widget }}
+        {...{ basePropPath, bindingFields, open }}
         key={open ? 'open' : 'close'}
         data={_get(props, ['records', 'value', editing as number])}
+        widget={config.widget}
         onChange={(e) =>
           typeof editing === 'number'
             ? handleChange.update(e, editing)
@@ -130,7 +132,7 @@ export default function FixedData({
             whiteSpace="pre-line"
           >
             {t('widgets:msg-fixed-data-description', {
-              widget: t(`widgets:lbl-widgets.${widget}`),
+              widget: t(`widgets:lbl-widgets.${config.widget}`),
             })}
           </Typography>
         </AccordionDetails>

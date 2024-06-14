@@ -17,20 +17,20 @@ import _get from 'lodash/get';
 import { useTranslation } from 'next-i18next';
 
 import { PrimitiveIcons } from '~web/components';
-import { usePropMapping } from './PropsSettingTabs.hooks';
+import { useMappingValidation, usePropMapping } from './PropsSettingTabs.hooks';
 import type { DataBindingProps } from './PropsSettingTabs.types';
 
 export default function PropMapping({
   classes,
-  config,
   elevation,
   expanded,
-  onChange,
   onExpand,
+  ...props
 }: DataBindingProps) {
-  const { widget, props = {} } = config;
+  const { config } = props;
   const { t } = useTranslation();
-  const { groups, invalid, onMappingChange } = usePropMapping(config, onChange);
+  const { invalid } = useMappingValidation(props);
+  const { groups, onMappingChange } = usePropMapping(props);
 
   return (
     <>
@@ -41,7 +41,7 @@ export default function PropMapping({
         whiteSpace="pre-line"
       >
         {t('widgets:msg-prop-mapping-description', {
-          widget: t(`widgets:lbl-widgets.${widget}`),
+          widget: t(`widgets:lbl-widgets.${config.widget}`),
         })}
       </Typography>
 
@@ -90,7 +90,8 @@ export default function PropMapping({
                   const error = errors.includes(propPath);
 
                   const value =
-                    _get(props, [mappingPath, 'value', propPath]) || '';
+                    _get(config, ['props', mappingPath, 'value', propPath]) ||
+                    '';
 
                   return (
                     <ListItem disableGutters key={propPath}>

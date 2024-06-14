@@ -87,7 +87,56 @@ export function useChangeEvents(
   };
 }
 
-export function useNodeCreate({
+export function useNodeCreateButton(
+  AppendNode: ComponentType<NodeCreateButtonProps>,
+  disabled: boolean,
+  {
+    onAddChild,
+    onAddLastChild,
+  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
+) {
+  const getDefinition = usePropsDefinitionGetter();
+
+  return <P extends object>(props: P, config: RenderConfig): P => {
+    if (disabled) {
+      return props;
+    }
+
+    const { widget } = config;
+    const definition = getDefinition(widget);
+    const { elementNodeProps } = definition;
+
+    return Object.entries(elementNodeProps || {}).reduce(
+      (result, [path, { definition }]) => {
+        const { clickable, multiple } = definition || {};
+        const target = _get(props, path);
+
+        const appendNode = createElement(AppendNode, {
+          key: 'append',
+          path,
+          config,
+          variant: clickable ? 'action' : 'node',
+          onClick: (widget) => {
+            const onAdd = multiple ? onAddLastChild : onAddChild;
+
+            onAdd(config, path, widget);
+          },
+        });
+
+        if (multiple) {
+          _set(result, path, [...((target || []) as ReactNode[]), appendNode]);
+        } else if (!target) {
+          _set(result, path, appendNode);
+        }
+
+        return result;
+      },
+      props
+    );
+  };
+}
+
+export function useNodeCreateInfo({
   config,
   path,
   variant,
@@ -145,54 +194,5 @@ export function useNodeCreate({
         ),
       [variant, getDefinition]
     ),
-  };
-}
-
-export function useNodeCreateButton(
-  AppendNode: ComponentType<NodeCreateButtonProps>,
-  disabled: boolean,
-  {
-    onAddChild,
-    onAddLastChild,
-  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
-) {
-  const getDefinition = usePropsDefinitionGetter();
-
-  return <P extends object>(props: P, config: RenderConfig): P => {
-    if (disabled) {
-      return props;
-    }
-
-    const { widget } = config;
-    const definition = getDefinition(widget);
-    const { elementNodeProps } = definition;
-
-    return Object.entries(elementNodeProps || {}).reduce(
-      (result, [path, { definition }]) => {
-        const { clickable, multiple } = definition || {};
-        const target = _get(props, path);
-
-        const appendNode = createElement(AppendNode, {
-          key: 'append',
-          path,
-          config,
-          variant: clickable ? 'action' : 'node',
-          onClick: (widget) => {
-            const onAdd = multiple ? onAddLastChild : onAddChild;
-
-            onAdd(config, path, widget);
-          },
-        });
-
-        if (multiple) {
-          _set(result, path, [...((target || []) as ReactNode[]), appendNode]);
-        } else if (!target) {
-          _set(result, path, appendNode);
-        }
-
-        return result;
-      },
-      props
-    );
   };
 }

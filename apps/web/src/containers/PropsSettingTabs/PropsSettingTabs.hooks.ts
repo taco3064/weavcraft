@@ -1,4 +1,3 @@
-import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
@@ -7,62 +6,20 @@ import { useMemo, useState, useTransition } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import { usePropsDefinitionGetter } from '~web/contexts';
-import type { RenderConfig } from '~web/hooks';
 import type { WidgetType } from '~web/services';
 
+import {
+  useDataChange,
+  useDataStructure,
+  useSourcePaths,
+  useStructureNode,
+} from '~web/hooks';
+
 import type {
-  ConfigChangeHandler,
   DataFields,
+  DataBindingProps,
   PropMappingItems,
-  SourcePaths,
 } from './PropsSettingTabs.types';
-
-function useDataChangeHandler(
-  config: RenderConfig,
-  dataPath: SourcePaths['data'],
-  onChange: ConfigChangeHandler
-) {
-  const { props = {} } = config;
-
-  return (e: JsonObject | JsonObject[]) => {
-    _set(props, [dataPath, 'value'], e);
-
-    onChange(
-      config,
-      dataPath,
-      Array.isArray(e) && !e.length
-        ? undefined
-        : {
-            type: 'DataBinding',
-            value: _get(props, [dataPath, 'value']) as typeof e,
-          }
-    );
-  };
-}
-
-function useSourcePaths(widget: WidgetType) {
-  const getDefinition = usePropsDefinitionGetter();
-
-  return useMemo<SourcePaths>(() => {
-    const { dataBindingProps = {} } = getDefinition(widget);
-    const configs = Object.entries(dataBindingProps);
-
-    const isRecordsCase = Boolean(
-      configs.find(
-        ([, { type, definition }]) =>
-          type === 'data' && _get(definition, 'multiple')
-      )
-    );
-
-    return {
-      data: isRecordsCase ? 'records' : 'data',
-
-      binding: configs.find(([path]) =>
-        isRecordsCase ? path.endsWith('.propMapping') : path === 'propMapping'
-      )?.[0] as SourcePaths['binding'],
-    };
-  }, [widget, getDefinition]);
-}
 
 export function useDataCreate(
   widget: WidgetType,
@@ -79,15 +36,18 @@ export function useDataCreate(
     const props = { ...elementNodeProps, ...primitiveValueProps };
 
     const result = Object.entries(bindingFields).reduce<DataFields>(
-      (acc, [propPath, fieldName]) => {
-        const path = basePropPath ? `${basePropPath}.${propPath}` : propPath;
-        const { [path]: propTypes } = props;
+      (acc, [propName, fieldPath]) => {
+        const propPath = basePropPath
+          ? `${basePropPath}.${propName}`
+          : propName;
+
+        const { [propPath]: propTypes } = props;
 
         return {
           ...acc,
-          ...(fieldName &&
+          ...(fieldPath &&
             propTypes && {
-              [fieldName]:
+              [fieldPath]:
                 propTypes.type !== 'node'
                   ? propTypes
                   : {
@@ -107,19 +67,20 @@ export function useDataCreate(
   }, [widget, basePropPath, stringify, getDefinition]);
 }
 
-export function useFixedData(
-  config: RenderConfig,
-  onChange: ConfigChangeHandler
-) {
+export function useFixedData({
+  config,
+  onChange,
+}: Pick<DataBindingProps, 'config' | 'onChange'>) {
   const { widget, props = {} } = config;
-  const sourcePaths = useSourcePaths(widget);
-  const handleChange = useDataChangeHandler(config, sourcePaths.data, onChange);
 
-  const bindingFields = (_get(props, [sourcePaths.binding, 'value']) ||
+  const sourcePaths = useSourcePaths(widget);
+  const modifyData = useDataChange(config, onChange);
+
+  const bindingFields = (_get(props, [sourcePaths.mapping, 'value']) ||
     {}) as Record<string, string>;
 
   return {
-    basePropPath: sourcePaths.binding.replace(/\.?propMapping$/, ''),
+    basePropPath: sourcePaths.mapping.replace(/\.?propMapping$/, ''),
     bindingFields,
     data: _get(props, [sourcePaths.data, 'value']) as JsonObject | JsonObject[],
 
@@ -130,13 +91,13 @@ export function useFixedData(
     handleChange: {
       create: (data: JsonObject) => {
         if (sourcePaths.data === 'data') {
-          handleChange(data);
+          modifyData.change(data);
         } else {
           const value = (_get(props, [sourcePaths.data, 'value']) ||
             []) as JsonObject[];
 
           value.push(data);
-          handleChange(value);
+          modifyData.change(value);
         }
       },
       delete: (index?: number) => {
@@ -148,104 +109,84 @@ export function useFixedData(
             []) as JsonObject[];
 
           value.splice(index, 1);
-          handleChange(value);
+          modifyData.change(value);
         }
       },
       update: (data: JsonObject, index?: number) => {
         if (sourcePaths.data === 'data') {
-          handleChange(data);
+          modifyData.change(data);
         } else if (typeof index === 'number') {
           const value = (_get(props, [sourcePaths.data, 'value']) ||
             []) as JsonObject[];
 
           value.splice(index, 1, data);
-          handleChange(value);
+          modifyData.change(value);
         }
       },
     },
   };
 }
 
-export function usePropMapping(
-  config: RenderConfig,
-  onChange: ConfigChangeHandler
-) {
-  const { widget, props = {} } = config;
-
-  const [, startTransition] = useTransition();
+export function useMappingValidation({
+  config,
+  paths,
+  widget,
+}: Pick<DataBindingProps, 'config' | 'paths' | 'widget'>) {
   const [invalid, setInvalid] = useState<Record<string, string[]>>(() => ({}));
 
-  const getDefinition = usePropsDefinitionGetter();
-  const sourcePaths = useSourcePaths(widget);
-  const handleChange = useDataChangeHandler(config, sourcePaths.data, onChange);
+  const parentNode = useStructureNode(widget, paths, config);
+  const grandNode = useStructureNode(widget, paths, parentNode);
 
-  const debouncedRefreshData = useMemo(() => {
-    const refreshData = (fieldPaths: string[], data: JsonObject) =>
-      fieldPaths.reduce<JsonObject>((result, path) => {
-        const value = _get(data, path);
-
-        return !value ? result : _set(result, path, value);
-      }, {});
-
-    return _debounce((mapping: Record<string, string>) => {
-      const fieldPaths = [...new Set(Object.values(mapping))];
-      const target = _get(props, [sourcePaths.data, 'value']);
-
-      if (target) {
-        if (sourcePaths.data === 'data') {
-          const data = target as JsonObject;
-
-          handleChange(refreshData(fieldPaths, data));
-        } else {
-          const records = target as JsonObject[];
-
-          handleChange(records.map((data) => refreshData(fieldPaths, data)));
-        }
-      }
-    }, 200);
-  }, [sourcePaths.data, props, handleChange]);
+  console.log(useDataStructure(parentNode));
+  console.log(useDataStructure(grandNode, true));
 
   return {
     invalid,
+  };
+}
 
+export function usePropMapping({
+  config,
+  onChange,
+}: Pick<DataBindingProps, 'config' | 'onChange'>) {
+  const { widget, props = {} } = config;
+
+  const [, startTransition] = useTransition();
+
+  const getDefinition = usePropsDefinitionGetter();
+  const modifyData = useDataChange(config, onChange);
+
+  return {
     groups: useMemo(() => {
-      const {
-        dataBindingProps = {},
-        elementNodeProps,
-        primitiveValueProps,
-      } = getDefinition(widget);
+      const { dataBindingProps, elementNodeProps, primitiveValueProps } =
+        getDefinition(widget);
 
       const props = { ...elementNodeProps, ...primitiveValueProps };
 
-      const result = Object.entries(dataBindingProps).reduce<PropMappingItems>(
-        (acc, [mappingPath, { type, definition }]) => {
-          const base = mappingPath.replace(/\.?propMapping$/, '');
-          const basePath = base ? `${base}.` : '';
+      const result = Object.entries(
+        dataBindingProps || {}
+      ).reduce<PropMappingItems>((acc, [mappingPath, { type, definition }]) => {
+        const base = mappingPath.replace(/\.?propMapping$/, '');
+        const basePath = base ? `${base}.` : '';
 
-          return {
-            ...acc,
-            ...(type === 'mapping' && {
-              [mappingPath]:
-                (definition as string[])
-                  ?.map((propPath) => {
-                    const type = _get(props, [
-                      `${basePath}${propPath}`,
-                      'type',
-                    ]);
+        if (type === 'mapping' && Array.isArray(definition)) {
+          acc[mappingPath] =
+            definition
+              .map((propPath) => {
+                const type = _get(props, [`${basePath}${propPath}`, 'type']);
 
-                    return {
-                      propPath,
-                      type: type === 'node' ? 'string' : type,
-                    };
-                  })
-                  .sort(({ propPath: p1 }, { propPath: p2 }) =>
-                    p1.localeCompare(p2)
-                  ) || [],
-            }),
-          };
-        },
-        {}
-      );
+                return {
+                  propPath,
+                  type: type === 'node' ? 'string' : type,
+                };
+              })
+              .sort(({ propPath: p1 }, { propPath: p2 }) =>
+                p1.localeCompare(p2)
+              ) || [];
+        }
+
+        return acc;
+      }, {});
 
       return Object.entries(result).sort(
         ([path1], [path2]) => path1.length - path2.length
@@ -263,26 +204,16 @@ export function usePropMapping(
           string
         >;
 
-        const conflicts = Object.keys(value).filter(
-          (propPath) => value[propPath] === fieldName
-        );
-
-        if (conflicts.length) {
-          _set(invalid, [mappingPath], [propName, ...conflicts]);
-        } else {
-          _unset(invalid, [mappingPath]);
-        }
-
-        if (fieldName.trim() && !conflicts.length) {
+        // TODO - Need to check validity of fieldName
+        if (fieldName.trim()) {
           _set(value, [propName], fieldName.trim());
-          propName === 'records' && handleChange([]);
+          propName === 'records' && modifyData.change([]);
         } else {
           _unset(value, [propName]);
         }
 
-        setInvalid({ ...invalid });
         onChange(config, mappingPath, { type: 'DataBinding', value });
-        debouncedRefreshData(value);
+        modifyData.debouncedRefresh(value);
       }),
   };
 }

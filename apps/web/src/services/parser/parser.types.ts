@@ -5,31 +5,38 @@ import type { WidgetType } from '../configs';
 
 type BasePropsWithPath<
   T extends WidgetPropTypes,
-  D extends PropTypeDefinitions.PropTypes
-> = Partial<Record<`${Uncapitalize<T>}Props`, { [Path: string]: D }>>;
+  P extends { [Path: string]: PropTypeDefinitions.PropTypes }
+> = Partial<Record<`${Uncapitalize<T>}Props`, P>>;
 
 export type DataBindingPropsWithPath = BasePropsWithPath<
   'DataBinding',
-  PropTypeDefinitions.Data | PropTypeDefinitions.Mapping
+  Record<`${string}.propMapping`, PropTypeDefinitions.Mapping> & {
+    propMapping: PropTypeDefinitions.Mapping;
+    data: PropTypeDefinitions.Data;
+    records: PropTypeDefinitions.Data;
+  }
 >;
 
 export type ElementNodePropsWithPath = BasePropsWithPath<
   'ElementNode',
-  PropTypeDefinitions.Node
+  { [Path: string]: PropTypeDefinitions.Node }
 >;
 
 export type EventCallbackPropsWithPath = BasePropsWithPath<
   'EventCallback',
-  PropTypeDefinitions.Function
+  { [Path: string]: PropTypeDefinitions.Function }
 >;
 
 export type PrimitiveValuePropsWithPath = BasePropsWithPath<
   'PrimitiveValue',
-  | PropTypeDefinitions.Boolean
-  | PropTypeDefinitions.Icon
-  | PropTypeDefinitions.Number
-  | PropTypeDefinitions.OneOf
-  | PropTypeDefinitions.String
+  {
+    [Path: string]:
+      | PropTypeDefinitions.Boolean
+      | PropTypeDefinitions.Icon
+      | PropTypeDefinitions.Number
+      | PropTypeDefinitions.OneOf
+      | PropTypeDefinitions.String;
+  }
 >;
 
 export interface PropsDefinition

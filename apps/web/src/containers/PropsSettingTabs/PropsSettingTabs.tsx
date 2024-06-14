@@ -22,6 +22,7 @@ export default function PropsSettingTabs({
   active,
   config,
   paths,
+  widget,
   onActiveChange,
   onChange,
   onClose,
@@ -76,14 +77,14 @@ export default function PropsSettingTabs({
             <Fade in>
               <Container maxWidth={false}>
                 <PropMapping
-                  {...{ config, expanded, onChange }}
+                  {...{ config, expanded, paths, widget, onChange }}
                   classes={{ ...editorClasses, row: classes.row }}
                   elevation={ELEVATION}
                   onExpand={setExpanded}
                 />
 
                 <FixedData
-                  {...{ config, expanded, onChange }}
+                  {...{ config, expanded, paths, widget, onChange }}
                   classes={{ ...editorClasses, row: classes.row }}
                   elevation={ELEVATION}
                   onExpand={setExpanded}

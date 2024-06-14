@@ -2,16 +2,17 @@ import Core from '@weavcraft/core';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { useState, useTransition } from 'react';
+import { nanoid } from 'nanoid';
+import { useCallback, useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
-import { useNodeCreate } from './WidgetEditor.hooks';
 import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
+import { useNodeCreateInfo } from './WidgetEditor.hooks';
 import type { NodeCreateButtonProps } from './WidgetEditor.types';
 import type { WidgetType } from '~web/services';
 
-const CLASS_NAME = 'NodeCreateButton-root';
+const CLASS_NAME = `NodeCreateButton-${nanoid(4)}`;
 
 const GLOBAL_STYLES = (
   <GlobalStyles
@@ -19,19 +20,19 @@ const GLOBAL_STYLES = (
       [`*:has(> .${CLASS_NAME})`]: {
         border: `1px dashed ${theme.palette.divider}`,
         borderRadius: theme.spacing(0.5),
-      },
-      [`*:has(> .${CLASS_NAME}:hover)`]: {
-        background: theme.palette.background.paper,
+
+        [`&:has(> .${CLASS_NAME}:hover)`]: {
+          background: theme.palette.action.hover,
+          filter: 'brightness(1.2)',
+        },
       },
     })}
   />
 );
 
 export default function NodeCreateButton({
-  config,
-  path,
-  variant,
   onClick,
+  ...props
 }: NodeCreateButtonProps) {
   const [, startTransition] = useTransition();
   const [visible, setVisible] = useState(true);
@@ -39,12 +40,16 @@ export default function NodeCreateButton({
 
   const { t } = useTranslation();
   const { classes, cx } = useNodeCreateButtonStyles();
+  const { subtitle, tooltip, items } = useNodeCreateInfo(props);
 
-  const { subtitle, tooltip, items } = useNodeCreate({
-    config,
-    path,
-    variant,
-  });
+  const buttonRef = useCallback((el: HTMLButtonElement | null) => {
+    /**
+     * * If the parent element of the Button has an id,
+     * * it indicates that it is rendered through the createPortal method from @weavcraft/core,
+     * * hence the create button does not need to be displayed.
+     */
+    setVisible(!el?.parentElement?.hasAttribute('id'));
+  }, []);
 
   return (
     <>
@@ -53,17 +58,10 @@ export default function NodeCreateButton({
       <Tooltip title={tooltip}>
         <IconButton
           className={cx(classes.toggle, CLASS_NAME)}
+          ref={buttonRef}
           size="small"
           sx={{ display: visible ? null : 'none' }}
           onClick={() => setOpen(true)}
-          ref={(el) =>
-            /**
-             * * If the parent element of the Button has an id,
-             * * it indicates that it is rendered through the createPortal method from @weavcraft/core,
-             * * hence the create button does not need to be displayed.
-             */
-            setVisible(!el?.parentElement?.hasAttribute('id'))
-          }
         >
           <Core.Icon code="faAdd" />
         </IconButton>

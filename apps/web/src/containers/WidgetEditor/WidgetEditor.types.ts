@@ -1,9 +1,13 @@
 import type { ContainerProps } from '@mui/material/Container';
 
-import type { ConfigChangeHandler } from '../PropsSettingTabs';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { PortalContainerEl } from '~web/contexts';
 import type { WidgetConfigs, WidgetType } from '~web/services';
+
+import type {
+  ConfigChangeHandler,
+  ConfigPaths,
+  RenderConfig,
+} from '~web/hooks';
 
 export type NodeCreateVariant = 'action' | 'node';
 
