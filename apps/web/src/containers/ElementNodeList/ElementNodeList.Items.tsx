@@ -10,7 +10,7 @@ import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import Action from './ElementNodeList.Action';
-import { usePropsDefinition } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 
 import type {
@@ -27,9 +27,10 @@ export default function Items({
   onDelete,
   onEdit,
 }: ItemsProps) {
+  const getDefinition = usePropsDefinitionGetter();
+
   const { widget, props = {} } = config;
   const { t } = useTranslation();
-  const { getDefinition } = usePropsDefinition();
 
   const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
     useMemo<NodePaths>(() => {

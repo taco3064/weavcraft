@@ -15,8 +15,8 @@ import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingTabs, { type ConfigType } from '../PropsSettingTabs';
 import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
-import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
+import { useMainStyles } from './WidgetEditor.styles';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { WidgetEditorProps } from './WidgetEditor.types';
 
@@ -81,6 +81,8 @@ export default withPropsDefinition(function WidgetEditor({
         { variant: 'success' }
       ),
   });
+
+  // console.log(useDataStructure(value));
 
   return (
     <Slide in direction="up" timeout={1200}>

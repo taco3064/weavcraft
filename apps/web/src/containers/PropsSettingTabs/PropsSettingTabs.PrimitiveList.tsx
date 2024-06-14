@@ -10,14 +10,15 @@ import { useTranslation } from 'next-i18next';
 import type { ChangeEvent, ReactNode } from 'react';
 
 import { PrimitiveFields } from '~web/components';
-import { usePropsDefinition } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
 import type { PrimitiveListProps } from './PropsSettingTabs.types';
 
 export default forwardRef<HTMLUListElement, PrimitiveListProps>(
   function PrimitiveList({ classes, config, onChange }, ref) {
+    const getDefinition = usePropsDefinitionGetter();
+
     const { widget, externalInjection = [], props = {} } = config;
     const { t } = useTranslation();
-    const { getDefinition } = usePropsDefinition();
 
     const items = useMemo(() => {
       const { primitiveValueProps = {} } = getDefinition(widget);

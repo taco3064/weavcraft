@@ -1,23 +1,20 @@
 import { createContext, useCallback, useContext } from 'react';
 
-import type { PropsDefinition, WidgetType } from '~web/services';
-import type { PropsDefinitionContextValue } from './PropsDefinition.types';
+import type {
+  GetDefinitionFn,
+  PropsDefinitionContextValue,
+} from './PropsDefinition.types';
 
 export const PropsDefinitionContext =
-  createContext<PropsDefinitionContextValue>([]);
+  createContext<PropsDefinitionContextValue | null>(null);
 
-export function usePropsDefinition() {
-  const definitions = useContext(PropsDefinitionContext);
+export function usePropsDefinitionGetter() {
+  const definitions = useContext(
+    PropsDefinitionContext
+  ) as PropsDefinitionContextValue;
 
-  return {
-    definitions,
-
-    getDefinition: useCallback(
-      (widgetId: WidgetType) =>
-        definitions.find(
-          ({ componentName }) => componentName === widgetId
-        ) as PropsDefinition,
-      [definitions]
-    ),
-  };
+  return useCallback<GetDefinitionFn>(
+    (widget) => definitions?.[widget],
+    [definitions]
+  );
 }

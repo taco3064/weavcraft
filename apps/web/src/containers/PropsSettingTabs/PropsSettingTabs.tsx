@@ -12,8 +12,8 @@ import FixedData from './PropsSettingTabs.FixedData';
 import PrimitiveList from './PropsSettingTabs.PrimitiveList';
 import PropMapping from './PropsSettingTabs.PropMapping';
 import { EditorList } from '~web/components';
-import { usePathDescription } from '~web/hooks';
 import { useMainStyles } from './PropsSettingTabs.styles';
+import { useWidgetNodePaths } from '~web/hooks';
 import type { PropsSettingTabsProps } from './PropsSettingTabs.types';
 
 const ELEVATION = 4;
@@ -26,16 +26,17 @@ export default function PropsSettingTabs({
   onChange,
   onClose,
 }: PropsSettingTabsProps) {
-  const description = usePathDescription(paths);
   const [expanded, setExpanded] = useState<number | 'data'>(0);
 
   const { t } = useTranslation();
   const { classes } = useMainStyles();
+  const { pathDescription } = useWidgetNodePaths(paths);
 
   return !config ? null : (
     <EditorList
-      {...{ description, onClose }}
       title={t('widgets:ttl-settings', { widget: config.widget })}
+      description={pathDescription}
+      onClose={onClose}
       render={(editorClasses) => (
         <ListItem disableGutters disablePadding className={classes.root}>
           <Tabs

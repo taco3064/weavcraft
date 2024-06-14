@@ -6,7 +6,7 @@ import _unset from 'lodash/unset';
 import { useMemo, useState, useTransition } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { usePropsDefinition } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
 import type { RenderConfig } from '~web/hooks';
 import type { WidgetType } from '~web/services';
 
@@ -41,7 +41,7 @@ function useDataChangeHandler(
 }
 
 function useSourcePaths(widget: WidgetType) {
-  const { getDefinition } = usePropsDefinition();
+  const getDefinition = usePropsDefinitionGetter();
 
   return useMemo<SourcePaths>(() => {
     const { dataBindingProps = {} } = getDefinition(widget);
@@ -69,7 +69,7 @@ export function useDataCreate(
   basePropPath: string,
   bindingFields: Record<string, string>
 ) {
-  const { getDefinition } = usePropsDefinition();
+  const getDefinition = usePropsDefinitionGetter();
   const stringify = JSON.stringify(bindingFields);
 
   return useMemo(() => {
@@ -121,8 +121,11 @@ export function useFixedData(
   return {
     basePropPath: sourcePaths.binding.replace(/\.?propMapping$/, ''),
     bindingFields,
-    disabled: _isEmpty(bindingFields),
     data: _get(props, [sourcePaths.data, 'value']) as JsonObject | JsonObject[],
+
+    disabled:
+      _isEmpty(bindingFields) ||
+      !_isEmpty(_get(props, ['propMapping', 'value', 'records'])),
 
     handleChange: {
       create: (data: JsonObject) => {
@@ -167,12 +170,12 @@ export function usePropMapping(
   config: RenderConfig,
   onChange: ConfigChangeHandler
 ) {
+  const { widget, props = {} } = config;
+
   const [, startTransition] = useTransition();
   const [invalid, setInvalid] = useState<Record<string, string[]>>(() => ({}));
 
-  const { widget, props = {} } = config;
-  const { getDefinition } = usePropsDefinition();
-
+  const getDefinition = usePropsDefinitionGetter();
   const sourcePaths = useSourcePaths(widget);
   const handleChange = useDataChangeHandler(config, sourcePaths.data, onChange);
 
@@ -272,6 +275,7 @@ export function usePropMapping(
 
         if (fieldName.trim() && !conflicts.length) {
           _set(value, [propName], fieldName.trim());
+          propName === 'records' && handleChange([]);
         } else {
           _unset(value, [propName]);
         }

@@ -1,45 +1,51 @@
 import Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 
-import { usePropsDefinition } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
 
 import type {
   ConfigPaths,
   GenerateOptions,
   RenderConfig,
   RenderFn,
-} from './useWidget.types';
+} from './useWidgetRender.types';
 
-export function getWidgetNodePaths(paths: ConfigPaths) {
-  return paths
-    .map((path) => (typeof path === 'string' ? ['props', path, 'value'] : path))
-    .flat();
-}
+export function useWidgetNodePaths(paths?: ConfigPaths) {
+  const stringify = JSON.stringify(paths || []);
 
-export function usePathDescription(paths: ConfigPaths) {
-  const stringify = JSON.stringify(paths);
+  const getNodePaths = useCallback(
+    (paths: ConfigPaths) =>
+      paths
+        .map((path) =>
+          typeof path === 'string' ? ['props', path, 'value'] : path
+        )
+        .flat(),
+    []
+  );
 
-  return useMemo(() => {
-    const paths: ConfigPaths = JSON.parse(stringify);
-    const lastIndex = paths.length - 1;
-    const isMultiple = typeof paths[lastIndex] === 'number';
+  return {
+    getNodePaths,
 
-    return [
-      paths[isMultiple ? lastIndex - 1 : lastIndex],
-      !isMultiple ? '' : `[${paths[lastIndex]}]`,
-    ].join('');
-  }, [stringify]);
-}
+    nodePaths: useMemo(() => getNodePaths(paths || []), [paths, getNodePaths]),
 
-export function useWidgetNodePaths(paths: ConfigPaths) {
-  return useMemo(() => getWidgetNodePaths(paths), [paths]);
+    pathDescription: useMemo(() => {
+      const paths: ConfigPaths = JSON.parse(stringify);
+      const lastIndex = paths.length - 1;
+      const isMultiple = typeof paths[lastIndex] === 'number';
+
+      return [
+        paths[isMultiple ? lastIndex - 1 : lastIndex],
+        !isMultiple ? '' : `[${paths[lastIndex]}]`,
+      ].join('');
+    }, [stringify]),
+  };
 }
 
 export function useWidgetRender(render: RenderFn) {
-  const { getDefinition } = usePropsDefinition();
+  const getDefinition = usePropsDefinitionGetter();
 
   return function generate(
     config: RenderConfig,

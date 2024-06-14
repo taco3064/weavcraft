@@ -9,13 +9,8 @@ import { useTranslation } from 'next-i18next';
 import Action from './ElementNodeList.Action';
 import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
+import { useWidgetNodePaths, type RenderConfig } from '~web/hooks';
 import type { ElementNodeListProps } from './ElementNodeList.types';
-
-import {
-  usePathDescription,
-  useWidgetNodePaths,
-  type RenderConfig,
-} from '~web/hooks';
 
 export default function ElementNodeList({
   config,
@@ -26,16 +21,18 @@ export default function ElementNodeList({
   onEdit,
 }: ElementNodeListProps) {
   const { t } = useTranslation();
+  const { nodePaths, pathDescription } = useWidgetNodePaths(active);
 
-  const paths = useWidgetNodePaths(active);
-  const description = usePathDescription(active);
-  const node: RenderConfig = !paths.length ? config : _get(config, paths);
+  const node: RenderConfig = !nodePaths.length
+    ? config
+    : _get(config, nodePaths);
 
   return !node ? null : (
     <EditorList
-      {...{ description, onClose }}
       key={active.join('|')}
       title={t('widgets:ttl-element-node')}
+      description={pathDescription}
+      onClose={onClose}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
 

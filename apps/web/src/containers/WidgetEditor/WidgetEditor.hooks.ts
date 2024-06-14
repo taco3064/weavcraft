@@ -2,14 +2,14 @@ import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo, useState } from 'react';
+import { createElement, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
-import { getWidgetNodePaths } from '~web/hooks';
-import { usePropsDefinition } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
+import { useWidgetNodePaths } from '~web/hooks';
 import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 import type { MenuItemOptions, RenderConfig } from '~web/hooks';
 import type { WidgetConfigs, WidgetType } from '~web/services';
@@ -27,6 +27,8 @@ export function useChangeEvents(
   value: RenderConfig,
   onChange: (value: RenderConfig) => void
 ): ChangeEvents {
+  const { getNodePaths } = useWidgetNodePaths();
+
   return {
     onAddChild: (config, path, widget) => {
       const propConfig: ElementNodeProp = {
@@ -68,7 +70,7 @@ export function useChangeEvents(
         return onChange({} as RenderConfig);
       }
 
-      const fullPaths = getWidgetNodePaths(paths);
+      const fullPaths = getNodePaths(paths);
       const lastPath = fullPaths.pop() as string | number;
 
       if (typeof lastPath !== 'number') {
@@ -90,8 +92,9 @@ export function useNodeCreate({
   path,
   variant,
 }: Pick<NodeCreateButtonProps, 'config' | 'path' | 'variant'>) {
+  const getDefinition = usePropsDefinitionGetter();
+
   const { t } = useTranslation();
-  const { getDefinition } = usePropsDefinition();
   const { widget } = config || {};
 
   const subtitle = [widget && t(`widgets:lbl-widgets.${widget}`), path]
@@ -153,7 +156,7 @@ export function useNodeCreateButton(
     onAddLastChild,
   }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
-  const { getDefinition } = usePropsDefinition();
+  const getDefinition = usePropsDefinitionGetter();
 
   return <P extends object>(props: P, config: RenderConfig): P => {
     if (disabled) {
