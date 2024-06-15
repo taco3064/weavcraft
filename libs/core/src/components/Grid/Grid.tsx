@@ -13,7 +13,6 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
   props: GridProps<D, V>
 ) {
   const {
-    children,
     columns = 12,
     itemVariant,
     itemProps = {},
@@ -22,7 +21,7 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
   } = useStoreProps(props);
 
   const { classes } = useCommonStyles();
-  const templates = Children.toArray(children);
+  const templates = Children.toArray(itemProps.content);
   const stringifyProps = JSON.stringify(itemProps);
 
   const gridItemProps = useMemo<GridItemProps<D>>(() => {
@@ -52,14 +51,17 @@ export default function Grid<D extends JsonObject, V extends ItemVariant>(
       className={classes.minHeight}
     >
       {records?.map((item, i) => (
-        <GridItem {...gridItemProps} key={i} data={item}>
-          {(itemVariant === 'unique' ? [templates[i]] : templates).map(
+        <GridItem
+          {...gridItemProps}
+          key={i}
+          data={item}
+          content={(itemVariant === 'unique' ? [templates[i]] : templates).map(
             (template, ii) =>
               !isValidElement(template)
                 ? null
                 : cloneElement(template, { key: ii })
           )}
-        </GridItem>
+        />
       ))}
     </MuiGrid>
   );

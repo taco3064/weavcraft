@@ -1,9 +1,9 @@
 import MuiImageListItem from '@mui/material/ImageListItem';
 import MuiImageListItemBar from '@mui/material/ImageListItemBar';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { PropsWithMappedData } from '../../hooks';
+import type { PropsWithMappedData, SlotElement } from '../../hooks';
 
 type MuiImageListItemProps = Pick<
   ComponentProps<typeof MuiImageListItem>,
@@ -25,7 +25,7 @@ interface BaseImageListItemProps extends MuiImageListItemProps {
 export type ImageListItemProps<D extends JsonObject> = PropsWithMappedData<
   D,
   BaseImageListItemProps & {
-    action?: ReactNode;
+    action?: SlotElement;
     actionPosition?: MuiImageListItemBarProps['actionPosition'];
     barPosition?: MuiImageListItemBarProps['position'];
   },

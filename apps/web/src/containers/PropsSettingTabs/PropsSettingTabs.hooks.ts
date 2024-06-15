@@ -135,10 +135,10 @@ export function useMappingValidation({
   const [invalid, setInvalid] = useState<Record<string, string[]>>(() => ({}));
 
   const parentNode = useStructureNode(widget, paths, config);
-  const grandNode = useStructureNode(widget, paths, parentNode);
+  // const grandNode = useStructureNode(widget, paths, parentNode);
 
   console.log(useDataStructure(parentNode));
-  console.log(useDataStructure(grandNode, true));
+  // console.log(useDataStructure(grandNode, true));
 
   return {
     invalid,

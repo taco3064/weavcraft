@@ -1,11 +1,12 @@
 import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
+import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { usePropsDefinitionGetter, type GetDefinitionFn } from '~web/contexts';
+import { usePropsDefinitionGetter } from '~web/contexts';
 import { useWidgetNodePaths } from '../useWidgetRender';
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
 
@@ -18,97 +19,145 @@ import type {
 import type {
   ConfigChangeHandler,
   DataChangeHandler,
-  DataStructureGetterOptions,
+  DataStructure,
   FieldDefinition,
+  GetDataStructureOptions,
+  MappingInfo,
   SourcePaths,
 } from './useDataStructure.types';
 
-function getDataStructure(
-  getDefinition: GetDefinitionFn,
+function mergeDataStructure(
+  target: DataStructure,
+  fieldPath: string,
   {
-    conflicts = new Set<string>(),
-    isStore,
-    mappingPath,
-    props = {},
-    widget,
-  }: DataStructureGetterOptions
+    baseFieldPath,
+    conflicts,
+    ...field
+  }: FieldDefinition &
+    Required<Pick<GetDataStructureOptions, 'baseFieldPath' | 'conflicts'>>
 ) {
-  const { elementNodeProps, primitiveValueProps } = getDefinition(widget);
-  const result: { [fieldPath: string]: FieldDefinition } = {};
+  const key = JSON.stringify([...baseFieldPath, fieldPath]);
+  const exists = _get(target, [fieldPath]);
+  const existsType = (Array.isArray(exists) ? exists[0] : exists)?.type;
 
-  const modify = (fieldPath: string, field: FieldDefinition) => {
-    const exists = _get(result, [fieldPath]);
-
-    if (exists && exists.type !== field.type) {
-      conflicts.add(fieldPath);
-      _unset(result, [fieldPath]);
-    } else if (!conflicts.has(fieldPath)) {
-      _set(result, [fieldPath], field);
-    }
-  };
-
-  //* - Step 1. Generate from the children nodes.
-  if (!isStore || mappingPath !== 'propMapping') {
-    Object.keys(elementNodeProps || {}).forEach((nodePath) => {
-      const child = _get(props, [nodePath, 'value']) || [];
-
-      const children = (
-        Array.isArray(child) ? child : [child]
-      ) as RenderConfig[];
-
-      children
-        .map((childNode) => {
-          const { dataBindingProps } = getDefinition(childNode.widget);
-          const { isStore } = getMappingCase(dataBindingProps);
-
-          return Object.entries(
-            getDataStructure(getDefinition, {
-              ...childNode,
-              conflicts,
-              isStore,
-              mappingPath: 'propMapping',
-            })
-          );
-        })
-        .flat()
-        .forEach((el) => modify(...el));
-    });
+  if (exists && existsType !== field.type) {
+    conflicts.add(key);
+    _unset(target, [fieldPath]);
+  } else if (!conflicts.has(key)) {
+    _set(target, [fieldPath], field);
   }
+}
 
-  //* - Step 2. Generate from the mapping path.
-  const definitions = { ...elementNodeProps, ...primitiveValueProps };
-  const basePropPath = mappingPath.replace(/\.?propMapping$/, '');
+function getDataStructure({
+  baseFieldPath = [],
+  conflicts = new Set<string>(),
+  props = {},
+  widget,
+  getDefinition,
+}: GetDataStructureOptions) {
+  const result: DataStructure = {};
 
-  const mappings = Object.entries(
-    _get(props, [mappingPath, 'value']) || {}
-  ) as [string, string][];
+  //* - Step 1. Prepare the definition variables.
+  const { dataBindingProps, elementNodeProps, primitiveValueProps } =
+    getDefinition(widget);
 
-  mappings.forEach(([propName, fieldPath]) => {
-    const propPath = basePropPath ? `${basePropPath}.${propName}` : propName;
+  const recordsPath = Symbol(
+    _get(props, ['propMapping', 'value', 'records']) || 'none'
+  );
 
-    if (propPath === 'records') {
-      return modify(fieldPath, { required: false, type: 'records' });
-    }
+  const { isStore } = getMappingInfo(dataBindingProps);
+  const [subStructure = {}] = (result[recordsPath] || []) as [DataStructure];
 
-    const { type, required, definition } = definitions[propPath];
+  const mappingPaths = Object.keys(dataBindingProps || {}).filter(
+    (path) => _get(dataBindingProps, [path, 'type']) === 'mapping'
+  ) as SourcePaths['mapping'][];
 
-    if (type !== 'node') {
-      modify(fieldPath, { type, required, definition });
-    } else {
-      modify(fieldPath, {
-        type: 'string',
-        required,
-        definition: { multiple: true },
-      });
-    }
+  //* - Step 2. Get by children nodes.
+  const children = Object.keys(elementNodeProps || {}).reduce<
+    (RenderConfig & { nodePath: string })[]
+  >((acc, nodePath) => {
+    const node = _get(props, [nodePath, 'value']) || [];
+    const nodes = (Array.isArray(node) ? node : [node]) as RenderConfig[];
+
+    acc.push(...nodes.map((node) => ({ ...node, nodePath })));
+
+    return acc;
+  }, []);
+
+  children.forEach(({ nodePath, ...childNode }) => {
+    const [basePropPath = ''] = mappingPaths
+      .map(getBasePropPath)
+      .filter(Boolean);
+
+    const isSubCase = isStore && nodePath.startsWith(`${basePropPath}.`);
+    const target = isSubCase ? subStructure : result;
+
+    const childStructure = getDataStructure({
+      ...childNode,
+      conflicts,
+      getDefinition,
+      baseFieldPath: !isSubCase
+        ? baseFieldPath
+        : [...baseFieldPath, recordsPath.description as string],
+    });
+
+    Reflect.ownKeys(childStructure).forEach((fieldPath) => {
+      const definition = childStructure[fieldPath];
+
+      if (Array.isArray(definition)) {
+        target[fieldPath as symbol] = definition;
+      } else {
+        mergeDataStructure(target, fieldPath as string, {
+          ...definition,
+          baseFieldPath,
+          conflicts,
+        });
+      }
+    });
   });
+
+  //* - Step 3. Get by props definition.
+  const definitions = { ...elementNodeProps, ...primitiveValueProps };
+
+  mappingPaths.forEach((mappingPath) => {
+    const basePropPath = getBasePropPath(mappingPath);
+    const isSubCase = isStore && basePropPath;
+    const mappings = Object.entries(_get(props, [mappingPath, 'value']) || {});
+
+    (mappings as [string, string][]).forEach(([propName, fieldPath]) => {
+      if (propName === 'records') {
+        return;
+      }
+
+      const propPath = basePropPath ? `${basePropPath}.${propName}` : propName;
+      const target = isSubCase ? subStructure : result;
+      const { type, required, definition } = definitions[propPath];
+
+      mergeDataStructure(target, fieldPath, {
+        conflicts,
+        required,
+        baseFieldPath,
+        ...(type !== 'node'
+          ? { type, definition }
+          : { type: 'string', definition: { multiple: true } }),
+      });
+    });
+  });
+
+  if (!_isEmpty(subStructure)) {
+    result[recordsPath] = [subStructure];
+  }
 
   return result;
 }
 
-function getMappingCase(
+function getBasePropPath(path: string) {
+  return path.replace(/\.?propMapping$/, '');
+}
+
+function getMappingInfo(
   dataBindingProps?: DataBindingPropsWithPath['dataBindingProps']
-): Pick<DataStructureGetterOptions, 'isStore' | 'mappingPath'> {
+): MappingInfo {
   const definitions = Object.entries(dataBindingProps || {});
 
   const isStore = definitions.some(
@@ -193,7 +242,7 @@ export function useSourcePaths(widget: WidgetType) {
 
   return useMemo<SourcePaths>(() => {
     const { dataBindingProps } = getDefinition(widget);
-    const { isStore, mappingPath } = getMappingCase(dataBindingProps);
+    const { isStore, mappingPath } = getMappingInfo(dataBindingProps);
 
     return {
       data: isStore ? 'records' : 'data',
@@ -225,7 +274,7 @@ export function useStructureNode(
         ) as RenderConfig;
 
         const { dataBindingProps } = getDefinition(node.widget);
-        const { isStore } = getMappingCase(dataBindingProps);
+        const { isStore } = getMappingInfo(dataBindingProps);
 
         if (isStore) {
           return node;
@@ -239,14 +288,8 @@ export function useStructureNode(
   );
 }
 
-export function useDataStructure(node: RenderConfig, forceMappingPath = false) {
+export function useDataStructure(node: RenderConfig) {
   const getDefinition = usePropsDefinitionGetter();
-  const { dataBindingProps } = getDefinition(node.widget);
-  const { isStore, mappingPath } = getMappingCase(dataBindingProps);
 
-  return getDataStructure(getDefinition, {
-    ...node,
-    isStore,
-    mappingPath: forceMappingPath ? 'propMapping' : mappingPath,
-  });
+  return getDataStructure({ ...node, getDefinition });
 }

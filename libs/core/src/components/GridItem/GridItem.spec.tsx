@@ -20,9 +20,7 @@ describe('@weavcraft/core/components/GridItem', () => {
 
   it('renders with children', () => {
     const { getByTestId } = render(
-      <GridItem>
-        <div data-testid="test" />
-      </GridItem>
+      <GridItem content={<div data-testid="test" />} />
     );
 
     expect(getByTestId('test')).toBeInTheDocument();

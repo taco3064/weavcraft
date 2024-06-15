@@ -31,13 +31,8 @@ export type ListProps<
       disableSubheaderGutters?: boolean;
 
       //* - ListItem
-      itemAction?: SlotElement;
-      itemIndicator?: SlotElement;
       itemVariant?: V;
-      itemProps?: Omit<
-        ListItemProps<D>,
-        'data' | 'action' | 'indicator' | 'variant' | 'onItemClick'
-      >;
+      itemProps?: Omit<ListItemProps<D>, 'data' | 'variant' | 'onItemClick'>;
 
       onItemClick?: V extends 'button' ? (item: D) => void : undefined;
       onItemActionClick?: (item: D) => void;

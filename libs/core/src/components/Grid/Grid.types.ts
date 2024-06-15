@@ -22,9 +22,8 @@ export type GridProps<
 > = PropsWithMappedStore<
   D,
   Pick<MuiGridProps, 'justifyContent' | 'spacing'> & {
-    children?: ReactNode;
     columns?: Extract<MuiGridProps['columns'], number>;
     itemVariant?: V;
-    itemProps?: Omit<GridItemProps<D>, 'children' | 'data' | 'icon' | 'title'>;
+    itemProps?: Omit<GridItemProps<D>, 'data'>;
   }
 >;
