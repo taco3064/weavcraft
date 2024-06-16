@@ -103,8 +103,15 @@ export function useNodeCreateButton(
     }
 
     const { widget } = config;
-    const definition = getDefinition(widget);
-    const { elementNodeProps } = definition;
+    const { dataBindingProps, elementNodeProps } = getDefinition(widget);
+
+    if (
+      dataBindingProps &&
+      'records' in dataBindingProps &&
+      !_get(config, ['props', 'records', 'value'])
+    ) {
+      _set(props, 'records', [{}]);
+    }
 
     return Object.entries(elementNodeProps || {}).reduce(
       (result, [path, { definition }]) => {

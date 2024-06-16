@@ -8,11 +8,6 @@ import type { RenderConfig } from '../useWidgetRender';
 export type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataChangeHandler = (e: JsonObject | JsonObject[]) => void;
 
-export interface MappingInfo {
-  isStore: boolean;
-  mappingPath: SourcePaths['mapping'];
-}
-
 export type FieldDefinition = Pick<
   NonNullable<
     Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
@@ -20,15 +15,25 @@ export type FieldDefinition = Pick<
   'required' | 'type' | 'definition'
 >;
 
+export interface DataStructure {
+  [fieldPath: string]: FieldDefinition;
+  [fieldSymbol: symbol]: [DataStructure];
+}
+
 export interface GetDataStructureOptions extends RenderConfig {
   baseFieldPath?: string[];
   conflicts?: Set<string>;
   getDefinition: GetDefinitionFn;
 }
 
-export interface DataStructure {
-  [fieldPath: string]: FieldDefinition;
-  [fieldSymbol: symbol]: [DataStructure];
+export interface MappingInfo {
+  isStore: boolean;
+  mappingPath: SourcePaths['mapping'];
+}
+
+export interface ParentNode {
+  node: RenderConfig;
+  recordsFieldName?: string;
 }
 
 export type SourcePaths = {

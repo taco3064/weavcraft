@@ -5,15 +5,9 @@ import _unset from 'lodash/unset';
 import { useMemo, useState, useTransition } from 'react';
 import type { JsonObject } from 'type-fest';
 
+import { useDataChange, useDataStructure, useSourcePaths } from '~web/hooks';
 import { usePropsDefinitionGetter } from '~web/contexts';
 import type { WidgetType } from '~web/services';
-
-import {
-  useDataChange,
-  useDataStructure,
-  useSourcePaths,
-  useStructureNode,
-} from '~web/hooks';
 
 import type {
   DataFields,
@@ -133,12 +127,9 @@ export function useMappingValidation({
   widget,
 }: Pick<DataBindingProps, 'config' | 'paths' | 'widget'>) {
   const [invalid, setInvalid] = useState<Record<string, string[]>>(() => ({}));
+  const { getFieldStructure } = useDataStructure(widget);
 
-  const parentNode = useStructureNode(widget, paths, config);
-  // const grandNode = useStructureNode(widget, paths, parentNode);
-
-  console.log(useDataStructure(parentNode));
-  // console.log(useDataStructure(grandNode, true));
+  console.log('=== Data Structure:', getFieldStructure(config, paths));
 
   return {
     invalid,
