@@ -4,7 +4,8 @@ import _set from 'lodash/set';
 import { useCallback, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
+import type { WidgetConfigs } from '../hooks.types';
 
 import type {
   ConfigPaths,
@@ -29,6 +30,9 @@ export function useWidgetNodePaths(paths?: ConfigPaths) {
   return {
     getNodePaths,
 
+    getNode: (widget: WidgetConfigs, paths: ConfigPaths): RenderConfig =>
+      !paths.length ? widget : _get(widget, getNodePaths(paths)),
+
     nodePaths: useMemo(() => getNodePaths(paths || []), [paths, getNodePaths]),
 
     pathDescription: useMemo(() => {
@@ -45,14 +49,14 @@ export function useWidgetNodePaths(paths?: ConfigPaths) {
 }
 
 export function useWidgetRender(render: RenderFn) {
-  const getDefinition = usePropsDefinitionGetter();
+  const getCoreProps = useCorePropsGetter();
 
   return function generate(
     config: RenderConfig,
     { key, paths = [] }: GenerateOptions = {}
   ) {
     const WidgetEl = _get(Core, config.widget) as ComponentType;
-    const { elementNodeProps } = getDefinition(config.widget);
+    const { definition } = getCoreProps(config.widget);
 
     return render(WidgetEl, {
       config,
@@ -68,7 +72,7 @@ export function useWidgetRender(render: RenderFn) {
             const nodes = Array.isArray(value) ? value : [value];
 
             const { multiple = false } =
-              elementNodeProps?.[path]?.definition || {};
+              _get(definition, ['elementNodeProps', path, 'definition']) || {};
 
             const children: ReactNode[] = nodes.map((node, i) =>
               generate(node as RenderConfig, {

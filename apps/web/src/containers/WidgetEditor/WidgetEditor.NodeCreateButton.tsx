@@ -3,14 +3,14 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { nanoid } from 'nanoid';
-import { useCallback, useState, useTransition } from 'react';
+import { useCallback, useMemo, useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
 import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
-import { useNodeCreateInfo } from './WidgetEditor.hooks';
+import { useWidgetOptions } from './WidgetEditor.hooks';
 import type { NodeCreateButtonProps } from './WidgetEditor.types';
-import type { WidgetType } from '~web/services';
+import type { WidgetType } from '../containers.types';
 
 const CLASS_NAME = `NodeCreateButton-${nanoid(4)}`;
 
@@ -31,16 +31,34 @@ const GLOBAL_STYLES = (
 );
 
 export default function NodeCreateButton({
+  config,
+  path,
+  variant,
   onClick,
-  ...props
 }: NodeCreateButtonProps) {
+  const options = useWidgetOptions(variant);
+
   const [, startTransition] = useTransition();
   const [visible, setVisible] = useState(true);
   const [open, setOpen] = useState(false);
 
+  const { widget } = config || {};
   const { t } = useTranslation();
   const { classes, cx } = useNodeCreateButtonStyles();
-  const { subtitle, tooltip, items } = useNodeCreateInfo(props);
+
+  const { subtitle, tooltip } = useMemo(() => {
+    const subtitle = [widget && t(`widgets:lbl-widgets.${widget}`), path]
+      .filter(Boolean)
+      .join(' - ');
+
+    return {
+      subtitle,
+      tooltip: [
+        t(`widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`),
+        !subtitle ? '' : ` (${subtitle})`,
+      ].join(' '),
+    };
+  }, [widget, path, variant, t]);
 
   const buttonRef = useCallback((el: HTMLButtonElement | null) => {
     /**
@@ -68,7 +86,8 @@ export default function NodeCreateButton({
       </Tooltip>
 
       <MenuDialog
-        {...{ items, open, subtitle }}
+        {...{ open, subtitle }}
+        items={options}
         title={t('widgets:ttl-select-widget')}
         onClose={() => setOpen(false)}
         onItemClick={(e) =>

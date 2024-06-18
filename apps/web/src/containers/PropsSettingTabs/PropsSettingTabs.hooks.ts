@@ -5,8 +5,8 @@ import _unset from 'lodash/unset';
 import { useMemo, useState, useTransition } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { useDataChange, useDataStructure, useSourcePaths } from '~web/hooks';
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
+import { useDataChange, useDataStructure } from '~web/hooks';
 import type { WidgetType } from '~web/services';
 
 import type {
@@ -20,14 +20,12 @@ export function useDataCreate(
   basePropPath: string,
   bindingFields: Record<string, string>
 ) {
-  const getDefinition = usePropsDefinitionGetter();
+  const getCoreProps = useCorePropsGetter();
   const stringify = JSON.stringify(bindingFields);
 
   return useMemo(() => {
-    const { elementNodeProps, primitiveValueProps } = getDefinition(widget);
-
+    const { mappableProps } = getCoreProps(widget);
     const bindingFields: Record<string, string> = JSON.parse(stringify);
-    const props = { ...elementNodeProps, ...primitiveValueProps };
 
     const result = Object.entries(bindingFields).reduce<DataFields>(
       (acc, [propName, fieldPath]) => {
@@ -35,7 +33,7 @@ export function useDataCreate(
           ? `${basePropPath}.${propName}`
           : propName;
 
-        const { [propPath]: propTypes } = props;
+        const { [propPath]: propTypes } = mappableProps;
 
         return {
           ...acc,
@@ -58,7 +56,7 @@ export function useDataCreate(
     return Object.entries(result).sort(([field1], [field2]) =>
       field1.localeCompare(field2)
     );
-  }, [widget, basePropPath, stringify, getDefinition]);
+  }, [widget, basePropPath, stringify, getCoreProps]);
 }
 
 export function useFixedData({
@@ -67,7 +65,7 @@ export function useFixedData({
 }: Pick<DataBindingProps, 'config' | 'onChange'>) {
   const { widget, props = {} } = config;
 
-  const sourcePaths = useSourcePaths(widget);
+  const sourcePaths = { mapping: '', data: '' }; // useSourcePaths(widget);
   const modifyData = useDataChange(config, onChange);
 
   const bindingFields = (_get(props, [sourcePaths.mapping, 'value']) ||
@@ -144,15 +142,13 @@ export function usePropMapping({
 
   const [, startTransition] = useTransition();
 
-  const getDefinition = usePropsDefinitionGetter();
+  const getCoreProps = useCorePropsGetter();
   const modifyData = useDataChange(config, onChange);
 
   return {
     groups: useMemo(() => {
-      const { dataBindingProps, elementNodeProps, primitiveValueProps } =
-        getDefinition(widget);
-
-      const props = { ...elementNodeProps, ...primitiveValueProps };
+      const { definition, mappableProps } = getCoreProps(widget);
+      const { dataBindingProps } = definition;
 
       const result = Object.entries(
         dataBindingProps || {}
@@ -164,7 +160,10 @@ export function usePropMapping({
           acc[mappingPath] =
             definition
               .map((propPath) => {
-                const type = _get(props, [`${basePath}${propPath}`, 'type']);
+                const type = _get(mappableProps, [
+                  `${basePath}${propPath}`,
+                  'type',
+                ]);
 
                 return {
                   propPath,
@@ -182,7 +181,7 @@ export function usePropMapping({
       return Object.entries(result).sort(
         ([path1], [path2]) => path1.length - path2.length
       );
-    }, [widget, getDefinition]),
+    }, [widget, getCoreProps]),
 
     onMappingChange: (
       mappingPath: string,

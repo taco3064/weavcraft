@@ -43,7 +43,7 @@ export interface PropsSettingTabsProps
   onChange: ConfigChangeHandler;
 }
 
-export interface PrimitiveListProps extends BaseSettingProps {
+export interface PrimitiveListProps {
   classes: EditorListClasses & { row?: string };
   config: RenderConfig;
   onChange: ConfigChangeHandler;

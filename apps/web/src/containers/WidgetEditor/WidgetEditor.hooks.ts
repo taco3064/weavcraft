@@ -2,17 +2,27 @@ import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo } from 'react';
-import { useTranslation } from 'next-i18next';
+import { createElement, useCallback, useMemo, useState } from 'react';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
 import { useWidgetNodePaths } from '~web/hooks';
-import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
-import type { MenuItemOptions, RenderConfig } from '~web/hooks';
-import type { WidgetConfigs, WidgetType } from '~web/services';
+
+import type {
+  ChangeEvents,
+  NodeCreateButtonProps,
+  PropItem,
+} from './WidgetEditor.types';
+
+import type {
+  MappingPath,
+  MenuItemOptions,
+  RenderConfig,
+  WidgetConfigs,
+  WidgetType,
+} from '../containers.types';
 
 const { default: _Core, ...CATEGORIES } = Core;
 
@@ -95,7 +105,7 @@ export function useNodeCreateButton(
     onAddLastChild,
   }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
-  const getDefinition = usePropsDefinitionGetter();
+  const getCoreProps = useCorePropsGetter();
 
   return <P extends object>(props: P, config: RenderConfig): P => {
     if (disabled) {
@@ -103,7 +113,8 @@ export function useNodeCreateButton(
     }
 
     const { widget } = config;
-    const { dataBindingProps, elementNodeProps } = getDefinition(widget);
+    const { definition } = getCoreProps(widget);
+    const { dataBindingProps, elementNodeProps } = definition;
 
     if (
       dataBindingProps &&
@@ -143,63 +154,115 @@ export function useNodeCreateButton(
   };
 }
 
-export function useNodeCreateInfo({
-  config,
-  path,
-  variant,
-}: Pick<NodeCreateButtonProps, 'config' | 'path' | 'variant'>) {
-  const getDefinition = usePropsDefinitionGetter();
+export function usePropItems(config: RenderConfig) {
+  const getCoreProps = useCorePropsGetter();
 
-  const { t } = useTranslation();
-  const { widget } = config || {};
+  const { widget, props = {} } = config;
+  const { childrenBasePath, definition } = getCoreProps(widget);
 
-  const subtitle = [widget && t(`widgets:lbl-widgets.${widget}`), path]
-    .filter(Boolean)
-    .join(' - ');
+  const getMappingProp = useCallback(
+    (propPath: string) => {
+      const { dataBindingProps } = definition;
+      const isChildProps = propPath.startsWith(`${childrenBasePath}.`);
+
+      const mappingPath = (
+        isChildProps ? `${childrenBasePath}.propMapping` : 'propMapping'
+      ) as MappingPath;
+
+      const mappingProps: string[] =
+        _get(dataBindingProps || {}, [mappingPath, 'definition']) || [];
+
+      const path = isChildProps
+        ? propPath.replace(`${childrenBasePath}.`, '')
+        : propPath;
+
+      return {
+        propName: path,
+        mappable: mappingProps.includes(path),
+        mappingPath,
+      };
+    },
+    [childrenBasePath, definition]
+  );
+
+  const [mappingItems, setMappingItems] = useState<Record<string, boolean>>(
+    () =>
+      Object.keys(definition.primitiveValueProps || {}).reduce((acc, path) => {
+        const { propName, mappable, mappingPath } = getMappingProp(path);
+        const fieldPath = _get(props, [mappingPath, 'value', propName]);
+
+        return {
+          ...acc,
+          ...(mappable && {
+            [path]: Boolean(fieldPath),
+          }),
+        };
+      }, {})
+  );
 
   return {
-    subtitle,
+    mappingItems,
 
-    tooltip: [
-      t(`widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`),
-      !subtitle ? '' : ` (${subtitle})`,
-    ].join(' '),
+    propItems: Object.entries(definition.primitiveValueProps || {})
+      .sort(([key1], [key2]) => key1.localeCompare(key2))
+      .map<PropItem>(([path, definition]) => {
+        const { propName, mappable, mappingPath } = getMappingProp(path);
 
-    items: useMemo(
-      () =>
-        Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
-          (acc, [category, widgets]) => {
-            const items = (Object.keys(widgets) as WidgetType[]).reduce<
-              MenuItemOptions[]
-            >((result, widget) => {
-              const { elementNodeProps = {}, eventCallbackProps = {} } =
-                getDefinition(widget);
+        return {
+          path,
+          definition,
+          mappable,
+          fieldPath: _get(props, [mappingPath, 'value', propName]),
+        };
+      }),
 
-              if (
-                /^(Avatar|Icon)$/.test(widget) ||
-                variant !== 'action' ||
-                'onClick' in eventCallbackProps ||
-                _get(elementNodeProps, 'toggle.definition.clickable')
-              ) {
-                result.push({ label: `widgets:lbl-widgets.${widget}` });
-              }
+    onMappingExpand: (path: string) =>
+      setMappingItems((prev) => ({
+        ...prev,
+        [path]: !prev[path],
+      })),
+  };
+}
 
-              return result;
-            }, []);
+export function useWidgetOptions(variant: NodeCreateButtonProps['variant']) {
+  const getCoreProps = useCorePropsGetter();
 
-            if (items.length) {
-              acc.push({
-                icon: ICON[category as keyof typeof ICON],
-                label: `widgets:lbl-category.${category}`,
-                items,
-              });
+  return useMemo(
+    () =>
+      Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
+        (acc, [category, widgets]) => {
+          const items = (Object.keys(widgets) as WidgetType[]).reduce<
+            MenuItemOptions[]
+          >((result, widget) => {
+            const { definition } = getCoreProps(widget);
+
+            const { elementNodeProps = {}, eventCallbackProps = {} } =
+              definition;
+
+            if (
+              /^(Avatar|Icon)$/.test(widget) ||
+              variant !== 'action' ||
+              'onClick' in eventCallbackProps ||
+              _get(elementNodeProps, 'toggle.definition.clickable')
+            ) {
+              result.push({ label: `widgets:lbl-widgets.${widget}` });
             }
 
-            return acc;
-          },
-          []
-        ),
-      [variant, getDefinition]
-    ),
-  };
+            return result;
+          }, []);
+
+          if (items.length) {
+            acc.push({
+              icon: ICON[category as keyof typeof ICON],
+              label: `widgets:lbl-category.${category}`,
+              items,
+            });
+          }
+
+          return acc;
+        },
+        []
+      ),
+    [variant, getCoreProps]
+  );
 }

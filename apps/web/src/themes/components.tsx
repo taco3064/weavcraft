@@ -163,6 +163,13 @@ export const components: ThemeOptions['components'] = {
       },
     ],
   },
+  MuiCollapse: {
+    styleOverrides: {
+      wrapperInner: {
+        width: '100%',
+      },
+    },
+  },
   MuiDialog: {
     defaultProps: {
       TransitionComponent: Transition,
@@ -277,6 +284,13 @@ export const components: ThemeOptions['components'] = {
       root: {
         width: '100%',
       },
+    },
+  },
+  MuiListSubheader: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        zIndex: theme.zIndex.appBar,
+      }),
     },
   },
   MuiMenu: {

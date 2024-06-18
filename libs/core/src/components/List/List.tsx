@@ -56,7 +56,8 @@ export default function List<
                 variant="subtitle1"
                 color="primary"
                 display="flex"
-                gap={8}
+                fontWeight={600}
+                gap={2}
                 marginRight="auto"
               >
                 {icon && (

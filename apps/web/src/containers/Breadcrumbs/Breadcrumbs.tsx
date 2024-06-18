@@ -12,9 +12,10 @@ import { useTranslation } from 'next-i18next';
 import { MenuDialog, Link } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
-import { useBreakpointMatches, type BreakpointValues } from '~web/hooks';
+import { useBreakpointMatches } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
+import type { BreakpointValues } from '../containers.types';
 
 const MAX_ITEMS: BreakpointValues<number> = {
   xs: 3,

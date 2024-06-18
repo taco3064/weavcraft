@@ -10,21 +10,23 @@
   "btn-set-as-prop-name": "As Prop Name",
   "btn-widget-preview": "Preview Widget",
   "btn-widget-structure": "View Structure",
+  "lbl-default-value": "Default Value: {{ value }}",
   "lbl-row": "Row {{ index }}",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-data-confirm": "Are you sure you want to delete the fixed data?",
   "msg-delete-widget-confirm": "Are you sure you want to delete {{ widget }} widget?",
   "msg-fixed-data-description": "The data bound to the {{ widget }} widget is dynamically loaded by default at runtime.\nHowever, you can also specify fixed data here.",
   "msg-no-data": "No Data Available",
-  "msg-primitive-description": "Change the display result of the widget by adjusting its layout and appearance settings.",
-  "msg-prop-mapping-conflict": "Data field conflicts with the corresponding layout setting type.",
+  "msg-primitive-description": "Change the display result of the widget by adjusting its appearance settings.",
+  "msg-prop-mapping-conflict": "Data field conflicts with the corresponding appearance setting type.",
   "msg-prop-mapping-description": "Configure data bindings for the {{ widget }} widget here.\nNote: Layout settings already configured will become the default.",
-  "msg-prop-mapping-placeholder": "Enter data field name or path.",
+  "msg-prop-mapping-placeholder": "Select data field name or path.",
+  "ttl-appearance": "Appearance Settings",
+  "ttl-default-value": "Default Value",
   "ttl-element-node": "Widget Structure",
   "ttl-fixed-data": "Fixed Data",
   "ttl-prop-mapping": "Data Binding",
   "ttl-select-widget": "Select Widget",
-  "ttl-settings": "{{ widget }} Settings",
   "lbl-category": {
     "Display": "Display",
     "Input": "Input",
@@ -32,7 +34,7 @@
     "Layout": "Layout"
   },
   "lbl-settings": {
-    "data-binding": "Data Binding",
+    "data-structure": "Data Structure",
     "primitive-value": "Layout"
   },
   "lbl-widgets": {

@@ -12,10 +12,11 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
-import { PaletteViewer, type ColorName } from '~web/components';
-import { upsertThemePalette, type ThemePalette } from '~web/services';
+import { PaletteViewer } from '~web/components';
+import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import type { PaletteEditorProps } from './PaletteEditor.types';
+import type { ColorName, ThemePalette } from '../containers.types';
 
 import {
   PortalWrapper,

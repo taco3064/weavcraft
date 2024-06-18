@@ -12,7 +12,7 @@ export const useNodeCreateButtonStyles = makeStyles({
   },
 }));
 
-export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
+export const usePropItemsStyles = makeStyles({ name: 'PropsSettingTabs' })(
   (theme) => ({
     root: {
       display: 'flex',
@@ -24,16 +24,14 @@ export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
         width: '100%',
       },
     },
+    fullWidth: {
+      width: '100% !important',
+    },
     row: {
+      width: '100%',
+
       '& > *': {
         margin: '0 !important',
-      },
-    },
-    tabs: {
-      marginBottom: theme.spacing(2),
-      '& + *': {
-        height: '100%',
-        overflow: 'hidden auto',
       },
     },
   })
@@ -49,6 +47,17 @@ export const useMainStyles = makeStyles<MainStyleParams>({
       !Number.isNaN(marginTop)
         ? marginTop
         : 0,
+  },
+  tabs: {
+    marginBottom: theme.spacing(2),
+    '& + *': {
+      height: '100%',
+      overflow: 'hidden auto',
+    },
+
+    '& button.MuiTab-root': {
+      textTransform: 'capitalize',
+    },
   },
   content: {
     alignItems: 'center',

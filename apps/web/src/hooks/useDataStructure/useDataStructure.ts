@@ -6,126 +6,85 @@ import _unset from 'lodash/unset';
 import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { getBasePropPath, useCorePropsGetter } from '~web/contexts';
 import { useWidgetNodePaths } from '../useWidgetRender';
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
-
-import type {
-  DataBindingPropsWithPath,
-  WidgetConfigs,
-  WidgetType,
-} from '~web/services';
+import type { MappingPath, WidgetConfigs } from '../hooks.types';
 
 import type {
   ConfigChangeHandler,
   DataChangeHandler,
   DataStructure,
   FieldDefinition,
-  GetDataStructureOptions,
-  MappingInfo,
+  GeneratorOptions,
+  ParentStoreNodeParams,
   ParentNode,
-  SourcePaths,
 } from './useDataStructure.types';
 
-function getBasePropPath(path: string) {
-  return path.replace(/\.?propMapping$/, '');
-}
-
-function getMappingInfo(
-  dataBindingProps?: DataBindingPropsWithPath['dataBindingProps']
-): MappingInfo {
-  const definitions = Object.entries(dataBindingProps || {});
-
-  const isStore = definitions.some(
-    ([, { type, definition }]) =>
-      type === 'data' && _get(definition, 'multiple')
-  );
-
-  return {
-    isStore,
-
-    mappingPath: definitions.find(([path]) =>
-      isStore ? path.endsWith('.propMapping') : path === 'propMapping'
-    )?.[0] as SourcePaths['mapping'],
-  };
-}
-
-function mergeDataStructure(
-  target: DataStructure,
-  fieldPath: string,
+function getDataStructure(
+  config: RenderConfig,
   {
-    baseFieldPath,
-    conflicts,
-    ...field
-  }: FieldDefinition &
-    Required<Pick<GetDataStructureOptions, 'baseFieldPath' | 'conflicts'>>
+    baseFieldPath = [],
+    children,
+    conflicts = new Set<string>(),
+    subFieldPath,
+    getCoreProps,
+  }: GeneratorOptions
 ) {
-  const key = JSON.stringify([...baseFieldPath, fieldPath]);
-  const exists = _get(target, [fieldPath]);
-  const existsType = (Array.isArray(exists) ? exists[0] : exists)?.type;
+  const { widget, props = {} } = config;
 
-  if (exists && existsType !== field.type) {
-    conflicts.add(key);
-    _unset(target, [fieldPath]);
-  } else if (!conflicts.has(key)) {
-    _set(target, [fieldPath], field);
-  }
-}
+  const { childrenBasePath, isStoreWidget, mappableProps, mappingPaths } =
+    getCoreProps(widget);
 
-function getDataStructure({
-  baseFieldPath = [],
-  conflicts = new Set<string>(),
-  props = {},
-  widget,
-  getDefinition,
-}: GetDataStructureOptions) {
-  const result: DataStructure = {};
-  const subStructure: DataStructure = {};
+  const mainDataStructure: DataStructure = {};
+  const subDataStructure: DataStructure = {};
 
-  //* - Step 1. Prepare the definition variables.
-  const { dataBindingProps, elementNodeProps, primitiveValueProps } =
-    getDefinition(widget);
+  //* - Step 1. Get by props definition.
+  mappingPaths.forEach((mappingPath) => {
+    const basePropPath = getBasePropPath(mappingPath);
+    const mappings = Object.entries(_get(props, [mappingPath, 'value']) || {});
 
-  const subFieldPath: string =
-    _get(props, ['propMapping', 'value', 'records']) || 'none';
+    (mappings as [string, string][]).forEach(([propName, fieldPath]) => {
+      if (propName === 'records') {
+        return;
+      }
 
-  const { isStore } = getMappingInfo(dataBindingProps);
+      const propPath = basePropPath ? `${basePropPath}.${propName}` : propName;
+      const { type, required, definition } = mappableProps[propPath];
 
-  const mappingPaths = Object.keys(dataBindingProps || {}).filter(
-    (path) => _get(dataBindingProps, [path, 'type']) === 'mapping'
-  ) as SourcePaths['mapping'][];
+      const target =
+        isStoreWidget && basePropPath ? subDataStructure : mainDataStructure;
 
-  const [childNodePath = ''] = mappingPaths
-    .map(getBasePropPath)
-    .filter(Boolean);
+      mergeDataStructure(target, fieldPath, {
+        conflicts,
+        required,
+        baseFieldPath,
+        ...(type !== 'node'
+          ? { type, definition }
+          : { type: 'string', definition: { multiple: true } }),
+      });
+    });
+  });
 
   //* - Step 2. Get by children nodes.
-  const children = Object.keys(elementNodeProps || {}).reduce<
-    (RenderConfig & { nodePath: string })[]
-  >((acc, nodePath) => {
-    const node = _get(props, [nodePath, 'value']) || [];
-    const nodes = (Array.isArray(node) ? node : [node]) as RenderConfig[];
-
-    acc.push(...nodes.map((node) => ({ ...node, nodePath })));
-
-    return acc;
-  }, []);
-
   children.forEach(({ nodePath, ...childNode }) => {
-    const isSubCase = isStore && nodePath.startsWith(`${childNodePath}.`);
-    const target = isSubCase ? subStructure : result;
+    const isSubCase =
+      isStoreWidget && nodePath.startsWith(`${childrenBasePath}.`);
 
-    const childStructure = getDataStructure({
-      ...childNode,
-      conflicts,
-      getDefinition,
-      baseFieldPath: !isSubCase
-        ? baseFieldPath
-        : [...baseFieldPath, subFieldPath],
-    });
+    const target = isSubCase ? subDataStructure : mainDataStructure;
 
-    Reflect.ownKeys(childStructure).forEach((fieldPath) => {
-      const definition = childStructure[fieldPath];
+    const nodeStructure = getDataStructure(
+      ...getGeneratorParams(childNode, {
+        getCoreProps,
+        conflicts,
+        baseFieldPath: !isSubCase
+          ? baseFieldPath
+          : [...baseFieldPath, subFieldPath],
+      })
+    );
+
+    Reflect.ownKeys(nodeStructure).forEach((fieldPath) => {
+      const definition = nodeStructure[fieldPath];
 
       if (Array.isArray(definition)) {
         target[fieldPath as symbol] = definition;
@@ -139,48 +98,133 @@ function getDataStructure({
     });
   });
 
-  //* - Step 3. Get by props definition.
-  const definitions = { ...elementNodeProps, ...primitiveValueProps };
-
-  mappingPaths.forEach((mappingPath) => {
-    const basePropPath = getBasePropPath(mappingPath);
-    const mappings = Object.entries(_get(props, [mappingPath, 'value']) || {});
-
-    (mappings as [string, string][]).forEach(([propName, fieldPath]) => {
-      if (propName === 'records') {
-        return;
-      }
-
-      const propPath = basePropPath ? `${basePropPath}.${propName}` : propName;
-      const target = isStore && basePropPath ? subStructure : result;
-      const { type, required, definition } = definitions[propPath];
-
-      mergeDataStructure(target, fieldPath, {
-        conflicts,
-        required,
-        baseFieldPath,
-        ...(type !== 'node'
-          ? { type, definition }
-          : { type: 'string', definition: { multiple: true } }),
-      });
-    });
-  });
-
-  if (!_isEmpty(subStructure)) {
-    result[Symbol(`${subFieldPath}(${childNodePath})`)] = [subStructure];
+  if (!_isEmpty(subDataStructure)) {
+    mainDataStructure[Symbol(`${subFieldPath}(${childrenBasePath})`)] = [
+      subDataStructure,
+    ];
   }
 
-  return result;
+  return mainDataStructure;
 }
+
+function getGeneratorParams(
+  config: RenderConfig,
+  options: Pick<
+    GeneratorOptions,
+    'baseFieldPath' | 'conflicts' | 'getCoreProps'
+  >
+): [RenderConfig, GeneratorOptions] {
+  const { widget, props = {} } = config;
+  const { definition } = options.getCoreProps(widget);
+
+  return [
+    config,
+    {
+      ...options,
+      subFieldPath: _get(props, ['propMapping', 'value', 'records']) || 'none',
+
+      children: Object.keys(definition.elementNodeProps || {}).reduce<
+        (RenderConfig & { nodePath: string })[]
+      >((acc, nodePath) => {
+        const node = _get(props, [nodePath, 'value']) || [];
+        const nodes = (Array.isArray(node) ? node : [node]) as RenderConfig[];
+
+        acc.push(...nodes.map((node) => ({ ...node, nodePath })));
+
+        return acc;
+      }, []),
+    },
+  ];
+}
+
+function getMappingPath(isStoreWidget: boolean, mappingPaths: MappingPath[]) {
+  return mappingPaths.find(([path]) =>
+    isStoreWidget ? path.endsWith('.propMapping') : path === 'propMapping'
+  );
+}
+
+function getParentStoreNode(
+  widget: WidgetConfigs,
+  paths: ConfigPaths,
+  { getCoreProps, getNode }: ParentStoreNodeParams
+): ParentNode | null {
+  if (!paths.length) {
+    return null;
+  }
+
+  const isMultiple = typeof paths[paths.length - 1] === 'number';
+  const popPaths = paths.slice(0, isMultiple ? -2 : -1);
+  const node = getNode(widget, popPaths);
+  const { childrenBasePath, isStoreWidget } = getCoreProps(node.widget);
+
+  if (isStoreWidget) {
+    const lastPath = paths[paths.length - (isMultiple ? 2 : 1)] as string;
+
+    const subFieldPath: string =
+      _get(node, ['props', 'propMapping', 'value', 'records']) || 'none';
+
+    return {
+      node,
+      subFieldName: lastPath.startsWith(`${childrenBasePath}.`)
+        ? `${subFieldPath}(${childrenBasePath})`
+        : undefined,
+    };
+  }
+
+  return getParentStoreNode(widget, popPaths, { getCoreProps, getNode });
+}
+
+function mergeDataStructure(
+  target: DataStructure,
+  fieldPath: string,
+  {
+    baseFieldPath,
+    conflicts,
+    ...field
+  }: FieldDefinition &
+    Required<Pick<GeneratorOptions, 'baseFieldPath' | 'conflicts'>>
+) {
+  const key = JSON.stringify([...baseFieldPath, fieldPath]);
+  const exists = _get(target, [fieldPath]);
+  const existsType = (Array.isArray(exists) ? exists[0] : exists)?.type;
+
+  if (exists && existsType !== field.type) {
+    conflicts.add(key);
+    _unset(target, [fieldPath]);
+  } else if (!conflicts.has(key)) {
+    _set(target, [fieldPath], field);
+  }
+}
+
+// /** @deprecated */
+// export function useSourcePaths(widget: WidgetType) {
+//   const getCoreProps = usePropsDefinitionGetter();
+
+//   return useMemo<SourcePaths>(() => {
+//     const { dataBindingProps } = getCoreProps(widget);
+//     const { isStore, mappingPath } = getMappingInfo(dataBindingProps);
+
+//     return {
+//       data: isStore ? 'records' : 'data',
+//       mapping: mappingPath,
+//     };
+//   }, [widget, getCoreProps]);
+// }
 
 export function useDataChange(
   config: RenderConfig,
   onChange: ConfigChangeHandler
 ) {
+  const { widget, props = {} } = config;
+
+  const getCoreProps = useCorePropsGetter();
   const handleRef = useRef<DataChangeHandler>();
 
-  const { widget, props = {} } = config;
-  const { data: dataPath } = useSourcePaths(widget);
+  const dataPath = useMemo(() => {
+    const { isStoreWidget } = getCoreProps(widget);
+
+    return isStoreWidget ? 'records' : 'data';
+  }, [widget, getCoreProps]);
 
   useImperativeHandle(
     handleRef,
@@ -237,76 +281,28 @@ export function useDataChange(
 }
 
 export function useDataStructure(widget: WidgetConfigs) {
-  const { getNodePaths } = useWidgetNodePaths();
-  const getDefinition = usePropsDefinitionGetter();
+  const { getNode } = useWidgetNodePaths();
+  const getCoreProps = useCorePropsGetter();
 
   return {
-    getCompleteStructure: () => getDataStructure({ ...widget, getDefinition }),
+    getCompleteStructure: () =>
+      getDataStructure(...getGeneratorParams(widget, { getCoreProps })),
 
     getFieldStructure: (config: RenderConfig, paths: ConfigPaths) => {
-      let parentNode: ParentNode = { node: config };
-      let slicePaths: ConfigPaths = [...paths];
+      const { node, subFieldName } = getParentStoreNode(widget, paths, {
+        getCoreProps,
+        getNode,
+      }) || { node: config };
 
-      while (slicePaths.length) {
-        const isMultiple =
-          typeof slicePaths[slicePaths.length - 1] === 'number';
-
-        const popPaths = slicePaths.slice(0, isMultiple ? -2 : -1);
-
-        const node = (
-          !popPaths.length ? widget : _get(widget, getNodePaths(popPaths))
-        ) as RenderConfig;
-
-        const { dataBindingProps } = getDefinition(node.widget);
-        const { isStore, mappingPath } = getMappingInfo(dataBindingProps);
-
-        if (!isStore) {
-          slicePaths = popPaths;
-          continue;
-        }
-
-        const nodePath = getBasePropPath(mappingPath);
-
-        const subFieldPath: string =
-          _get(node, ['props', 'propMapping', 'value', 'records']) || 'none';
-
-        const lathPath = slicePaths[
-          slicePaths.length - (isMultiple ? 2 : 1)
-        ] as string;
-
-        parentNode = {
-          node,
-          recordsFieldName: lathPath.startsWith(`${nodePath}.`)
-            ? `${subFieldPath}(${nodePath})`
-            : undefined,
-        };
-
-        break;
-      }
-
-      const structure = getDataStructure({ ...parentNode.node, getDefinition });
+      const structure = getDataStructure(
+        ...getGeneratorParams(node, { getCoreProps })
+      );
 
       const fieldName = Reflect.ownKeys(structure).find(
-        (key) =>
-          typeof key === 'symbol' &&
-          key.description === parentNode.recordsFieldName
+        (key) => typeof key === 'symbol' && key.description === subFieldName
       ) as symbol;
 
       return !fieldName ? structure : structure[fieldName][0];
     },
   };
-}
-
-export function useSourcePaths(widget: WidgetType) {
-  const getDefinition = usePropsDefinitionGetter();
-
-  return useMemo<SourcePaths>(() => {
-    const { dataBindingProps } = getDefinition(widget);
-    const { isStore, mappingPath } = getMappingInfo(dataBindingProps);
-
-    return {
-      data: isStore ? 'records' : 'data',
-      mapping: mappingPath,
-    };
-  }, [widget, getDefinition]);
 }

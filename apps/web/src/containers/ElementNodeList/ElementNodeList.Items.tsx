@@ -10,7 +10,7 @@ import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import Action from './ElementNodeList.Action';
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '~web/hooks';
 
 import type {
@@ -27,14 +27,15 @@ export default function Items({
   onDelete,
   onEdit,
 }: ItemsProps) {
-  const getDefinition = usePropsDefinitionGetter();
+  const getCoreProps = useCorePropsGetter();
 
   const { widget, props = {} } = config;
   const { t } = useTranslation();
 
   const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
     useMemo<NodePaths>(() => {
-      const { elementNodeProps = {} } = getDefinition(widget);
+      const { definition } = getCoreProps(widget);
+      const { elementNodeProps = {} } = definition;
 
       return {
         nodePaths: Object.keys(elementNodeProps),
@@ -49,7 +50,8 @@ export default function Items({
           return result;
         },
         onWidgetChildrenGenerate: ({ widget, props = {} }) => {
-          const { elementNodeProps = {} } = getDefinition(widget);
+          const { definition } = getCoreProps(widget);
+          const { elementNodeProps = {} } = definition;
           const nodePaths = Object.keys(elementNodeProps);
 
           return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
@@ -69,7 +71,7 @@ export default function Items({
           }, []);
         },
       };
-    }, [widget, getDefinition]);
+    }, [widget, getCoreProps]);
 
   return nodePaths.reduce<ChildrenArray>((items, path) => {
     const { [path]: nodes } = props;

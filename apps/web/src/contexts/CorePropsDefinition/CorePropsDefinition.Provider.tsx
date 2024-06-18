@@ -1,13 +1,13 @@
 import Core from '@weavcraft/core';
 import { lazy } from 'react';
 
-import { PropsDefinitionContext } from './PropsDefinition.hooks';
+import { CorePropsDefinitionContext } from './CorePropsDefinition.hooks';
 import { getPropsDefinition, type WidgetType } from '~web/services';
 
 import type {
-  PropsDefinitionProviderProps,
-  PropsDefinitionContextValue,
-} from './PropsDefinition.types';
+  CorePropsDefinitionProviderProps,
+  CorePropsDefinitionContextValue,
+} from './CorePropsDefinition.types';
 
 export default lazy(async () => {
   const definitions = await Promise.all(
@@ -21,17 +21,17 @@ export default lazy(async () => {
       ...acc,
       [definition.componentName]: definition,
     }),
-    {} as PropsDefinitionContextValue
+    {} as CorePropsDefinitionContextValue
   );
 
   return {
-    default: function PropsDefinitionProvider({
+    default: function CorePropsDefinitionProvider({
       children,
-    }: PropsDefinitionProviderProps) {
+    }: CorePropsDefinitionProviderProps) {
       return (
-        <PropsDefinitionContext.Provider value={value}>
+        <CorePropsDefinitionContext.Provider value={value}>
           {children}
-        </PropsDefinitionContext.Provider>
+        </CorePropsDefinitionContext.Provider>
       );
     },
   };

@@ -1,9 +1,13 @@
 import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 import type { Get, JsonObject } from 'type-fest';
 
-import type { GetDefinitionFn } from '~web/contexts';
-import type { PrimitiveValuePropsWithPath } from '~web/services';
-import type { RenderConfig } from '../useWidgetRender';
+import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
+
+import type {
+  GetDefinitionFn,
+  PrimitiveValuePropsWithPath,
+  WidgetConfigs,
+} from '../hooks.types';
 
 export type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataChangeHandler = (e: JsonObject | JsonObject[]) => void;
@@ -20,26 +24,23 @@ export interface DataStructure {
   [fieldSymbol: symbol]: [DataStructure];
 }
 
-export interface GetDataStructureOptions extends RenderConfig {
+export interface GeneratorOptions {
   baseFieldPath?: string[];
+  children: (RenderConfig & { nodePath: string })[];
   conflicts?: Set<string>;
-  getDefinition: GetDefinitionFn;
+  subFieldPath: string;
+  getCoreProps: GetDefinitionFn;
 }
 
-export interface MappingInfo {
-  isStore: boolean;
-  mappingPath: SourcePaths['mapping'];
+export interface ParentStoreNodeParams {
+  getCoreProps: GetDefinitionFn;
+  getNode: (widget: WidgetConfigs, paths: ConfigPaths) => RenderConfig;
 }
 
 export interface ParentNode {
   node: RenderConfig;
-  recordsFieldName?: string;
+  subFieldName?: string;
 }
-
-export type SourcePaths = {
-  mapping: 'propMapping' | `${string}.propMapping`;
-  data: 'records' | 'data';
-};
 
 export type ConfigChangeHandler = (
   config: RenderConfig,

@@ -28,7 +28,7 @@ const source = new Tsm.Project().addSourceFileAtPath(
 const trimImportText = (text?: string) =>
   text?.replace(/import\s*\(.*?\)\s*;?\./g, '');
 
-const getDefinition: GetDefinitionFn = (propsType, type, options) => {
+const getPropsDefinition: GetDefinitionFn = (propsType, type, options) => {
   const { [propsType]: generators } = Generator;
 
   return generators.reduce<ReturnType<(typeof generators)[number]>>(
@@ -47,7 +47,7 @@ const getPropertyWithAllTypes: GetPropertyWithAllTypesFn = (
 
     const definition = /(^|\.)(className|component)$/.test(propPath)
       ? false
-      : getDefinition(propsType, type, {
+      : getPropsDefinition(propsType, type, {
           path: propPath,
           required: !property.isOptional(),
         });
@@ -210,7 +210,7 @@ const Generator: GetDefinitionFns = {
                 const paramType = param.getTypeAtLocation(source);
 
                 return (
-                  getDefinition('PrimitiveValue', paramType, {
+                  getPropsDefinition('PrimitiveValue', paramType, {
                     path: `[${i}]`,
                     aliasName: param.getName(),
                     required: !param.isOptional(),
@@ -267,7 +267,7 @@ const Generator: GetDefinitionFns = {
           .reduce<NonNullable<PropTypeDefinitions.OneOf['definition']>>(
             (result, union) => {
               const { type, definition } =
-                getDefinition('PrimitiveValue', union, options) || {};
+                getPropsDefinition('PrimitiveValue', union, options) || {};
 
               result.push(...((type === 'oneof' && definition) || []));
 

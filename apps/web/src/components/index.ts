@@ -1,6 +1,7 @@
 export * from './ConfirmToggle';
 export * from './EditorList';
 export * from './FallbackTrans';
+export * from './IconSwitch';
 export * from './Link';
 export * from './MenuDialog';
 export * from './PaletteViewer';

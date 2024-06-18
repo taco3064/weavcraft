@@ -2,8 +2,12 @@ import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
+import StorageIcon from '@mui/icons-material/Storage';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import WidgetsIcon from '@mui/icons-material/Widgets';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -12,7 +16,7 @@ import { useTranslation } from 'next-i18next';
 
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import PropsSettingTabs, { type ConfigType } from '../PropsSettingTabs';
+import PropItems from './WidgetEditor.PropItems';
 import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useWidgetRender } from '~web/hooks';
@@ -24,10 +28,10 @@ import {
   PortalWrapper,
   useTogglePortal,
   useTutorialMode,
-  withPropsDefinition,
+  withCorePropsDefinition,
 } from '~web/contexts';
 
-export default withPropsDefinition(function WidgetEditor({
+export default withCorePropsDefinition(function WidgetEditor({
   config,
   marginTop,
   maxWidth,
@@ -37,15 +41,12 @@ export default withPropsDefinition(function WidgetEditor({
   const isTutorialMode = useTutorialMode();
 
   const [, startTransition] = useTransition();
-  const [editing, setEditing] = useState<RenderConfig>();
-  const [previewMode, setPreviewMode] = useState(false);
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
-  const [activeProps, setActiveProps] = useState<ConfigType>('PrimitiveValue');
   const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
-
-  const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
-    'treeView'
-  );
+  const [editing, setEditing] = useState<RenderConfig>();
+  const [portalMode, setPortalMode] = useState<'tree' | 'props'>('tree');
+  const [previewMode, setPreviewMode] = useState(false);
+  const [tab, setTab] = useState<'node' | 'data-structure'>('node');
 
   const [value, setValue] = useState<RenderConfig>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
@@ -92,32 +93,34 @@ export default withPropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          {!previewMode && value.widget && (
-            <Tooltip title={t('widgets:btn-widget-structure')}>
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => onToggle(true)}
-              >
-                <Core.Icon code="faCode" />
-              </IconButton>
-            </Tooltip>
-          )}
+          {tab === 'node' && value.widget && (
+            <>
+              {!previewMode && (
+                <Tooltip title={t('widgets:btn-widget-structure')}>
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => onToggle(true)}
+                  >
+                    <Core.Icon code="faCode" />
+                  </IconButton>
+                </Tooltip>
+              )}
 
-          {value.widget && (
-            <Tooltip
-              title={
-                previewMode ? t('btn-undo') : t('widgets:btn-widget-preview')
-              }
-            >
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => setPreviewMode(!previewMode)}
+              <Tooltip
+                title={
+                  previewMode ? t('btn-undo') : t('widgets:btn-widget-preview')
+                }
               >
-                <Core.Icon code={previewMode ? 'faUndo' : 'faEye'} />
-              </IconButton>
-            </Tooltip>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => setPreviewMode(!previewMode)}
+                >
+                  <Core.Icon code={previewMode ? 'faUndo' : 'faEye'} />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
 
           <Tooltip title={t('btn-save')}>
@@ -137,69 +140,92 @@ export default withPropsDefinition(function WidgetEditor({
           </Tooltip>
         </PortalWrapper>
 
-        <Container
-          disableGutters
-          className={classes.content}
-          onContextMenu={(e) => e.preventDefault()}
+        <Tabs
+          centered
+          className={classes.tabs}
+          indicatorColor="secondary"
+          textColor="secondary"
+          variant="fullWidth"
+          value={tab}
+          onChange={(_e, value) => setTab(value)}
         >
-          {value.widget ? (
-            generate(value)
-          ) : (
-            <NodeCreateButton
-              variant="node"
-              onClick={(widget) => setValue({ widget })}
-            />
-          )}
-        </Container>
+          <Tab
+            icon={<WidgetsIcon fontSize="large" />}
+            iconPosition="top"
+            value="node"
+            label={t('widgets:lbl-settings.primitive-value')}
+          />
 
-        <PortalWrapper containerEl={containerEl}>
-          {portalMode === 'treeView' && (
-            <ElementNodeList
-              active={activeNode}
-              config={value}
-              onActive={(paths) => setActiveNode(paths)}
-              onClose={() => onToggle(false)}
-              onDelete={({ paths }) =>
-                startTransition(() => {
-                  const active = paths.slice(
-                    0,
-                    typeof paths[paths.length - 1] === 'string' ? -1 : -2
-                  );
+          <Tab
+            icon={<StorageIcon fontSize="large" />}
+            iconPosition="top"
+            value="DataBinding"
+            label={t('widgets:lbl-settings.data-structure')}
+          />
+        </Tabs>
 
-                  onDeleteNode(paths);
-                  onToggle(paths.length > 0);
-                  setActiveNode(active);
-                })
-              }
-              onEdit={({ target, paths }) =>
-                startTransition(() => {
-                  onToggle(true);
-                  setActivePrimitive(paths);
-                  setActiveProps('PrimitiveValue');
-                  setPortalMode('setting');
-                  setEditing(target);
-                })
-              }
-            />
-          )}
+        {tab === 'node' && (
+          <Container
+            disableGutters
+            className={classes.content}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            {value.widget ? (
+              generate(value)
+            ) : (
+              <NodeCreateButton
+                variant="node"
+                onClick={(widget) => setValue({ widget })}
+              />
+            )}
 
-          {portalMode === 'setting' && (
-            <PropsSettingTabs
-              active={activeProps}
-              config={editing}
-              paths={activePrimitive}
-              widget={value as WidgetConfigs}
-              onActiveChange={setActiveProps}
-              onChange={onConfigChange}
-              onClose={() =>
-                startTransition(() => {
-                  setPortalMode('treeView');
-                  setEditing(undefined);
-                })
-              }
-            />
-          )}
-        </PortalWrapper>
+            <PortalWrapper containerEl={containerEl}>
+              {portalMode === 'tree' && (
+                <ElementNodeList
+                  active={activeNode}
+                  config={value}
+                  onActive={(paths) => setActiveNode(paths)}
+                  onClose={() => onToggle(false)}
+                  onDelete={({ paths }) =>
+                    startTransition(() => {
+                      const active = paths.slice(
+                        0,
+                        typeof paths[paths.length - 1] === 'string' ? -1 : -2
+                      );
+
+                      onDeleteNode(paths);
+                      onToggle(paths.length > 0);
+                      setActiveNode(active);
+                    })
+                  }
+                  onEdit={({ target, paths }) =>
+                    startTransition(() => {
+                      onToggle(true);
+                      setActivePrimitive(paths);
+                      setPortalMode('props');
+                      setEditing(target);
+                    })
+                  }
+                />
+              )}
+
+              {portalMode === 'props' && editing && (
+                <PropItems
+                  config={editing}
+                  paths={activePrimitive}
+                  widget={value as WidgetConfigs}
+                  onChange={onConfigChange}
+                  onClose={() =>
+                    startTransition(() => {
+                      setPortalMode('tree');
+                      setEditing(undefined);
+                    })
+                  }
+                />
+              )}
+            </PortalWrapper>
+          </Container>
+        )}
       </Container>
     </Slide>
   );

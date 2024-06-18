@@ -1,7 +1,11 @@
 import { Children } from 'react';
 
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { EditorListClasses, EditorListProps } from '~web/components';
+import type {
+  ConfigPaths,
+  RenderConfig,
+  EditorListClasses,
+  EditorListProps,
+} from '../containers.types';
 
 export type ChildrenArray = ReturnType<typeof Children.toArray>;
 

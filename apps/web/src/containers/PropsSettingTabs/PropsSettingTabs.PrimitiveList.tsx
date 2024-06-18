@@ -1,47 +1,31 @@
-import Checkbox from '@mui/material/Checkbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
-import _set from 'lodash/set';
 import { forwardRef, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
-import type { ChangeEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { PrimitiveFields } from '~web/components';
-import { usePropsDefinitionGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
 import type { PrimitiveListProps } from './PropsSettingTabs.types';
 
 export default forwardRef<HTMLUListElement, PrimitiveListProps>(
   function PrimitiveList({ classes, config, onChange }, ref) {
-    const getDefinition = usePropsDefinitionGetter();
+    const getCoreProps = useCorePropsGetter();
 
-    const { widget, externalInjection = [], props = {} } = config;
+    const { widget, props = {} } = config;
     const { t } = useTranslation();
 
     const items = useMemo(() => {
-      const { primitiveValueProps = {} } = getDefinition(widget);
+      const { definition } = getCoreProps(widget);
+      const { primitiveValueProps } = definition;
 
-      return Object.entries(primitiveValueProps).sort(([key1], [key2]) =>
+      return Object.entries(primitiveValueProps || {}).sort(([key1], [key2]) =>
         key1.localeCompare(key2)
       );
-    }, [widget, getDefinition]);
-
-    const handleExternalInjectionChange = (
-      e: ChangeEvent<HTMLInputElement>
-    ) => {
-      const injections = new Set(externalInjection);
-
-      if (e.target.checked) {
-        injections.add(e.target.value);
-      } else {
-        injections.delete(e.target.value);
-      }
-
-      _set(config, 'externalInjection', [...injections]);
-      onChange(config);
-    };
+    }, [widget, getCoreProps]);
 
     return (
       <List disablePadding ref={ref}>
@@ -62,17 +46,7 @@ export default forwardRef<HTMLUListElement, PrimitiveListProps>(
 
           return (
             <ListItem key={path} onClick={(e) => e.stopPropagation()}>
-              <ListItemIcon className={classes.icon}>
-                <Tooltip title={t('widgets:msg-external-injection')}>
-                  <Checkbox
-                    color="secondary"
-                    size="large"
-                    value={path}
-                    checked={externalInjection?.includes(path)}
-                    onChange={handleExternalInjectionChange}
-                  />
-                </Tooltip>
-              </ListItemIcon>
+              <ListItemIcon className={classes.icon}></ListItemIcon>
 
               <ListItemText
                 disableTypography

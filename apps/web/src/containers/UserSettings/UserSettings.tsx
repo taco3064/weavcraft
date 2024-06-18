@@ -14,7 +14,7 @@ import { MenuDialog } from '~web/components';
 import { useAuth, SIGNIN_OPTIONS, USER_SETTINGS } from '~web/hooks';
 import { useExpanded } from './UserSettings.hooks';
 import { useMainStyles } from './UserSettings.styles';
-import type { SigninMethod, UserSettingId } from '~web/hooks';
+import type { SigninMethod, UserSettingId } from '../containers.types';
 
 const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
   analytics: lazy(() => import('./UserSettings.Analytics')),

@@ -1,15 +1,27 @@
 import type { ContainerProps } from '@mui/material/Container';
-
-import type { PortalContainerEl } from '~web/contexts';
-import type { WidgetConfigs, WidgetType } from '~web/services';
+import type { Get } from 'type-fest';
 
 import type {
   ConfigChangeHandler,
   ConfigPaths,
+  EditorListProps,
+  PortalContainerEl,
+  PrimitiveValuePropsWithPath,
   RenderConfig,
-} from '~web/hooks';
+  WidgetConfigs,
+  WidgetType,
+} from '../containers.types';
 
 export type NodeCreateVariant = 'action' | 'node';
+
+export interface PropItem {
+  fieldPath?: string;
+  mappable: boolean;
+  path: string;
+  definition: NonNullable<
+    Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+  >;
+}
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
@@ -39,4 +51,11 @@ export interface NodeCreateButtonProps {
   path?: string;
   variant: NodeCreateVariant;
   onClick: (widget: WidgetType) => void;
+}
+
+export interface PropItemsProps extends Pick<EditorListProps, 'onClose'> {
+  config: RenderConfig;
+  paths: ConfigPaths;
+  widget: WidgetConfigs;
+  onChange: ConfigChangeHandler;
 }
