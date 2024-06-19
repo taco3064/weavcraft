@@ -14,14 +14,14 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import DataStructureView from '../DataStructureView';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropItems from './WidgetEditor.PropItems';
-import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
+import { upsertWidgetConfig } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './WidgetEditor.styles';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
 import type { WidgetEditorProps } from './WidgetEditor.types';
 
 import {
@@ -30,6 +30,12 @@ import {
   useTutorialMode,
   withCorePropsDefinition,
 } from '~web/contexts';
+
+import type {
+  ConfigPaths,
+  RenderConfig,
+  WidgetConfigs,
+} from '../imports.types';
 
 export default withCorePropsDefinition(function WidgetEditor({
   config,
@@ -48,7 +54,7 @@ export default withCorePropsDefinition(function WidgetEditor({
   const [previewMode, setPreviewMode] = useState(false);
   const [tab, setTab] = useState<'node' | 'data-structure'>('node');
 
-  const [value, setValue] = useState<RenderConfig>(() =>
+  const [value, setValue] = useState<WidgetConfigs>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
@@ -157,75 +163,119 @@ export default withCorePropsDefinition(function WidgetEditor({
           />
 
           <Tab
+            disabled={!value.widget}
             icon={<StorageIcon fontSize="large" />}
             iconPosition="top"
-            value="DataBinding"
+            value="data-structure"
             label={t('widgets:lbl-settings.data-structure')}
           />
         </Tabs>
 
-        {tab === 'node' && (
-          <Container
-            disableGutters
-            className={classes.content}
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            {value.widget ? (
-              generate(value)
-            ) : (
-              <NodeCreateButton
-                variant="node"
-                onClick={(widget) => setValue({ widget })}
-              />
-            )}
-
-            <PortalWrapper containerEl={containerEl}>
-              {portalMode === 'tree' && (
-                <ElementNodeList
-                  active={activeNode}
-                  config={value}
-                  onActive={(paths) => setActiveNode(paths)}
-                  onClose={() => onToggle(false)}
-                  onDelete={({ paths }) =>
-                    startTransition(() => {
-                      const active = paths.slice(
-                        0,
-                        typeof paths[paths.length - 1] === 'string' ? -1 : -2
-                      );
-
-                      onDeleteNode(paths);
-                      onToggle(paths.length > 0);
-                      setActiveNode(active);
-                    })
-                  }
-                  onEdit={({ target, paths }) =>
-                    startTransition(() => {
-                      onToggle(true);
-                      setActivePrimitive(paths);
-                      setPortalMode('props');
-                      setEditing(target);
-                    })
-                  }
+        <Container
+          disableGutters
+          className={classes.content}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          {tab === 'node' && (
+            <>
+              {value.widget ? (
+                generate(value)
+              ) : (
+                <NodeCreateButton
+                  variant="node"
+                  onClick={(widget) => setValue({ widget })}
                 />
               )}
 
-              {portalMode === 'props' && editing && (
-                <PropItems
-                  config={editing}
-                  paths={activePrimitive}
-                  widget={value as WidgetConfigs}
-                  onChange={onConfigChange}
-                  onClose={() =>
-                    startTransition(() => {
-                      setPortalMode('tree');
-                      setEditing(undefined);
-                    })
-                  }
-                />
-              )}
-            </PortalWrapper>
-          </Container>
-        )}
+              <PortalWrapper containerEl={containerEl}>
+                {portalMode === 'tree' && (
+                  <ElementNodeList
+                    active={activeNode}
+                    config={value}
+                    onActive={(paths) => setActiveNode(paths)}
+                    onClose={() => onToggle(false)}
+                    onDelete={({ paths }) =>
+                      startTransition(() => {
+                        const active = paths.slice(
+                          0,
+                          typeof paths[paths.length - 1] === 'string' ? -1 : -2
+                        );
+
+                        onDeleteNode(paths);
+                        onToggle(paths.length > 0);
+                        setActiveNode(active);
+                      })
+                    }
+                    onEdit={({ target, paths }) =>
+                      startTransition(() => {
+                        onToggle(true);
+                        setActivePrimitive(paths);
+                        setPortalMode('props');
+                        setEditing(target);
+                      })
+                    }
+                  />
+                )}
+
+                {portalMode === 'props' && editing && (
+                  <PropItems
+                    config={editing}
+                    paths={activePrimitive}
+                    widget={value as WidgetConfigs}
+                    onChange={onConfigChange}
+                    onClose={() =>
+                      startTransition(() => {
+                        setPortalMode('tree');
+                        setEditing(undefined);
+                      })
+                    }
+                  />
+                )}
+              </PortalWrapper>
+            </>
+          )}
+
+          {tab === 'data-structure' && (
+            <DataStructureView
+              root
+              value={value.dataStructure || []}
+              onChange={({ fieldPath, oldFieldPath, paths, isStructure }) => {
+                // TODO: Implement data structure change
+                const structure = value.dataStructure || [];
+
+                const target = paths.reduce<WidgetConfigs['dataStructure']>(
+                  (result, path) => {
+                    const target = result?.find(
+                      (field) => Array.isArray(field) && field[0] === path
+                    );
+
+                    return Array.isArray(target) ? target[1] : undefined;
+                  },
+                  structure
+                );
+
+                const index =
+                  target?.findIndex((field) => {
+                    const [fieldPath] = Array.isArray(field) ? field : [field];
+
+                    return fieldPath === oldFieldPath;
+                  }) ?? -1;
+
+                if (index < 0) {
+                  target?.push(isStructure ? [fieldPath, []] : fieldPath);
+                } else {
+                  target?.splice(
+                    index,
+                    1,
+                    isStructure ? [fieldPath, []] : fieldPath
+                  );
+                }
+
+                setValue({ ...value, dataStructure: structure });
+              }}
+            />
+          )}
+        </Container>
       </Container>
     </Slide>
   );

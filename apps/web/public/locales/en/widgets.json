@@ -1,5 +1,7 @@
 {
   "btn-add-data": "Add Data",
+  "btn-add-field": "Data Field",
+  "btn-add-structure": "Sub-Structure",
   "btn-add-trigger": "Add Trigger Widget",
   "btn-add-widget": "Add Widget",
   "btn-delete-data": "Delete Data",
@@ -11,6 +13,7 @@
   "btn-widget-preview": "Preview Widget",
   "btn-widget-structure": "View Structure",
   "lbl-default-value": "Default Value: {{ value }}",
+  "lbl-field-path": "Data Field Name/Path",
   "lbl-row": "Row {{ index }}",
   "msg-definitions-loading": "Loading settings...",
   "msg-delete-data-confirm": "Are you sure you want to delete the fixed data?",
@@ -27,6 +30,16 @@
   "ttl-fixed-data": "Fixed Data",
   "ttl-prop-mapping": "Data Binding",
   "ttl-select-widget": "Select Widget",
+  "ttl-field-path": {
+    "add": {
+      "field": "Add Data Field",
+      "structure": "Add Structure Field"
+    },
+    "edit": {
+      "field": "Edit Data Field",
+      "structure": "Edit Structure Field"
+    }
+  },
   "lbl-category": {
     "Display": "Display",
     "Input": "Input",

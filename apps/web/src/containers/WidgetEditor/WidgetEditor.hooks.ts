@@ -34,8 +34,8 @@ const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
 };
 
 export function useChangeEvents(
-  value: RenderConfig,
-  onChange: (value: RenderConfig) => void
+  value: WidgetConfigs,
+  onChange: (value: WidgetConfigs) => void
 ): ChangeEvents {
   const { getNodePaths } = useWidgetNodePaths();
 
@@ -51,7 +51,7 @@ export function useChangeEvents(
     },
 
     onAddLastChild: (config, path, widget) => {
-      const nodes: WidgetConfigs[] =
+      const nodes: RenderConfig[] =
         _get(config, ['props', path, 'value']) || [];
 
       const propConfig: ElementNodeProp = {
@@ -77,7 +77,7 @@ export function useChangeEvents(
 
     onDeleteNode: (paths) => {
       if (!paths.length) {
-        return onChange({} as RenderConfig);
+        return onChange({} as WidgetConfigs);
       }
 
       const fullPaths = getNodePaths(paths);

@@ -14,6 +14,7 @@ export type MutationtConfigInput<T> = {
   isTutorialMode?: boolean;
 };
 
-export interface WidgetConfigs extends Omit<BaseWidgetConfigs, 'widget'> {
+export interface WidgetConfigs
+  extends Pick<BaseWidgetConfigs, 'dataStructure' | 'props'> {
   widget: WidgetType;
 }

@@ -42,6 +42,9 @@ export type ElementNodeProp = BaseWidgetProps<
 >;
 
 //* - Widget Configs
+type DataFields = (string | [string, DataFields])[];
+
 export interface WidgetConfigs extends ElementNodeConfig {
   id: string;
+  dataStructure?: DataFields;
 }

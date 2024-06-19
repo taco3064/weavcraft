@@ -1,5 +1,7 @@
 {
   "btn-add-data": "加入資料",
+  "btn-add-field": "資料欄位",
+  "btn-add-structure": "子結構",
   "btn-add-trigger": "加入點擊組件",
   "btn-add-widget": "加入組件",
   "btn-delete-data": "刪除注入資料",
@@ -11,6 +13,7 @@
   "btn-widget-preview": "預覽輸出結果",
   "btn-widget-structure": "查看組件結構",
   "lbl-default-value": "預設值: {{ value }}",
+  "lbl-field-path": "資料欄位名稱或路徑",
   "lbl-row": "第 {{ index }} 筆",
   "msg-definitions-loading": "載入設定中...",
   "msg-delete-data-confirm": "確定要刪除目標資料嗎？",
@@ -26,6 +29,16 @@
   "ttl-fixed-data": "注入資料",
   "ttl-prop-mapping": "資料綁定設置",
   "ttl-select-widget": "選擇組件",
+  "ttl-field-path": {
+    "add": {
+      "field": "新增資料欄位",
+      "structure": "建立結構欄位"
+    },
+    "edit": {
+      "field": "編輯資料欄位",
+      "structure": "編輯結構欄位"
+    }
+  },
   "lbl-category": {
     "Display": "資料呈現",
     "Input": "表單輸入",
