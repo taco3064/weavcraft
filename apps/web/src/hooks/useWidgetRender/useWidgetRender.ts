@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
 
 import { useCorePropsGetter } from '~web/contexts';
-import type { WidgetConfigs } from '../hooks.types';
+import type { WidgetConfigs } from '../imports.types';
 
 import type {
   ConfigPaths,

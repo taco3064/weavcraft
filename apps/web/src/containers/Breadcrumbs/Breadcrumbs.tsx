@@ -15,7 +15,7 @@ import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
 import { useBreakpointMatches } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
-import type { BreakpointValues } from '../containers.types';
+import type { BreakpointValues } from '../imports.types';
 
 const MAX_ITEMS: BreakpointValues<number> = {
   xs: 3,

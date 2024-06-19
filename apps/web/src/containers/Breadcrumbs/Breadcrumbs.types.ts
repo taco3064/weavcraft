@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { Href, PortalContainerEl } from '../containers.types';
+import type { Href, PortalContainerEl } from '../imports.types';
 
 export interface Breadcrumb {
   label: string;

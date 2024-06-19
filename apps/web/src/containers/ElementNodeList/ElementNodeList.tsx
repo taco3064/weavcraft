@@ -11,7 +11,7 @@ import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
 import { useWidgetNodePaths } from '~web/hooks';
 import type { ElementNodeListProps } from './ElementNodeList.types';
-import type { RenderConfig } from '../containers.types';
+import type { RenderConfig } from '../imports.types';
 
 export default function ElementNodeList({
   config,

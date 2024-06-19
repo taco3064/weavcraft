@@ -2,7 +2,8 @@ import Core from '@weavcraft/core';
 import { lazy } from 'react';
 
 import { CorePropsDefinitionContext } from './CorePropsDefinition.hooks';
-import { getPropsDefinition, type WidgetType } from '~web/services';
+import { getPropsDefinition } from '~web/services';
+import type { WidgetType } from '../imports.types';
 
 import type {
   CorePropsDefinitionProviderProps,

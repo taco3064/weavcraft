@@ -6,7 +6,7 @@ import type {
   PrimitiveValuePropsWithPath,
   PropsDefinition,
   WidgetType,
-} from '~web/services';
+} from '../imports.types';
 
 type ElementNodeDefinition = NonNullable<
   Get<ElementNodePropsWithPath, ['elementNodeProps', string]>

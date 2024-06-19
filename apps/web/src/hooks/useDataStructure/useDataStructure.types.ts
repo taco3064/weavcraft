@@ -7,7 +7,7 @@ import type {
   GetDefinitionFn,
   PrimitiveValuePropsWithPath,
   WidgetConfigs,
-} from '../hooks.types';
+} from '../imports.types';
 
 export type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataChangeHandler = (e: JsonObject | JsonObject[]) => void;

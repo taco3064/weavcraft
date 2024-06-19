@@ -20,7 +20,7 @@ import { useBreakpointMatches } from '~web/hooks';
 import { useHierarchyStyles } from './HierarchyList.styles';
 import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
-import type { PortalContainerEl } from '../containers.types';
+import type { PortalContainerEl } from '../imports.types';
 
 import {
   useDataStore,

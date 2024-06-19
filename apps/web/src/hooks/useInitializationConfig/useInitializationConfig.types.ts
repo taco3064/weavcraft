@@ -1,4 +1,4 @@
-import type { HierarchyData, SuperiorHierarchy } from '../hooks.types';
+import type { HierarchyData, SuperiorHierarchy } from '../imports.types';
 
 export interface InitializationConfig<T> {
   hash: string;

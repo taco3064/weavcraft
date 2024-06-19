@@ -5,7 +5,7 @@ import type {
   RenderConfig,
   EditorListClasses,
   EditorListProps,
-} from '../containers.types';
+} from '../imports.types';
 
 export type ChildrenArray = ReturnType<typeof Children.toArray>;
 

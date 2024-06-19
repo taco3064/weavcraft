@@ -7,8 +7,9 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import NotistackProvider from '../Notistack';
-import { PALETTES, type PaletteCode } from '~web/themes';
+import { PALETTES } from '~web/themes';
 import { AppSettingsContext, usePalette } from './AppProviderManager.hooks';
+import type { PaletteCode } from '../imports.types';
 
 import type {
   AppProviderManagerProps,

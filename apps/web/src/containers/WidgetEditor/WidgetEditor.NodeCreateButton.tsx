@@ -10,7 +10,7 @@ import { MenuDialog } from '~web/components';
 import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
 import { useWidgetOptions } from './WidgetEditor.hooks';
 import type { NodeCreateButtonProps } from './WidgetEditor.types';
-import type { WidgetType } from '../containers.types';
+import type { WidgetType } from '../imports.types';
 
 const CLASS_NAME = `NodeCreateButton-${nanoid(4)}`;
 

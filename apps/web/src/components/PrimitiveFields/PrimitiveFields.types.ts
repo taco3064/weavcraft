@@ -3,7 +3,7 @@ import type { Get } from 'type-fest';
 import type { ReactElement, ReactNode } from 'react';
 import type { IconProps } from '@mui/material/Icon';
 
-import type { PrimitiveValuePropsWithPath } from '~web/services';
+import type { PrimitiveValuePropsWithPath } from '../imports.types';
 
 export type PrimitiveProps = NonNullable<
   Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>

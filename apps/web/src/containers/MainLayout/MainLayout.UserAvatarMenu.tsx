@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { MenuDialog } from '~web/components';
 import { useAuth, SIGNIN_OPTIONS, USER_MENU_ITEMS } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
-import type { SigninMethod } from '../containers.types';
+import type { SigninMethod } from '../imports.types';
 
 export default function UserAvatarMenu() {
   const [open, setOpen] = useState(false);

@@ -6,7 +6,7 @@ import type {
   HierarchyData,
   PortalContainerEl,
   SearchHierarchyParams,
-} from '../containers.types';
+} from '../imports.types';
 
 //* Variables
 export type MutationMode = 'create' | 'update' | 'delete';

@@ -10,7 +10,7 @@ import type {
   RenderConfig,
   WidgetConfigs,
   WidgetType,
-} from '../containers.types';
+} from '../imports.types';
 
 export type NodeCreateVariant = 'action' | 'node';
 

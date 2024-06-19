@@ -2,7 +2,7 @@ import * as Dnd from '@dnd-kit/core';
 import { useEffect, useMemo, useState, useTransition } from 'react';
 
 import { EnumHierarchyType } from '~web/services';
-import type { HierarchyData, SearchHierarchyParams } from '../containers.types';
+import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
 import type { HierarchyListProps } from './HierarchyList.types';
 
 let bodyScrollTop = 0;

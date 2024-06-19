@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { WidgetConfigs } from '../hooks.types';
+import type { WidgetConfigs } from '../imports.types';
 
 export type ConfigPaths = (string | number)[];
 

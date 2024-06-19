@@ -16,7 +16,7 @@ import { PaletteViewer } from '~web/components';
 import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import type { PaletteEditorProps } from './PaletteEditor.types';
-import type { ColorName, ThemePalette } from '../containers.types';
+import type { ColorName, ThemePalette } from '../imports.types';
 
 import {
   PortalWrapper,

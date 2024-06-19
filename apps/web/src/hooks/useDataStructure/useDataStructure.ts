@@ -9,7 +9,7 @@ import type { JsonObject } from 'type-fest';
 import { getBasePropPath, useCorePropsGetter } from '~web/contexts';
 import { useWidgetNodePaths } from '../useWidgetRender';
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
-import type { MappingPath, WidgetConfigs } from '../hooks.types';
+import type { MappingPath, WidgetConfigs } from '../imports.types';
 
 import type {
   ConfigChangeHandler,

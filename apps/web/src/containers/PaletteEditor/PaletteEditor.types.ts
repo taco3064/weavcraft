@@ -9,7 +9,7 @@ import type {
   PaletteViewerProps,
   PortalContainerEl,
   ThemePalette,
-} from '../containers.types';
+} from '../imports.types';
 
 export type ColorInputProps = ComponentProps<typeof HexColorInput>;
 

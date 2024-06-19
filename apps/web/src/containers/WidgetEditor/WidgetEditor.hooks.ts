@@ -22,7 +22,7 @@ import type {
   RenderConfig,
   WidgetConfigs,
   WidgetType,
-} from '../containers.types';
+} from '../imports.types';
 
 const { default: _Core, ...CATEGORIES } = Core;
 

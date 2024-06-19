@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react';
+
 import type { TogglePortalContextValue } from './TogglePortal.types';
 
 export const TogglePortalContext = createContext<TogglePortalContextValue>({
