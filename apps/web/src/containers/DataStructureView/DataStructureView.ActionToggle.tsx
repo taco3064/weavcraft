@@ -22,7 +22,7 @@ const SubTransition = forwardRef<unknown, SubTransitionProps>(
 export default function ActionToggle({
   variant,
   value,
-  onFieldModify,
+  onActionToggle,
 }: ActionToggleProps) {
   const { t } = useTranslation();
 
@@ -30,6 +30,9 @@ export default function ActionToggle({
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState<EditingState>();
 
+  const mode = editing?.fieldPath ? 'edit' : 'add';
+
+  //* Action Menu Options
   const fieldOptions: MenuItemOptions[] = !value
     ? []
     : [
@@ -42,7 +45,7 @@ export default function ActionToggle({
       ? []
       : [
           { icon: 'faPlus', label: 'widgets:btn-add.field' },
-          { icon: 'faCirclePlus', label: 'widgets:btn-add.structure' },
+          { icon: 'faFileCirclePlus', label: 'widgets:btn-add.structure' },
         ];
 
   const divider: MenuItemOptions[] =
@@ -63,7 +66,9 @@ export default function ActionToggle({
             field: value,
           })}
           onClose={() => setConfirmOpen(false)}
-          onConfirm={() => onFieldModify({ type: 'delete', value })}
+          onConfirm={() =>
+            onActionToggle({ mode: 'delete', value, type: variant })
+          }
         />
       )}
 
@@ -91,17 +96,18 @@ export default function ActionToggle({
         TransitionComponent={SubTransition}
         icon="faBezierCurve"
         open={editing !== undefined}
-        title={t(
-          `widgets:ttl-field-path.${editing?.fieldPath ? 'edit' : 'add'}.${
-            editing?.type
-          }`
-        )}
+        title={t(`widgets:ttl-field-path.${mode}.${editing?.type}`)}
         onClose={() => setEditing(undefined)}
         onSubmit={(formData) => {
           const value = formData.get('fieldPath') as string;
 
           setEditing(undefined);
-          onFieldModify({ type: editing?.fieldPath ? 'edit' : 'add', value });
+
+          onActionToggle({
+            mode,
+            type: editing?.type as EditingState['type'],
+            value,
+          });
         }}
       >
         <TextField

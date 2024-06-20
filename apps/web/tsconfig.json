@@ -34,7 +34,7 @@
     "jest.config.ts",
     "**/*.spec.ts",
     "**/*.test.ts",
-    "**/legacy"
+    "../../apps/web/src/legacy"
   ],
   "ts-node": {
     "files": true,

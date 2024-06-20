@@ -44,21 +44,21 @@ export default function FieldItems({
                     <ActionToggle
                       value={fieldPath}
                       variant={isStructure ? 'structure' : 'field'}
-                      onFieldModify={({ type, value: newFieldPath }) => {
-                        if (type === 'add' && isStructure) {
+                      onActionToggle={({ mode, value: newFieldPath, type }) => {
+                        if (mode === 'add' && isStructure) {
                           onFieldChange(subFields, {
                             fieldPath: newFieldPath,
                             paths: [...paths, fieldPath],
-                            isStructure,
+                            isStructure: type === 'structure',
                           });
-                        } else if (type === 'edit') {
+                        } else if (mode === 'edit') {
                           onFieldChange(value, {
                             fieldPath: newFieldPath,
                             oldFieldPath: fieldPath,
                             paths,
                             isStructure,
                           });
-                        } else if (type === 'delete') {
+                        } else if (mode === 'delete') {
                           onChange({
                             fieldPath,
                             oldFieldPath: fieldPath,

@@ -22,8 +22,9 @@ export interface ActionToggleProps {
   value?: string;
   variant: EditingState['type'];
 
-  onFieldModify: (e: {
+  onActionToggle: (e: {
+    mode: 'add' | 'edit' | 'delete';
+    type: EditingState['type'];
     value: string;
-    type: 'add' | 'edit' | 'delete';
   }) => void;
 }

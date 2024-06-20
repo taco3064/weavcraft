@@ -43,11 +43,11 @@ export default function DataStructureView({
               >
                 <ActionToggle
                   variant="structure"
-                  onFieldModify={({ value: fieldPath }) =>
+                  onActionToggle={({ value: fieldPath, type }) =>
                     onFieldChange(value, {
                       fieldPath,
                       paths: [],
-                      isStructure: true,
+                      isStructure: type === 'structure',
                     })
                   }
                 />
