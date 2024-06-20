@@ -44,32 +44,29 @@ export default function FieldItems({
                     <ActionToggle
                       value={fieldPath}
                       variant={isStructure ? 'structure' : 'field'}
-                      onFieldAdd={
-                        !isStructure
-                          ? undefined
-                          : (field, isStructure) =>
-                              onFieldChange(subFields, {
-                                fieldPath: field,
-                                paths: [...paths, fieldPath],
-                                isStructure,
-                              })
-                      }
-                      onFieldChange={(field, isStructure) =>
-                        onFieldChange(value, {
-                          fieldPath: field,
-                          oldFieldPath: fieldPath,
-                          paths,
-                          isStructure,
-                        })
-                      }
-                      onFieldRemove={(_field, isStructure) =>
-                        onChange({
-                          fieldPath,
-                          oldFieldPath: fieldPath,
-                          paths,
-                          isStructure,
-                        })
-                      }
+                      onFieldModify={({ type, value: newFieldPath }) => {
+                        if (type === 'add' && isStructure) {
+                          onFieldChange(subFields, {
+                            fieldPath: newFieldPath,
+                            paths: [...paths, fieldPath],
+                            isStructure,
+                          });
+                        } else if (type === 'edit') {
+                          onFieldChange(value, {
+                            fieldPath: newFieldPath,
+                            oldFieldPath: fieldPath,
+                            paths,
+                            isStructure,
+                          });
+                        } else if (type === 'delete') {
+                          onChange({
+                            fieldPath,
+                            oldFieldPath: fieldPath,
+                            paths,
+                            isStructure,
+                          });
+                        }
+                      }}
                     />
                   </Toolbar>
                 )}

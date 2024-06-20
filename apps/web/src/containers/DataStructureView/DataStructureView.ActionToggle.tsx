@@ -22,14 +22,13 @@ const SubTransition = forwardRef<unknown, SubTransitionProps>(
 export default function ActionToggle({
   variant,
   value,
-  onFieldAdd,
-  onFieldChange,
-  onFieldRemove,
+  onFieldModify,
 }: ActionToggleProps) {
+  const { t } = useTranslation();
+
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState<EditingState>();
-  const { t } = useTranslation();
 
   const fieldOptions: MenuItemOptions[] = !value
     ? []
@@ -38,12 +37,13 @@ export default function ActionToggle({
         { icon: 'faTrash', label: `widgets:btn-delete.${variant}` },
       ];
 
-  const structureOptions: MenuItemOptions[] = !onFieldAdd
-    ? []
-    : [
-        { icon: 'faPlus', label: 'widgets:btn-add.field' },
-        { icon: 'faCirclePlus', label: 'widgets:btn-add.structure' },
-      ];
+  const structureOptions: MenuItemOptions[] =
+    variant !== 'structure'
+      ? []
+      : [
+          { icon: 'faPlus', label: 'widgets:btn-add.field' },
+          { icon: 'faCirclePlus', label: 'widgets:btn-add.structure' },
+        ];
 
   const divider: MenuItemOptions[] =
     !fieldOptions.length || !structureOptions.length ? [] : ['divider'];
@@ -54,16 +54,16 @@ export default function ActionToggle({
         <Core.Icon code="faGear" />
       </IconButton>
 
-      {value && onFieldRemove && (
+      {value && (
         <ConfirmDialog
           TransitionComponent={SubTransition}
           open={confirmOpen}
           subject={t('ttl-delete-confirm')}
-          onClose={() => setConfirmOpen(false)}
-          onConfirm={() => onFieldRemove(value, variant === 'structure')}
           message={t('widgets:msg-delete-confirm.field', {
             field: value,
           })}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={() => onFieldModify({ type: 'delete', value })}
         />
       )}
 
@@ -91,23 +91,18 @@ export default function ActionToggle({
         TransitionComponent={SubTransition}
         icon="faBezierCurve"
         open={editing !== undefined}
-        onClose={() => setEditing(undefined)}
-        onSubmit={(formData) => {
-          const fieldPath = formData.get('fieldPath') as string;
-
-          setEditing(undefined);
-
-          if (!editing?.fieldPath) {
-            onFieldAdd?.(fieldPath, editing?.type === 'structure');
-          } else {
-            onFieldChange?.(fieldPath, editing?.type === 'structure');
-          }
-        }}
         title={t(
           `widgets:ttl-field-path.${editing?.fieldPath ? 'edit' : 'add'}.${
             editing?.type
           }`
         )}
+        onClose={() => setEditing(undefined)}
+        onSubmit={(formData) => {
+          const value = formData.get('fieldPath') as string;
+
+          setEditing(undefined);
+          onFieldModify({ type: editing?.fieldPath ? 'edit' : 'add', value });
+        }}
       >
         <TextField
           autoFocus

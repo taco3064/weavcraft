@@ -8,6 +8,7 @@
   "msg-primitive-description": "透過調整組件的佈局和外觀設定，來改變組件的顯示結果。",
   "msg-prop-mapping-placeholder": "選擇資料欄位名稱或路徑",
   "ttl-appearance": "外觀設定",
+  "ttl-data-structure-action": "資料結構選單",
   "ttl-default-value": "預設值",
   "ttl-element-node": "組建結構",
   "ttl-prop-mapping": "資料綁定設置",

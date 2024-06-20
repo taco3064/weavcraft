@@ -21,7 +21,9 @@ export interface DataStructureViewProps {
 export interface ActionToggleProps {
   value?: string;
   variant: EditingState['type'];
-  onFieldAdd?: (fieldPath: string, isStructure: boolean) => void;
-  onFieldChange?: (fieldPath: string, isStructure: boolean) => void;
-  onFieldRemove?: (fieldPath: string, isStructure: boolean) => void;
+
+  onFieldModify: (e: {
+    value: string;
+    type: 'add' | 'edit' | 'delete';
+  }) => void;
 }
