@@ -1,43 +1,31 @@
 {
-  "btn-add-data": "加入資料",
-  "btn-add-field": "資料欄位",
-  "btn-add-structure": "子結構",
-  "btn-add-trigger": "加入點擊組件",
-  "btn-add-widget": "加入組件",
-  "btn-delete-data": "刪除注入資料",
-  "btn-delete-widget": "刪除組件",
-  "btn-edit-data": "設定注入資料",
-  "btn-edit-widget": "設定組件",
-  "btn-open-toolbar": "開啟工具欄 ({{ widget }})",
-  "btn-set-as-prop-name": "同屬性名稱",
   "btn-widget-preview": "預覽輸出結果",
   "btn-widget-structure": "查看組件結構",
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
-  "lbl-row": "第 {{ index }} 筆",
   "msg-definitions-loading": "載入設定中...",
-  "msg-delete-data-confirm": "確定要刪除目標資料嗎？",
-  "msg-delete-widget-confirm": "確定要刪除此{{widget}}組件嗎？",
-  "msg-fixed-data-description": "{{widget}}組件所綁定的資料預設在網頁運行時動態載入，也可以透過此處注入特定資料。",
-  "msg-no-data": "未注入資料",
+  "msg-no-structure": "尚未設置資料結構",
   "msg-primitive-description": "透過調整組件的佈局和外觀設定，來改變組件的顯示結果。",
-  "msg-prop-mapping-conflict": "資料欄位與對應的外觀設定型態存在衝突",
-  "msg-prop-mapping-description": "在此為{{ widget }}組件的外觀設定進行資料綁定注入配置。\n請注意：已配置的外觀設定將會變成預設值。",
   "msg-prop-mapping-placeholder": "選擇資料欄位名稱或路徑",
   "ttl-appearance": "外觀設定",
+  "ttl-default-value": "預設值",
   "ttl-element-node": "組建結構",
-  "ttl-fixed-data": "注入資料",
   "ttl-prop-mapping": "資料綁定設置",
   "ttl-select-widget": "選擇組件",
-  "ttl-field-path": {
-    "add": {
-      "field": "新增資料欄位",
-      "structure": "建立結構欄位"
-    },
-    "edit": {
-      "field": "編輯資料欄位",
-      "structure": "編輯結構欄位"
-    }
+  "btn-add": {
+    "field": "加入資料欄位",
+    "structure": "建立子結構",
+    "trigger": "加入點擊組件",
+    "widget": "加入組件"
+  },
+  "btn-delete": {
+    "field": "移除資料欄位",
+    "structure": "移除子結構",
+    "widget": "刪除組件"
+  },
+  "btn-edit": {
+    "field": "編輯資料欄位名稱",
+    "widget": "設定組件"
   },
   "lbl-category": {
     "Display": "資料呈現",
@@ -94,5 +82,19 @@
     "Toolbar": "工具列",
     "Tooltip": "文字提示",
     "Typography": "文字排版"
+  },
+  "msg-delete-confirm": {
+    "field": "確定要移除 {{ field }}?",
+    "widget": "確定要刪除此{{widget}}組件嗎？"
+  },
+  "ttl-field-path": {
+    "add": {
+      "field": "新增資料欄位",
+      "structure": "建立結構欄位"
+    },
+    "edit": {
+      "field": "編輯資料欄位",
+      "structure": "編輯結構欄位"
+    }
   }
 }

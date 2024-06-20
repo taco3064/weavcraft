@@ -1,117 +1,79 @@
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import { Fragment, useState } from 'react';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
 import { useTranslation } from 'next-i18next';
 
-import FieldModifyDialog from './DataStructureView.FieldModifyDialog';
+import AddButtons from './DataStructureView.AddButtons';
+import FieldItems from './DataStructureView.FieldItems';
+import { useFieldChangeHandler } from './DataStructureView.hooks';
 import { useMainStyles } from './DataStructureView.styles';
 import type { DataStructureViewProps } from './DataStructureView.types';
 
 export default function DataStructureView({
   paths = [],
-  root,
   value,
   onChange,
 }: DataStructureViewProps) {
-  const Container = root ? SimpleTreeView : Fragment;
+  const onFieldChange = useFieldChangeHandler(onChange);
 
   const { t } = useTranslation();
   const { classes } = useMainStyles();
 
-  const [editing, setEditing] = useState<{
-    fieldPath: string;
-    type: 'field' | 'structure';
-  }>();
-
   return (
-    <>
-      <FieldModifyDialog
-        open={editing !== undefined}
-        value={editing?.fieldPath}
-        onClose={() => setEditing(undefined)}
-        onConfirm={(fieldPath) => {
-          setEditing(undefined);
+    <Container
+      disableGutters
+      maxWidth={false}
+      component={SimpleTreeView}
+      defaultExpandedItems={['root']}
+    >
+      <TreeItem
+        classes={{ label: classes.row }}
+        itemId="root"
+        label={
+          <>
+            <AccountTreeIcon color="disabled" fontSize="large" />
 
-          onChange({
-            fieldPath,
-            oldFieldPath: editing?.fieldPath || undefined,
-            paths,
-            isStructure: editing?.type === 'structure',
-          });
-        }}
-        title={t(
-          `widgets:ttl-field-path.${!editing?.fieldPath ? 'add' : 'edit'}.${
-            editing?.type
-          }`
-        )}
-      />
+            {onChange && (
+              <Toolbar
+                disableGutters
+                variant="dense"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AddButtons
+                  onChange={(fieldPath, isStructure) =>
+                    onFieldChange(value, {
+                      fieldPath,
+                      oldFieldPath: undefined,
+                      paths: [],
+                      isStructure,
+                    })
+                  }
+                />
+              </Toolbar>
+            )}
+          </>
+        }
+      >
+        <FieldItems {...{ paths, value, onChange }} />
+      </TreeItem>
 
-      <Container sx={{ width: '100%' }}>
+      {!value.length && (
         <TreeItem
-          itemId={`${paths.join(':')}-toolbar`}
-          classes={{ content: classes.toolbar }}
+          itemId="message"
+          classes={{ iconContainer: classes.hidden }}
           label={
-            <ButtonGroup
-              variant="contained"
-              className={classes.buttons}
-              onClick={(e) => e.stopPropagation()}
+            <Typography
+              variant="h6"
+              justifyContent="center"
+              color="text.disabled"
             >
-              <Button
-                color="info"
-                startIcon={<AddIcon />}
-                onClick={() => setEditing({ fieldPath: '', type: 'field' })}
-              >
-                {t('widgets:btn-add-field')}
-              </Button>
-
-              <Button
-                color="success"
-                endIcon={<PostAddIcon />}
-                onClick={() => setEditing({ fieldPath: '', type: 'structure' })}
-              >
-                {t('widgets:btn-add-structure')}
-              </Button>
-            </ButtonGroup>
+              {t('widgets:msg-no-structure')}
+            </Typography>
           }
         />
-
-        {value
-          .sort((field1, field2) => {
-            const [path1, sub1 = []] = Array.isArray(field1)
-              ? field1
-              : [field1];
-
-            const [path2, sub2 = []] = Array.isArray(field2)
-              ? field2
-              : [field2];
-
-            return sub1.length - sub2.length || path1.localeCompare(path2);
-          })
-          .map((field) => {
-            const [fieldPath, subFields] = Array.isArray(field)
-              ? field
-              : [field];
-
-            return (
-              <TreeItem
-                key={fieldPath}
-                itemId={`${paths.join(':')}-${fieldPath}`}
-                label={fieldPath}
-              >
-                {!Array.isArray(subFields) ? null : (
-                  <DataStructureView
-                    paths={[...paths, fieldPath]}
-                    value={subFields}
-                    onChange={onChange}
-                  />
-                )}
-              </TreeItem>
-            );
-          })}
-      </Container>
-    </>
+      )}
+    </Container>
   );
 }

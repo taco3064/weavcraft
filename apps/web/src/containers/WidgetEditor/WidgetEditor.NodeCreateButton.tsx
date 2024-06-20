@@ -54,7 +54,7 @@ export default function NodeCreateButton({
     return {
       subtitle,
       tooltip: [
-        t(`widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`),
+        t(`widgets:btn-add.${variant === 'action' ? 'trigger' : 'widget'}`),
         !subtitle ? '' : ` (${subtitle})`,
       ].join(' '),
     };

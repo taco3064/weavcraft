@@ -25,11 +25,11 @@ export default function Action({
       <ConfirmToggle
         subject={t('ttl-delete-confirm')}
         onConfirm={() => onDelete({ target: config, paths })}
-        message={t('widgets:msg-delete-widget-confirm', {
+        message={t('widgets:msg-delete-confirm.widget', {
           widget: t(`widgets:lbl-widgets.${widget}`),
         })}
         toggle={
-          <Tooltip title={t('widgets:btn-delete-widget')}>
+          <Tooltip title={t('widgets:btn-delete.widget')}>
             <IconButton>
               <Core.Icon code="faTrash" color="disabled" />
             </IconButton>
@@ -37,7 +37,7 @@ export default function Action({
         }
       />
 
-      <Tooltip title={t('widgets:btn-edit-widget')}>
+      <Tooltip title={t('widgets:btn-edit.widget')}>
         <IconButton
           color="info"
           onClick={(e) => {

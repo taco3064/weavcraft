@@ -34,8 +34,11 @@ export default function ConfirmToggle<T extends string>({
         fullWidth
         maxWidth="xs"
         open={open}
-        onClose={() => setOpen(false)}
         PaperProps={{ className: classes.root }}
+        onClose={(e: MouseEvent) => {
+          e.stopPropagation();
+          setOpen(false);
+        }}
       >
         <Alert
           severity={severity}
@@ -43,7 +46,9 @@ export default function ConfirmToggle<T extends string>({
             <Button
               variant="text"
               color={severity}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
+
                 setOpen(false);
                 onConfirm();
               }}

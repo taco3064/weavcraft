@@ -64,10 +64,8 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
 
-  const { onDeleteNode, onConfigChange, ...changeEvents } = useChangeEvents(
-    value,
-    setValue
-  );
+  const { onDeleteNode, onConfigChange, onStructureChange, ...changeEvents } =
+    useChangeEvents(value, setValue);
 
   const withNodeCreateButton = useNodeCreateButton(
     NodeCreateButton,
@@ -237,42 +235,8 @@ export default withCorePropsDefinition(function WidgetEditor({
 
           {tab === 'data-structure' && (
             <DataStructureView
-              root
               value={value.dataStructure || []}
-              onChange={({ fieldPath, oldFieldPath, paths, isStructure }) => {
-                // TODO: Implement data structure change
-                const structure = value.dataStructure || [];
-
-                const target = paths.reduce<WidgetConfigs['dataStructure']>(
-                  (result, path) => {
-                    const target = result?.find(
-                      (field) => Array.isArray(field) && field[0] === path
-                    );
-
-                    return Array.isArray(target) ? target[1] : undefined;
-                  },
-                  structure
-                );
-
-                const index =
-                  target?.findIndex((field) => {
-                    const [fieldPath] = Array.isArray(field) ? field : [field];
-
-                    return fieldPath === oldFieldPath;
-                  }) ?? -1;
-
-                if (index < 0) {
-                  target?.push(isStructure ? [fieldPath, []] : fieldPath);
-                } else {
-                  target?.splice(
-                    index,
-                    1,
-                    isStructure ? [fieldPath, []] : fieldPath
-                  );
-                }
-
-                setValue({ ...value, dataStructure: structure });
-              }}
+              onChange={onStructureChange}
             />
           )}
         </Container>

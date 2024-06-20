@@ -1,6 +1,8 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { Get } from 'type-fest';
 
+import type { DataStructureViewProps } from '../DataStructureView';
+
 import type {
   ConfigChangeHandler,
   ConfigPaths,
@@ -27,6 +29,7 @@ export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
   onConfigChange: ConfigChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
+  onStructureChange: NonNullable<DataStructureViewProps['onChange']>;
 
   onAddLastChild: (
     config: RenderConfig,

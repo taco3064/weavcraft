@@ -94,6 +94,41 @@ export function useChangeEvents(
 
       onChange({ ...value });
     },
+
+    onStructureChange: ({ fieldPath, oldFieldPath, paths, isStructure }) => {
+      const structure = value.dataStructure || [];
+
+      const target = paths.reduce<WidgetConfigs['dataStructure']>(
+        (result, path) => {
+          const target = result?.find(
+            (field) => Array.isArray(field) && field[0] === path
+          );
+
+          return Array.isArray(target) ? target[1] : undefined;
+        },
+        structure
+      );
+
+      const index =
+        target?.findIndex((field) => {
+          const [fieldPath] = Array.isArray(field) ? field : [field];
+
+          return fieldPath === oldFieldPath;
+        }) ?? -1;
+
+      if (index < 0) {
+        target?.push(isStructure ? [fieldPath, []] : fieldPath);
+      } else if (fieldPath !== oldFieldPath) {
+        target?.splice(index, 1, isStructure ? [fieldPath, []] : fieldPath);
+      } else {
+        target?.splice(index, 1);
+      }
+
+      onChange({
+        ...value,
+        dataStructure: JSON.parse(JSON.stringify(structure)),
+      });
+    },
   };
 }
 
