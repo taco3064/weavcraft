@@ -10,11 +10,12 @@ import { useTranslation } from 'next-i18next';
 import AddButtons from './DataStructureView.AddButtons';
 import FieldModifyDialog from './DataStructureView.FieldModifyDialog';
 import { ConfirmToggle } from '~web/components';
+import { useMainStyles } from './DataStructureView.styles';
+
 import {
   useDataFields,
   useFieldChangeHandler,
 } from './DataStructureView.hooks';
-import { useMainStyles } from './DataStructureView.styles';
 
 import type {
   DataStructureViewProps,
