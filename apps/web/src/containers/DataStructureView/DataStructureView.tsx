@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
 import { useTranslation } from 'next-i18next';
 
-import AddButtons from './DataStructureView.AddButtons';
+import ActionToggle from './DataStructureView.ActionToggle';
 import FieldItems from './DataStructureView.FieldItems';
 import { useFieldChangeHandler } from './DataStructureView.hooks';
 import { useMainStyles } from './DataStructureView.styles';
@@ -41,11 +41,11 @@ export default function DataStructureView({
                 variant="dense"
                 onClick={(e) => e.stopPropagation()}
               >
-                <AddButtons
-                  onChange={(fieldPath, isStructure) =>
+                <ActionToggle
+                  variant="structure"
+                  onFieldAdd={(field, isStructure) =>
                     onFieldChange(value, {
-                      fieldPath,
-                      oldFieldPath: undefined,
+                      fieldPath: field,
                       paths: [],
                       isStructure,
                     })

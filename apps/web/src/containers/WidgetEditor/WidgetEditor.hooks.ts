@@ -1,6 +1,7 @@
 import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 import { createElement, useCallback, useMemo, useState } from 'react';
 import type CoreType from '@weavcraft/core';
@@ -118,8 +119,8 @@ export function useChangeEvents(
 
       if (index < 0) {
         target?.push(isStructure ? [fieldPath, []] : fieldPath);
-      } else if (fieldPath !== oldFieldPath) {
-        target?.splice(index, 1, isStructure ? [fieldPath, []] : fieldPath);
+      } else if (target && fieldPath !== oldFieldPath) {
+        _set(target, isStructure ? [index, 0] : [index], fieldPath);
       } else {
         target?.splice(index, 1);
       }
@@ -193,22 +194,22 @@ export function usePropItems(config: RenderConfig) {
   const getCoreProps = useCorePropsGetter();
 
   const { widget, props = {} } = config;
-  const { childrenBasePath, definition } = getCoreProps(widget);
+  const { baseChildPath, definition } = getCoreProps(widget);
 
   const getMappingProp = useCallback(
     (propPath: string) => {
       const { dataBindingProps } = definition;
-      const isChildProps = propPath.startsWith(`${childrenBasePath}.`);
+      const isChildProps = propPath.startsWith(`${baseChildPath}.`);
 
       const mappingPath = (
-        isChildProps ? `${childrenBasePath}.propMapping` : 'propMapping'
+        isChildProps ? `${baseChildPath}.propMapping` : 'propMapping'
       ) as MappingPath;
 
       const mappingProps: string[] =
         _get(dataBindingProps || {}, [mappingPath, 'definition']) || [];
 
       const path = isChildProps
-        ? propPath.replace(`${childrenBasePath}.`, '')
+        ? propPath.replace(`${baseChildPath}.`, '')
         : propPath;
 
       return {
@@ -217,7 +218,7 @@ export function usePropItems(config: RenderConfig) {
         mappingPath,
       };
     },
-    [childrenBasePath, definition]
+    [baseChildPath, definition]
   );
 
   const [mappingItems, setMappingItems] = useState<Record<string, boolean>>(
@@ -236,10 +237,16 @@ export function usePropItems(config: RenderConfig) {
   );
 
   return {
+    baseChildPath,
     mappingItems,
 
     propItems: Object.entries(definition.primitiveValueProps || {})
-      .sort(([key1], [key2]) => key1.localeCompare(key2))
+      .sort(([path1], [path2]) => {
+        const paths1 = _toPath(path1);
+        const paths2 = _toPath(path2);
+
+        return paths1.length - paths2.length || path1.localeCompare(path2);
+      })
       .map<PropItem>(([path, definition]) => {
         const { propName, mappable, mappingPath } = getMappingProp(path);
 

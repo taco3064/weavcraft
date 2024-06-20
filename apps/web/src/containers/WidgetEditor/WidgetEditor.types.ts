@@ -1,10 +1,10 @@
 import type { ContainerProps } from '@mui/material/Container';
+import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 import type { Get } from 'type-fest';
 
 import type { DataStructureViewProps } from '../DataStructureView';
 
 import type {
-  ConfigChangeHandler,
   ConfigPaths,
   EditorListProps,
   PortalContainerEl,
@@ -14,6 +14,7 @@ import type {
   WidgetType,
 } from '../imports.types';
 
+type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type NodeCreateVariant = 'action' | 'node';
 
 export interface PropItem {
@@ -24,6 +25,12 @@ export interface PropItem {
     Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
   >;
 }
+
+type ConfigChangeHandler = (
+  config: RenderConfig,
+  propPath?: string,
+  propValue?: ConfigProps
+) => void;
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;

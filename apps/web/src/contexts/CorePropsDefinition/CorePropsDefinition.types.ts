@@ -18,7 +18,7 @@ type PrimitiveValueDefinition = NonNullable<
 export type MappingPath = 'propMapping' | `${string}.propMapping`;
 
 export type GetDefinitionFn = (widget: WidgetType) => {
-  childrenBasePath?: string;
+  baseChildPath?: string;
   definition: PropsDefinition;
   isStoreWidget: boolean;
   mappingPaths: MappingPath[];

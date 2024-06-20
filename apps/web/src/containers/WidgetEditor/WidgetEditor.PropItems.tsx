@@ -13,21 +13,26 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'next-i18next';
 
 import { EditorList, IconSwitch, PrimitiveFields } from '~web/components';
+import { useDataBindingFields, useWidgetNodePaths } from '~web/hooks';
 import { usePropItems } from './WidgetEditor.hooks';
 import { usePropItemsStyles } from './WidgetEditor.styles';
-import { useWidgetNodePaths } from '~web/hooks';
 import type { PropItemsProps } from './WidgetEditor.types';
 
 export default function PropItems({
   config,
   paths,
+  widget,
   onChange,
   onClose,
 }: PropItemsProps) {
+  const mappableFields = useDataBindingFields(widget, paths);
+
   const { t } = useTranslation();
   const { classes, cx } = usePropItemsStyles();
   const { pathDescription } = useWidgetNodePaths(paths);
-  const { mappingItems, propItems, onMappingExpand } = usePropItems(config);
+
+  const { baseChildPath, mappingItems, propItems, onMappingExpand } =
+    usePropItems(config);
 
   return (
     <EditorList

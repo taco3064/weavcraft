@@ -5,58 +5,45 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import { useTranslation } from 'next-i18next';
 import type { FormEventHandler } from 'react';
 
-import type { FieldModifyDialogProps } from './DataStructureView.types';
+import type { EditorDialogProps } from './EditorDialog.types';
 
-export default function FieldModifyDialog({
+export default function EditorDialog({
+  TransitionComponent,
+  children,
+  icon,
+  maxWidth = 'xs',
   open,
   title,
-  value,
   onClose,
-  onConfirm,
-}: FieldModifyDialogProps) {
+  onSubmit,
+}: EditorDialogProps) {
   const { t } = useTranslation();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    const formdata = new FormData(e.currentTarget);
-
     e.preventDefault();
-    onConfirm(formdata.get('fieldPath') as string);
+    onSubmit(new FormData(e.currentTarget));
   };
 
   return (
     <Dialog
-      {...{ open, onClose }}
+      {...{ TransitionComponent, maxWidth, open, onClose }}
       fullWidth
-      maxWidth="xs"
       PaperProps={{
         component: 'form',
         onSubmit: handleSubmit,
       }}
     >
-      <DialogTitle>
-        <Core.Icon code="faBezierCurve" />
-        {title}
-      </DialogTitle>
+      {(icon || title) && (
+        <DialogTitle>
+          {icon && <Core.Icon code={icon} />}
+          {title}
+        </DialogTitle>
+      )}
 
-      <DialogContent>
-        <TextField
-          autoFocus
-          fullWidth
-          required
-          key={open ? 'open' : 'close'}
-          color="secondary"
-          name="fieldPath"
-          label={t('widgets:lbl-field-path')}
-          defaultValue={value}
-          inputProps={{
-            pattern: '[a-zA-Z0-9 ,@&\\.\\-\\(\\)\\u4e00-\\u9fa5]*',
-          }}
-        />
-      </DialogContent>
+      <DialogContent>{children}</DialogContent>
 
       <ButtonGroup
         component={DialogActions}

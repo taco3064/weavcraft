@@ -18,14 +18,10 @@ export interface DataStructureViewProps {
   }) => void;
 }
 
-export interface AddButtonsProps {
-  onChange: (fieldPath: string, isStructure: boolean) => void;
-}
-
-export interface FieldModifyDialogProps {
-  open: boolean;
-  title: string;
+export interface ActionToggleProps {
   value?: string;
-  onClose: () => void;
-  onConfirm: (value: string) => void;
+  variant: EditingState['type'];
+  onFieldAdd?: (fieldPath: string, isStructure: boolean) => void;
+  onFieldChange?: (fieldPath: string, isStructure: boolean) => void;
+  onFieldRemove?: (fieldPath: string, isStructure: boolean) => void;
 }

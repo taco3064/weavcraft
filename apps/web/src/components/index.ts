@@ -1,4 +1,6 @@
+export * from './ConfirmDialog';
 export * from './ConfirmToggle';
+export * from './EditorDialog';
 export * from './EditorList';
 export * from './FallbackTrans';
 export * from './IconSwitch';
