@@ -12,31 +12,6 @@ export const useNodeCreateButtonStyles = makeStyles({
   },
 }));
 
-export const usePropItemsStyles = makeStyles({ name: 'PropsSettingTabs' })(
-  (theme) => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: `calc(100% - ${theme.spacing(8)})`,
-      overflow: 'hidden auto',
-
-      '& > *': {
-        width: '100%',
-      },
-    },
-    fullWidth: {
-      width: '100% !important',
-    },
-    row: {
-      width: '100%',
-
-      '& > *': {
-        margin: '0 !important',
-      },
-    },
-  })
-);
-
 export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'WidgetEditor',
 })((theme, { marginTop }) => ({

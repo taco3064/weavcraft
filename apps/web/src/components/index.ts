@@ -7,6 +7,7 @@ export * from './IconSwitch';
 export * from './Link';
 export * from './MenuDialog';
 export * from './PaletteViewer';
-export * from './PrimitiveFields';
+export * from './PrimitiveField';
 export * from './SwitchIconButton';
+export * from './SwitchListItem';
 export * from './TutorialModeAlert';

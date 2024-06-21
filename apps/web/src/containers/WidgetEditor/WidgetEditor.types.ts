@@ -1,40 +1,20 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
-import type { Get } from 'type-fest';
-
 import type { DataStructureViewProps } from '../DataStructureView';
 
 import type {
   ConfigPaths,
-  EditorListProps,
   PortalContainerEl,
-  PrimitiveValuePropsWithPath,
+  PropsSettingChangeHandler,
   RenderConfig,
   WidgetConfigs,
   WidgetType,
 } from '../imports.types';
 
-type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type NodeCreateVariant = 'action' | 'node';
-
-export interface PropItem {
-  fieldPath?: string;
-  mappable: boolean;
-  path: string;
-  definition: NonNullable<
-    Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
-  >;
-}
-
-type ConfigChangeHandler = (
-  config: RenderConfig,
-  propPath?: string,
-  propValue?: ConfigProps
-) => void;
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
-  onConfigChange: ConfigChangeHandler;
+  onConfigChange: PropsSettingChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
   onStructureChange: NonNullable<DataStructureViewProps['onChange']>;
 
@@ -61,11 +41,4 @@ export interface NodeCreateButtonProps {
   path?: string;
   variant: NodeCreateVariant;
   onClick: (widget: WidgetType) => void;
-}
-
-export interface PropItemsProps extends Pick<EditorListProps, 'onClose'> {
-  config: RenderConfig;
-  paths: ConfigPaths;
-  widget: WidgetConfigs;
-  onChange: ConfigChangeHandler;
 }

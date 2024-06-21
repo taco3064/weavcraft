@@ -1,4 +1,4 @@
-import type { MouseEvent, ReactElement, ReactNode } from 'react';
+import type { MouseEvent, ReactElement } from 'react';
 import type { ConfirmDialogProps } from '../ConfirmDialog';
 
 export type ToggleProps<T extends string> = {

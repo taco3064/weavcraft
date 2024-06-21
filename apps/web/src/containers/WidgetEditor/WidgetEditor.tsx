@@ -17,7 +17,7 @@ import { useTranslation } from 'next-i18next';
 import DataStructureView from '../DataStructureView';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import PropItems from './WidgetEditor.PropItems';
+import PropsSettingList from '../PropsSettingList';
 import { upsertWidgetConfig } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useWidgetRender } from '~web/hooks';
@@ -157,7 +157,7 @@ export default withCorePropsDefinition(function WidgetEditor({
             icon={<WidgetsIcon fontSize="large" />}
             iconPosition="top"
             value="node"
-            label={t('widgets:lbl-settings.primitive-value')}
+            label={t('widgets:lbl-settings.template')}
           />
 
           <Tab
@@ -174,6 +174,13 @@ export default withCorePropsDefinition(function WidgetEditor({
           className={classes.content}
           onContextMenu={(e) => e.preventDefault()}
         >
+          {tab === 'data-structure' && (
+            <DataStructureView
+              value={value.dataStructure || []}
+              onChange={onStructureChange}
+            />
+          )}
+
           {tab === 'node' && (
             <>
               {value.widget ? (
@@ -216,7 +223,7 @@ export default withCorePropsDefinition(function WidgetEditor({
                 )}
 
                 {portalMode === 'props' && editing && (
-                  <PropItems
+                  <PropsSettingList
                     config={editing}
                     paths={activePrimitive}
                     widget={value as WidgetConfigs}
@@ -231,13 +238,6 @@ export default withCorePropsDefinition(function WidgetEditor({
                 )}
               </PortalWrapper>
             </>
-          )}
-
-          {tab === 'data-structure' && (
-            <DataStructureView
-              value={value.dataStructure || []}
-              onChange={onStructureChange}
-            />
           )}
         </Container>
       </Container>

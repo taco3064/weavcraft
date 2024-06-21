@@ -1,9 +1,8 @@
 import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
-import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
-import { createElement, useCallback, useMemo, useState } from 'react';
+import { createElement, useMemo } from 'react';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
@@ -11,14 +10,9 @@ import type { ElementNodeProp } from '@weavcraft/common';
 import { useCorePropsGetter } from '~web/contexts';
 import { useWidgetNodePaths } from '~web/hooks';
 
-import type {
-  ChangeEvents,
-  NodeCreateButtonProps,
-  PropItem,
-} from './WidgetEditor.types';
+import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 
 import type {
-  MappingPath,
   MenuItemOptions,
   RenderConfig,
   WidgetConfigs,
@@ -187,82 +181,6 @@ export function useNodeCreateButton(
       },
       props
     );
-  };
-}
-
-export function usePropItems(config: RenderConfig) {
-  const getCoreProps = useCorePropsGetter();
-
-  const { widget, props = {} } = config;
-  const { baseChildPath, definition } = getCoreProps(widget);
-
-  const getMappingProp = useCallback(
-    (propPath: string) => {
-      const { dataBindingProps } = definition;
-      const isChildProps = propPath.startsWith(`${baseChildPath}.`);
-
-      const mappingPath = (
-        isChildProps ? `${baseChildPath}.propMapping` : 'propMapping'
-      ) as MappingPath;
-
-      const mappingProps: string[] =
-        _get(dataBindingProps || {}, [mappingPath, 'definition']) || [];
-
-      const path = isChildProps
-        ? propPath.replace(`${baseChildPath}.`, '')
-        : propPath;
-
-      return {
-        propName: path,
-        mappable: mappingProps.includes(path),
-        mappingPath,
-      };
-    },
-    [baseChildPath, definition]
-  );
-
-  const [mappingItems, setMappingItems] = useState<Record<string, boolean>>(
-    () =>
-      Object.keys(definition.primitiveValueProps || {}).reduce((acc, path) => {
-        const { propName, mappable, mappingPath } = getMappingProp(path);
-        const fieldPath = _get(props, [mappingPath, 'value', propName]);
-
-        return {
-          ...acc,
-          ...(mappable && {
-            [path]: Boolean(fieldPath),
-          }),
-        };
-      }, {})
-  );
-
-  return {
-    baseChildPath,
-    mappingItems,
-
-    propItems: Object.entries(definition.primitiveValueProps || {})
-      .sort(([path1], [path2]) => {
-        const paths1 = _toPath(path1);
-        const paths2 = _toPath(path2);
-
-        return paths1.length - paths2.length || path1.localeCompare(path2);
-      })
-      .map<PropItem>(([path, definition]) => {
-        const { propName, mappable, mappingPath } = getMappingProp(path);
-
-        return {
-          path,
-          definition,
-          mappable,
-          fieldPath: _get(props, [mappingPath, 'value', propName]),
-        };
-      }),
-
-    onMappingExpand: (path: string) =>
-      setMappingItems((prev) => ({
-        ...prev,
-        [path]: !prev[path],
-      })),
   };
 }
 

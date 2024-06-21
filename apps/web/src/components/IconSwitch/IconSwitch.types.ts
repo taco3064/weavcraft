@@ -13,7 +13,7 @@ export interface IconSwitchProps<V extends string = string>
     SwitchProps,
     'defaultChecked' | 'checked' | 'classes' | 'color' | 'onChange'
   > {
-  options: { [key in V]: IconOptions };
+  options: Record<V, IconOptions>;
   value: V;
   onChange: (value: V) => void;
 }

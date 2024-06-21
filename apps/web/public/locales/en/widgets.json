@@ -1,18 +1,16 @@
 {
+  "btn-fixed-data": "Fixed Data",
   "btn-widget-preview": "Preview Widget",
   "btn-widget-structure": "View Structure",
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
   "msg-definitions-loading": "Loading settings...",
   "msg-no-structure": "No Data Structure Available",
-  "msg-primitive-description": "Change the display result of the widget by adjusting its appearance settings.",
   "msg-prop-mapping-placeholder": "Select data field name or path.",
-  "ttl-appearance": "Appearance Settings",
   "ttl-data-structure-action": "Structure Actions",
-  "ttl-default-value": "Default Value",
   "ttl-element-node": "Widget Structure",
-  "ttl-prop-mapping": "Data Binding",
   "ttl-select-widget": "Select Widget",
+  "ttl-widget-settings": "{{ widget }} Settings",
   "btn-add": {
     "field": "Add Data Field",
     "structure": "Add Sub-Structure",
@@ -35,8 +33,10 @@
     "Layout": "Layout"
   },
   "lbl-settings": {
+    "data-source": "Data Source",
     "data-structure": "Data Structure",
-    "primitive-value": "Layout"
+    "prop-items": "Settings",
+    "template": "Template"
   },
   "lbl-widgets": {
     "Accordion": "Accordion",
@@ -97,5 +97,9 @@
       "field": "Edit Data Field",
       "structure": "Edit Structure Field"
     }
+  },
+  "ttl-prop-item-mode": {
+    "DefaultValue": "Default Value",
+    "PropMapping": "Data Binding"
   }
 }

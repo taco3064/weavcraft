@@ -1,18 +1,16 @@
 {
+  "btn-fixed-data": "固定資料",
   "btn-widget-preview": "預覽輸出結果",
   "btn-widget-structure": "查看組件結構",
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
   "msg-definitions-loading": "載入設定中...",
   "msg-no-structure": "尚未設置資料結構",
-  "msg-primitive-description": "透過調整組件的佈局和外觀設定，來改變組件的顯示結果。",
   "msg-prop-mapping-placeholder": "選擇資料欄位名稱或路徑",
-  "ttl-appearance": "外觀設定",
   "ttl-data-structure-action": "資料結構選單",
-  "ttl-default-value": "預設值",
   "ttl-element-node": "組建結構",
-  "ttl-prop-mapping": "資料綁定設置",
   "ttl-select-widget": "選擇組件",
+  "ttl-widget-settings": "{{ widget }}設定",
   "btn-add": {
     "field": "加入資料欄位",
     "structure": "建立子結構",
@@ -35,8 +33,10 @@
     "Layout": "版面配置"
   },
   "lbl-settings": {
+    "data-source": "資料來源",
     "data-structure": "資料結構",
-    "primitive-value": "外觀設定"
+    "prop-items": "細項設定",
+    "template": "外觀模板"
   },
   "lbl-widgets": {
     "Accordion": "手風琴式選單",
@@ -97,5 +97,9 @@
       "field": "編輯資料欄位",
       "structure": "編輯結構欄位"
     }
+  },
+  "ttl-prop-item-mode": {
+    "DefaultValue": "預設值",
+    "PropMapping": "資料綁定設置"
   }
 }

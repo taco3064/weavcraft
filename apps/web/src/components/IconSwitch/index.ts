@@ -1,2 +1,2 @@
 export { default, default as IconSwitch } from './IconSwitch';
-export type { IconSwitchProps } from './IconSwitch.types';
+export type { IconOptions, IconSwitchProps } from './IconSwitch.types';

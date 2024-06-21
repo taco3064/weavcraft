@@ -345,6 +345,16 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
+  MuiTooltip: {
+    defaultProps: {
+      slotProps: {
+        popper: {
+          onPointerDown: (e) => e.stopPropagation(),
+          onTouchEnd: (e) => e.stopPropagation(),
+        },
+      },
+    },
+  },
   MuiTypography: {
     styleOverrides: {
       root: {
