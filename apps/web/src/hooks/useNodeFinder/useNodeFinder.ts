@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useCorePropsGetter } from '~web/contexts';
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
 import type { WidgetConfigs } from '../imports.types';
-import type { GetterOptions, ParentStoreNode } from './useNodePaths.types';
+import type { GetterOptions, ParentStoreNode } from './useNodeFinder.types';
 
 export function useNodeFinder() {
   const getCoreProps = useCorePropsGetter();

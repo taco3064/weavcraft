@@ -5,7 +5,7 @@ import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import { useCorePropsGetter } from '~web/contexts';
-import { useNodeFinder } from '../useNodePaths';
+import { useNodeFinder } from '../useNodeFinder';
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
 import type { GetDefinitionFn, WidgetConfigs } from '../imports.types';
 
