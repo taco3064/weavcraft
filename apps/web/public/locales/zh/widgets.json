@@ -34,6 +34,10 @@
     "Interaction": "互動操作",
     "Layout": "版面配置"
   },
+  "lbl-source-path": {
+    "data": "資料來源",
+    "records": "多筆資料來源"
+  },
   "lbl-widgets": {
     "Accordion": "手風琴式選單",
     "Avatar": "頭像",
@@ -93,6 +97,10 @@
       "field": "編輯資料欄位",
       "structure": "編輯結構欄位"
     }
+  },
+  "ttl-injection-mode": {
+    "Binding": "資料綁定",
+    "Fixed": "固定資料"
   },
   "ttl-prop-item-mode": {
     "DefaultValue": "預設值",

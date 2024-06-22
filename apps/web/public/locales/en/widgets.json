@@ -34,6 +34,10 @@
     "Interaction": "Interaction",
     "Layout": "Layout"
   },
+  "lbl-source-path": {
+    "data": "Data Source",
+    "records": "Records Source"
+  },
   "lbl-widgets": {
     "Accordion": "Accordion",
     "Avatar": "Avatar",
@@ -93,6 +97,10 @@
       "field": "Edit Data Field",
       "structure": "Edit Structure Field"
     }
+  },
+  "ttl-injection-mode": {
+    "Binding": "Data Binding",
+    "Fixed": "Fixed Data"
   },
   "ttl-prop-item-mode": {
     "DefaultValue": "Default Value",

@@ -83,7 +83,7 @@ export default function PropsSettingList({
                       variant="filled"
                       size="small"
                       color="secondary"
-                      label={t('widgets:lbl-data-source-path')}
+                      label={t(`widgets:lbl-source-path.${dataPropName}`)}
                       value={dataSrcPath}
                       onChange={(e) =>
                         onSourceBinding(
