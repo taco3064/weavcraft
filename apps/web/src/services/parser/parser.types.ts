@@ -3,31 +3,28 @@ import { WidgetPropTypes } from '@weavcraft/common';
 import type { PropTypeDefinitions } from '../common';
 import type { WidgetType } from '../configs';
 
-type BasePropsWithPath<
+type BasePropDefinitions<
   T extends WidgetPropTypes,
   P extends { [Path: string]: PropTypeDefinitions.PropTypes }
 > = Partial<Record<`${Uncapitalize<T>}Props`, P>>;
 
-export type DataBindingPropsWithPath = BasePropsWithPath<
+export type DataBindingPropDefinition = BasePropDefinitions<
   'DataBinding',
-  Record<`${string}.propMapping`, PropTypeDefinitions.Mapping> & {
-    propMapping: PropTypeDefinitions.Mapping;
-    data: PropTypeDefinitions.Data;
-    records: PropTypeDefinitions.Data;
-  }
+  Record<'propMapping' | `${string}.propMapping`, PropTypeDefinitions.Mapping> &
+    Record<'data' | 'records', PropTypeDefinitions.Data>
 >;
 
-export type ElementNodePropsWithPath = BasePropsWithPath<
+export type ElementNodePropDefinitions = BasePropDefinitions<
   'ElementNode',
   { [Path: string]: PropTypeDefinitions.Node }
 >;
 
-export type EventCallbackPropsWithPath = BasePropsWithPath<
+export type EventCallbackPropDefinitions = BasePropDefinitions<
   'EventCallback',
   { [Path: string]: PropTypeDefinitions.Function }
 >;
 
-export type PrimitiveValuePropsWithPath = BasePropsWithPath<
+export type PrimitivePropDefinitions = BasePropDefinitions<
   'PrimitiveValue',
   {
     [Path: string]:
@@ -40,10 +37,10 @@ export type PrimitiveValuePropsWithPath = BasePropsWithPath<
 >;
 
 export interface PropsDefinition
-  extends DataBindingPropsWithPath,
-    ElementNodePropsWithPath,
-    EventCallbackPropsWithPath,
-    PrimitiveValuePropsWithPath {
+  extends DataBindingPropDefinition,
+    ElementNodePropDefinitions,
+    EventCallbackPropDefinitions,
+    PrimitivePropDefinitions {
   componentName: string;
   group?: string;
 }

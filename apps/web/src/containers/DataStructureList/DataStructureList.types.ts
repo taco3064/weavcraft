@@ -1,4 +1,4 @@
-import type { WidgetConfigs } from '../imports.types';
+import type { EditorListProps, WidgetConfigs } from '../imports.types';
 
 export type EditingState = {
   fieldPath: string;
@@ -6,7 +6,8 @@ export type EditingState = {
 };
 
 //* Component Props
-export interface DataStructureViewProps {
+export interface DataStructureListProps
+  extends Pick<EditorListProps, 'onClose'> {
   paths?: string[];
   value: NonNullable<WidgetConfigs['dataStructure']>;
 

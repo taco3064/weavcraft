@@ -17,7 +17,7 @@ export type QueryFunctionParams<T extends QueryKey> = Pick<
 //* - Props Type Schema
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace PropTypeDefinitions {
-  enum PropType {
+  enum PropTypeEnum {
     boolean,
     data,
     function,
@@ -30,7 +30,7 @@ export namespace PropTypeDefinitions {
     string,
   }
 
-  interface BasePropType<T extends keyof typeof PropType, D = undefined> {
+  interface BasePropType<T extends keyof typeof PropTypeEnum, D = undefined> {
     path: string;
     aliasName?: string;
     required: boolean;

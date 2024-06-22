@@ -2,7 +2,6 @@ import type { ComponentType } from 'react';
 import type { WidgetConfigs } from '../imports.types';
 
 export type ConfigPaths = (string | number)[];
-
 export type RenderConfig = Pick<WidgetConfigs, 'widget' | 'props'>;
 
 export type GenerateOptions = {

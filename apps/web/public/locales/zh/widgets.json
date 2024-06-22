@@ -1,14 +1,16 @@
 {
+  "btn-data-structure": "資料結構",
   "btn-fixed-data": "固定資料",
   "btn-widget-preview": "預覽輸出結果",
-  "btn-widget-structure": "查看組件結構",
+  "btn-widget-settings": "組件設定",
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
   "msg-definitions-loading": "載入設定中...",
   "msg-no-structure": "尚未設置資料結構",
   "msg-prop-mapping-placeholder": "選擇資料欄位名稱或路徑",
+  "ttl-data-structure": "資料結構設定",
   "ttl-data-structure-action": "資料結構選單",
-  "ttl-element-node": "組建結構",
+  "ttl-element-node": "組件結構",
   "ttl-select-widget": "選擇組件",
   "ttl-widget-settings": "{{ widget }}設定",
   "btn-add": {
@@ -31,12 +33,6 @@
     "Input": "表單輸入",
     "Interaction": "互動操作",
     "Layout": "版面配置"
-  },
-  "lbl-settings": {
-    "data-source": "資料來源",
-    "data-structure": "資料結構",
-    "prop-items": "細項設定",
-    "template": "外觀模板"
   },
   "lbl-widgets": {
     "Accordion": "手風琴式選單",

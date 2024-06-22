@@ -1,12 +1,14 @@
 {
+  "btn-data-structure": "Data Structure",
   "btn-fixed-data": "Fixed Data",
   "btn-widget-preview": "Preview Widget",
-  "btn-widget-structure": "View Structure",
+  "btn-widget-settings": "Widget Settings",
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
   "msg-definitions-loading": "Loading settings...",
   "msg-no-structure": "No Data Structure Available",
   "msg-prop-mapping-placeholder": "Select data field name or path.",
+  "ttl-data-structure": "Data Structure Settings",
   "ttl-data-structure-action": "Structure Actions",
   "ttl-element-node": "Widget Structure",
   "ttl-select-widget": "Select Widget",
@@ -31,12 +33,6 @@
     "Input": "Input",
     "Interaction": "Interaction",
     "Layout": "Layout"
-  },
-  "lbl-settings": {
-    "data-source": "Data Source",
-    "data-structure": "Data Structure",
-    "prop-items": "Settings",
-    "template": "Template"
   },
   "lbl-widgets": {
     "Accordion": "Accordion",

@@ -1,5 +1,5 @@
 import type { ContainerProps } from '@mui/material/Container';
-import type { DataStructureViewProps } from '../DataStructureView';
+import type { DataStructureListProps } from '../DataStructureList';
 
 import type {
   ConfigPaths,
@@ -10,13 +10,23 @@ import type {
   WidgetType,
 } from '../imports.types';
 
+export enum EditModeEnum {
+  ElementNode,
+  PropsSetting,
+}
+
+export enum ViewModeEnum {
+  DataStructure,
+  Preview,
+}
+
 export type NodeCreateVariant = 'action' | 'node';
 
 export interface ChangeEvents {
   onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
   onConfigChange: PropsSettingChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
-  onStructureChange: NonNullable<DataStructureViewProps['onChange']>;
+  onStructureChange: NonNullable<DataStructureListProps['onChange']>;
 
   onAddLastChild: (
     config: RenderConfig,

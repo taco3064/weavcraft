@@ -65,15 +65,15 @@ export function useSettingOptions({
   const getCoreProps = useCorePropsGetter();
   const handleBinding = useDataBindingHandler(config, onChange);
 
-  const { injectedPath, propItems } = useMemo(() => {
+  const { dataPropName, propItems } = useMemo(() => {
     const { definition, isStoreWidget } = getCoreProps(widget);
     const { dataBindingProps, primitiveValueProps } = definition;
 
-    const injectionPath = isStoreWidget ? 'records' : 'data';
+    const dataPropName = isStoreWidget ? 'records' : 'data';
 
     return {
-      injectedPath: (dataBindingProps?.[injectionPath]
-        ? injectionPath
+      dataPropName: (dataBindingProps?.[dataPropName]
+        ? dataPropName
         : undefined) as 'records' | 'data',
 
       propItems: Object.entries(primitiveValueProps || {})
@@ -91,8 +91,8 @@ export function useSettingOptions({
   }, [widget, getCoreProps]);
 
   return {
-    dataSrcPath: _get(props, [injectedPath, 'value']) as string,
-    injectedPath,
+    dataPropName,
+    dataSrcPath: _get(props, [dataPropName, 'value']) as string,
     propItems,
 
     onSourceBinding: (

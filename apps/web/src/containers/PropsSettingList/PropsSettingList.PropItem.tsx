@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 
 import BindingSelect from './PropsSettingList.BindingSelect';
 import { PrimitiveField, SwitchListItem } from '~web/components';
-import { PropItemMode, type PropItemProps } from './PropsSettingList.types';
+import { PropItemModeEnum, type PropItemProps } from './PropsSettingList.types';
 import { usePropItemOptions } from './PropsSettingList.hooks';
 
 export default function PropItem({
@@ -17,12 +17,15 @@ export default function PropItem({
   onChange,
 }: PropItemProps) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<PropItemMode>(PropItemMode.DefaultValue);
 
   const { defaultPropValue, fieldPath, mappable } = usePropItemOptions({
     config,
     propPath,
   });
+
+  const [mode, setMode] = useState<PropItemModeEnum>(
+    PropItemModeEnum.DefaultValue
+  );
 
   return (
     <SwitchListItem
@@ -31,7 +34,7 @@ export default function PropItem({
       disabled={disableBinding || !mappable}
       onActiveChange={setMode}
       options={{
-        [PropItemMode.DefaultValue]: {
+        [PropItemModeEnum.DefaultValue]: {
           color: 'info',
           icon: <SettingsOutlinedIcon />,
           tooltip: t('widgets:ttl-prop-item-mode.DefaultValue'),
@@ -51,7 +54,7 @@ export default function PropItem({
             />
           ),
         },
-        [PropItemMode.PropMapping]: {
+        [PropItemModeEnum.PropMapping]: {
           color: 'success',
           icon: <StorageOutlinedIcon />,
           tooltip: t('widgets:ttl-prop-item-mode.PropMapping'),

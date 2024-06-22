@@ -8,7 +8,7 @@ import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
 import { useCorePropsGetter } from '~web/contexts';
-import { useWidgetNodePaths } from '~web/hooks';
+import { useNodePaths } from '~web/hooks';
 
 import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 
@@ -32,7 +32,7 @@ export function useChangeEvents(
   value: WidgetConfigs,
   onChange: (value: WidgetConfigs) => void
 ): ChangeEvents {
-  const { getNodePaths } = useWidgetNodePaths();
+  const { getNodePaths } = useNodePaths();
 
   return {
     onAddChild: (config, path, widget) => {

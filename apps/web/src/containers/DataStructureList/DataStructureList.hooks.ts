@@ -1,7 +1,7 @@
 import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
-import type { DataStructureViewProps } from './DataStructureView.types';
+import type { DataStructureListProps } from './DataStructureList.types';
 
-export function useDataFields(value: DataStructureViewProps['value']) {
+export function useDataFields(value: DataStructureListProps['value']) {
   return useMemo(
     () =>
       value
@@ -17,7 +17,7 @@ export function useDataFields(value: DataStructureViewProps['value']) {
 }
 
 export function useFieldChangeHandler(
-  onChange: DataStructureViewProps['onChange']
+  onChange: DataStructureListProps['onChange']
 ) {
   const handleChangeRef = useRef(onChange);
 
@@ -25,8 +25,8 @@ export function useFieldChangeHandler(
 
   return useCallback(
     (
-      structures: DataStructureViewProps['value'],
-      e: Parameters<NonNullable<DataStructureViewProps['onChange']>>[0]
+      structures: DataStructureListProps['value'],
+      e: Parameters<NonNullable<DataStructureListProps['onChange']>>[0]
     ) => {
       const isDuplicate = structures.some(
         (field) => (Array.isArray(field) ? field : [field])[0] === e.fieldPath

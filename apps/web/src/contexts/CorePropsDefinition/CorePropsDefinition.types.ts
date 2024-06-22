@@ -2,17 +2,18 @@ import type { Get } from 'type-fest';
 import type { ReactNode } from 'react';
 
 import type {
-  ElementNodePropsWithPath,
-  PrimitiveValuePropsWithPath,
+  ElementNodePropDefinitions,
+  PrimitivePropDefinitions,
   PropsDefinition,
   WidgetType,
 } from '../imports.types';
 
 type ElementNodeDefinition = NonNullable<
-  Get<ElementNodePropsWithPath, ['elementNodeProps', string]>
+  Get<ElementNodePropDefinitions, ['elementNodeProps', string]>
 >;
+
 type PrimitiveValueDefinition = NonNullable<
-  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+  Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
 >;
 
 export type MappingPath = 'propMapping' | `${string}.propMapping`;

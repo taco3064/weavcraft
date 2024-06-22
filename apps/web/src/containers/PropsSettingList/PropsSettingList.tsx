@@ -15,10 +15,10 @@ import PropItem from './PropsSettingList.PropItem';
 import { EditorList, SwitchListItem } from '~web/components';
 import { useMainStyles } from './PropsSettingList.styles';
 import { useSettingOptions } from './PropsSettingList.hooks';
-import { useWidgetNodePaths } from '~web/hooks';
+import { useBindingSources, useNodePaths } from '~web/hooks';
 
 import {
-  InjectionMode,
+  InjectionModeEnum,
   type PropsSettingListProps,
 } from './PropsSettingList.types';
 
@@ -29,17 +29,16 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
-  const [mode, setMode] = useState<InjectionMode>(InjectionMode.Fixed);
+  const [mode, setMode] = useState<InjectionModeEnum>(InjectionModeEnum.Fixed);
 
   const { t } = useTranslation();
   const { classes } = useMainStyles();
-  const { pathDescription } = useWidgetNodePaths(paths);
+  const { pathDescription } = useNodePaths(paths);
 
-  const { dataSrcPath, injectedPath, propItems, onSourceBinding } =
-    useSettingOptions({
-      config,
-      onChange,
-    });
+  const { dataPropName, dataSrcPath, propItems, onSourceBinding } =
+    useSettingOptions({ config, onChange });
+
+  const bindingSources = useBindingSources(widget, config, paths);
 
   return (
     <EditorList
@@ -51,14 +50,14 @@ export default function PropsSettingList({
       })}
       render={({ icon }) => (
         <>
-          {injectedPath && (
+          {dataPropName && (
             <SwitchListItem
               divider
               active={mode}
               classes={{ icon, row: classes.row }}
               onActiveChange={setMode}
               options={{
-                [InjectionMode.Fixed]: {
+                [InjectionModeEnum.Fixed]: {
                   color: 'error',
                   icon: <EditIcon />,
                   tooltip: t('widgets:ttl-injection-mode.Fixed'),
@@ -73,7 +72,7 @@ export default function PropsSettingList({
                     </Button>
                   ),
                 },
-                [InjectionMode.Binding]: {
+                [InjectionModeEnum.Binding]: {
                   color: 'warning',
                   icon: <CommitIcon />,
                   tooltip: t('widgets:ttl-injection-mode.Binding'),
@@ -89,7 +88,7 @@ export default function PropsSettingList({
                       onChange={(e) =>
                         onSourceBinding(
                           'propMapping',
-                          injectedPath,
+                          dataPropName,
                           e.target.value
                         )
                       }
@@ -107,7 +106,7 @@ export default function PropsSettingList({
                               <Tooltip title={t('btn-reset')}>
                                 <IconButton
                                   onClick={() =>
-                                    onSourceBinding('propMapping', injectedPath)
+                                    onSourceBinding('propMapping', dataPropName)
                                   }
                                 >
                                   <CloseIcon />

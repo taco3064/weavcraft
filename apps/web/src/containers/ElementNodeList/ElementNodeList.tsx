@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
 import Action from './ElementNodeList.Action';
 import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
-import { useWidgetNodePaths } from '~web/hooks';
+import { useNodePaths } from '~web/hooks';
 import type { ElementNodeListProps } from './ElementNodeList.types';
 import type { RenderConfig } from '../imports.types';
 
@@ -22,7 +22,7 @@ export default function ElementNodeList({
   onEdit,
 }: ElementNodeListProps) {
   const { t } = useTranslation();
-  const { nodePaths, pathDescription } = useWidgetNodePaths(active);
+  const { nodePaths, pathDescription } = useNodePaths(active);
 
   const node: RenderConfig = !nodePaths.length
     ? config

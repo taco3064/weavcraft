@@ -4,14 +4,14 @@ import type { ReactElement } from 'react';
 import type { IconProps } from '@mui/material/Icon';
 import type { PrimitiveValueProp } from '@weavcraft/common';
 
-import type { PrimitiveValuePropsWithPath } from '../imports.types';
+import type { PrimitivePropDefinitions } from '../imports.types';
 
 export type AdornmentIcons = {
   [K in PrimitiveType]: ReactElement<IconProps>;
 };
 
 type PrimitiveDefinition = NonNullable<
-  Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+  Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
 >;
 
 export type PrimitiveType = Get<PrimitiveDefinition, ['type']>;

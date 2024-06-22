@@ -3,18 +3,18 @@ import type { Get } from 'type-fest';
 import type {
   ConfigPaths,
   EditorListProps,
-  PrimitiveValuePropsWithPath,
+  PrimitivePropDefinitions,
   PropsSettingChangeHandler,
   RenderConfig,
   WidgetConfigs,
 } from '../imports.types';
 
-export enum InjectionMode {
+export enum InjectionModeEnum {
   Binding = 'Binding',
   Fixed = 'Fixed',
 }
 
-export enum PropItemMode {
+export enum PropItemModeEnum {
   DefaultValue = 'DefaultValue',
   PropMapping = 'PropMapping',
 }
@@ -24,7 +24,7 @@ export interface PropItem {
   mappable: boolean;
   path: string;
   definition: NonNullable<
-    Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+    Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
   >;
 }
 
@@ -44,7 +44,7 @@ export interface PropItemProps
   propPath: string;
 
   definition: NonNullable<
-    Get<PrimitiveValuePropsWithPath, ['primitiveValueProps', string]>
+    Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
   >;
 }
 

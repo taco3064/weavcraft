@@ -11,7 +11,7 @@ import type { MenuItemOptions, SubTransitionProps } from '../imports.types';
 import type {
   ActionToggleProps,
   EditingState,
-} from './DataStructureView.types';
+} from './DataStructureList.types';
 
 const SubTransition = forwardRef<unknown, SubTransitionProps>(
   function Transition(props, ref) {
@@ -120,7 +120,7 @@ export default function ActionToggle({
           label={t('widgets:lbl-field-path')}
           defaultValue={editing?.fieldPath}
           inputProps={{
-            pattern: '[a-zA-Z0-9 ,@&\\.\\-\\(\\)\\u4e00-\\u9fa5]*',
+            pattern: '[a-zA-Z0-9 ,@&\\|\\.\\-\\(\\)\\u4e00-\\u9fa5]*',
           }}
         />
       </EditorDialog>

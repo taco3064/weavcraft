@@ -1,9 +1,9 @@
 export * from './parser';
 
 export type {
-  DataBindingPropsWithPath,
-  ElementNodePropsWithPath,
-  EventCallbackPropsWithPath,
-  PrimitiveValuePropsWithPath,
+  DataBindingPropDefinition,
+  ElementNodePropDefinitions,
+  EventCallbackPropDefinitions,
+  PrimitivePropDefinitions,
   PropsDefinition,
 } from './parser.types';

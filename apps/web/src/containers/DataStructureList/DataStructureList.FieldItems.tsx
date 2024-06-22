@@ -1,21 +1,21 @@
 import Toolbar from '@mui/material/Toolbar';
 import { TreeItem } from '@mui/x-tree-view';
 
-import ActionToggle from './DataStructureView.ActionToggle';
-import { useMainStyles } from './DataStructureView.styles';
+import ActionToggle from './DataStructureList.ActionToggle';
+import { useMainStyles } from './DataStructureList.styles';
 
 import {
   useDataFields,
   useFieldChangeHandler,
-} from './DataStructureView.hooks';
+} from './DataStructureList.hooks';
 
-import type { DataStructureViewProps } from './DataStructureView.types';
+import type { DataStructureListProps } from './DataStructureList.types';
 
 export default function FieldItems({
   paths = [],
   value,
   onChange,
-}: Omit<DataStructureViewProps, 'root'>) {
+}: Omit<DataStructureListProps, 'root'>) {
   const { classes } = useMainStyles();
 
   const fields = useDataFields(value);
