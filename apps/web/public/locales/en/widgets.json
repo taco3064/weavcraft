@@ -3,6 +3,7 @@
   "btn-fixed-data": "Fixed Data",
   "btn-widget-preview": "Preview Widget",
   "btn-widget-settings": "Widget Settings",
+  "lbl-data-structure-root": "Root",
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
   "msg-definitions-loading": "Loading settings...",

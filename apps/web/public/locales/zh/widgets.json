@@ -3,6 +3,7 @@
   "btn-fixed-data": "固定資料",
   "btn-widget-preview": "預覽輸出結果",
   "btn-widget-settings": "組件設定",
+  "lbl-data-structure-root": "最頂層",
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
   "msg-definitions-loading": "載入設定中...",

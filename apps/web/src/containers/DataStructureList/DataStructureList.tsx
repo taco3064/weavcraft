@@ -1,6 +1,8 @@
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Container from '@mui/material/Container';
 import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
@@ -28,61 +30,63 @@ export default function DataStructureView({
     <EditorList
       title={t('widgets:ttl-data-structure')}
       onClose={onClose}
-      render={() => (
-        <ListItem disableGutters>
-          <Container
-            maxWidth={false}
-            component={SimpleTreeView}
-            defaultExpandedItems={['root']}
-          >
-            <TreeItem
-              classes={{ label: classes.row }}
-              itemId="root"
-              label={
-                <>
-                  <AccountTreeIcon color="disabled" fontSize="large" />
+      render={({ icon }) => (
+        <>
+          <ListItem>
+            <ListItemIcon className={icon}>
+              <AccountTreeIcon color="disabled" fontSize="large" />
+            </ListItemIcon>
 
-                  {onChange && (
-                    <Toolbar
-                      disableGutters
-                      variant="dense"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ActionToggle
-                        variant="structure"
-                        onActionToggle={({ value: fieldPath, type }) =>
-                          onFieldChange(value, {
-                            fieldPath,
-                            paths: [],
-                            isStructure: type === 'structure',
-                          })
-                        }
-                      />
-                    </Toolbar>
-                  )}
-                </>
-              }
-            >
-              <FieldItems {...{ paths, value, onChange }} />
-            </TreeItem>
+            <ListItemText
+              primary={t('widgets:lbl-data-structure-root')}
+              primaryTypographyProps={{
+                color: 'text.primary',
+                fontWeight: 600,
+              }}
+            />
 
-            {!value.length && (
-              <TreeItem
-                itemId="message"
-                classes={{ iconContainer: classes.hidden }}
-                label={
-                  <Typography
-                    variant="h6"
-                    justifyContent="center"
-                    color="text.disabled"
-                  >
-                    {t('widgets:msg-no-structure')}
-                  </Typography>
-                }
-              />
+            {onChange && (
+              <Toolbar disableGutters>
+                <ActionToggle
+                  variant="structure"
+                  onActionToggle={({ value: fieldPath, type }) =>
+                    onFieldChange(value, {
+                      fieldPath,
+                      paths: [],
+                      isStructure: type === 'structure',
+                    })
+                  }
+                />
+              </Toolbar>
             )}
-          </Container>
-        </ListItem>
+          </ListItem>
+
+          <ListItem sx={{ paddingRight: 1 }}>
+            <Container
+              maxWidth={false}
+              component={SimpleTreeView}
+              sx={{ paddingRight: 0 }}
+            >
+              {value.length ? (
+                <FieldItems {...{ paths, value, onChange }} />
+              ) : (
+                <TreeItem
+                  itemId="message"
+                  classes={{ iconContainer: classes.hidden }}
+                  label={
+                    <Typography
+                      variant="h6"
+                      justifyContent="center"
+                      color="text.disabled"
+                    >
+                      {t('widgets:msg-no-structure')}
+                    </Typography>
+                  }
+                />
+              )}
+            </Container>
+          </ListItem>
+        </>
       )}
     />
   );
