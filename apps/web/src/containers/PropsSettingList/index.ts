@@ -1,2 +1,6 @@
 export { default, default as PropsSettingList } from './PropsSettingList';
-export type { PropsSettingListProps } from './PropsSettingList.types';
+
+export type {
+  PropsSettingChangeHandler,
+  PropsSettingListProps,
+} from './PropsSettingList.types';

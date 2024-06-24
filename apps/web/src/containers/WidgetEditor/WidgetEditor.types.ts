@@ -1,10 +1,10 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { DataStructureListProps } from '../DataStructureList';
+import type { PropsSettingChangeHandler } from '../PropsSettingList';
 
 import type {
   ConfigPaths,
   PortalContainerEl,
-  PropsSettingChangeHandler,
   RenderConfig,
   WidgetConfigs,
   WidgetType,

@@ -8,17 +8,14 @@ import type { PrimitiveValueProp } from '@weavcraft/common';
 
 import { DataPropNameEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
-import { useDataBindingHandler, useNodeFinder } from '~web/hooks';
-import type {
-  DataFields,
-  DataSourceValue,
-  MappingPath,
-} from '../imports.types';
+import { useNodeFinder } from '~web/hooks';
+import type { DataFields, MappingPath } from '../imports.types';
 
 import type {
   BindingSelectProps,
   DataFieldIndexes,
   DataSourceOptions,
+  DataSource,
   PropItemProps,
   PropsSettingListProps,
 } from './PropsSettingList.types';
@@ -65,7 +62,7 @@ export function useFieldBindingOptions({
   const { dataStructure = [] } = widget;
   const { isStoreWidget } = getCoreProps(config.widget);
 
-  const dataSource: DataSourceValue = _get(config, [
+  const dataSource: DataSource = _get(config, [
     'props',
     'propMapping',
     'value',
@@ -141,10 +138,8 @@ export function useSetting({
   config,
   onChange,
 }: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
-  const { widget, props = {} } = config;
-
   const getCoreProps = useCorePropsGetter();
-  const handleBinding = useDataBindingHandler(config, onChange);
+  const { widget, props = {} } = config;
 
   const { dataPropName, propItems } = useMemo(() => {
     const { definition, isStoreWidget } = getCoreProps(widget);
@@ -181,34 +176,32 @@ export function useSetting({
       'propMapping',
       'value',
       dataPropName,
-    ]) as DataSourceValue,
+    ]) as DataSource,
 
     onFieldBinding: (
-      mappingPath: string,
+      mappingPath: MappingPath,
       propName: string,
-      source?: DataSourceValue
+      source?: DataSource
     ) => {
-      const value = (_get(props, [mappingPath, 'value']) || {}) as Record<
+      const mapping = (_get(props, [mappingPath, 'value']) || {}) as Record<
         string,
         string
       >;
 
       if (source) {
-        _set(value, [propName], source);
-        propName === 'records' && handleBinding.change([]);
+        _set(mapping, [propName], source);
       } else {
-        _unset(value, [propName]);
+        _unset(mapping, [propName]);
       }
 
-      onChange(config, mappingPath, { type: 'DataBinding', value });
-      handleBinding.debouncedRefresh(value);
+      onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
     },
   };
 }
 
 export function useIndexesValue<
   N extends DataPropNameEnum | string,
-  V extends DataSourceValue | DataFieldIndexes
+  V extends DataSource | DataFieldIndexes
 >(
   propName: N,
   value: V | undefined,

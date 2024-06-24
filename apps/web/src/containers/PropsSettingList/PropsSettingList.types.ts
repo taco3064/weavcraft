@@ -1,15 +1,15 @@
+import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 import type { Get } from 'type-fest';
 
 import type {
   ConfigPaths,
-  DataSourceValue,
   EditorListProps,
   PrimitivePropDefinitions,
-  PropsSettingChangeHandler,
   RenderConfig,
   WidgetConfigs,
 } from '../imports.types';
 
+//* Enums
 export enum InjectionModeEnum {
   Binding = 'Binding',
   Fixed = 'Fixed',
@@ -25,11 +25,14 @@ export enum DataPropNameEnum {
   Records = 'records',
 }
 
-export type DataFieldIndexes = Exclude<DataSourceValue, `[[${string}]]`>;
+//* Variables
+type ConfigProps = DataBindingProp | PrimitiveValueProp;
+export type DataSource = '[[root]]' | '[[extension]]' | number[];
+export type DataFieldIndexes = Exclude<DataSource, `[[${string}]]`>;
 
 export type DataSourceOptions = {
   fieldPath: string;
-  indexes: DataSourceValue;
+  indexes: DataSource;
 };
 
 export interface PropItem {
@@ -40,6 +43,12 @@ export interface PropItem {
     Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
   >;
 }
+
+export type PropsSettingChangeHandler = (
+  config: RenderConfig,
+  propPath?: string,
+  propValue?: ConfigProps
+) => void;
 
 //* Component Props
 export interface PropsSettingListProps
@@ -68,8 +77,8 @@ export interface PropItemProps
 export interface SourceSelectProps
   extends Pick<PropsSettingListProps, 'paths' | 'widget'> {
   dataPropName: DataPropNameEnum;
-  value?: DataSourceValue;
-  onChange: (dataPropName: DataPropNameEnum, value?: DataSourceValue) => void;
+  value?: DataSource;
+  onChange: (dataPropName: DataPropNameEnum, value?: DataSource) => void;
 }
 
 export interface BindingSelectProps
