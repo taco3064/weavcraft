@@ -2,6 +2,7 @@ import type { Get } from 'type-fest';
 
 import type {
   ConfigPaths,
+  DataSourceValue,
   EditorListProps,
   PrimitivePropDefinitions,
   PropsSettingChangeHandler,
@@ -18,6 +19,18 @@ export enum PropItemModeEnum {
   DefaultValue = 'DefaultValue',
   PropMapping = 'PropMapping',
 }
+
+export enum DataPropNameEnum {
+  Data = 'data',
+  Records = 'records',
+}
+
+export type DataFieldIndexes = Exclude<DataSourceValue, `[[${string}]]`>;
+
+export type DataSourceOptions = {
+  fieldPath: string;
+  indexes: DataSourceValue;
+};
 
 export interface PropItem {
   fieldPath?: string;
@@ -38,16 +51,31 @@ export interface PropsSettingListProps
 }
 
 export interface PropItemProps
-  extends Pick<PropsSettingListProps, 'config' | 'onChange'> {
+  extends Pick<
+    PropsSettingListProps,
+    'config' | 'paths' | 'widget' | 'onChange'
+  > {
   classes: Record<'icon' | 'row', string>;
   disableBinding?: boolean;
   propPath: string;
+  onFieldBinding: (propName: string, value?: DataFieldIndexes) => void;
 
   definition: NonNullable<
     Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
   >;
 }
 
-export interface BindingSelectProps {
-  test?: string;
+export interface SourceSelectProps
+  extends Pick<PropsSettingListProps, 'paths' | 'widget'> {
+  dataPropName: DataPropNameEnum;
+  value?: DataSourceValue;
+  onChange: (dataPropName: DataPropNameEnum, value?: DataSourceValue) => void;
+}
+
+export interface BindingSelectProps
+  extends Pick<
+    PropItemProps,
+    'config' | 'paths' | 'propPath' | 'widget' | 'onFieldBinding'
+  > {
+  value?: DataFieldIndexes;
 }

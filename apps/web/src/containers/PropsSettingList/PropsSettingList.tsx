@@ -1,21 +1,17 @@
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
 import CommitIcon from '@mui/icons-material/Commit';
 import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
-import { Fragment, useState } from 'react';
+import _toPath from 'lodash/toPath';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import PropItem from './PropsSettingList.PropItem';
+import SourceSelect from './PropsSettingList.SourceSelect';
 import { EditorList, SwitchListItem } from '~web/components';
 import { useMainStyles } from './PropsSettingList.styles';
-import { useSettingOptions } from './PropsSettingList.hooks';
-import { useBindingSources, useNodePaths } from '~web/hooks';
+import { useSetting } from './PropsSettingList.hooks';
+import { useNodePaths } from '~web/hooks';
 
 import {
   InjectionModeEnum,
@@ -29,16 +25,16 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
-  const [mode, setMode] = useState<InjectionModeEnum>(InjectionModeEnum.Fixed);
-
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
 
-  const { dataPropName, dataSrcPath, propItems, onSourceBinding } =
-    useSettingOptions({ config, onChange });
+  const { dataPropName, dataSourceIndexes, propItems, onFieldBinding } =
+    useSetting({ config, onChange });
 
-  const bindingSources = useBindingSources(widget, config, paths);
+  const [mode, setMode] = useState<InjectionModeEnum>(() =>
+    dataSourceIndexes ? InjectionModeEnum.Binding : InjectionModeEnum.Fixed
+  );
 
   return (
     <EditorList
@@ -77,45 +73,12 @@ export default function PropsSettingList({
                   icon: <CommitIcon />,
                   tooltip: t('widgets:ttl-injection-mode.Binding'),
                   content: (
-                    <TextField
-                      fullWidth
-                      select
-                      variant="filled"
-                      size="small"
-                      color="secondary"
-                      label={t(`widgets:lbl-source-path.${dataPropName}`)}
-                      value={dataSrcPath}
-                      onChange={(e) =>
-                        onSourceBinding(
-                          'propMapping',
-                          dataPropName,
-                          e.target.value
-                        )
+                    <SourceSelect
+                      {...{ dataPropName, paths, widget }}
+                      value={dataSourceIndexes}
+                      onChange={(dataPropName, value) =>
+                        onFieldBinding('propMapping', dataPropName, value)
                       }
-                      SelectProps={{
-                        displayEmpty: true,
-                        IconComponent: Fragment,
-                      }}
-                      InputProps={{
-                        disableUnderline: false,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            {!dataSrcPath ? (
-                              <ArrowDropDownIcon />
-                            ) : (
-                              <Tooltip title={t('btn-reset')}>
-                                <IconButton
-                                  onClick={() =>
-                                    onSourceBinding('propMapping', dataPropName)
-                                  }
-                                >
-                                  <CloseIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                          </InputAdornment>
-                        ),
-                      }}
                     />
                   ),
                 },
@@ -125,10 +88,19 @@ export default function PropsSettingList({
 
           {propItems.map(({ propPath, definition }) => (
             <PropItem
-              {...{ config, definition, propPath, onChange }}
+              {...{ config, definition, paths, propPath, widget, onChange }}
               key={propPath}
-              disableBinding={!dataSrcPath}
+              disableBinding={!dataSourceIndexes}
               classes={{ icon, row: classes.row }}
+              onFieldBinding={(propPath, value) => {
+                const [propName, baseName] = _toPath(propPath).reverse();
+
+                onFieldBinding(
+                  baseName ? `${baseName}.propMapping` : 'propMapping',
+                  propName,
+                  value
+                );
+              }}
             />
           ))}
         </>

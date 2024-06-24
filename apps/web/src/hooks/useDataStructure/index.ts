@@ -1,2 +1,7 @@
 export * from './useDataStructure';
-export type { PropsSettingChangeHandler } from './useDataStructure.types';
+
+export type {
+  DataFields,
+  DataSourceValue,
+  PropsSettingChangeHandler,
+} from './useDataStructure.types';

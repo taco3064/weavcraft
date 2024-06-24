@@ -40,10 +40,7 @@ export function useCorePropsGetter() {
         )
         .map(([path]) => path) as MappingPath[];
 
-      const [baseChildPath] = mappingPaths.map(getBasePropPath).filter(Boolean);
-
       return {
-        baseChildPath,
         definition,
         isStoreWidget,
         mappingPaths,

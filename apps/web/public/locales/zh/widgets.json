@@ -35,7 +35,7 @@
     "Interaction": "互動操作",
     "Layout": "版面配置"
   },
-  "lbl-source-path": {
+  "lbl-source-setting": {
     "data": "資料來源",
     "records": "多筆資料來源"
   },
@@ -88,6 +88,10 @@
   "msg-delete-confirm": {
     "field": "確定要移除 {{ field }}?",
     "widget": "確定要刪除此{{widget}}組件嗎？"
+  },
+  "opt-source-setting": {
+    "extension": "使用上層結構的擴展",
+    "root": "使用最頂層結構"
   },
   "ttl-field-path": {
     "add": {

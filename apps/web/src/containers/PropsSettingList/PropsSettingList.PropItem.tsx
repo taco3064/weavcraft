@@ -1,37 +1,42 @@
+import CommitIcon from '@mui/icons-material/Commit';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import BindingSelect from './PropsSettingList.BindingSelect';
 import { PrimitiveField, SwitchListItem } from '~web/components';
 import { PropItemModeEnum, type PropItemProps } from './PropsSettingList.types';
-import { usePropItemOptions } from './PropsSettingList.hooks';
+import { usePropItem } from './PropsSettingList.hooks';
 
 export default function PropItem({
   classes,
   config,
   disableBinding,
   definition,
+  paths,
   propPath,
+  widget,
   onChange,
+  onFieldBinding,
 }: PropItemProps) {
   const { t } = useTranslation();
 
-  const { defaultPropValue, fieldPath, mappable } = usePropItemOptions({
+  const { bindable, defaultPropValue, dataFieldIndexes } = usePropItem({
     config,
     propPath,
   });
 
-  const [mode, setMode] = useState<PropItemModeEnum>(
-    PropItemModeEnum.DefaultValue
+  const [mode, setMode] = useState<PropItemModeEnum>(() =>
+    dataFieldIndexes
+      ? PropItemModeEnum.PropMapping
+      : PropItemModeEnum.DefaultValue
   );
 
   return (
     <SwitchListItem
       active={mode}
       classes={classes}
-      disabled={disableBinding || !mappable}
+      disabled={disableBinding || !bindable}
       onActiveChange={setMode}
       options={{
         [PropItemModeEnum.DefaultValue]: {
@@ -55,10 +60,15 @@ export default function PropItem({
           ),
         },
         [PropItemModeEnum.PropMapping]: {
-          color: 'success',
-          icon: <StorageOutlinedIcon />,
+          color: 'warning',
+          icon: <CommitIcon />,
           tooltip: t('widgets:ttl-prop-item-mode.PropMapping'),
-          content: <BindingSelect />,
+          content: (
+            <BindingSelect
+              {...{ config, paths, propPath, widget, onFieldBinding }}
+              value={dataFieldIndexes}
+            />
+          ),
         },
       }}
     />

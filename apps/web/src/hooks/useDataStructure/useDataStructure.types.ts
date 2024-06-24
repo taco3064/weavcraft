@@ -9,10 +9,7 @@ type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataChangeHandler = (e: JsonObject | JsonObject[]) => void;
 export type DataFields = NonNullable<WidgetConfigs['dataStructure']>;
 
-export type DataSourceOptions = {
-  fieldPath: string;
-  indexes: 'root' | `${number}` | `${number}.${number}`;
-};
+export type DataSourceValue = '[[root]]' | '[[extension]]' | number[];
 
 export type PropsSettingChangeHandler = (
   config: RenderConfig,

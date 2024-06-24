@@ -35,7 +35,7 @@
     "Interaction": "Interaction",
     "Layout": "Layout"
   },
-  "lbl-source-path": {
+  "lbl-source-setting": {
     "data": "Data Source",
     "records": "Records Source"
   },
@@ -88,6 +88,10 @@
   "msg-delete-confirm": {
     "field": "Are you sure you want to remove {{ field }}?",
     "widget": "Are you sure you want to delete {{ widget }} widget?"
+  },
+  "opt-source-setting": {
+    "extension": "Extension from the Parent",
+    "root": "Root Structure"
   },
   "ttl-field-path": {
     "add": {
