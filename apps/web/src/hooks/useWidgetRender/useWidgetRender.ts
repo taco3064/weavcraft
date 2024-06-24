@@ -6,12 +6,13 @@ import type { ComponentType, ReactNode } from 'react';
 import { useCorePropsGetter } from '~web/contexts';
 
 import type {
+  DataFields,
   GenerateOptions,
   RenderConfig,
   RenderFn,
 } from './useWidgetRender.types';
 
-export function useWidgetRender(render: RenderFn) {
+export function useWidgetRender(dataStructure: DataFields, render: RenderFn) {
   const getCoreProps = useCorePropsGetter();
 
   return function generate(
@@ -45,6 +46,24 @@ export function useWidgetRender(render: RenderFn) {
             );
 
             _set(acc, path, multiple ? children : children[0]);
+          } else if (type === 'DataBinding' && path.endsWith('propMapping')) {
+            _set(
+              acc,
+              path,
+              Object.entries(value || {}).reduce(
+                (mapping, [propPath, indexes]) => {
+                  const fieldPath = _get(
+                    dataStructure,
+                    indexes as []
+                  ) as string;
+
+                  return !fieldPath
+                    ? mapping
+                    : _set(mapping, propPath, fieldPath);
+                },
+                {}
+              )
+            );
           } else {
             _set(acc, path, value);
           }

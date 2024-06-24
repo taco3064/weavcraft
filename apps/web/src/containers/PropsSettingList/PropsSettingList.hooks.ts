@@ -88,11 +88,11 @@ export function useFieldBindingOptions({
     );
   }
 
-  const indexes = baseName ? dataSource : dataSource.slice(0, -2);
+  const indexes = baseName ? dataSource : dataSource?.slice(0, -2);
 
   return getSourceOptions(
     DataPropNameEnum.Data,
-    !indexes.length ? dataStructure : _get(dataStructure, indexes),
+    (!indexes?.length ? dataStructure : _get(dataStructure, indexes)) || [],
     indexes
   );
 }

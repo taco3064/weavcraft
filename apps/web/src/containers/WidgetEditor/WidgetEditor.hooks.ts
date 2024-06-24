@@ -3,6 +3,7 @@ import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { createElement, useMemo } from 'react';
+import { nanoid } from 'nanoid';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
@@ -129,6 +130,7 @@ export function useChangeEvents(
 
 export function useNodeCreateButton(
   AppendNode: ComponentType<NodeCreateButtonProps>,
+  dataStructure: WidgetConfigs['dataStructure'],
   disabled: boolean,
   {
     onAddChild,
@@ -151,7 +153,20 @@ export function useNodeCreateButton(
       'records' in dataBindingProps &&
       !_get(config, ['props', 'records', 'value'])
     ) {
-      _set(props, 'records', [{}]);
+      const mappingPath = Object.keys(dataBindingProps).find((key) =>
+        key.endsWith('.propMapping')
+      );
+
+      const idIndexes = _get(config, [
+        'props',
+        mappingPath as string,
+        'value',
+        'id',
+      ]);
+
+      const idField = _get(dataStructure, idIndexes) as string;
+
+      _set(props, 'records', [!idField ? {} : _set({}, idField, nanoid())]);
     }
 
     return Object.entries(elementNodeProps || {}).reduce(

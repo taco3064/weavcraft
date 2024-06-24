@@ -75,13 +75,17 @@ export default withCorePropsDefinition(function WidgetEditor({
 
   const withNodeCreateButton = useNodeCreateButton(
     NodeCreateButton,
+    value.dataStructure,
     viewMode === ViewModeEnum.Preview,
     changeEvents
   );
 
-  const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
-    <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
-  ));
+  const generate = useWidgetRender(
+    value.dataStructure || [],
+    (WidgetEl, { config, key, props }) => (
+      <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
+    )
+  );
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertWidgetConfig,
@@ -183,7 +187,7 @@ export default withCorePropsDefinition(function WidgetEditor({
           ) : (
             <NodeCreateButton
               variant="node"
-              onClick={(widget) => setValue({ widget })}
+              onClick={(widget) => setValue({ ...value, widget })}
             />
           )}
 

@@ -7,7 +7,7 @@ import type { GridItemProps } from '../GridItem';
 
 type MuiGridProps = Pick<
   ComponentProps<typeof MuiGrid>,
-  'columns' | 'justifyContent' | 'spacing'
+  'columns' | 'id' | 'justifyContent' | 'spacing'
 >;
 
 export type ItemVariant = 'common' | 'unique';
