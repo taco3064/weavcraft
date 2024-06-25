@@ -1,18 +1,14 @@
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import Container from '@mui/material/Container';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { SimpleTreeView, TreeItem } from '@mui/x-tree-view';
 import { useTranslation } from 'next-i18next';
 
 import ActionToggle from './DataStructureList.ActionToggle';
 import FieldItems from './DataStructureList.FieldItems';
 import { EditorList } from '~web/components';
 import { useFieldChangeHandler } from './DataStructureList.hooks';
-import { useMainStyles } from './DataStructureList.styles';
 import type { DataStructureListProps } from './DataStructureList.types';
 
 export default function DataStructureView({
@@ -21,19 +17,17 @@ export default function DataStructureView({
   onChange,
   onClose,
 }: DataStructureListProps) {
-  const onFieldChange = useFieldChangeHandler(onChange);
-
   const { t } = useTranslation();
-  const { classes } = useMainStyles();
+  const onFieldChange = useFieldChangeHandler(onChange);
 
   return (
     <EditorList
       title={t('widgets:ttl-data-structure')}
       onClose={onClose}
-      render={({ icon }) => (
+      render={(classes) => (
         <>
           <ListItem>
-            <ListItemIcon className={icon}>
+            <ListItemIcon className={classes.icon}>
               <AccountTreeIcon color="disabled" fontSize="large" />
             </ListItemIcon>
 
@@ -61,31 +55,20 @@ export default function DataStructureView({
             )}
           </ListItem>
 
-          <ListItem sx={{ paddingRight: 1 }}>
-            <Container
-              maxWidth={false}
-              component={SimpleTreeView}
-              sx={{ paddingRight: 0 }}
-            >
-              {value.length ? (
-                <FieldItems {...{ paths, value, onChange }} />
-              ) : (
-                <TreeItem
-                  itemId="message"
-                  classes={{ iconContainer: classes.hidden }}
-                  label={
-                    <Typography
-                      variant="h6"
-                      justifyContent="center"
-                      color="text.disabled"
-                    >
-                      {t('widgets:msg-no-structure')}
-                    </Typography>
-                  }
-                />
-              )}
-            </Container>
-          </ListItem>
+          {value.length ? (
+            <FieldItems {...{ classes, paths, value, onChange }} />
+          ) : (
+            <ListItem>
+              <ListItemText
+                primary={t('widgets:msg-no-structure')}
+                primaryTypographyProps={{
+                  align: 'center',
+                  color: 'text.disabled',
+                  variant: 'h6',
+                }}
+              />
+            </ListItem>
+          )}
         </>
       )}
     />

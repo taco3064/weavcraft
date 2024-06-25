@@ -1,4 +1,8 @@
-import type { EditorListProps, WidgetConfigs } from '../imports.types';
+import type {
+  EditorListClasses,
+  EditorListProps,
+  WidgetConfigs,
+} from '../imports.types';
 
 export type EditingState = {
   fieldPath: string;
@@ -17,6 +21,11 @@ export interface DataStructureListProps
     paths: string[];
     isStructure: boolean;
   }) => void;
+}
+
+export interface FieldItemsProps
+  extends Pick<DataStructureListProps, 'paths' | 'value' | 'onChange'> {
+  classes: EditorListClasses;
 }
 
 export interface ActionToggleProps {
