@@ -41,7 +41,7 @@ export type GetPropsDefinitionsReturn = Pick<
   'elementNodeProps' | 'eventCallbackProps' | 'primitiveValueProps'
 >;
 
-export type GetDefinitionFn = (
+export type GetPropsDefinitionFn = (
   propsType: WidgetPropTypes,
   ...[type, options]: GetDefinitionArgs
 ) => WidgetPropDefinitions[typeof propsType] | false;

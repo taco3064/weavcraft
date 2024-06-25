@@ -11,12 +11,13 @@ import Typography from '@mui/material/Typography';
 import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { DataPropEnum } from './PropsSettingList.types';
+import { DataPropEnum } from '~web/hooks';
+import type { SourceSelectProps } from './PropsSettingList.types';
+
 import {
   useDataSourceOptions,
   useIndexesValue,
 } from './PropsSettingList.hooks';
-import type { SourceSelectProps } from './PropsSettingList.types';
 
 export default function SourceSelect({
   dataPropName,

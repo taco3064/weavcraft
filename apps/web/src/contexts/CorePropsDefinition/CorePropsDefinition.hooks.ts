@@ -2,7 +2,7 @@ import _get from 'lodash/get';
 import { createContext, useCallback, useContext } from 'react';
 
 import type {
-  GetDefinitionFn,
+  GetCorePropsFn,
   MappingPath,
   CorePropsDefinitionContextValue,
 } from './CorePropsDefinition.types';
@@ -19,7 +19,7 @@ export function useCorePropsGetter() {
     CorePropsDefinitionContext
   ) as CorePropsDefinitionContextValue;
 
-  return useCallback<GetDefinitionFn>(
+  return useCallback<GetCorePropsFn>(
     (widget) => {
       const definition = definitions[widget];
 

@@ -8,9 +8,9 @@ import type { PropTypeDefinitions } from '~web/services';
 
 import type {
   CoreParser,
-  GetDefinitionFn,
   GetDefinitionFns,
   GetPropertyWithAllTypesFn,
+  GetPropsDefinitionFn,
   GetPropsDefinitionsReturn,
 } from './parser.types';
 
@@ -28,7 +28,7 @@ const source = new Tsm.Project().addSourceFileAtPath(
 const trimImportText = (text?: string) =>
   text?.replace(/import\s*\(.*?\)\s*;?\./g, '');
 
-const getPropsDefinition: GetDefinitionFn = (propsType, type, options) => {
+const getPropsDefinition: GetPropsDefinitionFn = (propsType, type, options) => {
   const { [propsType]: generators } = Generator;
 
   return generators.reduce<ReturnType<(typeof generators)[number]>>(

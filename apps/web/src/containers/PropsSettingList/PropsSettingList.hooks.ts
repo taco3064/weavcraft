@@ -4,9 +4,8 @@ import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 import { useMemo, type ChangeEvent } from 'react';
 
-import { DataPropEnum } from './PropsSettingList.types';
+import { DataPropEnum, useNodeFinder } from '~web/hooks';
 import { useCorePropsGetter } from '~web/contexts';
-import { useNodeFinder } from '~web/hooks';
 
 import type {
   BindingSelectProps,
@@ -19,7 +18,7 @@ import type {
 
 import type {
   DataFields,
-  GetDefinitionFn,
+  GetCorePropsFn,
   MappingPath,
   RenderConfig,
 } from '../imports.types';
@@ -191,7 +190,7 @@ function resetAllPropMapping(
   {
     forceReset = false,
     getCoreProps,
-  }: { forceReset?: boolean; getCoreProps: GetDefinitionFn }
+  }: { forceReset?: boolean; getCoreProps: GetCorePropsFn }
 ) {
   const { definition, isStoreWidget, mappingPaths } = getCoreProps(widget);
   const { elementNodeProps } = definition;

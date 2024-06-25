@@ -3,6 +3,7 @@ import type { Get } from 'type-fest';
 
 import type {
   ConfigPaths,
+  DataPropEnum,
   EditorListProps,
   PrimitivePropDefinitions,
   RenderConfig,
@@ -18,11 +19,6 @@ export enum InjectionModeEnum {
 export enum PropItemModeEnum {
   DefaultValue = 'DefaultValue',
   PropMapping = 'PropMapping',
-}
-
-export enum DataPropEnum {
-  Data = 'data',
-  Records = 'records',
 }
 
 //* Variables

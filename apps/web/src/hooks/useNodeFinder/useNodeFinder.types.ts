@@ -1,8 +1,8 @@
 import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
-import type { GetDefinitionFn, WidgetConfigs } from '../imports.types';
+import type { GetCorePropsFn, WidgetConfigs } from '../imports.types';
 
 export interface GetterOptions {
-  getCoreProps: GetDefinitionFn;
+  getCoreProps: GetCorePropsFn;
   getNode: (widget: WidgetConfigs, paths: ConfigPaths) => RenderConfig;
 }
 

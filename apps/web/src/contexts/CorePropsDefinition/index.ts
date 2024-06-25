@@ -6,7 +6,7 @@ export {
 } from './CorePropsDefinition.hooks';
 
 export type {
-  GetDefinitionFn,
+  GetCorePropsFn,
   MappingPath,
   CorePropsDefinitionProviderProps,
 } from './CorePropsDefinition.types';

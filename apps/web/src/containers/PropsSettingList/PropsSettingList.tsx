@@ -1,5 +1,4 @@
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import Button from '@mui/material/Button';
 import CommitIcon from '@mui/icons-material/Commit';
 import EditIcon from '@mui/icons-material/Edit';
 import _get from 'lodash/get';
@@ -7,14 +6,15 @@ import _toPath from 'lodash/toPath';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import FixedDataDialog from '../FixedDataDialog';
 import PropItem from './PropsSettingList.PropItem';
 import SourceSelect from './PropsSettingList.SourceSelect';
-import { DataPropEnum, InjectionModeEnum } from './PropsSettingList.types';
 import { EditorList, SwitchListItem } from '~web/components';
+import { InjectionModeEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
+import { useDataPropName, useNodePaths } from '~web/hooks';
 import { useFieldBindingHandler } from './PropsSettingList.hooks';
 import { useMainStyles } from './PropsSettingList.styles';
-import { useNodePaths } from '~web/hooks';
 
 import type {
   DataSource,
@@ -28,45 +28,36 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
-  const getCoreProps = useCorePropsGetter();
-  const onFieldBinding = useFieldBindingHandler({ config, onChange });
-
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
 
-  const { dataPropName, propItems } = useMemo(() => {
-    const { definition, isStoreWidget } = getCoreProps(config.widget);
-    const { dataBindingProps, primitiveValueProps } = definition;
+  const getCoreProps = useCorePropsGetter();
+  const onFieldBinding = useFieldBindingHandler({ config, onChange });
+  const dataPropName = useDataPropName(config);
 
-    const dataPropName = isStoreWidget
-      ? DataPropEnum.Records
-      : DataPropEnum.Data;
+  const propItems = useMemo(() => {
+    const { definition } = getCoreProps(config.widget);
+    const { primitiveValueProps } = definition;
 
-    return {
-      dataPropName: (dataBindingProps?.[dataPropName]
-        ? dataPropName
-        : undefined) as DataPropEnum,
+    return Object.entries(primitiveValueProps || {})
+      .sort(([path1], [path2]) => {
+        const paths1 = _toPath(path1);
+        const paths2 = _toPath(path2);
 
-      propItems: Object.entries(primitiveValueProps || {})
-        .sort(([path1], [path2]) => {
-          const paths1 = _toPath(path1);
-          const paths2 = _toPath(path2);
-
-          return paths1.length - paths2.length || path1.localeCompare(path2);
-        })
-        .map(([propPath, definition]) => ({
-          propPath,
-          definition,
-        })),
-    };
+        return paths1.length - paths2.length || path1.localeCompare(path2);
+      })
+      .map(([propPath, definition]) => ({
+        propPath,
+        definition,
+      }));
   }, [config.widget, getCoreProps]);
 
   const dataSourceIndexes = _get(config, [
     'props',
     'propMapping',
     'value',
-    dataPropName,
+    dataPropName as string,
   ]) as DataSource;
 
   const [mode, setMode] = useState<InjectionModeEnum>(() =>
@@ -94,16 +85,7 @@ export default function PropsSettingList({
                   color: 'error',
                   icon: <EditIcon />,
                   tooltip: t('widgets:ttl-injection-mode.Fixed'),
-                  content: (
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      color="error"
-                      size="large"
-                    >
-                      {t('widgets:btn-fixed-data')}
-                    </Button>
-                  ),
+                  content: <FixedDataDialog {...{ config }} />,
                 },
                 [InjectionModeEnum.Binding]: {
                   color: 'warning',
