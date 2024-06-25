@@ -1,12 +1,7 @@
 import type { DialogProps } from '@mui/material/Dialog';
-import type { ReactElement, ReactNode } from 'react';
-import type { TransitionProps } from '@mui/material/transitions';
+import type { ReactNode } from 'react';
 
 import type { MenuItemOptions } from '../imports.types';
-
-export type SubTransitionProps = TransitionProps & {
-  children: ReactElement;
-};
 
 export interface MenuDialogProps
   extends Pick<DialogProps, 'TransitionComponent'> {

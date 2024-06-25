@@ -1,3 +1,5 @@
+import type { DialogProps } from '@mui/material/Dialog';
+
 import type {
   EditorListClasses,
   EditorListProps,
@@ -28,7 +30,8 @@ export interface FieldItemsProps
   classes: EditorListClasses;
 }
 
-export interface ActionToggleProps {
+export interface ActionToggleProps
+  extends Pick<DialogProps, 'TransitionComponent'> {
   value?: string;
   variant: EditingState['type'];
 

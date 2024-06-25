@@ -9,11 +9,16 @@ const NONE_IMPORTANT = '0 !important';
 const BRIGHTNESS_HIGHLIGHT = 'brightness(1.2)';
 
 //* Dialog Transition
-const Transition = forwardRef<unknown, TransitionProps>((props, ref) => (
-  <Slide direction="up" ref={ref} {...props} />
-));
+export const SlideDownTransition = forwardRef<unknown, TransitionProps>(
+  (props, ref) => <Slide ref={ref} direction="down" {...props} />
+);
 
-Transition.displayName = 'Transition';
+export const SlideUpTransition = forwardRef<unknown, TransitionProps>(
+  (props, ref) => <Slide ref={ref} direction="up" {...props} />
+);
+
+SlideDownTransition.displayName = 'SlideDownTransition';
+SlideUpTransition.displayName = 'SlideUpTransition';
 
 //* Default Component Styles
 export const components: ThemeOptions['components'] = {
@@ -172,7 +177,7 @@ export const components: ThemeOptions['components'] = {
   },
   MuiDialog: {
     defaultProps: {
-      TransitionComponent: Transition,
+      TransitionComponent: SlideUpTransition,
       transitionDuration: 400,
       onPointerDown: (e) => e.stopPropagation(),
       onTouchEnd: (e) => e.stopPropagation(),

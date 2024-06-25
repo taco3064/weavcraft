@@ -5,17 +5,26 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Step from '@mui/material/Step';
+import StepButton from '@mui/material/StepButton';
+import StepContent from '@mui/material/StepContent';
+import Stepper from '@mui/material/Stepper';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { useFixedData } from './FixedDataDialog.hooks';
-import type { FixedDataDialogProps } from './FixedDataDialog.types';
+
+import {
+  BuildStepEnum,
+  type FixedDataDialogProps,
+} from './FixedDataDialog.types';
 
 export default function FixedDataDialog({ config }: FixedDataDialogProps) {
-  const [open, setOpen] = useState(false);
-
   const { t } = useTranslation();
   const { data, dataPropName } = useFixedData(config);
+
+  const [activeStep, setActiveStep] = useState(BuildStepEnum.DataStructure);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -34,17 +43,33 @@ export default function FixedDataDialog({ config }: FixedDataDialogProps) {
         maxWidth="xs"
         open={open}
         onClose={() => setOpen(false)}
-        PaperProps={{
-          component: 'form',
-          onSubmit: console.log,
-        }}
       >
         <DialogTitle>
           <Core.Icon code="faEdit" />
           {t('widgets:ttl-injection-mode.Fixed')}
         </DialogTitle>
 
-        <DialogContent>Content</DialogContent>
+        <DialogContent>
+          <Stepper nonLinear orientation="vertical">
+            <Step active={activeStep === BuildStepEnum.DataStructure}>
+              <StepButton
+                onClick={() => setActiveStep(BuildStepEnum.DataStructure)}
+              >
+                {t('widgets:ttl-data-structure')}
+              </StepButton>
+
+              <StepContent>Data Structure</StepContent>
+            </Step>
+
+            <Step active={activeStep === BuildStepEnum.DataView}>
+              <StepButton onClick={() => setActiveStep(BuildStepEnum.DataView)}>
+                {t('widgets:btn-fixed-data')}
+              </StepButton>
+
+              <StepContent>Data View</StepContent>
+            </Step>
+          </Stepper>
+        </DialogContent>
 
         <ButtonGroup
           fullWidth
@@ -60,11 +85,7 @@ export default function FixedDataDialog({ config }: FixedDataDialogProps) {
             {t('btn-cancel')}
           </Button>
 
-          <Button
-            color="secondary"
-            startIcon={<Core.Icon code="faCheck" />}
-            type="submit"
-          >
+          <Button color="secondary" startIcon={<Core.Icon code="faCheck" />}>
             {t('btn-confirm')}
           </Button>
         </ButtonGroup>

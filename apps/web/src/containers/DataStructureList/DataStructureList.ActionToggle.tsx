@@ -1,25 +1,20 @@
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import Slide from '@mui/material/Slide';
 import TextField from '@mui/material/TextField';
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { ConfirmDialog, EditorDialog, MenuDialog } from '~web/components';
-import type { MenuItemOptions, SubTransitionProps } from '../imports.types';
+import { SlideDownTransition, SlideUpTransition } from '~web/themes';
+import type { MenuItemOptions } from '../imports.types';
 
 import type {
   ActionToggleProps,
   EditingState,
 } from './DataStructureList.types';
 
-const SubTransition = forwardRef<unknown, SubTransitionProps>(
-  function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
-  }
-);
-
 export default function ActionToggle({
+  TransitionComponent = SlideUpTransition,
   variant,
   value,
   onActionToggle,
@@ -59,7 +54,6 @@ export default function ActionToggle({
 
       {value && (
         <ConfirmDialog
-          TransitionComponent={SubTransition}
           open={confirmOpen}
           subject={t('ttl-delete-confirm')}
           message={t('widgets:msg-delete-confirm.field', {
@@ -69,10 +63,16 @@ export default function ActionToggle({
           onConfirm={() =>
             onActionToggle({ mode: 'delete', value, type: variant })
           }
+          TransitionComponent={
+            TransitionComponent === SlideUpTransition
+              ? SlideDownTransition
+              : SlideUpTransition
+          }
         />
       )}
 
       <MenuDialog
+        TransitionComponent={TransitionComponent}
         items={[...structureOptions, ...divider, ...fieldOptions]}
         open={menuOpen}
         subtitle={value}
@@ -93,7 +93,6 @@ export default function ActionToggle({
       />
 
       <EditorDialog
-        TransitionComponent={SubTransition}
         icon="faBezierCurve"
         open={editing !== undefined}
         title={t(`widgets:ttl-field-path.${mode}.${editing?.type}`)}
@@ -109,6 +108,11 @@ export default function ActionToggle({
             value,
           });
         }}
+        TransitionComponent={
+          TransitionComponent === SlideUpTransition
+            ? SlideDownTransition
+            : SlideUpTransition
+        }
       >
         <TextField
           autoFocus
