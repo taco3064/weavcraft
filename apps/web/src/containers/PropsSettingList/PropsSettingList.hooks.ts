@@ -4,10 +4,9 @@ import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 import { useMemo, type ChangeEvent } from 'react';
 
-import { DataPropNameEnum } from './PropsSettingList.types';
+import { DataPropEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
 import { useNodeFinder } from '~web/hooks';
-import type { DataFields, MappingPath } from '../imports.types';
 
 import type {
   BindingSelectProps,
@@ -17,6 +16,13 @@ import type {
   PropsSettingListProps,
   SourceSelectProps,
 } from './PropsSettingList.types';
+
+import type {
+  DataFields,
+  GetDefinitionFn,
+  MappingPath,
+  RenderConfig,
+} from '../imports.types';
 
 export function useDataSourceOptions({
   dataPropName,
@@ -35,7 +41,7 @@ export function useDataSourceOptions({
     isExtensionAllowed: Boolean(extensionIndexes.length),
 
     recordsOptions:
-      dataPropName !== DataPropNameEnum.Records
+      dataPropName !== DataPropEnum.Records
         ? undefined
         : {
             root: getSourceOptions(dataPropName, dataStructure),
@@ -45,6 +51,30 @@ export function useDataSourceOptions({
               extensionIndexes
             ),
           },
+  };
+}
+
+export function useFieldBindingHandler({
+  config,
+  onChange,
+}: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
+  const getCoreProps = useCorePropsGetter();
+
+  return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
+    if (propName === DataPropEnum.Records || propName === DataPropEnum.Data) {
+      resetAllPropMapping(config, { forceReset: true, getCoreProps });
+    }
+
+    const mapping: Record<string, string> =
+      _get(config, ['props', mappingPath, 'value']) || {};
+
+    if (source) {
+      _set(mapping, [propName], source);
+    } else {
+      _unset(mapping, [propName]);
+    }
+
+    onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
   };
 }
 
@@ -69,7 +99,7 @@ export function useFieldBindingOptions({
   ]);
 
   if (dataSource === '[[root]]') {
-    return getSourceOptions(DataPropNameEnum.Data, dataStructure);
+    return getSourceOptions(DataPropEnum.Data, dataStructure);
   } else if (dataSource === '[[extension]]') {
     const parentNode = getParentStoreNode(widget, paths);
 
@@ -78,7 +108,7 @@ export function useFieldBindingOptions({
       [];
 
     return getSourceOptions(
-      DataPropNameEnum.Data,
+      DataPropEnum.Data,
       _get(dataStructure, dataFieldIndexes),
       dataFieldIndexes
     );
@@ -87,34 +117,14 @@ export function useFieldBindingOptions({
   const indexes = baseName ? dataSource : dataSource?.slice(0, -2);
 
   return getSourceOptions(
-    DataPropNameEnum.Data,
+    DataPropEnum.Data,
     (!indexes?.length ? dataStructure : _get(dataStructure, indexes)) || [],
     indexes
   );
 }
 
-export function useFieldBindingHandler({
-  config,
-  onChange,
-}: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
-  const getCoreProps = useCorePropsGetter();
-
-  return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
-    const mapping = (_get(config, ['props', mappingPath, 'value']) ||
-      {}) as Record<string, string>;
-
-    if (source) {
-      _set(mapping, [propName], source);
-    } else {
-      _unset(mapping, [propName]);
-    }
-
-    onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
-  };
-}
-
 export function useIndexesValue<
-  N extends DataPropNameEnum | string,
+  N extends DataPropEnum | string,
   V extends DataSource | DataFieldIndexes
 >(
   propName: N,
@@ -138,8 +148,36 @@ export function useIndexesValue<
   ] as const;
 }
 
+function resetAllPropMapping(
+  { widget, props = {} }: RenderConfig,
+  {
+    forceReset = false,
+    getCoreProps,
+  }: { forceReset?: boolean; getCoreProps: GetDefinitionFn }
+) {
+  const { definition, isStoreWidget, mappingPaths } = getCoreProps(widget);
+  const { elementNodeProps } = definition;
+  const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } = DataPropEnum;
+
+  const dataSource = _get(props, [dataPropName, 'value']) as DataSource;
+
+  if (
+    forceReset ||
+    !dataSource ||
+    dataSource === '[[extension]]' ||
+    (Array.isArray(dataSource) && dataSource.length >= 3)
+  ) {
+    const children = Object.keys(elementNodeProps || {})
+      .map((path) => (_get(props, [path, 'value']) || []) as RenderConfig[])
+      .flat();
+
+    mappingPaths.forEach((mappingPath) => _unset(props, [mappingPath]));
+    children.forEach((node) => resetAllPropMapping(node, { getCoreProps }));
+  }
+}
+
 function getSourceOptions(
-  type: DataPropNameEnum,
+  type: DataPropEnum,
   dataStructure: DataFields,
   baseIndexes: DataFieldIndexes = []
 ) {
@@ -147,8 +185,8 @@ function getSourceOptions(
     const [fieldPath, structure] = Array.isArray(field) ? field : [field];
 
     const fieldType = Array.isArray(structure)
-      ? DataPropNameEnum.Records
-      : DataPropNameEnum.Data;
+      ? DataPropEnum.Records
+      : DataPropEnum.Data;
 
     if (type === fieldType) {
       const indexes = Array.isArray(structure)

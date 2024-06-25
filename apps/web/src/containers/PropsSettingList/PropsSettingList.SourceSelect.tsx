@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { DataPropNameEnum } from './PropsSettingList.types';
+import { DataPropEnum } from './PropsSettingList.types';
 import {
   useDataSourceOptions,
   useIndexesValue,
@@ -50,7 +50,6 @@ export default function SourceSelect({
       onChange={handleChange}
       SelectProps={{ IconComponent: Fragment }}
       InputProps={{
-        disableUnderline: false,
         endAdornment: (
           <InputAdornment position="end">
             {!value ? (
@@ -66,7 +65,7 @@ export default function SourceSelect({
         ),
       }}
     >
-      {dataPropName === DataPropNameEnum.Data && [
+      {dataPropName === DataPropEnum.Data && [
         <MenuItem key="root" value="[[root]]">
           {t('widgets:opt-source-setting.root')}
         </MenuItem>,

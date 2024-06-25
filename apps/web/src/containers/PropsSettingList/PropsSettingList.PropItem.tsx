@@ -2,7 +2,7 @@ import CommitIcon from '@mui/icons-material/Commit';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import _get from 'lodash/get';
 import _toPath from 'lodash/toPath';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Get } from 'type-fest';
 import type { PrimitiveValueProp } from '@weavcraft/common';
@@ -56,17 +56,25 @@ export default function PropItem({
     | DataFieldIndexes
     | undefined;
 
+  const disabled = !bindable || disableBinding;
+
   const [mode, setMode] = useState<PropItemModeEnum>(() =>
     dataFieldIndexes
       ? PropItemModeEnum.PropMapping
       : PropItemModeEnum.DefaultValue
   );
 
+  useEffect(() => {
+    if (disabled) {
+      setMode(PropItemModeEnum.DefaultValue);
+    }
+  }, [disabled]);
+
   return (
     <SwitchListItem
       active={mode}
       classes={classes}
-      disabled={disableBinding || !bindable}
+      disabled={disabled}
       onActiveChange={setMode}
       options={{
         [PropItemModeEnum.DefaultValue]: {

@@ -50,7 +50,6 @@ export default function BindingSelect({
       onChange={handleChange}
       SelectProps={{ IconComponent: Fragment }}
       InputProps={{
-        disableUnderline: false,
         endAdornment: (
           <InputAdornment position="end">
             {!value ? (

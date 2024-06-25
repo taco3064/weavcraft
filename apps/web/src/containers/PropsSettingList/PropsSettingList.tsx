@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
 
 import PropItem from './PropsSettingList.PropItem';
 import SourceSelect from './PropsSettingList.SourceSelect';
-import { DataPropNameEnum, InjectionModeEnum } from './PropsSettingList.types';
+import { DataPropEnum, InjectionModeEnum } from './PropsSettingList.types';
 import { EditorList, SwitchListItem } from '~web/components';
 import { useCorePropsGetter } from '~web/contexts';
 import { useFieldBindingHandler } from './PropsSettingList.hooks';
@@ -40,13 +40,13 @@ export default function PropsSettingList({
     const { dataBindingProps, primitiveValueProps } = definition;
 
     const dataPropName = isStoreWidget
-      ? DataPropNameEnum.Records
-      : DataPropNameEnum.Data;
+      ? DataPropEnum.Records
+      : DataPropEnum.Data;
 
     return {
       dataPropName: (dataBindingProps?.[dataPropName]
         ? dataPropName
-        : undefined) as DataPropNameEnum,
+        : undefined) as DataPropEnum,
 
       propItems: Object.entries(primitiveValueProps || {})
         .sort(([path1], [path2]) => {

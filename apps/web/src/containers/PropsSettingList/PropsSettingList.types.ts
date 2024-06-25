@@ -20,7 +20,7 @@ export enum PropItemModeEnum {
   PropMapping = 'PropMapping',
 }
 
-export enum DataPropNameEnum {
+export enum DataPropEnum {
   Data = 'data',
   Records = 'records',
 }
@@ -76,9 +76,9 @@ export interface PropItemProps
 
 export interface SourceSelectProps
   extends Pick<PropsSettingListProps, 'paths' | 'widget'> {
-  dataPropName: DataPropNameEnum;
+  dataPropName: DataPropEnum;
   value?: DataSource;
-  onChange: (dataPropName: DataPropNameEnum, value?: DataSource) => void;
+  onChange: (dataPropName: DataPropEnum, value?: DataSource) => void;
 }
 
 export interface BindingSelectProps
