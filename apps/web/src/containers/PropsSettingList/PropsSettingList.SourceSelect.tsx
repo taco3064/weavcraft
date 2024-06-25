@@ -26,10 +26,11 @@ export default function SourceSelect({
 }: SourceSelectProps) {
   const { t } = useTranslation();
 
-  const { isExtensionAllowed, recordsOptions } = useDataSourceOptions(
+  const { isExtensionAllowed, recordsOptions } = useDataSourceOptions({
     dataPropName,
-    { paths, widget }
-  );
+    paths,
+    widget,
+  });
 
   const [selectValue, handleChange] = useIndexesValue(
     dataPropName,

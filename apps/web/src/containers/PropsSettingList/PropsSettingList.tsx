@@ -2,20 +2,23 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Button from '@mui/material/Button';
 import CommitIcon from '@mui/icons-material/Commit';
 import EditIcon from '@mui/icons-material/Edit';
+import _get from 'lodash/get';
 import _toPath from 'lodash/toPath';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import PropItem from './PropsSettingList.PropItem';
 import SourceSelect from './PropsSettingList.SourceSelect';
+import { DataPropNameEnum, InjectionModeEnum } from './PropsSettingList.types';
 import { EditorList, SwitchListItem } from '~web/components';
+import { useCorePropsGetter } from '~web/contexts';
+import { useFieldBindingHandler } from './PropsSettingList.hooks';
 import { useMainStyles } from './PropsSettingList.styles';
-import { useSetting } from './PropsSettingList.hooks';
 import { useNodePaths } from '~web/hooks';
 
-import {
-  InjectionModeEnum,
-  type PropsSettingListProps,
+import type {
+  DataSource,
+  PropsSettingListProps,
 } from './PropsSettingList.types';
 
 export default function PropsSettingList({
@@ -25,12 +28,46 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
+  const getCoreProps = useCorePropsGetter();
+  const onFieldBinding = useFieldBindingHandler({ config, onChange });
+
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
 
-  const { dataPropName, dataSourceIndexes, propItems, onFieldBinding } =
-    useSetting({ config, onChange });
+  const { dataPropName, propItems } = useMemo(() => {
+    const { definition, isStoreWidget } = getCoreProps(config.widget);
+    const { dataBindingProps, primitiveValueProps } = definition;
+
+    const dataPropName = isStoreWidget
+      ? DataPropNameEnum.Records
+      : DataPropNameEnum.Data;
+
+    return {
+      dataPropName: (dataBindingProps?.[dataPropName]
+        ? dataPropName
+        : undefined) as DataPropNameEnum,
+
+      propItems: Object.entries(primitiveValueProps || {})
+        .sort(([path1], [path2]) => {
+          const paths1 = _toPath(path1);
+          const paths2 = _toPath(path2);
+
+          return paths1.length - paths2.length || path1.localeCompare(path2);
+        })
+        .map(([propPath, definition]) => ({
+          propPath,
+          definition,
+        })),
+    };
+  }, [config.widget, getCoreProps]);
+
+  const dataSourceIndexes = _get(config, [
+    'props',
+    'propMapping',
+    'value',
+    dataPropName,
+  ]) as DataSource;
 
   const [mode, setMode] = useState<InjectionModeEnum>(() =>
     dataSourceIndexes ? InjectionModeEnum.Binding : InjectionModeEnum.Fixed

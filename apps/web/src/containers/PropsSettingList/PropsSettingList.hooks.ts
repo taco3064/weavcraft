@@ -3,8 +3,6 @@ import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
 import { useMemo, type ChangeEvent } from 'react';
-import type { Get } from 'type-fest';
-import type { PrimitiveValueProp } from '@weavcraft/common';
 
 import { DataPropNameEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
@@ -16,14 +14,15 @@ import type {
   DataFieldIndexes,
   DataSourceOptions,
   DataSource,
-  PropItemProps,
   PropsSettingListProps,
+  SourceSelectProps,
 } from './PropsSettingList.types';
 
-export function useDataSourceOptions(
-  dataPropName: DataPropNameEnum,
-  { paths, widget }: Pick<PropsSettingListProps, 'paths' | 'widget'>
-) {
+export function useDataSourceOptions({
+  dataPropName,
+  paths,
+  widget,
+}: Pick<SourceSelectProps, 'dataPropName' | 'paths' | 'widget'>) {
   const { getParentStoreNode } = useNodeFinder();
   const { dataStructure = [] } = widget;
   const parentNode = getParentStoreNode(widget, paths);
@@ -94,108 +93,23 @@ export function useFieldBindingOptions({
   );
 }
 
-export function usePropItem({
-  config,
-  propPath,
-}: Pick<PropItemProps, 'config' | 'propPath'>) {
-  const getCoreProps = useCorePropsGetter();
-  const { widget, props = {} } = config;
-
-  const { bindable, bindingSourcePaths } = useMemo(() => {
-    const [propName, baseName] = _toPath(propPath).reverse();
-
-    const { definition } = getCoreProps(widget);
-    const { dataBindingProps = {} } = definition;
-
-    const mappingPath = (
-      baseName ? `${baseName}.propMapping` : 'propMapping'
-    ) as MappingPath;
-
-    const mappingProps: string[] =
-      _get(dataBindingProps || {}, [mappingPath, 'definition']) || [];
-
-    return {
-      bindable: mappingProps.includes(propName),
-      bindingSourcePaths: [mappingPath, 'value', propName],
-    };
-  }, [propPath, widget, getCoreProps]);
-
-  return {
-    bindable,
-
-    defaultPropValue: _get(config, ['props', propPath, 'value']) as Get<
-      PrimitiveValueProp,
-      ['value']
-    >,
-
-    dataFieldIndexes: _get(props, bindingSourcePaths) as
-      | DataFieldIndexes
-      | undefined,
-  };
-}
-
-export function useSetting({
+export function useFieldBindingHandler({
   config,
   onChange,
 }: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
   const getCoreProps = useCorePropsGetter();
-  const { widget, props = {} } = config;
 
-  const { dataPropName, propItems } = useMemo(() => {
-    const { definition, isStoreWidget } = getCoreProps(widget);
-    const { dataBindingProps, primitiveValueProps } = definition;
+  return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
+    const mapping = (_get(config, ['props', mappingPath, 'value']) ||
+      {}) as Record<string, string>;
 
-    const dataPropName = isStoreWidget
-      ? DataPropNameEnum.Records
-      : DataPropNameEnum.Data;
+    if (source) {
+      _set(mapping, [propName], source);
+    } else {
+      _unset(mapping, [propName]);
+    }
 
-    return {
-      dataPropName: (dataBindingProps?.[dataPropName]
-        ? dataPropName
-        : undefined) as DataPropNameEnum,
-
-      propItems: Object.entries(primitiveValueProps || {})
-        .sort(([path1], [path2]) => {
-          const paths1 = _toPath(path1);
-          const paths2 = _toPath(path2);
-
-          return paths1.length - paths2.length || path1.localeCompare(path2);
-        })
-        .map(([propPath, definition]) => ({
-          propPath,
-          definition,
-        })),
-    };
-  }, [widget, getCoreProps]);
-
-  return {
-    dataPropName,
-    propItems,
-
-    dataSourceIndexes: _get(props, [
-      'propMapping',
-      'value',
-      dataPropName,
-    ]) as DataSource,
-
-    onFieldBinding: (
-      mappingPath: MappingPath,
-      propName: string,
-      source?: DataSource
-    ) => {
-      const mapping = (_get(props, [mappingPath, 'value']) || {}) as Record<
-        string,
-        string
-      >;
-
-      if (source) {
-        _set(mapping, [propName], source);
-      } else {
-        _unset(mapping, [propName]);
-      }
-
-      onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
-    },
+    onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
   };
 }
 
