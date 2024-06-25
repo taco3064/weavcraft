@@ -62,6 +62,12 @@ export function useFieldBindingHandler({
 
   return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
     if (propName === DataPropEnum.Records || propName === DataPropEnum.Data) {
+      const { isStoreWidget } = getCoreProps(config.widget);
+
+      const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } =
+        DataPropEnum;
+
+      _unset(config, ['props', dataPropName, 'value']);
       resetAllPropMapping(config, { forceReset: true, getCoreProps });
     }
 
