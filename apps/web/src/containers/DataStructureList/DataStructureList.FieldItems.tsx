@@ -17,6 +17,7 @@ import {
 import type { FieldItemsProps } from './DataStructureList.types';
 
 export default function FieldItems({
+  ActionTransitionComponent,
   classes,
   paths = [],
   value,
@@ -90,6 +91,7 @@ export default function FieldItems({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <ActionToggle
+                    TransitionComponent={ActionTransitionComponent}
                     value={fieldPath}
                     variant={isStructure ? 'structure' : 'field'}
                     onActionToggle={({ mode, value: newFieldPath, type }) => {
@@ -123,10 +125,9 @@ export default function FieldItems({
             {!Array.isArray(subFields) ? null : (
               <Collapse in={!collapseds.has(fieldPath)} sx={{ paddingLeft: 2 }}>
                 <FieldItems
-                  classes={classes}
+                  {...{ ActionTransitionComponent, classes, onChange }}
                   paths={[...paths, fieldPath]}
                   value={subFields}
-                  onChange={onChange}
                 />
               </Collapse>
             )}

@@ -12,6 +12,7 @@ import { useFieldChangeHandler } from './DataStructureList.hooks';
 import type { DataStructureListProps } from './DataStructureList.types';
 
 export default function DataStructureView({
+  ActionTransitionComponent,
   paths = [],
   value,
   onChange,
@@ -56,7 +57,15 @@ export default function DataStructureView({
           </ListItem>
 
           {value.length ? (
-            <FieldItems {...{ classes, paths, value, onChange }} />
+            <FieldItems
+              {...{
+                ActionTransitionComponent,
+                classes,
+                paths,
+                value,
+                onChange,
+              }}
+            />
           ) : (
             <ListItem>
               <ListItemText

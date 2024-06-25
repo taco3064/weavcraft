@@ -14,6 +14,7 @@ export type EditingState = {
 //* Component Props
 export interface DataStructureListProps
   extends Pick<EditorListProps, 'onClose'> {
+  ActionTransitionComponent?: DialogProps['TransitionComponent'];
   paths?: string[];
   value: NonNullable<WidgetConfigs['dataStructure']>;
 
@@ -26,7 +27,10 @@ export interface DataStructureListProps
 }
 
 export interface FieldItemsProps
-  extends Pick<DataStructureListProps, 'paths' | 'value' | 'onChange'> {
+  extends Pick<
+    DataStructureListProps,
+    'ActionTransitionComponent' | 'paths' | 'value' | 'onChange'
+  > {
   classes: EditorListClasses;
 }
 
