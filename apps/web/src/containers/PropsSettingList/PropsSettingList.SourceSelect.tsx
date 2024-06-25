@@ -1,4 +1,5 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -93,10 +94,16 @@ export default function SourceSelect({
 
                 ...options.map(({ fieldPath, indexes }) => (
                   <MenuItem
-                    key={`${group}:${fieldPath}`}
+                    key={indexes.join('.')}
                     value={JSON.stringify(indexes)}
                   >
-                    {fieldPath}
+                    <Breadcrumbs separator="›">
+                      {fieldPath.map((fieldName, i) => (
+                        <Typography key={i} color="text.primary">
+                          {fieldName}
+                        </Typography>
+                      ))}
+                    </Breadcrumbs>
                   </MenuItem>
                 )),
               ]

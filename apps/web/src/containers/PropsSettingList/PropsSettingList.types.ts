@@ -30,10 +30,10 @@ type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataSource = '[[root]]' | '[[extension]]' | number[];
 export type DataFieldIndexes = Exclude<DataSource, `[[${string}]]`>;
 
-export type DataSourceOptions = {
-  fieldPath: string;
-  indexes: DataSource;
-};
+export interface DataSourceOptions<T extends string | string[] = string> {
+  fieldPath: T;
+  indexes: DataFieldIndexes;
+}
 
 export interface PropItem {
   fieldPath?: string;

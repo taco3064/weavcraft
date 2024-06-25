@@ -33,25 +33,57 @@ export function useDataSourceOptions({
   const { dataStructure = [] } = widget;
   const parentNode = getParentStoreNode(widget, paths);
 
-  const extensionIndexes: DataFieldIndexes =
-    _get(parentNode, ['node', 'props', 'propMapping', 'value', 'records']) ||
-    [];
+  const stringify = JSON.stringify(
+    _get(parentNode, ['node', 'props', 'propMapping', 'value', 'records']) || []
+  );
 
-  return {
-    isExtensionAllowed: Boolean(extensionIndexes.length),
+  return useMemo<{
+    isExtensionAllowed: boolean;
+    recordsOptions?: {
+      root: DataSourceOptions<string[]>[];
+      extension: DataSourceOptions<string[]>[];
+    };
+  }>(() => {
+    const extensionIndexes: DataFieldIndexes = JSON.parse(stringify);
+    const isExtensionAllowed = Boolean(extensionIndexes.length);
 
-    recordsOptions:
-      dataPropName !== DataPropEnum.Records
-        ? undefined
-        : {
-            root: getSourceOptions(dataPropName, dataStructure),
-            extension: getSourceOptions(
-              dataPropName,
-              (_get(dataStructure, extensionIndexes) || []) as DataFields,
-              extensionIndexes
-            ),
-          },
-  };
+    if (dataPropName !== DataPropEnum.Records) {
+      return { isExtensionAllowed };
+    }
+
+    return {
+      isExtensionAllowed,
+      recordsOptions: {
+        root: getSourceOptions(dataPropName, dataStructure).map(
+          ({ fieldPath, indexes }) => ({
+            fieldPath: [fieldPath],
+            indexes,
+          })
+        ),
+        extension: getSourceOptions(
+          dataPropName,
+          (_get(dataStructure, extensionIndexes) || []) as DataFields,
+          extensionIndexes
+        ).map(({ indexes }) => ({
+          indexes,
+          fieldPath: indexes.reduceRight<string[]>((acc, _index, i) => {
+            const target = _get(dataStructure, indexes.slice(0, i));
+
+            if (
+              Array.isArray(target) &&
+              target.length === 2 &&
+              typeof target[0] === 'string' &&
+              Array.isArray(target[1])
+            ) {
+              acc.unshift(target[0]);
+            }
+
+            return acc;
+          }, []),
+        })),
+      },
+    };
+  }, [dataPropName, dataStructure, stringify]);
 }
 
 export function useFieldBindingHandler({
