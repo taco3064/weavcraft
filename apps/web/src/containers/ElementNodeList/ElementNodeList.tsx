@@ -29,20 +29,6 @@ export default function ElementNodeList({
     ? config
     : _get(config, nodePaths);
 
-  const currentComponent = (
-    <>
-      <ListItemText
-        primary={t(`widgets:lbl-component.${node.component}`)}
-        primaryTypographyProps={{
-          color: 'text.primary',
-          fontWeight: 600,
-        }}
-      />
-
-      <Action {...{ onDelete, onEdit }} config={node} paths={active} />
-    </>
-  );
-
   return !node ? null : (
     <EditorList
       key={active.join('|')}
@@ -51,6 +37,20 @@ export default function ElementNodeList({
       onClose={onClose}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
+
+        const currentComponent = (
+          <>
+            <ListItemText
+              primary={t(`widgets:lbl-component.${node.component}`)}
+              primaryTypographyProps={{
+                color: 'text.primary',
+                fontWeight: 600,
+              }}
+            />
+
+            <Action {...{ onDelete, onEdit }} config={node} paths={active} />
+          </>
+        );
 
         return (
           <>

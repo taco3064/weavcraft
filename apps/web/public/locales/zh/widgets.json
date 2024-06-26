@@ -87,8 +87,8 @@
     "Typography": "文字排版 (Typography)"
   },
   "msg-delete-confirm": {
-    "component": "確定要刪除此{{ component }}構件嗎？",
-    "field": "確定要移除 {{ field }}?"
+    "component": "確定要刪除 {{ component }} 的構件嗎？",
+    "field": "確定要移除 {{ field }} 嗎？"
   },
   "opt-source-setting": {
     "extension": "使用上層結構的擴展",
