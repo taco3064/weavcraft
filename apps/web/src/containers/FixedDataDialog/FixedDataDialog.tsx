@@ -46,7 +46,7 @@ export default function FixedDataDialog({ config }: FixedDataDialogProps) {
       >
         <DialogTitle>
           <Core.Icon code="faEdit" />
-          {t('widgets:ttl-injection-mode.Fixed')}
+          {t('widgets:ttl-source-mode.Fixed')}
         </DialogTitle>
 
         <DialogContent>

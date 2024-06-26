@@ -1,6 +1,6 @@
 {
   "btn-data-structure": "Data Structure",
-  "btn-fixed-data": "Fixed Data",
+  "btn-fixed-data": "View Fixed Data",
   "btn-widget-preview": "Preview Widget",
   "btn-widget-settings": "Widget Settings",
   "lbl-data-structure-root": "Root",
@@ -104,12 +104,12 @@
       "structure": "Edit Structure Field"
     }
   },
-  "ttl-injection-mode": {
-    "Binding": "Data Binding",
-    "Fixed": "Fixed Data"
-  },
-  "ttl-prop-item-mode": {
+  "ttl-setting-mode": {
     "DefaultValue": "Default Value",
     "PropMapping": "Data Binding"
+  },
+  "ttl-source-mode": {
+    "Binding": "Data Binding",
+    "Fixed": "Fixed Data"
   }
 }

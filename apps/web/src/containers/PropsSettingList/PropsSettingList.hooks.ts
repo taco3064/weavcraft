@@ -2,9 +2,10 @@ import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
-import { useMemo, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 
 import { DataPropEnum, useNodeFinder } from '~web/hooks';
+import { SettingModeEnum, SourceModeEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
 
 import type {
@@ -12,6 +13,7 @@ import type {
   DataFieldIndexes,
   DataSourceOptions,
   DataSource,
+  PropItemProps,
   PropsSettingListProps,
   SourceSelectProps,
 } from './PropsSettingList.types';
@@ -183,6 +185,57 @@ export function useIndexesValue<
           : JSON.parse(e.target.value)
       ),
   ] as const;
+}
+
+export function usePropItemStatus({
+  config,
+  propPath,
+  sourceMode,
+}: Pick<PropItemProps, 'config' | 'propPath' | 'sourceMode'>) {
+  const getCoreProps = useCorePropsGetter();
+  const { component } = config;
+  const [mode, setMode] = useState(SettingModeEnum.DefaultValue);
+
+  const { disabled, bindingSourcePaths } = useMemo(() => {
+    const [propName, baseName] = _toPath(propPath).reverse();
+
+    const { definition } = getCoreProps(component);
+    const { dataBindingProps = {} } = definition;
+
+    const mappingPath = (
+      baseName ? `${baseName}.propMapping` : 'propMapping'
+    ) as MappingPath;
+
+    const mappingProps: string[] =
+      _get(dataBindingProps || {}, [mappingPath, 'definition']) || [];
+
+    return {
+      bindingSourcePaths: ['props', mappingPath, 'value', propName],
+
+      disabled:
+        sourceMode !== SourceModeEnum.Binding ||
+        !mappingProps.includes(propName),
+    };
+  }, [component, propPath, sourceMode, getCoreProps]);
+
+  const dataFieldIndexes = _get(config, bindingSourcePaths) as
+    | DataFieldIndexes
+    | undefined;
+
+  useEffect(() => {
+    if (disabled || sourceMode !== SourceModeEnum.Binding) {
+      setMode(SettingModeEnum.DefaultValue);
+    } else if (sourceMode === SourceModeEnum.Binding && dataFieldIndexes) {
+      setMode(SettingModeEnum.PropMapping);
+    }
+  }, [dataFieldIndexes, disabled, sourceMode]);
+
+  return {
+    mode,
+    disabledModeSwitch: disabled,
+    dataFieldIndexes,
+    onModeChange: setMode,
+  };
 }
 
 function resetAllPropMapping(

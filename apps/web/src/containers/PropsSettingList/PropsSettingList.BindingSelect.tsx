@@ -5,6 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import _get from 'lodash/get';
 import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -37,18 +38,22 @@ export default function BindingSelect({
 
   return (
     <TextField
+      SelectProps={{ IconComponent: Fragment }}
       fullWidth
       select
       variant="filled"
       size="small"
-      color="secondary"
+      color="warning"
       label={propPath}
-      helperText={t('widgets:lbl-default-value', {
-        value: defaultValue || t('lbl-none'),
-      })}
       value={selectValue}
       onChange={handleChange}
-      SelectProps={{ IconComponent: Fragment }}
+      helperText={
+        <Typography variant="caption" color="warning.main">
+          {t('widgets:lbl-default-value', {
+            value: defaultValue || t('lbl-none'),
+          })}
+        </Typography>
+      }
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

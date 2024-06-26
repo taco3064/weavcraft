@@ -46,7 +46,7 @@ export default function SourceSelect({
       select
       variant="filled"
       size="small"
-      color="secondary"
+      color="warning"
       label={t(`widgets:lbl-source-setting.${dataPropName}`)}
       value={selectValue}
       onChange={handleChange}

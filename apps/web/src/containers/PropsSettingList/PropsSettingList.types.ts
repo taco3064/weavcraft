@@ -11,14 +11,14 @@ import type {
 } from '../imports.types';
 
 //* Enums
-export enum InjectionModeEnum {
-  Binding = 'Binding',
-  Fixed = 'Fixed',
-}
-
-export enum PropItemModeEnum {
+export enum SettingModeEnum {
   DefaultValue = 'DefaultValue',
   PropMapping = 'PropMapping',
+}
+
+export enum SourceModeEnum {
+  Binding = 'Binding',
+  Fixed = 'Fixed',
 }
 
 //* Variables
@@ -61,8 +61,8 @@ export interface PropItemProps
     'config' | 'paths' | 'widget' | 'onChange'
   > {
   classes: Record<'icon' | 'row', string>;
-  disableBinding?: boolean;
   propPath: string;
+  sourceMode?: SourceModeEnum;
   onFieldBinding: (propName: string, value?: DataFieldIndexes) => void;
 
   definition: NonNullable<

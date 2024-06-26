@@ -10,7 +10,7 @@ import FixedDataDialog from '../FixedDataDialog';
 import PropItem from './PropsSettingList.PropItem';
 import SourceSelect from './PropsSettingList.SourceSelect';
 import { EditorList, SwitchListItem } from '~web/components';
-import { InjectionModeEnum } from './PropsSettingList.types';
+import { SourceModeEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
 import { useDataPropName, useNodePaths } from '~web/hooks';
 import { useFieldBindingHandler } from './PropsSettingList.hooks';
@@ -61,8 +61,8 @@ export default function PropsSettingList({
     dataPropName as string,
   ]) as DataSource;
 
-  const [mode, setMode] = useState<InjectionModeEnum>(() =>
-    dataSourceIndexes ? InjectionModeEnum.Binding : InjectionModeEnum.Fixed
+  const [mode, setMode] = useState<SourceModeEnum>(() =>
+    dataSourceIndexes ? SourceModeEnum.Binding : SourceModeEnum.Fixed
   );
 
   return (
@@ -82,16 +82,16 @@ export default function PropsSettingList({
               classes={{ icon, row: classes.row }}
               onActiveChange={setMode}
               options={{
-                [InjectionModeEnum.Fixed]: {
+                [SourceModeEnum.Fixed]: {
                   color: 'error',
                   icon: <EditIcon />,
-                  tooltip: t('widgets:ttl-injection-mode.Fixed'),
+                  tooltip: t('widgets:ttl-source-mode.Fixed'),
                   content: <FixedDataDialog {...{ config }} />,
                 },
-                [InjectionModeEnum.Binding]: {
+                [SourceModeEnum.Binding]: {
                   color: 'warning',
                   icon: <CommitIcon />,
-                  tooltip: t('widgets:ttl-injection-mode.Binding'),
+                  tooltip: t('widgets:ttl-source-mode.Binding'),
                   content: (
                     <SourceSelect
                       {...{ dataPropName, paths, widget }}
@@ -110,8 +110,12 @@ export default function PropsSettingList({
             <PropItem
               {...{ config, definition, paths, propPath, widget, onChange }}
               key={propPath}
-              disableBinding={!dataSourceIndexes}
               classes={{ icon, row: classes.row }}
+              sourceMode={
+                mode === SourceModeEnum.Fixed
+                  ? mode
+                  : dataSourceIndexes && SourceModeEnum.Binding
+              }
               onFieldBinding={(propPath, value) => {
                 const [propName, baseName] = _toPath(propPath).reverse();
 
