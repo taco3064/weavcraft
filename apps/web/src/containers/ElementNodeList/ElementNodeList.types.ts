@@ -1,13 +1,9 @@
-import { Children } from 'react';
-
 import type {
   ConfigPaths,
   ComponentConfig,
   EditorListClasses,
   EditorListProps,
 } from '../imports.types';
-
-export type ChildrenArray = ReturnType<typeof Children.toArray>;
 
 export interface NodePaths {
   nodePaths: string[];
@@ -18,6 +14,12 @@ export interface NodePaths {
     index: number,
     paths?: ConfigPaths
   ) => ConfigPaths;
+}
+
+export interface ChildNodeGroup {
+  path: string;
+  chidlren: ComponentConfig[];
+  showIndex: boolean;
 }
 
 interface StructureEvent {

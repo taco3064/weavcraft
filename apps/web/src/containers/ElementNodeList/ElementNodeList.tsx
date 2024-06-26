@@ -1,6 +1,7 @@
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
@@ -28,6 +29,20 @@ export default function ElementNodeList({
     ? config
     : _get(config, nodePaths);
 
+  const currentComponent = (
+    <>
+      <ListItemText
+        primary={t(`widgets:lbl-component.${node.component}`)}
+        primaryTypographyProps={{
+          color: 'text.primary',
+          fontWeight: 600,
+        }}
+      />
+
+      <Action {...{ onDelete, onEdit }} config={node} paths={active} />
+    </>
+  );
+
   return !node ? null : (
     <EditorList
       key={active.join('|')}
@@ -39,32 +54,25 @@ export default function ElementNodeList({
 
         return (
           <>
-            <ListItem>
-              <ListItemIcon className={classes.icon}>
-                {!active.length ? (
+            {!active.length ? (
+              <ListItem>
+                <ListItemIcon className={classes.icon}>
                   <Core.Icon color="disabled" code="faMinus" />
-                ) : (
-                  <IconButton
-                    size="large"
-                    onClick={() =>
-                      onActive(active.slice(0, isMultiple ? -2 : -1))
-                    }
-                  >
-                    <Core.Icon code="faChevronLeft" />
-                  </IconButton>
-                )}
-              </ListItemIcon>
+                </ListItemIcon>
 
-              <ListItemText
-                primary={t(`widgets:lbl-component.${node.component}`)}
-                primaryTypographyProps={{
-                  color: 'text.primary',
-                  fontWeight: 600,
-                }}
-              />
+                {currentComponent}
+              </ListItem>
+            ) : (
+              <ListItemButton
+                onClick={() => onActive(active.slice(0, isMultiple ? -2 : -1))}
+              >
+                <ListItemIcon className={classes.icon}>
+                  <Core.Icon code="faChevronLeft" />
+                </ListItemIcon>
 
-              <Action {...{ onDelete, onEdit }} config={node} paths={active} />
-            </ListItem>
+                {currentComponent}
+              </ListItemButton>
+            )}
 
             <Items
               {...{ active, classes, onActive, onDelete, onEdit }}
