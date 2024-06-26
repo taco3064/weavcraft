@@ -10,7 +10,7 @@ import { MenuDialog } from '~web/components';
 import { useNodeCreateButtonStyles } from './WidgetEditor.styles';
 import { useWidgetOptions } from './WidgetEditor.hooks';
 import type { NodeCreateButtonProps } from './WidgetEditor.types';
-import type { WidgetType } from '../imports.types';
+import type { CoreComponent } from '../imports.types';
 
 const CLASS_NAME = `NodeCreateButton-${nanoid(4)}`;
 
@@ -42,23 +42,22 @@ export default function NodeCreateButton({
   const [visible, setVisible] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const { widget } = config || {};
+  const { component } = config || {};
   const { t } = useTranslation();
   const { classes, cx } = useNodeCreateButtonStyles();
 
   const { subtitle, tooltip } = useMemo(() => {
-    const subtitle = [widget && t(`widgets:lbl-widgets.${widget}`), path]
-      .filter(Boolean)
-      .join(' - ');
+    const name = t(`widgets:lbl-component.${component}`);
+    const subtitle = [component && name, path].filter(Boolean).join(' - ');
 
     return {
       subtitle,
       tooltip: [
-        t(`widgets:btn-add.${variant === 'action' ? 'trigger' : 'widget'}`),
+        t(`widgets:btn-add.${variant === 'action' ? 'trigger' : 'component'}`),
         !subtitle ? '' : ` (${subtitle})`,
       ].join(' '),
     };
-  }, [widget, path, variant, t]);
+  }, [component, path, variant, t]);
 
   const buttonRef = useCallback((el: HTMLButtonElement | null) => {
     /**
@@ -88,17 +87,17 @@ export default function NodeCreateButton({
       <MenuDialog
         {...{ open, subtitle }}
         items={options}
-        title={t('widgets:ttl-select-widget')}
+        title={t('widgets:ttl-select-component')}
         onClose={() => setOpen(false)}
         onItemClick={(e) =>
           startTransition(() => {
-            const widget = e.replace(
-              /^widgets:lbl-widgets\./,
+            const component = e.replace(
+              /^widgets:lbl-component\./,
               ''
-            ) as WidgetType;
+            ) as CoreComponent;
 
             setOpen(false);
-            onClick(widget);
+            onClick(component);
           })
         }
       />

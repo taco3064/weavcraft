@@ -11,7 +11,7 @@ import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
 import { useNodePaths } from '~web/hooks';
 import type { ElementNodeListProps } from './ElementNodeList.types';
-import type { RenderConfig } from '../imports.types';
+import type { ComponentConfig } from '../imports.types';
 
 export default function ElementNodeList({
   config,
@@ -24,7 +24,7 @@ export default function ElementNodeList({
   const { t } = useTranslation();
   const { nodePaths, pathDescription } = useNodePaths(active);
 
-  const node: RenderConfig = !nodePaths.length
+  const node: ComponentConfig = !nodePaths.length
     ? config
     : _get(config, nodePaths);
 
@@ -56,7 +56,7 @@ export default function ElementNodeList({
               </ListItemIcon>
 
               <ListItemText
-                primary={t(`widgets:lbl-widgets.${node.widget}`)}
+                primary={t(`widgets:lbl-component.${node.component}`)}
                 primaryTypographyProps={{
                   color: 'text.primary',
                   fontWeight: 600,

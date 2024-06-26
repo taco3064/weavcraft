@@ -2,7 +2,7 @@ import _get from 'lodash/get';
 import { useCallback, useMemo } from 'react';
 
 import { useCorePropsGetter } from '~web/contexts';
-import type { ConfigPaths, RenderConfig } from '../useWidgetRender';
+import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
 import type { WidgetConfigs } from '../imports.types';
 import type { GetterOptions, ParentStoreNode } from './useNodeFinder.types';
 
@@ -10,7 +10,10 @@ export function useNodeFinder() {
   const getCoreProps = useCorePropsGetter();
   const { getNodePaths } = useNodePaths();
 
-  const getNode = (widget: WidgetConfigs, paths: ConfigPaths): RenderConfig =>
+  const getNode = (
+    widget: WidgetConfigs,
+    paths: ConfigPaths
+  ): ComponentConfig =>
     !paths.length ? widget : _get(widget, getNodePaths(paths));
 
   return {
@@ -82,7 +85,7 @@ function getParentStoreNode(
   const popPaths = paths.slice(0, isMultiple ? -2 : -1);
   const node = getNode(widget, popPaths);
 
-  return getCoreProps(node.widget).isStoreWidget
+  return getCoreProps(node.component).isStoreWidget
     ? { node, paths: popPaths }
     : getParentStoreNode(widget, popPaths, { getCoreProps, getNode });
 }

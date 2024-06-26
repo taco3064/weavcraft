@@ -5,9 +5,9 @@ import type { PropsSettingChangeHandler } from '../PropsSettingList';
 import type {
   ConfigPaths,
   PortalContainerEl,
-  RenderConfig,
+  ComponentConfig,
   WidgetConfigs,
-  WidgetType,
+  CoreComponent,
 } from '../imports.types';
 
 export enum EditModeEnum {
@@ -23,15 +23,19 @@ export enum ViewModeEnum {
 export type NodeCreateVariant = 'action' | 'node';
 
 export interface ChangeEvents {
-  onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
+  onAddChild: (
+    config: ComponentConfig,
+    path: string,
+    component: CoreComponent
+  ) => void;
   onConfigChange: PropsSettingChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
   onStructureChange: NonNullable<DataStructureListProps['onChange']>;
 
   onAddLastChild: (
-    config: RenderConfig,
+    config: ComponentConfig,
     path: string,
-    widget: WidgetType
+    component: CoreComponent
   ) => void;
 }
 
@@ -47,8 +51,8 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
 }
 
 export interface NodeCreateButtonProps {
-  config?: RenderConfig;
+  config?: ComponentConfig;
   path?: string;
   variant: NodeCreateVariant;
-  onClick: (widget: WidgetType) => void;
+  onClick: (component: CoreComponent) => void;
 }

@@ -1,5 +1,5 @@
 import type { JsonObject } from 'type-fest';
-import type { DataPropEnum, RenderConfig } from '../imports.types';
+import type { DataPropEnum, ComponentConfig } from '../imports.types';
 
 export enum BuildStepEnum {
   DataStructure,
@@ -12,5 +12,5 @@ export type FixedData =
 
 //* Component Props
 export interface FixedDataDialogProps {
-  config: RenderConfig;
+  config: ComponentConfig;
 }

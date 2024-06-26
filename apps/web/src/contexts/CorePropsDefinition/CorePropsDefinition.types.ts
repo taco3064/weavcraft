@@ -5,7 +5,7 @@ import type {
   ElementNodePropDefinitions,
   PrimitivePropDefinitions,
   PropsDefinition,
-  WidgetType,
+  CoreComponent,
 } from '../imports.types';
 
 type ElementNodeDefinition = NonNullable<
@@ -18,7 +18,7 @@ type PrimitiveValueDefinition = NonNullable<
 
 export type MappingPath = 'propMapping' | `${string}.propMapping`;
 
-export type GetCorePropsFn = (widget: WidgetType) => {
+export type GetCorePropsFn = (component: CoreComponent) => {
   definition: PropsDefinition;
   isStoreWidget: boolean;
   mappingPaths: MappingPath[];
@@ -29,7 +29,7 @@ export type GetCorePropsFn = (widget: WidgetType) => {
 };
 
 export type CorePropsDefinitionContextValue = Record<
-  WidgetType,
+  CoreComponent,
   PropsDefinition
 >;
 

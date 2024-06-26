@@ -2,9 +2,9 @@ import _get from 'lodash/get';
 
 import { DataPropEnum, useDataPropName } from '~web/hooks';
 import type { FixedData } from './FixedDataDialog.types';
-import type { RenderConfig } from '../imports.types';
+import type { ComponentConfig } from '../imports.types';
 
-export function useFixedData(config: RenderConfig): FixedData {
+export function useFixedData(config: ComponentConfig): FixedData {
   const dataPropName = useDataPropName(config) as DataPropEnum;
 
   const data =

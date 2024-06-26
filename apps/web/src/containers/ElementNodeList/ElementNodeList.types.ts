@@ -2,7 +2,7 @@ import { Children } from 'react';
 
 import type {
   ConfigPaths,
-  RenderConfig,
+  ComponentConfig,
   EditorListClasses,
   EditorListProps,
 } from '../imports.types';
@@ -11,7 +11,7 @@ export type ChildrenArray = ReturnType<typeof Children.toArray>;
 
 export interface NodePaths {
   nodePaths: string[];
-  onWidgetChildrenGenerate: (config: RenderConfig) => RenderConfig[];
+  onWidgetChildrenGenerate: (config: ComponentConfig) => ComponentConfig[];
 
   onPathsGenerate: (
     nodePath: string,
@@ -21,7 +21,7 @@ export interface NodePaths {
 }
 
 interface StructureEvent {
-  target: RenderConfig;
+  target: ComponentConfig;
   paths: ConfigPaths;
 }
 
@@ -33,7 +33,7 @@ export interface ElementNodeListProps
 }
 
 export type ActionProps<P extends string = 'paths'> = Record<P, ConfigPaths> & {
-  config: RenderConfig;
+  config: ComponentConfig;
   onDelete: (e: StructureEvent) => void;
   onEdit: (e: StructureEvent) => void;
 };
@@ -44,5 +44,5 @@ export interface ItemsProps
     'active' | 'onActive' | 'onDelete' | 'onEdit'
   > {
   classes: EditorListClasses;
-  config: RenderConfig;
+  config: ComponentConfig;
 }

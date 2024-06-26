@@ -7,27 +7,28 @@
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
   "msg-definitions-loading": "Loading settings...",
+  "msg-no-fixed-data": "No Fixed Data Available",
   "msg-no-structure": "No Data Structure Available",
   "msg-prop-mapping-placeholder": "Select data field name or path.",
+  "ttl-component-settings": "{{ component }} Settings",
   "ttl-data-structure": "Data Structure Settings",
   "ttl-data-structure-action": "Structure Actions",
   "ttl-element-node": "Widget Structure",
-  "ttl-select-widget": "Select Widget",
-  "ttl-widget-settings": "{{ widget }} Settings",
+  "ttl-select-component": "Select Component",
   "btn-add": {
+    "component": "Add Component",
     "field": "Add Data Field",
     "structure": "Add Sub-Structure",
-    "trigger": "Add Trigger Widget",
-    "widget": "Add Widget"
+    "trigger": "Add Trigger Widget"
   },
   "btn-delete": {
+    "component": "Delete Component",
     "field": "Remove Data Field",
-    "structure": "Remove Sub-Structure",
-    "widget": "Delete Widget"
+    "structure": "Remove Sub-Structure"
   },
   "btn-edit": {
-    "field": "Edit Field Name",
-    "widget": "Edit Widget"
+    "component": "Edit Component",
+    "field": "Edit Field Name"
   },
   "lbl-category": {
     "Display": "Display",
@@ -39,7 +40,7 @@
     "data": "Data Source",
     "records": "Records Source"
   },
-  "lbl-widgets": {
+  "lbl-component": {
     "Accordion": "Accordion",
     "Avatar": "Avatar",
     "AvatarGroup": "Avatar Group",
@@ -86,8 +87,8 @@
     "Typography": "Typography"
   },
   "msg-delete-confirm": {
-    "field": "Are you sure you want to remove {{ field }}?",
-    "widget": "Are you sure you want to delete {{ widget }} widget?"
+    "component": "Are you sure you want to delete {{ component }} component?",
+    "field": "Are you sure you want to remove {{ field }}?"
   },
   "opt-source-setting": {
     "extension": "Extension from the Parent",

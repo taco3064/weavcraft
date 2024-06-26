@@ -1,7 +1,7 @@
 import { WidgetPropTypes } from '@weavcraft/common';
 
 import type { PropTypeDefinitions } from '../common';
-import type { WidgetType } from '../configs';
+import type { CoreComponent } from '../configs';
 
 type BasePropDefinitions<
   T extends WidgetPropTypes,
@@ -48,7 +48,7 @@ export interface PropsDefinition
 export type DefinitionIDB = Record<
   'core',
   {
-    key: WidgetType;
+    key: CoreComponent;
     value: PropsDefinition;
   }
 >;

@@ -20,7 +20,7 @@ import type {
   DataFields,
   GetCorePropsFn,
   MappingPath,
-  RenderConfig,
+  ComponentConfig,
 } from '../imports.types';
 
 export function useDataSourceOptions({
@@ -93,7 +93,7 @@ export function useFieldBindingHandler({
 
   return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
     if (propName === DataPropEnum.Records || propName === DataPropEnum.Data) {
-      const { isStoreWidget } = getCoreProps(config.widget);
+      const { isStoreWidget } = getCoreProps(config.component);
 
       const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } =
         DataPropEnum;
@@ -126,7 +126,7 @@ export function useFieldBindingOptions({
 
   const { getParentStoreNode } = useNodeFinder();
   const { dataStructure = [] } = widget;
-  const { isStoreWidget } = getCoreProps(config.widget);
+  const { isStoreWidget } = getCoreProps(config.component);
 
   const dataSource: DataSource = _get(config, [
     'props',
@@ -186,13 +186,13 @@ export function useIndexesValue<
 }
 
 function resetAllPropMapping(
-  { widget, props = {} }: RenderConfig,
+  { component, props = {} }: ComponentConfig,
   {
     forceReset = false,
     getCoreProps,
   }: { forceReset?: boolean; getCoreProps: GetCorePropsFn }
 ) {
-  const { definition, isStoreWidget, mappingPaths } = getCoreProps(widget);
+  const { definition, isStoreWidget, mappingPaths } = getCoreProps(component);
   const { elementNodeProps } = definition;
   const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } = DataPropEnum;
 
@@ -205,7 +205,7 @@ function resetAllPropMapping(
     (Array.isArray(dataSource) && dataSource.length >= 3)
   ) {
     const children = Object.keys(elementNodeProps || {})
-      .map((path) => (_get(props, [path, 'value']) || []) as RenderConfig[])
+      .map((path) => (_get(props, [path, 'value']) || []) as ComponentConfig[])
       .flat();
 
     mappingPaths.forEach((mappingPath) => _unset(props, [mappingPath]));

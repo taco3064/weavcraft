@@ -28,6 +28,7 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
+  const { component } = config;
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
@@ -37,7 +38,7 @@ export default function PropsSettingList({
   const dataPropName = useDataPropName(config);
 
   const propItems = useMemo(() => {
-    const { definition } = getCoreProps(config.widget);
+    const { definition } = getCoreProps(component);
     const { primitiveValueProps } = definition;
 
     return Object.entries(primitiveValueProps || {})
@@ -51,7 +52,7 @@ export default function PropsSettingList({
         propPath,
         definition,
       }));
-  }, [config.widget, getCoreProps]);
+  }, [component, getCoreProps]);
 
   const dataSourceIndexes = _get(config, [
     'props',
@@ -69,8 +70,8 @@ export default function PropsSettingList({
       description={pathDescription}
       icon={<AutoAwesomeIcon color="primary" />}
       onClose={onClose}
-      title={t('widgets:ttl-widget-settings', {
-        widget: t(`widgets:lbl-widgets.${config.widget}`),
+      title={t('widgets:ttl-component-settings', {
+        component: t(`widgets:lbl-component.${component}`),
       })}
       render={({ icon }) => (
         <>

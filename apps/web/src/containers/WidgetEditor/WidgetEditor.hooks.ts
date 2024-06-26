@@ -15,9 +15,9 @@ import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 
 import type {
   MenuItemOptions,
-  RenderConfig,
+  ComponentConfig,
   WidgetConfigs,
-  WidgetType,
+  CoreComponent,
 } from '../imports.types';
 
 const { default: _Core, ...CATEGORIES } = Core;
@@ -36,23 +36,23 @@ export function useChangeEvents(
   const { getNodePaths } = useNodePaths();
 
   return {
-    onAddChild: (config, path, widget) => {
+    onAddChild: (config, path, component) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: { widget },
+        value: { component },
       };
 
       _set(config, ['props', path], propConfig);
       onChange({ ...value });
     },
 
-    onAddLastChild: (config, path, widget) => {
-      const nodes: RenderConfig[] =
+    onAddLastChild: (config, path, component) => {
+      const nodes: ComponentConfig[] =
         _get(config, ['props', path, 'value']) || [];
 
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: [...nodes, { widget }],
+        value: [...nodes, { component }],
       };
 
       _set(config, ['props', path], propConfig);
@@ -139,13 +139,12 @@ export function useNodeCreateButton(
 ) {
   const getCoreProps = useCorePropsGetter();
 
-  return <P extends object>(props: P, config: RenderConfig): P => {
+  return <P extends object>(props: P, config: ComponentConfig): P => {
     if (disabled) {
       return props;
     }
 
-    const { widget } = config;
-    const { definition } = getCoreProps(widget);
+    const { definition } = getCoreProps(config.component);
     const { dataBindingProps, elementNodeProps } = definition;
 
     if (
@@ -179,10 +178,10 @@ export function useNodeCreateButton(
           path,
           config,
           variant: clickable ? 'action' : 'node',
-          onClick: (widget) => {
+          onClick: (component) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
-            onAdd(config, path, widget);
+            onAdd(config, path, component);
           },
         });
 
@@ -205,22 +204,22 @@ export function useWidgetOptions(variant: NodeCreateButtonProps['variant']) {
   return useMemo(
     () =>
       Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
-        (acc, [category, widgets]) => {
-          const items = (Object.keys(widgets) as WidgetType[]).reduce<
+        (acc, [category, components]) => {
+          const items = (Object.keys(components) as CoreComponent[]).reduce<
             MenuItemOptions[]
-          >((result, widget) => {
-            const { definition } = getCoreProps(widget);
+          >((result, component) => {
+            const { definition } = getCoreProps(component);
 
             const { elementNodeProps = {}, eventCallbackProps = {} } =
               definition;
 
             if (
-              /^(Avatar|Icon)$/.test(widget) ||
+              /^(Avatar|Icon)$/.test(component) ||
               variant !== 'action' ||
               'onClick' in eventCallbackProps ||
               _get(elementNodeProps, 'toggle.definition.clickable')
             ) {
-              result.push({ label: `widgets:lbl-widgets.${widget}` });
+              result.push({ label: `widgets:lbl-component.${component}` });
             }
 
             return result;

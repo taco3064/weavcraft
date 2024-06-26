@@ -8,7 +8,7 @@ import { useCorePropsGetter } from '~web/contexts';
 import type {
   DataFields,
   GenerateOptions,
-  RenderConfig,
+  ComponentConfig,
   RenderFn,
 } from './useWidgetRender.types';
 
@@ -16,11 +16,11 @@ export function useWidgetRender(dataStructure: DataFields, render: RenderFn) {
   const getCoreProps = useCorePropsGetter();
 
   return function generate(
-    config: RenderConfig,
+    config: ComponentConfig,
     { key, paths = [] }: GenerateOptions = {}
   ) {
-    const WidgetEl = _get(Core, config.widget) as ComponentType;
-    const { definition } = getCoreProps(config.widget);
+    const WidgetEl = _get(Core, config.component) as ComponentType;
+    const { definition } = getCoreProps(config.component);
 
     return render(WidgetEl, {
       config,
@@ -39,7 +39,7 @@ export function useWidgetRender(dataStructure: DataFields, render: RenderFn) {
               _get(definition, ['elementNodeProps', path, 'definition']) || {};
 
             const children: ReactNode[] = nodes.map((node, i) =>
-              generate(node as RenderConfig, {
+              generate(node as ComponentConfig, {
                 key: i,
                 paths: [...paths, path, ...(multiple ? [i] : [])],
               })

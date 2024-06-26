@@ -20,8 +20,8 @@ export function useCorePropsGetter() {
   ) as CorePropsDefinitionContextValue;
 
   return useCallback<GetCorePropsFn>(
-    (widget) => {
-      const definition = definitions[widget];
+    (component) => {
+      const definition = definitions[component];
 
       const { dataBindingProps, elementNodeProps, primitiveValueProps } =
         definition;

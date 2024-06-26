@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 
 import Action from './ElementNodeList.Action';
 import { useCorePropsGetter } from '~web/contexts';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
+import type { ConfigPaths, ComponentConfig } from '~web/hooks';
 
 import type {
   ChildrenArray,
@@ -29,12 +29,12 @@ export default function Items({
 }: ItemsProps) {
   const getCoreProps = useCorePropsGetter();
 
-  const { widget, props = {} } = config;
+  const { component, props = {} } = config;
   const { t } = useTranslation();
 
   const { nodePaths, onPathsGenerate, onWidgetChildrenGenerate } =
     useMemo<NodePaths>(() => {
-      const { definition } = getCoreProps(widget);
+      const { definition } = getCoreProps(component);
       const { elementNodeProps = {} } = definition;
 
       return {
@@ -49,12 +49,12 @@ export default function Items({
 
           return result;
         },
-        onWidgetChildrenGenerate: ({ widget, props = {} }) => {
-          const { definition } = getCoreProps(widget);
+        onWidgetChildrenGenerate: ({ component, props = {} }) => {
+          const { definition } = getCoreProps(component);
           const { elementNodeProps = {} } = definition;
           const nodePaths = Object.keys(elementNodeProps);
 
-          return nodePaths.reduce<RenderConfig[]>((result, nodePath) => {
+          return nodePaths.reduce<ComponentConfig[]>((result, nodePath) => {
             const { [nodePath]: nodes } = props;
 
             if (nodes?.value && nodes.type === 'ElementNode') {
@@ -63,7 +63,7 @@ export default function Items({
               result.push(
                 ...((isMultiple
                   ? nodes.value
-                  : [nodes.value]) as RenderConfig[])
+                  : [nodes.value]) as ComponentConfig[])
               );
             }
 
@@ -71,7 +71,7 @@ export default function Items({
           }, []);
         },
       };
-    }, [widget, getCoreProps]);
+    }, [component, getCoreProps]);
 
   return nodePaths.reduce<ChildrenArray>((items, path) => {
     const { [path]: nodes } = props;
@@ -79,11 +79,11 @@ export default function Items({
     if (nodes?.value && nodes.type === 'ElementNode') {
       const isMultiple = Array.isArray(nodes.value);
 
-      const widgets = (
+      const components = (
         isMultiple ? nodes.value : [nodes.value]
-      ) as RenderConfig[];
+      ) as ComponentConfig[];
 
-      widgets.length &&
+      components.length &&
         items.push(
           <Fragment key={path}>
             <ListSubheader
@@ -96,7 +96,7 @@ export default function Items({
               </Typography>
             </ListSubheader>
 
-            {widgets.map((config, i) => {
+            {components.map((config, i) => {
               const hasChildren = onWidgetChildrenGenerate(config).length > 0;
 
               const content = (
@@ -111,7 +111,7 @@ export default function Items({
                   </ListItemIcon>
 
                   <ListItemText
-                    primary={t(`widgets:lbl-widgets.${config.widget}`)}
+                    primary={t(`widgets:lbl-component.${config.component}`)}
                     primaryTypographyProps={{
                       color: hasChildren ? 'secondary' : 'text.primary',
                       fontWeight: hasChildren ? 550 : 500,

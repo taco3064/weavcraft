@@ -26,12 +26,14 @@ export default function PropItem({
   onFieldBinding,
 }: PropItemProps) {
   const getCoreProps = useCorePropsGetter();
+
+  const { component } = config;
   const { t } = useTranslation();
 
   const { bindable, bindingSourcePaths } = useMemo(() => {
     const [propName, baseName] = _toPath(propPath).reverse();
 
-    const { definition } = getCoreProps(config.widget);
+    const { definition } = getCoreProps(component);
     const { dataBindingProps = {} } = definition;
 
     const mappingPath = (
@@ -45,7 +47,7 @@ export default function PropItem({
       bindable: mappingProps.includes(propName),
       bindingSourcePaths: ['props', mappingPath, 'value', propName],
     };
-  }, [propPath, config.widget, getCoreProps]);
+  }, [propPath, component, getCoreProps]);
 
   const defaultPropValue = _get(config, ['props', propPath, 'value']) as Get<
     PrimitiveValueProp,

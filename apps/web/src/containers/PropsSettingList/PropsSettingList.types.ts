@@ -6,7 +6,7 @@ import type {
   DataPropEnum,
   EditorListProps,
   PrimitivePropDefinitions,
-  RenderConfig,
+  ComponentConfig,
   WidgetConfigs,
 } from '../imports.types';
 
@@ -41,7 +41,7 @@ export interface PropItem {
 }
 
 export type PropsSettingChangeHandler = (
-  config: RenderConfig,
+  config: ComponentConfig,
   propPath?: string,
   propValue?: ConfigProps
 ) => void;
@@ -49,7 +49,7 @@ export type PropsSettingChangeHandler = (
 //* Component Props
 export interface PropsSettingListProps
   extends Pick<EditorListProps, 'icon' | 'onClose'> {
-  config: RenderConfig;
+  config: ComponentConfig;
   paths: ConfigPaths;
   widget: WidgetConfigs;
   onChange: PropsSettingChangeHandler;

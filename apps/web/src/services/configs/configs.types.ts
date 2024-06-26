@@ -6,7 +6,7 @@ import type {
 } from '@weavcraft/common';
 
 export type { ThemePalette };
-export type WidgetType = Exclude<keyof typeof Core, Lowercase<string>>;
+export type CoreComponent = Exclude<keyof typeof Core, Lowercase<string>>;
 
 export type MutationtConfigInput<T> = {
   hierarchyId: string;
@@ -16,5 +16,5 @@ export type MutationtConfigInput<T> = {
 
 export interface WidgetConfigs
   extends Pick<BaseWidgetConfigs, 'dataStructure' | 'props'> {
-  widget: WidgetType;
+  component: CoreComponent;
 }

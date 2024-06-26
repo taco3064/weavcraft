@@ -3,7 +3,7 @@ import type { WidgetConfigs } from '../imports.types';
 
 export type ConfigPaths = (string | number)[];
 export type DataFields = NonNullable<WidgetConfigs['dataStructure']>;
-export type RenderConfig = Pick<WidgetConfigs, 'widget' | 'props'>;
+export type ComponentConfig = Pick<WidgetConfigs, 'component' | 'props'>;
 
 export type GenerateOptions = {
   key?: number;
@@ -15,7 +15,7 @@ export type RenderFn = <P extends object>(
   options: {
     key?: number;
     props: P;
-    config: RenderConfig;
+    config: ComponentConfig;
     paths: ConfigPaths;
   }
 ) => JSX.Element;

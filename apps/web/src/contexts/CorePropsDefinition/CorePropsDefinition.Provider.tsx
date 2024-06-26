@@ -3,7 +3,7 @@ import { lazy } from 'react';
 
 import { CorePropsDefinitionContext } from './CorePropsDefinition.hooks';
 import { getPropsDefinition } from '~web/services';
-import type { WidgetType } from '../imports.types';
+import type { CoreComponent } from '../imports.types';
 
 import type {
   CorePropsDefinitionProviderProps,
@@ -14,7 +14,7 @@ export default lazy(async () => {
   const definitions = await Promise.all(
     Object.keys(Core)
       .filter((widgetId) => widgetId !== 'fontawesomes')
-      .map((widgetId) => getPropsDefinition(widgetId as WidgetType))
+      .map((widgetId) => getPropsDefinition(widgetId as CoreComponent))
   );
 
   const value = definitions.reduce(

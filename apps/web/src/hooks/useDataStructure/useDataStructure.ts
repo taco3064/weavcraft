@@ -2,13 +2,13 @@ import { useMemo } from 'react';
 
 import { DataPropEnum } from './useDataStructure.types';
 import { useCorePropsGetter } from '~web/contexts';
-import type { RenderConfig } from '../useWidgetRender';
+import type { ComponentConfig } from '../useWidgetRender';
 
-export function useDataPropName({ widget }: RenderConfig) {
+export function useDataPropName({ component }: ComponentConfig) {
   const getCoreProps = useCorePropsGetter();
 
   return useMemo<DataPropEnum | undefined>(() => {
-    const { definition, isStoreWidget } = getCoreProps(widget);
+    const { definition, isStoreWidget } = getCoreProps(component);
     const { dataBindingProps } = definition;
 
     const dataPropName = isStoreWidget
@@ -16,5 +16,5 @@ export function useDataPropName({ widget }: RenderConfig) {
       : DataPropEnum.Data;
 
     return dataBindingProps?.[dataPropName] ? dataPropName : undefined;
-  }, [widget, getCoreProps]);
+  }, [component, getCoreProps]);
 }

@@ -3,5 +3,5 @@ export * from './useWidgetRender';
 export type {
   ConfigPaths,
   DataFields,
-  RenderConfig,
+  ComponentConfig,
 } from './useWidgetRender.types';

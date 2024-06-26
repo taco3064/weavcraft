@@ -34,7 +34,7 @@ import {
 
 import type {
   ConfigPaths,
-  RenderConfig,
+  ComponentConfig,
   WidgetConfigs,
 } from '../imports.types';
 
@@ -49,7 +49,7 @@ export default withCorePropsDefinition(function WidgetEditor({
 
   const [, startTransition] = useTransition();
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
-  const [editing, setEditing] = useState<RenderConfig>();
+  const [editing, setEditing] = useState<ComponentConfig>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
   const [settingNode, setSettingNode] = useState<ConfigPaths>([]);
 
@@ -182,12 +182,12 @@ export default withCorePropsDefinition(function WidgetEditor({
           className={classes.content}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {value.widget ? (
+          {value.component ? (
             generate(value)
           ) : (
             <NodeCreateButton
               variant="node"
-              onClick={(widget) => setValue({ ...value, widget })}
+              onClick={(component) => setValue({ ...value, component })}
             />
           )}
 
