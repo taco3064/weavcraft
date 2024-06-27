@@ -1,7 +1,6 @@
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Core from '@weavcraft/core';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';

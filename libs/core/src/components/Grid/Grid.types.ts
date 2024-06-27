@@ -1,5 +1,5 @@
 import MuiGrid from '@mui/material/Grid';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { PropsWithMappedStore } from '../../hooks';

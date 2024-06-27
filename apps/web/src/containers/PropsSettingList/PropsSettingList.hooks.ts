@@ -183,7 +183,7 @@ export function useIndexesValue<
   return [
     useMemo(
       () =>
-        (!value || typeof value === 'string' ? value : JSON.stringify(value)) ||
+        (!value || typeof value === 'string' ? value : JSON.stringify(value)) ??
         '',
       [value]
     ),

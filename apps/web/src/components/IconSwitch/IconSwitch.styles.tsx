@@ -2,13 +2,13 @@ import ReactDomServer from 'react-dom/server';
 import _get from 'lodash/get';
 import { makeStyles } from 'tss-react/mui';
 
-import type { IconOptions, IconSwitchProps } from './IconSwitch.types';
+import type { IconSwitchProps } from './IconSwitch.types';
 
 export const useMainStyles = makeStyles<
   Pick<IconSwitchProps, 'disabled' | 'options' | 'value'>
 >({ name: 'IconSwitch' })((theme, { disabled, options, value }) => {
   const color = _get(theme.palette, [options[value]?.color as string]);
-  const opts = Object.entries(options) as [string, IconOptions][];
+  const opts = Object.entries(options);
   const parser = new DOMParser();
   const serializer = new XMLSerializer();
 
