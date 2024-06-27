@@ -1,2 +1,6 @@
 export { default, default as PrimitiveField } from './PrimitiveField';
-export type { PrimitiveFieldProps } from './PrimitiveField.types';
+
+export type {
+  PrimitiveDefinition,
+  PrimitiveFieldProps,
+} from './PrimitiveField.types';

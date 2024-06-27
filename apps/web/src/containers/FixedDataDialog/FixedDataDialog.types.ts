@@ -1,16 +1,24 @@
 import type { JsonObject } from 'type-fest';
-import type { DataPropEnum, ComponentConfig } from '../imports.types';
-
-export enum BuildStepEnum {
-  DataStructure,
-  DataView,
-}
-
-export type FixedData =
-  | { dataPropName: DataPropEnum.Data; data: JsonObject }
-  | { dataPropName: DataPropEnum.Records; data: JsonObject[] };
+import type { ComponentConfig } from '../imports.types';
 
 //* Component Props
 export interface FixedDataDialogProps {
   config: ComponentConfig;
+  onDataChange: (data?: JsonObject | JsonObject[]) => void;
+}
+
+export interface DataDetailProps {
+  data: JsonObject | JsonObject[];
+  onAdd: () => void;
+  onEdit: (e: number | JsonObject) => void;
+  onRemove: (e: number) => void;
+}
+
+export interface DataEditorDialogProps
+  extends Pick<FixedDataDialogProps, 'config'> {
+  data?: JsonObject;
+  mode: 'add' | 'edit';
+  open: boolean;
+  onClose: () => void;
+  onConfirm: (data: JsonObject) => void;
 }

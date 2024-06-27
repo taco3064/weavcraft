@@ -10,7 +10,7 @@ export type AdornmentIcons = {
   [K in PrimitiveType]: ReactElement<IconProps>;
 };
 
-type PrimitiveDefinition = NonNullable<
+export type PrimitiveDefinition = NonNullable<
   Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
 >;
 

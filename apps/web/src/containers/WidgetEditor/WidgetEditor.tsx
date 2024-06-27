@@ -97,8 +97,6 @@ export default withCorePropsDefinition(function WidgetEditor({
       ),
   });
 
-  // console.log(useDataStructure(value));
-
   return (
     <Slide in direction="up" timeout={1200}>
       <Container disableGutters className={classes.root} maxWidth={maxWidth}>

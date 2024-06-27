@@ -13,7 +13,7 @@ import { EditorList, SwitchListItem } from '~web/components';
 import { SourceModeEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
 import { useDataPropName, useNodePaths } from '~web/hooks';
-import { useFieldBindingHandler } from './PropsSettingList.hooks';
+import { useInjectionHandler } from './PropsSettingList.hooks';
 import { useMainStyles } from './PropsSettingList.styles';
 
 import type {
@@ -28,14 +28,17 @@ export default function PropsSettingList({
   onChange,
   onClose,
 }: PropsSettingListProps) {
+  const getCoreProps = useCorePropsGetter();
+  const dataPropName = useDataPropName(config);
+
   const { component } = config;
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
-
-  const getCoreProps = useCorePropsGetter();
-  const onFieldBinding = useFieldBindingHandler({ config, onChange });
-  const dataPropName = useDataPropName(config);
+  const { onFieldBinding, onFixedDataChange } = useInjectionHandler({
+    config,
+    onChange,
+  });
 
   const propItems = useMemo(() => {
     const { definition } = getCoreProps(component);
@@ -86,7 +89,12 @@ export default function PropsSettingList({
                   color: 'error',
                   icon: <EditIcon />,
                   tooltip: t('widgets:ttl-source-mode.Fixed'),
-                  content: <FixedDataDialog {...{ config }} />,
+                  content: (
+                    <FixedDataDialog
+                      config={config}
+                      onDataChange={onFixedDataChange}
+                    />
+                  ),
                 },
                 [SourceModeEnum.Binding]: {
                   color: 'warning',

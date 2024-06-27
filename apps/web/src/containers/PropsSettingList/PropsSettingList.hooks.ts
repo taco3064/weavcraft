@@ -1,8 +1,17 @@
 import _get from 'lodash/get';
+import _isEmpty from 'lodash/isEmpty';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
 import _unset from 'lodash/unset';
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
+import type { JsonObject } from 'type-fest';
+
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ChangeEvent,
+} from 'react';
 
 import { DataPropEnum, useNodeFinder } from '~web/hooks';
 import { SettingModeEnum, SourceModeEnum } from './PropsSettingList.types';
@@ -38,6 +47,10 @@ export function useDataSourceOptions({
     _get(parentNode, ['node', 'props', 'propMapping', 'value', 'records']) || []
   );
 
+  const hasFixedRecords = Boolean(
+    _get(parentNode, ['node', 'props', 'records', 'value'])
+  );
+
   return useMemo<{
     isExtensionAllowed: boolean;
     recordsOptions?: {
@@ -49,7 +62,7 @@ export function useDataSourceOptions({
     const isExtensionAllowed = Boolean(extensionIndexes.length);
 
     if (dataPropName !== DataPropEnum.Records) {
-      return { isExtensionAllowed };
+      return { isExtensionAllowed: isExtensionAllowed || hasFixedRecords };
     }
 
     return {
@@ -84,37 +97,7 @@ export function useDataSourceOptions({
         })),
       },
     };
-  }, [dataPropName, dataStructure, stringify]);
-}
-
-export function useFieldBindingHandler({
-  config,
-  onChange,
-}: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
-  const getCoreProps = useCorePropsGetter();
-
-  return (mappingPath: MappingPath, propName: string, source?: DataSource) => {
-    if (propName === DataPropEnum.Records || propName === DataPropEnum.Data) {
-      const { isStoreWidget } = getCoreProps(config.component);
-
-      const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } =
-        DataPropEnum;
-
-      _unset(config, ['props', dataPropName, 'value']);
-      resetAllPropMapping(config, { forceReset: true, getCoreProps });
-    }
-
-    const mapping: Record<string, string> =
-      _get(config, ['props', mappingPath, 'value']) || {};
-
-    if (source) {
-      _set(mapping, [propName], source);
-    } else {
-      _unset(mapping, [propName]);
-    }
-
-    onChange(config, mappingPath, { type: 'DataBinding', value: mapping });
-  };
+  }, [dataPropName, dataStructure, hasFixedRecords, stringify]);
 }
 
 export function useFieldBindingOptions({
@@ -141,16 +124,25 @@ export function useFieldBindingOptions({
     return getSourceOptions(DataPropEnum.Data, dataStructure);
   } else if (dataSource === '[[extension]]') {
     const parentNode = getParentStoreNode(widget, paths);
+    const records: JsonObject[] =
+      _get(parentNode, ['node', 'props', 'records', 'value']) || [];
+    const fixedFields = new Set(
+      records.map((data) => Object.keys(data)).flat()
+    );
 
     const dataFieldIndexes: DataFieldIndexes =
       _get(parentNode, ['node', 'props', 'propMapping', 'value', 'records']) ||
       [];
 
-    return getSourceOptions(
-      DataPropEnum.Data,
-      _get(dataStructure, dataFieldIndexes),
-      dataFieldIndexes
-    );
+    return fixedFields.size
+      ? Array.from(fixedFields).map<{ fieldPath: string; indexes?: undefined }>(
+          (fieldPath) => ({ fieldPath })
+        )
+      : getSourceOptions(
+          DataPropEnum.Data,
+          _get(dataStructure, dataFieldIndexes),
+          dataFieldIndexes
+        );
   }
 
   const indexes = baseName ? dataSource : dataSource?.slice(0, -2);
@@ -180,11 +172,87 @@ export function useIndexesValue<
     (e: ChangeEvent<HTMLInputElement>) =>
       onChange(
         propName,
-        !e.target.value || /^\[\[(root|extension)\]\]$/.test(e.target.value)
+        !e.target.value || /[a-z]/.test(e.target.value)
           ? e.target.value
           : JSON.parse(e.target.value)
       ),
   ] as const;
+}
+
+export function useInjectionHandler({
+  config,
+  onChange,
+}: Pick<PropsSettingListProps, 'config' | 'onChange'>) {
+  const getCoreProps = useCorePropsGetter();
+
+  const resetPropMapping = useCallback(
+    (config: ComponentConfig, data?: JsonObject | JsonObject[]) => {
+      const { isStoreWidget } = getCoreProps(config.component);
+
+      const { [isStoreWidget ? 'Records' : 'Data']: dataPropName } =
+        DataPropEnum;
+
+      resetAllPropMapping(config, { forceReset: true, getCoreProps });
+
+      if (data) {
+        _set(config, ['props', dataPropName], {
+          type: 'DataBinding',
+          value: data,
+        });
+      } else {
+        _unset(config, ['props', dataPropName, 'value']);
+      }
+    },
+    [getCoreProps]
+  );
+
+  return {
+    onFieldBinding: (
+      mappingPath: MappingPath,
+      propName: string,
+      source?: DataSource
+    ) => {
+      if (propName === DataPropEnum.Records || propName === DataPropEnum.Data) {
+        resetPropMapping(config);
+      }
+
+      const mapping: Record<string, string> =
+        _get(config, ['props', mappingPath, 'value']) || {};
+
+      if (source) {
+        _set(mapping, [propName], source);
+      } else {
+        _unset(mapping, [propName]);
+      }
+
+      onChange(
+        config,
+        mappingPath,
+        _isEmpty(mapping) ? undefined : { type: 'DataBinding', value: mapping }
+      );
+    },
+    onFixedDataChange: (data?: JsonObject | JsonObject[]) => {
+      const { definition, isStoreWidget, mappingPaths } = getCoreProps(
+        config.component
+      );
+
+      const mappingPath = mappingPaths.find((path) =>
+        isStoreWidget ? path.endsWith('.propMapping') : path === 'propMapping'
+      ) as MappingPath;
+
+      const propNames: string[] =
+        _get(definition, ['dataBindingProps', mappingPath, 'definition']) || [];
+
+      resetPropMapping(config, data);
+
+      onChange(config, mappingPath, {
+        type: 'DataBinding',
+        value: Object.fromEntries(
+          propNames.map((propName) => [propName, propName])
+        ),
+      });
+    },
+  };
 }
 
 export function usePropItemStatus({

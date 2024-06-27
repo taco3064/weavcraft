@@ -51,10 +51,14 @@ export function useWidgetRender(dataStructure: DataFields, render: RenderFn) {
               acc,
               path,
               Object.entries(value || {}).reduce(
-                (mapping, [propPath, indexes]) => {
+                (mapping, [propPath, sourcePath]) => {
+                  if (typeof sourcePath === 'string') {
+                    return _set(mapping, propPath, sourcePath);
+                  }
+
                   const fieldPath = _get(
                     dataStructure,
-                    indexes as []
+                    sourcePath as []
                   ) as string;
 
                   return !fieldPath

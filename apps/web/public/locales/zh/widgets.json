@@ -6,6 +6,7 @@
   "lbl-data-structure-root": "最頂層",
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
+  "lbl-row": "第 {{ row }} 筆",
   "msg-definitions-loading": "載入設定中...",
   "msg-no-fixed-data": "無特定資料",
   "msg-no-structure": "尚未設置資料結構",
@@ -18,17 +19,20 @@
   "btn-add": {
     "component": "加入構件",
     "field": "加入資料欄位",
+    "fixed-data": "加入資料",
     "structure": "建立子結構",
     "trigger": "加入點擊組件"
   },
   "btn-delete": {
     "component": "刪除構件",
     "field": "移除資料欄位",
+    "fixed-data": "移除資料",
     "structure": "移除子結構"
   },
   "btn-edit": {
     "component": "設定構件",
-    "field": "編輯資料欄位名稱"
+    "field": "編輯資料欄位名稱",
+    "fixed-data": "編輯資料"
   },
   "lbl-category": {
     "Display": "資料呈現",
@@ -87,8 +91,10 @@
     "Typography": "文字排版 (Typography)"
   },
   "msg-delete-confirm": {
+    "clear-fixed-data": "確定要清除所有特定資料嗎？",
     "component": "確定要刪除 {{ component }} 的構件嗎？",
-    "field": "確定要移除 {{ field }} 嗎？"
+    "field": "確定要移除 {{ field }} 嗎？",
+    "fixed-data": "確定要移除目標資料嗎？"
   },
   "opt-source-setting": {
     "extension": "使用上層結構的擴展",

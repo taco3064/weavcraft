@@ -6,6 +6,7 @@
   "lbl-data-structure-root": "Root",
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
+  "lbl-row": "No. {{ row }}",
   "msg-definitions-loading": "Loading settings...",
   "msg-no-fixed-data": "No Fixed Data Available",
   "msg-no-structure": "No Data Structure Available",
@@ -18,17 +19,20 @@
   "btn-add": {
     "component": "Add Component",
     "field": "Add Data Field",
+    "fixed-data": "Add Data",
     "structure": "Add Sub-Structure",
     "trigger": "Add Trigger Widget"
   },
   "btn-delete": {
     "component": "Delete Component",
     "field": "Remove Data Field",
+    "fixed-data": "Remove Data",
     "structure": "Remove Sub-Structure"
   },
   "btn-edit": {
     "component": "Edit Component",
-    "field": "Edit Field Name"
+    "field": "Edit Field Name",
+    "fixed-data": "Edit Data"
   },
   "lbl-category": {
     "Display": "Display",
@@ -87,8 +91,10 @@
     "Typography": "Typography"
   },
   "msg-delete-confirm": {
+    "clear-fixed-data": "Are you sure you want to clear all fixed data?",
     "component": "Are you sure you want to delete {{ component }} component?",
-    "field": "Are you sure you want to remove {{ field }}?"
+    "field": "Are you sure you want to remove {{ field }}?",
+    "fixed-data": "Are you sure you want to remove data?"
   },
   "opt-source-setting": {
     "extension": "Extension from the Parent",

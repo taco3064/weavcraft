@@ -20,6 +20,8 @@ export default function Collapse<D extends JsonObject>(
   const { classes } = useCommonStyles();
   const [expanded, setExpanded] = useState(false);
 
+  console.log(containerId);
+
   return (
     <GeneratePropsProvider>
       <MuiBox
@@ -40,7 +42,7 @@ export default function Collapse<D extends JsonObject>(
           />
         )}
 
-        <PortalContainer id={containerId}>
+        <PortalContainer key={containerId} id={containerId}>
           <MuiCollapse
             {...collapseProps}
             in={expanded}

@@ -22,7 +22,6 @@ export default function PropItem({
   onChange,
   onFieldBinding,
 }: PropItemProps) {
-  const { component } = config;
   const { t } = useTranslation();
 
   const { dataFieldIndexes, disabledModeSwitch, mode, onModeChange } =

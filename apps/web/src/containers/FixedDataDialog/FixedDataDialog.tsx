@@ -5,70 +5,77 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Step from '@mui/material/Step';
-import StepButton from '@mui/material/StepButton';
-import StepContent from '@mui/material/StepContent';
-import Stepper from '@mui/material/Stepper';
-import { useState } from 'react';
+import _isEqual from 'lodash/isEqual';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
+import type { JsonObject } from 'type-fest';
 
-import { useFixedData } from './FixedDataDialog.hooks';
+import DataDetail from './FixedDataDialog.DataDetail';
+import EditorDialog from './FixedDataDialog.DataEditorDialog';
+import { ConfirmToggle } from '~web/components';
+import { useDataModifyProps, useFixedData } from './FixedDataDialog.hooks';
+import type { FixedDataDialogProps } from './FixedDataDialog.types';
 
-import {
-  BuildStepEnum,
-  type FixedDataDialogProps,
-} from './FixedDataDialog.types';
-
-export default function FixedDataDialog({ config }: FixedDataDialogProps) {
+export default function FixedDataDialog({
+  config,
+  onDataChange,
+}: FixedDataDialogProps) {
   const { t } = useTranslation();
-  const { data, dataPropName } = useFixedData(config);
 
-  const [activeStep, setActiveStep] = useState(BuildStepEnum.DataStructure);
-  const [open, setOpen] = useState(false);
+  const fixedData = useFixedData(config);
+  const stringify = JSON.stringify(fixedData);
+
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [value, setValue] = useState<JsonObject | JsonObject[]>();
+
+  const [{ open: editorOpen, ...editorProps }, detailProps] =
+    useDataModifyProps(value as typeof fixedData, setValue);
+
+  useEffect(() => {
+    if (detailOpen) {
+      setValue(JSON.parse(stringify));
+
+      return () => setValue(undefined);
+    }
+  }, [stringify, detailOpen]);
 
   return (
     <>
       <ButtonGroup fullWidth color="error" size="large" variant="contained">
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setDetailOpen(true)}>
           {t('widgets:btn-fixed-data')}
         </Button>
 
-        <Button fullWidth={false} sx={{ opacity: 0.8 }}>
-          <Core.Icon code="faTrash" />
-        </Button>
+        <ConfirmToggle
+          subject={t('ttl-delete-confirm')}
+          onConfirm={() => onDataChange()}
+          message={t('widgets:msg-delete-confirm.clear-fixed-data')}
+          toggle={
+            <Button fullWidth={false} sx={{ opacity: 0.8 }}>
+              <Core.Icon code="faTrash" />
+            </Button>
+          }
+        />
       </ButtonGroup>
+
+      <EditorDialog {...editorProps} config={config} open={editorOpen} />
 
       <Dialog
         fullWidth
         maxWidth="xs"
-        open={open}
-        onClose={() => setOpen(false)}
+        open={detailOpen && !editorOpen}
+        onClose={() => setDetailOpen(false)}
       >
         <DialogTitle>
-          <Core.Icon code="faEdit" />
+          <Core.Icon code="faDatabase" />
           {t('widgets:ttl-source-mode.Fixed')}
         </DialogTitle>
 
         <DialogContent>
-          <Stepper nonLinear orientation="vertical">
-            <Step active={activeStep === BuildStepEnum.DataStructure}>
-              <StepButton
-                onClick={() => setActiveStep(BuildStepEnum.DataStructure)}
-              >
-                {t('widgets:ttl-data-structure')}
-              </StepButton>
-
-              <StepContent>Data Structure</StepContent>
-            </Step>
-
-            <Step active={activeStep === BuildStepEnum.DataView}>
-              <StepButton onClick={() => setActiveStep(BuildStepEnum.DataView)}>
-                {t('widgets:btn-fixed-data')}
-              </StepButton>
-
-              <StepContent>Data View</StepContent>
-            </Step>
-          </Stepper>
+          <DataDetail
+            {...detailProps}
+            data={value as JsonObject | JsonObject[]}
+          />
         </DialogContent>
 
         <ButtonGroup
@@ -80,13 +87,21 @@ export default function FixedDataDialog({ config }: FixedDataDialogProps) {
           <Button
             color="inherit"
             startIcon={<Core.Icon code="faClose" />}
-            onClick={() => setOpen(false)}
+            onClick={() => setDetailOpen(false)}
           >
             {t('btn-cancel')}
           </Button>
 
-          <Button color="secondary" startIcon={<Core.Icon code="faCheck" />}>
-            {t('btn-confirm')}
+          <Button
+            color="secondary"
+            disabled={_isEqual(fixedData, value)}
+            startIcon={<Core.Icon code="faCheck" />}
+            onClick={() => {
+              setDetailOpen(false);
+              onDataChange(value);
+            }}
+          >
+            {t('btn-done')}
           </Button>
         </ButtonGroup>
       </Dialog>

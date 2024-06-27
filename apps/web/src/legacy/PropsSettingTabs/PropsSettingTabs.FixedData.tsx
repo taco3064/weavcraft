@@ -106,7 +106,7 @@ export default function FixedData({
                         <Chip
                           color="warning"
                           label={t('widgets:lbl-row', {
-                            index: (keyPath[0] as number) + 1,
+                            row: (keyPath[0] as number) + 1,
                           })}
                           onClick={(e) =>
                             startTransition(() => {

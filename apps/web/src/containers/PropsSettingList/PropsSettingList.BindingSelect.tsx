@@ -71,7 +71,10 @@ export default function BindingSelect({
       }}
     >
       {options.map(({ fieldPath, indexes }) => (
-        <MenuItem key={fieldPath} value={JSON.stringify(indexes)}>
+        <MenuItem
+          key={fieldPath}
+          value={indexes ? JSON.stringify(indexes) : fieldPath}
+        >
           {fieldPath}
         </MenuItem>
       ))}
