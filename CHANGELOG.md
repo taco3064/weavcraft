@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.43](https://github.com/taco3064/weavcraft/compare/v0.0.42...v0.0.43) (2024-06-27)
+
+
+### Features
+
+* **web/data-structure-list:** actionToggle support to set TransitionComponent ([ac51952](https://github.com/taco3064/weavcraft/commit/ac519526c27c91d3f1797a8ac6e21db4465efa2c))
+* **web/data-structure:** add new hook: useDataStructure to generate the widget data structure ([1185369](https://github.com/taco3064/weavcraft/commit/1185369d436ba08afc0d0763a415f656285ae9a5))
+* **web/data-structure:** complete DataStructure ([d5a7dc5](https://github.com/taco3064/weavcraft/commit/d5a7dc58884ffcef2e894e7e18fcf03dd35b3171))
+* **web/fixed-data-dialog:** add new container component: FixedDataDialog ([17048b5](https://github.com/taco3064/weavcraft/commit/17048b5d8cc11d60c54044b9c831628bfb6c0335))
+* **web/fixed-data-dialog:** complete FixedDataDialog ([c188d95](https://github.com/taco3064/weavcraft/commit/c188d95dddb2aebab614cf9443403a148242f983))
+* **web/prop-setting-list:** complete the binding feature ([c2506bf](https://github.com/taco3064/weavcraft/commit/c2506bfa3a6d3750ea1f4d5a87b0f72972828e16))
+* **web/props-setting-list:** add new container: PropsSettingList ([793dbe4](https://github.com/taco3064/weavcraft/commit/793dbe4c346ca1ba1171467842eb288c1fd1f5dc))
+* **web/props-setting-list:** add reset all prop mapping when the data source is changed ([54c1c57](https://github.com/taco3064/weavcraft/commit/54c1c57db5823f8d7d5f18e6d68589676865c6b2))
+* **web/props-setting-list:** complete the data binding feature ([9decf42](https://github.com/taco3064/weavcraft/commit/9decf428f967012777226760a35ef24b3a9760bf))
+* **web/props-settings-list:** support to print the full field path in SourceSelect ([f5a584e](https://github.com/taco3064/weavcraft/commit/f5a584e5b977e0ee822586c83a1e0964368d774c))
+
+
+### Bug Fixes
+
+* fixed the sonar qube issues ([48742e8](https://github.com/taco3064/weavcraft/commit/48742e8dfa98c837ee395b0b9e83401aca2c1c84))
+* **web/*:** refactor source codes ([85fb82d](https://github.com/taco3064/weavcraft/commit/85fb82d02eb5d0b3a6644e4d15acafc8f9c2effc))
+* **web/data-structure-view:** change the prop names of ActionToggle ([33023bb](https://github.com/taco3064/weavcraft/commit/33023bb97016a2794e24e99c6f7ab46ab4a4814f))
+* **web/data-structure:** change the layout as the EditorList ([12f6006](https://github.com/taco3064/weavcraft/commit/12f60062181af5fe9894ac9323641e34ed829eab))
+* **web/data-structure:** make sure the useDataStructure could work perfect ([36c78db](https://github.com/taco3064/weavcraft/commit/36c78db54f83d1a6a22337403f88f0a8af2dfe4f))
+* **web/data-structure:** refactor the useDataStructure hook ([4601923](https://github.com/taco3064/weavcraft/commit/46019237dce9c1cca490310c0ea1832d87de7bee))
+* **web/data-structure:** remove fixed data when data source is changed ([5e5b2d5](https://github.com/taco3064/weavcraft/commit/5e5b2d51f577eaeba08c830c526fd2d6b9bcfc52))
+* **web/locales:** update locales text ([2e650a9](https://github.com/taco3064/weavcraft/commit/2e650a9b44df8bfe14970c01f798761c1428abf3))
+* **web/locales:** update widgets's locales ([ee7134b](https://github.com/taco3064/weavcraft/commit/ee7134b734c7ef4b57ad2457ca085c40219aef99))
+* **web/props-setting-list:** fixed the generate rules of extension binding options ([21baa1e](https://github.com/taco3064/weavcraft/commit/21baa1eec155b14f264f7d005db100fecde37392))
+* **web/themes:** add SlideUp / SlideDown Transition ([f6a9555](https://github.com/taco3064/weavcraft/commit/f6a9555b8d9d74762fac25a9a8bc34539158e4bd))
+* **web/use-node-finder:** rename useNodePaths as useNodeFinder ([762cc89](https://github.com/taco3064/weavcraft/commit/762cc8917077edee617522657cfcc241d18bed82))
+* **web/widget-editor:** remove the unnecessary node create button in view ([1c98a1e](https://github.com/taco3064/weavcraft/commit/1c98a1e076154a5024d269afe00cd4e5a8a97d0b))
+
 ### [0.0.42](https://github.com/taco3064/weavcraft/compare/v0.0.41...v0.0.42) (2024-06-13)
 
 
