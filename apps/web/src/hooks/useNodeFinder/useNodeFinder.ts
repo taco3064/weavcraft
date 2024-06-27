@@ -4,9 +4,14 @@ import { useCallback, useMemo } from 'react';
 import { useCorePropsGetter } from '~web/contexts';
 import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
 import type { WidgetConfigs } from '../imports.types';
-import type { GetterOptions, ParentStoreNode } from './useNodeFinder.types';
 
-export function useNodeFinder() {
+import type {
+  GetterOptions,
+  NodeFinderHookReturn,
+  ParentNode,
+} from './useNodeFinder.types';
+
+export function useNodeFinder(): NodeFinderHookReturn {
   const getCoreProps = useCorePropsGetter();
   const { getNodePaths } = useNodePaths();
 
@@ -19,25 +24,31 @@ export function useNodeFinder() {
   return {
     getNode,
 
+    getParentNode: (
+      widget: WidgetConfigs,
+      paths: ConfigPaths,
+      filter?: GetterOptions['filter']
+    ) => getParentNode(widget, paths, { filter, getNode })?.node || null,
+
     getParentStoreNode: (widget: WidgetConfigs, paths: ConfigPaths) =>
-      getParentStoreNode(widget, paths, { getCoreProps, getNode }),
+      getParentNode(widget, paths, {
+        getNode,
+        filter: ({ component }) => getCoreProps(component).isStoreWidget,
+      })?.node || null,
 
-    getAllParentStoreNodes: (widget: WidgetConfigs, paths: ConfigPaths) => {
-      const result = [
-        getParentStoreNode(widget, paths, { getCoreProps, getNode }),
-      ].filter(Boolean) as ParentStoreNode[];
+    getChildNodes: useCallback(
+      ({ component, props = {} }: ComponentConfig) => {
+        const { definition } = getCoreProps(component);
+        const { elementNodeProps } = definition;
 
-      while (result.at(-1)?.paths.length) {
-        result.push(
-          getParentStoreNode(widget, result.at(-1)?.paths || [], {
-            getCoreProps,
-            getNode,
-          }) as ParentStoreNode
-        );
-      }
-
-      return result;
-    },
+        return Object.keys(elementNodeProps || {})
+          .map(
+            (path) => (_get(props, [path, 'value']) || []) as ComponentConfig[]
+          )
+          .flat();
+      },
+      [getCoreProps]
+    ),
   };
 }
 
@@ -72,11 +83,11 @@ export function useNodePaths(paths?: ConfigPaths) {
   };
 }
 
-function getParentStoreNode(
+function getParentNode(
   widget: WidgetConfigs,
   paths: ConfigPaths,
-  { getCoreProps, getNode }: GetterOptions
-): ParentStoreNode | null {
+  { filter = () => true, getNode }: GetterOptions
+): ParentNode | null {
   if (!paths.length) {
     return null;
   }
@@ -85,7 +96,7 @@ function getParentStoreNode(
   const popPaths = paths.slice(0, isMultiple ? -2 : -1);
   const node = getNode(widget, popPaths);
 
-  return getCoreProps(node.component).isStoreWidget
+  return filter(node)
     ? { node, paths: popPaths }
-    : getParentStoreNode(widget, popPaths, { getCoreProps, getNode });
+    : getParentNode(widget, popPaths, { filter, getNode });
 }

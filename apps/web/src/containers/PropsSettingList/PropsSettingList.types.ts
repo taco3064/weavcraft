@@ -1,12 +1,14 @@
-import type { DataBindingProp, PrimitiveValueProp } from '@weavcraft/common';
 import type { Get } from 'type-fest';
 
 import type {
+  ComponentConfig,
   ConfigPaths,
+  DataFieldIndexes,
   DataPropEnum,
+  DataSource,
   EditorListProps,
   PrimitivePropDefinitions,
-  ComponentConfig,
+  PropsSettingChangeHandler,
   WidgetConfigs,
 } from '../imports.types';
 
@@ -22,13 +24,9 @@ export enum SourceModeEnum {
 }
 
 //* Variables
-type ConfigProps = DataBindingProp | PrimitiveValueProp;
-export type DataSource = '[[root]]' | '[[extension]]' | number[];
-export type DataFieldIndexes = Exclude<DataSource, `[[${string}]]`>;
-
 export interface DataSourceOptions<T extends string | string[] = string> {
   fieldPath: T;
-  indexes: DataFieldIndexes;
+  indexes?: DataFieldIndexes;
 }
 
 export interface PropItem {
@@ -39,12 +37,6 @@ export interface PropItem {
     Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
   >;
 }
-
-export type PropsSettingChangeHandler = (
-  config: ComponentConfig,
-  propPath?: string,
-  propValue?: ConfigProps
-) => void;
 
 //* Component Props
 export interface PropsSettingListProps

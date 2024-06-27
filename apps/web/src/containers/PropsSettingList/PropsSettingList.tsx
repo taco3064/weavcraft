@@ -12,14 +12,10 @@ import SourceSelect from './PropsSettingList.SourceSelect';
 import { EditorList, SwitchListItem } from '~web/components';
 import { SourceModeEnum } from './PropsSettingList.types';
 import { useCorePropsGetter } from '~web/contexts';
-import { useDataPropName, useNodePaths } from '~web/hooks';
-import { useInjectionHandler } from './PropsSettingList.hooks';
+import { useDataPropName, useInjectionHandler, useNodePaths } from '~web/hooks';
 import { useMainStyles } from './PropsSettingList.styles';
-
-import type {
-  DataSource,
-  PropsSettingListProps,
-} from './PropsSettingList.types';
+import { DataSource } from '../imports.types';
+import type { PropsSettingListProps } from './PropsSettingList.types';
 
 export default function PropsSettingList({
   config,
@@ -35,10 +31,11 @@ export default function PropsSettingList({
   const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { pathDescription } = useNodePaths(paths);
-  const { onFieldBinding, onFixedDataChange } = useInjectionHandler({
+
+  const { onFieldBinding, onFixedDataChange } = useInjectionHandler(
     config,
-    onChange,
-  });
+    onChange
+  );
 
   const propItems = useMemo(() => {
     const { definition } = getCoreProps(component);

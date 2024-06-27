@@ -50,7 +50,10 @@ export default function SourceSelect({
       label={t(`widgets:lbl-source-setting.${dataPropName}`)}
       value={selectValue}
       onChange={handleChange}
-      SelectProps={{ IconComponent: Fragment }}
+      SelectProps={{
+        IconComponent: Fragment,
+        displayEmpty: true,
+      }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -95,7 +98,7 @@ export default function SourceSelect({
 
                 ...options.map(({ fieldPath, indexes }) => (
                   <MenuItem
-                    key={indexes.join('.')}
+                    key={indexes?.join('.')}
                     value={JSON.stringify(indexes)}
                   >
                     <Breadcrumbs separator="›">

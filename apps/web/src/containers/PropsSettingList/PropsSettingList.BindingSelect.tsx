@@ -38,7 +38,6 @@ export default function BindingSelect({
 
   return (
     <TextField
-      SelectProps={{ IconComponent: Fragment }}
       fullWidth
       select
       variant="filled"
@@ -54,6 +53,10 @@ export default function BindingSelect({
           })}
         </Typography>
       }
+      SelectProps={{
+        IconComponent: Fragment,
+        displayEmpty: true,
+      }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

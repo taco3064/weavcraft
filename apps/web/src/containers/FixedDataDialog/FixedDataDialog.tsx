@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import _isEmpty from 'lodash/isEmpty';
 import _isEqual from 'lodash/isEqual';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -51,7 +52,11 @@ export default function FixedDataDialog({
           onConfirm={() => onDataChange()}
           message={t('widgets:msg-delete-confirm.clear-fixed-data')}
           toggle={
-            <Button fullWidth={false} sx={{ opacity: 0.8 }}>
+            <Button
+              disabled={_isEmpty(fixedData)}
+              fullWidth={false}
+              sx={{ opacity: 0.8 }}
+            >
               <Core.Icon code="faTrash" />
             </Button>
           }

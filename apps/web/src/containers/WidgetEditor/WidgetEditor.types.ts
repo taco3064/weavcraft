@@ -1,13 +1,13 @@
 import type { ContainerProps } from '@mui/material/Container';
 import type { DataStructureListProps } from '../DataStructureList';
-import type { PropsSettingChangeHandler } from '../PropsSettingList';
 
 import type {
-  ConfigPaths,
-  PortalContainerEl,
   ComponentConfig,
-  WidgetConfigs,
+  ConfigPaths,
   CoreComponent,
+  PortalContainerEl,
+  PropsSettingChangeHandler,
+  WidgetConfigs,
 } from '../imports.types';
 
 export enum EditModeEnum {
