@@ -15,8 +15,8 @@ import {
   useState,
 } from 'react';
 
-import { PALETTES, components, type PaletteCode } from '~web/themes';
-import type { ThemePalette } from '~web/services';
+import { PALETTES, components } from '~web/themes';
+import type { PaletteCode, ThemePalette } from '../imports.types';
 
 import type {
   AppSettingsContextValue,

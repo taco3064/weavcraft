@@ -51,6 +51,7 @@ export default function SpeedDial<D extends JsonObject>(
 
   return (
     <PortalContainer
+      key={containerId}
       id={containerId}
       onContainerRetrieved={(container) => {
         setCssPosition('absolute');

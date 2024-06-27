@@ -12,33 +12,6 @@ export const useNodeCreateButtonStyles = makeStyles({
   },
 }));
 
-export const useSettingStyles = makeStyles({ name: 'PrimitiveValue' })(
-  (theme) => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: `calc(100% - ${theme.spacing(8)})`,
-      overflow: 'hidden auto',
-
-      '& > *': {
-        width: '100%',
-      },
-    },
-    row: {
-      '& > *': {
-        margin: '0 !important',
-      },
-    },
-    tabs: {
-      marginBottom: theme.spacing(2),
-      '& + *': {
-        height: '100%',
-        overflow: 'hidden auto',
-      },
-    },
-  })
-);
-
 export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'WidgetEditor',
 })((theme, { marginTop }) => ({
@@ -49,6 +22,17 @@ export const useMainStyles = makeStyles<MainStyleParams>({
       !Number.isNaN(marginTop)
         ? marginTop
         : 0,
+  },
+  tabs: {
+    marginBottom: theme.spacing(2),
+    '& + *': {
+      height: '100%',
+      overflow: 'hidden auto',
+    },
+
+    '& button.MuiTab-root': {
+      textTransform: 'capitalize',
+    },
   },
   content: {
     alignItems: 'center',

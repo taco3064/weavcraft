@@ -40,12 +40,12 @@ describe('@weavcraft/core/components/ImageList', () => {
       <ImageList
         records={records as RecordWithNulls[]}
         onItemActionClick={onItemActionClick}
-        itemAction={
-          <button {...{ propMapping: { children: 'title' } as never }}>
-            Click me
-          </button>
-        }
         itemProps={{
+          action: (
+            <button {...{ propMapping: { children: 'title' } as never }}>
+              Click me
+            </button>
+          ),
           propMapping: {
             src: 'img',
             title: 'title',

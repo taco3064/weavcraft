@@ -8,7 +8,7 @@ import { Trans } from 'next-i18next';
 import { PALETTES } from '~web/themes';
 import { useAppSettings } from '~web/contexts';
 import { useSettingsStyles } from './UserSettings.styles';
-import type { LanguageCode, PaletteCode } from '~web/contexts';
+import type { LanguageCode, PaletteCode } from '../imports.types';
 
 export default function Settings() {
   const { classes } = useSettingsStyles();

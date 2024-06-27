@@ -1,17 +1,11 @@
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Core from '@weavcraft/core';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import _set from 'lodash/set';
-import { useEffect, useState, type FormEventHandler } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
 
+import { EditorDialog } from '~web/components';
 import { createHierarchyData, updateHierarchyData } from '~web/services';
 import { useTutorialMode } from '~web/contexts';
 
@@ -63,91 +57,50 @@ export default function UpsertDialog<P>({
     }),
   };
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-
-    if (data) {
-      const formdata = new FormData(e.currentTarget);
-      const mode: MutationMode = data?.id ? 'update' : 'create';
-      const mutate = mutation[mode].mutate;
-      const input = { ...data } as Parameters<typeof mutate>[0]['input'];
-
-      formdata.forEach((value, key) => _set(input, key, value));
-      mutate({ input, isTutorialMode });
-    }
-  };
-
   useEffect(() => {
     setHierarchy(data);
   }, [data]);
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="xs"
+    <EditorDialog
+      {...{ icon, title }}
       open={Boolean(hierarchy)}
-      onClose={onClose}
-      PaperProps={{
-        component: 'form',
-        onSubmit: handleSubmit,
+      onClose={() => {
+        setHierarchy(undefined);
+        onClose();
+      }}
+      onSubmit={(formData) => {
+        if (data) {
+          const mode: MutationMode = data?.id ? 'update' : 'create';
+          const mutate = mutation[mode].mutate;
+          const input = { ...data } as Parameters<typeof mutate>[0]['input'];
+
+          formData.forEach((value, key) => _set(input, key, value));
+          mutate({ input, isTutorialMode });
+        }
       }}
     >
-      {!icon && !title ? null : (
-        <DialogTitle>
-          <Core.Icon code={icon} />
-          {title}
-        </DialogTitle>
-      )}
-
-      <DialogContent>
-        <TextField
-          autoFocus
-          fullWidth
-          required
-          color="secondary"
-          name="title"
-          defaultValue={data?.title}
-          label={t(`lbl-hierarchy-name.${data?.type}`, {
-            category: categoryLabel,
-          })}
-        />
-
-        <TextField
-          fullWidth
-          multiline
-          rows={3}
-          color="secondary"
-          name="description"
-          defaultValue={data?.description}
-          label={t('lbl-description')}
-        />
-      </DialogContent>
-
-      <ButtonGroup
-        component={DialogActions}
+      <TextField
+        autoFocus
         fullWidth
-        size="large"
-        variant="contained"
-      >
-        <Button
-          color="inherit"
-          startIcon={<Core.Icon code="faClose" />}
-          onClick={() => {
-            setHierarchy(undefined);
-            onClose();
-          }}
-        >
-          {t('btn-cancel')}
-        </Button>
+        required
+        color="secondary"
+        name="title"
+        defaultValue={data?.title}
+        label={t(`lbl-hierarchy-name.${data?.type}`, {
+          category: categoryLabel,
+        })}
+      />
 
-        <Button
-          color="secondary"
-          type="submit"
-          startIcon={<Core.Icon code="faCheck" />}
-        >
-          {t('btn-confirm')}
-        </Button>
-      </ButtonGroup>
-    </Dialog>
+      <TextField
+        fullWidth
+        multiline
+        rows={3}
+        color="secondary"
+        name="description"
+        defaultValue={data?.description}
+        label={t('lbl-description')}
+      />
+    </EditorDialog>
   );
 }

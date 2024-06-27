@@ -10,7 +10,7 @@ export default function GridItem<D extends JsonObject>(
 ) {
   const [
     GeneratePropsProvider,
-    { children, elevation, icon, title, ...gridItemProps },
+    { content, elevation, icon, title, ...gridItemProps },
   ] = useGenerateProps<D, GridItemProps<D>>(props);
 
   return (
@@ -20,7 +20,7 @@ export default function GridItem<D extends JsonObject>(
         data-testid="GridItem"
         header={!title ? null : <Toolbar {...{ elevation, icon, title }} />}
       >
-        {children}
+        {content}
       </FlexGridItem>
     </GeneratePropsProvider>
   );

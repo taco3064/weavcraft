@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import { useState } from 'react';
 
 import { MenuDialog } from '~web/components';
-import type { Notifications } from '~web/services';
+import type { Notifications } from '../imports.types';
 
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);

@@ -29,7 +29,13 @@
     "../../dist/apps/web/.next/types/**/*.ts",
     "next-env.d.ts"
   ],
-  "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": [
+    "node_modules",
+    "jest.config.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "../../apps/web/src/legacy"
+  ],
   "ts-node": {
     "files": true,
     "compilerOptions": {

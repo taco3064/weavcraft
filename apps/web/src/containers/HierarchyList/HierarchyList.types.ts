@@ -2,8 +2,11 @@ import type Core from '@weavcraft/core';
 import type { ContainerProps } from '@mui/material/Container';
 import type { ReactNode } from 'react';
 
-import type { HierarchyData, SearchHierarchyParams } from '~web/services';
-import type { PortalContainerEl } from '~web/contexts';
+import type {
+  HierarchyData,
+  PortalContainerEl,
+  SearchHierarchyParams,
+} from '../imports.types';
 
 //* Variables
 export type MutationMode = 'create' | 'update' | 'delete';

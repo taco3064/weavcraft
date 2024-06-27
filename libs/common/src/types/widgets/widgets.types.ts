@@ -17,7 +17,9 @@ interface BaseWidgetProps<T extends WidgetPropTypes, V> {
 //* - Data Binding
 export type DataBindingProp = BaseWidgetProps<
   'DataBinding',
-  Record<string, string> | JsonObject | JsonObject[]
+  | Record<string, '[[root]]' | '[[extension]]' | number[]>
+  | JsonObject
+  | JsonObject[]
 >;
 
 //* - Primitive Value
@@ -30,8 +32,7 @@ export type PrimitiveValueProp = BaseWidgetProps<
 
 //* - Element Node
 interface ElementNodeConfig {
-  widget: string;
-  externalInjection?: string[];
+  component: string;
   props?: {
     [propPath: string]: DataBindingProp | ElementNodeProp | PrimitiveValueProp;
   };
@@ -43,6 +44,9 @@ export type ElementNodeProp = BaseWidgetProps<
 >;
 
 //* - Widget Configs
+type DataFields = (string | [string, DataFields])[];
+
 export interface WidgetConfigs extends ElementNodeConfig {
   id: string;
+  dataStructure?: DataFields;
 }

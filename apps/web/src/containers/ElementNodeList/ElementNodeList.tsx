@@ -1,6 +1,6 @@
 import Core from '@weavcraft/core';
-import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import _get from 'lodash/get';
@@ -9,13 +9,9 @@ import { useTranslation } from 'next-i18next';
 import Action from './ElementNodeList.Action';
 import Items from './ElementNodeList.Items';
 import { EditorList } from '~web/components';
+import { useNodePaths } from '~web/hooks';
 import type { ElementNodeListProps } from './ElementNodeList.types';
-
-import {
-  usePathDescription,
-  useWidgetNodePaths,
-  type RenderConfig,
-} from '~web/hooks';
+import type { ComponentConfig } from '../imports.types';
 
 export default function ElementNodeList({
   config,
@@ -26,47 +22,56 @@ export default function ElementNodeList({
   onEdit,
 }: ElementNodeListProps) {
   const { t } = useTranslation();
+  const { nodePaths, pathDescription } = useNodePaths(active);
 
-  const paths = useWidgetNodePaths(active);
-  const description = usePathDescription(active);
-  const node: RenderConfig = !paths.length ? config : _get(config, paths);
+  const node: ComponentConfig = !nodePaths.length
+    ? config
+    : _get(config, nodePaths);
 
   return !node ? null : (
     <EditorList
-      {...{ description, onClose }}
       key={active.join('|')}
       title={t('widgets:ttl-element-node')}
+      description={pathDescription}
+      onClose={onClose}
       render={(classes) => {
         const isMultiple = typeof active[active.length - 1] === 'number';
 
+        const currentComponent = (
+          <>
+            <ListItemText
+              primary={t(`widgets:lbl-component.${node.component}`)}
+              primaryTypographyProps={{
+                color: 'text.primary',
+                fontWeight: 600,
+              }}
+            />
+
+            <Action {...{ onDelete, onEdit }} config={node} paths={active} />
+          </>
+        );
+
         return (
           <>
-            <ListItem>
-              <ListItemIcon className={classes.icon}>
-                {!active.length ? (
+            {!active.length ? (
+              <ListItem>
+                <ListItemIcon className={classes.icon}>
                   <Core.Icon color="disabled" code="faMinus" />
-                ) : (
-                  <IconButton
-                    size="large"
-                    onClick={() =>
-                      onActive(active.slice(0, isMultiple ? -2 : -1))
-                    }
-                  >
-                    <Core.Icon code="faChevronLeft" />
-                  </IconButton>
-                )}
-              </ListItemIcon>
+                </ListItemIcon>
 
-              <ListItemText
-                primary={t(`widgets:lbl-widgets.${node.widget}`)}
-                primaryTypographyProps={{
-                  color: 'text.primary',
-                  fontWeight: 600,
-                }}
-              />
+                {currentComponent}
+              </ListItem>
+            ) : (
+              <ListItemButton
+                onClick={() => onActive(active.slice(0, isMultiple ? -2 : -1))}
+              >
+                <ListItemIcon className={classes.icon}>
+                  <Core.Icon code="faChevronLeft" />
+                </ListItemIcon>
 
-              <Action {...{ onDelete, onEdit }} config={node} paths={active} />
-            </ListItem>
+                {currentComponent}
+              </ListItemButton>
+            )}
 
             <Items
               {...{ active, classes, onActive, onDelete, onEdit }}

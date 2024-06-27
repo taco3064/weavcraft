@@ -14,7 +14,7 @@ export default function Action({
   onEdit,
 }: ActionProps) {
   const { t } = useTranslation();
-  const { widget } = config;
+  const { component } = config;
 
   return (
     <Toolbar
@@ -25,11 +25,11 @@ export default function Action({
       <ConfirmToggle
         subject={t('ttl-delete-confirm')}
         onConfirm={() => onDelete({ target: config, paths })}
-        message={t('widgets:msg-delete-widget-confirm', {
-          widget: t(`widgets:lbl-widgets.${widget}`),
+        message={t('widgets:msg-delete-confirm.component', {
+          component: t(`widgets:lbl-component.${component}`),
         })}
         toggle={
-          <Tooltip title={t('widgets:btn-delete-widget')}>
+          <Tooltip title={t('widgets:btn-delete.component')}>
             <IconButton>
               <Core.Icon code="faTrash" color="disabled" />
             </IconButton>
@@ -37,7 +37,7 @@ export default function Action({
         }
       />
 
-      <Tooltip title={t('widgets:btn-edit-widget')}>
+      <Tooltip title={t('widgets:btn-edit.component')}>
         <IconButton
           color="info"
           onClick={(e) => {

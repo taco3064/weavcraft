@@ -3,7 +3,7 @@ import { useQueries } from '@tanstack/react-query';
 import { getHierarchyDataById, getSuperiorHierarchies } from '~web/services';
 import { useTutorialMode } from '~web/contexts';
 import type { InitializationConfig } from './useInitializationConfig.types';
-import type { QueryFunctionParams } from '~web/services';
+import type { QueryFunctionParams } from '../imports.types';
 
 export function useInitializationConfig<T>(
   serviceFn: (params: QueryFunctionParams<[string]>) => Promise<T>,

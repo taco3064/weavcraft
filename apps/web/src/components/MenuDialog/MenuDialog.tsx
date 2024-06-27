@@ -9,22 +9,16 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
-import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import { Trans } from 'next-i18next';
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 
+import { SlideDownTransition, SlideUpTransition } from '~web/themes';
 import { useDialogStyles } from './MenuDialog.styles';
-import type { MenuDialogProps, SubTransitionProps } from './MenuDialog.types';
-
-const SubTransition = forwardRef<unknown, SubTransitionProps>(
-  function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
-  }
-);
+import type { MenuDialogProps } from './MenuDialog.types';
 
 export default function MenuDialog({
-  TransitionComponent,
+  TransitionComponent = SlideUpTransition,
   indicator,
   items,
   open,
@@ -42,13 +36,17 @@ export default function MenuDialog({
     <>
       {!subProps?.items?.length ? null : (
         <MenuDialog
-          TransitionComponent={SubTransition}
           indicator={subProps.indicator}
           items={subProps.items}
           open={Boolean(subProps.items.length)}
           title={subProps.title}
           onClose={() => setSubProps(undefined)}
           onItemClick={onItemClick}
+          TransitionComponent={
+            TransitionComponent === SlideUpTransition
+              ? SlideDownTransition
+              : SlideUpTransition
+          }
         />
       )}
 

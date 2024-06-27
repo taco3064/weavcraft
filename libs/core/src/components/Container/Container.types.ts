@@ -6,7 +6,7 @@ import type { PropsWithMappedData } from '../../hooks';
 
 type MuiContainerProps = Pick<
   ComponentProps<typeof MuiContainer>,
-  'children' | 'disableGutters' | 'maxWidth'
+  'children' | 'disableGutters' | 'id' | 'maxWidth'
 >;
 
 export type ContainerProps<D extends JsonObject> = PropsWithMappedData<

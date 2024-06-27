@@ -3,24 +3,30 @@ import type * as Tsm from 'ts-morph';
 import type { Get } from 'type-fest';
 
 import type {
-  DataBindingPropsWithPath,
-  ElementNodePropsWithPath,
-  EventCallbackPropsWithPath,
-  PrimitiveValuePropsWithPath,
+  DataBindingPropDefinition,
+  ElementNodePropDefinitions,
+  EventCallbackPropDefinitions,
+  PrimitivePropDefinitions,
   PropTypeDefinitions,
   PropsDefinition,
 } from '~web/services';
 
-type WidgetPropTypeDefinitions = {
-  DataBinding: Get<DataBindingPropsWithPath, ['dataBindingProps', string]>;
-  ElementNode: Get<ElementNodePropsWithPath, ['elementNodeProps', string]>;
+type WidgetPropDefinitions = {
+  ElementNode: Get<ElementNodePropDefinitions, ['elementNodeProps', string]>;
 
+  DataBinding: Get<
+    DataBindingPropDefinition,
+    [
+      'dataBindingProps',
+      'data' | 'records' | 'propMapping' | `${string}.propMapping`
+    ]
+  >;
   EventCallback: Get<
-    EventCallbackPropsWithPath,
+    EventCallbackPropDefinitions,
     ['eventCallbackProps', string]
   >;
   PrimitiveValue: Get<
-    PrimitiveValuePropsWithPath,
+    PrimitivePropDefinitions,
     ['primitiveValueProps', string]
   >;
 };
@@ -35,15 +41,15 @@ export type GetPropsDefinitionsReturn = Pick<
   'elementNodeProps' | 'eventCallbackProps' | 'primitiveValueProps'
 >;
 
-export type GetDefinitionFn = (
+export type GetPropsDefinitionFn = (
   propsType: WidgetPropTypes,
   ...[type, options]: GetDefinitionArgs
-) => WidgetPropTypeDefinitions[typeof propsType] | false;
+) => WidgetPropDefinitions[typeof propsType] | false;
 
 export type GetDefinitionFns<T extends WidgetPropTypes = WidgetPropTypes> = {
   [K in T]: ((
     ...[type, options]: GetDefinitionArgs
-  ) => WidgetPropTypeDefinitions[K] | false)[];
+  ) => WidgetPropDefinitions[K] | false)[];
 };
 
 export type GetPropertyWithAllTypesFn = (

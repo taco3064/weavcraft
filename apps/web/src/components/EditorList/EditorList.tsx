@@ -11,6 +11,7 @@ import type { EditorListProps } from './EditorList.types';
 
 export default function EditorList({
   description,
+  icon,
   title,
   render,
   onClose,
@@ -23,11 +24,13 @@ export default function EditorList({
         className={classes.root}
         subheader={
           <ListSubheader className={classes.subheader}>
-            {onClose && (
+            {(icon || onClose) && (
               <ListItemIcon className={classes.icon}>
-                <IconButton size="large" onClick={onClose}>
-                  <Core.Icon code="faAngleRight" />
-                </IconButton>
+                {icon || (
+                  <IconButton size="large" onClick={onClose}>
+                    <Core.Icon code="faAngleRight" />
+                  </IconButton>
+                )}
               </ListItemIcon>
             )}
 
@@ -37,13 +40,21 @@ export default function EditorList({
               primaryTypographyProps={{
                 variant: 'h6',
                 color: 'text.primary',
+                display: 'row',
                 fontWeight: 600,
               }}
               secondaryTypographyProps={{
                 variant: 'caption',
                 color: 'text.secondary',
+                display: 'row',
               }}
             />
+
+            {icon && onClose && (
+              <IconButton size="large" onClick={onClose}>
+                <Core.Icon code="faClose" />
+              </IconButton>
+            )}
           </ListSubheader>
         }
       >
