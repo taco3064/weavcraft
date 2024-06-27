@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { ImageListItemProps } from '../ImageListItem';
-import type { PropsWithMappedStore, SlotElement } from '../../hooks';
+import type { PropsWithMappedStore } from '../../hooks';
 
 type MuiImageListProps = Pick<
   ComponentProps<typeof MuiImageList>,
@@ -13,8 +13,7 @@ type MuiImageListProps = Pick<
 export type ImageListProps<D extends JsonObject> = PropsWithMappedStore<
   D,
   MuiImageListProps & {
-    itemAction?: SlotElement;
-    itemProps?: Omit<ImageListItemProps<D>, 'data' | 'action'>;
+    itemProps?: Omit<ImageListItemProps<D>, 'data'>;
     onItemActionClick?: (item: D) => void;
   }
 >;

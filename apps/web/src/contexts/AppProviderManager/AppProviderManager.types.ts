@@ -3,7 +3,7 @@ import type { AppProps as NextAppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { Palette } from '@mui/material/styles';
 
-import type { PaletteCode } from '~web/themes';
+import type { PaletteCode } from '../imports.types';
 
 type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   P,

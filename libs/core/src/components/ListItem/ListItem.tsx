@@ -89,7 +89,12 @@ export default function ListItem<D extends JsonObject>(
       )}
 
       {!nestedContent && !id ? null : (
-        <MuiListItem disableGutters id={id} data-testid="ListItemNested">
+        <MuiListItem
+          disableGutters
+          disablePadding
+          id={id}
+          data-testid="ListItemNested"
+        >
           {nestedContent}
         </MuiListItem>
       )}

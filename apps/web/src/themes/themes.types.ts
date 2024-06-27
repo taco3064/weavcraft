@@ -5,6 +5,6 @@ import * as Palettes from './palettes';
 
 export type PaletteCode = keyof typeof Palettes;
 
-export type TransitionProps = MuiTransitionProps & {
+export interface TransitionProps extends MuiTransitionProps {
   children: ReactElement;
-};
+}

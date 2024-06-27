@@ -10,24 +10,35 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import DataStructureList from '../DataStructureList';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
-import PropsSettingTabs, { type ConfigType } from '../PropsSettingTabs';
-import { upsertWidgetConfig, type WidgetConfigs } from '~web/services';
+import PropsSettingList from '../PropsSettingList';
+import { upsertWidgetConfig } from '~web/services';
 import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
 import { useWidgetRender } from '~web/hooks';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { WidgetEditorProps } from './WidgetEditor.types';
+
+import {
+  EditModeEnum,
+  ViewModeEnum,
+  type WidgetEditorProps,
+} from './WidgetEditor.types';
 
 import {
   PortalWrapper,
   useTogglePortal,
   useTutorialMode,
-  withPropsDefinition,
+  withCorePropsDefinition,
 } from '~web/contexts';
 
-export default withPropsDefinition(function WidgetEditor({
+import type {
+  ConfigPaths,
+  ComponentConfig,
+  WidgetConfigs,
+} from '../imports.types';
+
+export default withCorePropsDefinition(function WidgetEditor({
   config,
   marginTop,
   maxWidth,
@@ -37,40 +48,44 @@ export default withPropsDefinition(function WidgetEditor({
   const isTutorialMode = useTutorialMode();
 
   const [, startTransition] = useTransition();
-  const [editing, setEditing] = useState<RenderConfig>();
-  const [previewMode, setPreviewMode] = useState(false);
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
-  const [activeProps, setActiveProps] = useState<ConfigType>('PrimitiveValue');
-  const [activePrimitive, setActivePrimitive] = useState<ConfigPaths>([]);
+  const [editing, setEditing] = useState<ComponentConfig>();
+  const [viewMode, setViewMode] = useState<ViewModeEnum>();
+  const [settingNode, setSettingNode] = useState<ConfigPaths>([]);
 
-  const [portalMode, setPortalMode] = useState<'treeView' | 'setting'>(
-    'treeView'
+  const [editMode, setEditMode] = useState<EditModeEnum>(
+    EditModeEnum.ElementNode
   );
 
-  const [value, setValue] = useState<RenderConfig>(() =>
+  const [value, setValue] = useState<WidgetConfigs>(() =>
     !config ? {} : JSON.parse(JSON.stringify(config))
   );
 
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { containerEl, onToggle } = useTogglePortal();
   const { classes } = useMainStyles({ marginTop });
 
-  const { onDeleteNode, onConfigChange, ...changeEvents } = useChangeEvents(
-    value,
-    setValue
+  const { containerEl, onToggle } = useTogglePortal(() =>
+    setViewMode(undefined)
   );
 
-  const withAppendNode = useNodeCreateButton(
+  const { onDeleteNode, onConfigChange, onStructureChange, ...changeEvents } =
+    useChangeEvents(value, setValue);
+
+  const withNodeCreateButton = useNodeCreateButton(
     NodeCreateButton,
-    previewMode,
+    value.dataStructure,
+    viewMode === ViewModeEnum.Preview,
     changeEvents
   );
 
-  const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
-    <WidgetEl key={key} {...withAppendNode(props, config)} />
-  ));
+  const generate = useWidgetRender(
+    value.dataStructure || [],
+    (WidgetEl, { config, key, props }) => (
+      <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
+    )
+  );
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertWidgetConfig,
@@ -90,33 +105,58 @@ export default withPropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          {!previewMode && value.widget && (
-            <Tooltip title={t('widgets:btn-widget-structure')}>
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => onToggle(true)}
-              >
-                <Core.Icon code="faCode" />
-              </IconButton>
-            </Tooltip>
+          {viewMode !== ViewModeEnum.Preview && (
+            <>
+              <Tooltip title={t('widgets:btn-widget-settings')}>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => onToggle(true)}
+                >
+                  <Core.Icon code="faCode" />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title={t('widgets:btn-data-structure')}>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() =>
+                    startTransition(() => {
+                      onToggle(true);
+                      setViewMode(ViewModeEnum.DataStructure);
+                    })
+                  }
+                >
+                  <Core.Icon code="faDatabase" />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
 
-          {value.widget && (
-            <Tooltip
-              title={
-                previewMode ? t('btn-undo') : t('widgets:btn-widget-preview')
+          <Tooltip
+            title={
+              viewMode === ViewModeEnum.Preview
+                ? t('btn-undo')
+                : t('widgets:btn-widget-preview')
+            }
+          >
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() =>
+                setViewMode(
+                  viewMode === ViewModeEnum.Preview
+                    ? undefined
+                    : ViewModeEnum.Preview
+                )
               }
             >
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() => setPreviewMode(!previewMode)}
-              >
-                <Core.Icon code={previewMode ? 'faUndo' : 'faEye'} />
-              </IconButton>
-            </Tooltip>
-          )}
+              <Core.Icon
+                code={viewMode === ViewModeEnum.Preview ? 'faUndo' : 'faEye'}
+              />
+            </IconButton>
+          </Tooltip>
 
           <Tooltip title={t('btn-save')}>
             <IconButton
@@ -140,63 +180,71 @@ export default withPropsDefinition(function WidgetEditor({
           className={classes.content}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {value.widget ? (
+          {value.component ? (
             generate(value)
           ) : (
             <NodeCreateButton
               variant="node"
-              onClick={(widget) => setValue({ widget })}
+              onClick={(component) => setValue({ ...value, component })}
             />
           )}
+
+          <PortalWrapper containerEl={containerEl}>
+            {viewMode === ViewModeEnum.DataStructure ? (
+              <DataStructureList
+                value={value.dataStructure || []}
+                onChange={onStructureChange}
+                onClose={() => onToggle(false)}
+              />
+            ) : (
+              <>
+                {editMode === EditModeEnum.ElementNode && (
+                  <ElementNodeList
+                    active={activeNode}
+                    config={value}
+                    onActive={(paths) => setActiveNode(paths)}
+                    onClose={() => onToggle(false)}
+                    onDelete={({ paths }) =>
+                      startTransition(() => {
+                        const active = paths.slice(
+                          0,
+                          typeof paths[paths.length - 1] === 'string' ? -1 : -2
+                        );
+
+                        onDeleteNode(paths);
+                        onToggle(paths.length > 0);
+                        setActiveNode(active);
+                      })
+                    }
+                    onEdit={({ target, paths }) =>
+                      startTransition(() => {
+                        onToggle(true);
+                        setSettingNode(paths);
+                        setEditMode(EditModeEnum.PropsSetting);
+                        setEditing(target);
+                      })
+                    }
+                  />
+                )}
+
+                {editMode === EditModeEnum.PropsSetting && editing && (
+                  <PropsSettingList
+                    config={editing}
+                    paths={settingNode}
+                    widget={value as WidgetConfigs}
+                    onChange={onConfigChange}
+                    onClose={() =>
+                      startTransition(() => {
+                        setEditMode(EditModeEnum.ElementNode);
+                        setEditing(undefined);
+                      })
+                    }
+                  />
+                )}
+              </>
+            )}
+          </PortalWrapper>
         </Container>
-
-        <PortalWrapper containerEl={containerEl}>
-          {portalMode === 'treeView' && (
-            <ElementNodeList
-              active={activeNode}
-              config={value}
-              onActive={(paths) => setActiveNode(paths)}
-              onClose={() => onToggle(false)}
-              onDelete={({ paths }) =>
-                startTransition(() => {
-                  const active = paths.slice(
-                    0,
-                    typeof paths[paths.length - 1] === 'string' ? -1 : -2
-                  );
-
-                  onDeleteNode(paths);
-                  onToggle(paths.length > 0);
-                  setActiveNode(active);
-                })
-              }
-              onEdit={({ target, paths }) =>
-                startTransition(() => {
-                  onToggle(true);
-                  setActivePrimitive(paths);
-                  setActiveProps('PrimitiveValue');
-                  setPortalMode('setting');
-                  setEditing(target);
-                })
-              }
-            />
-          )}
-
-          {portalMode === 'setting' && (
-            <PropsSettingTabs
-              active={activeProps}
-              config={editing}
-              paths={activePrimitive}
-              onActiveChange={setActiveProps}
-              onChange={onConfigChange}
-              onClose={() =>
-                startTransition(() => {
-                  setPortalMode('treeView');
-                  setEditing(undefined);
-                })
-              }
-            />
-          )}
-        </PortalWrapper>
       </Container>
     </Slide>
   );

@@ -39,14 +39,13 @@ describe('@weavcraft/core/components/Grid', () => {
       <Grid
         records={records}
         itemProps={{
+          content: <Container propMapping={{ children: 'content' }} />,
           propMapping: {
             icon: 'icon',
             title: 'title',
           },
         }}
-      >
-        <Container propMapping={{ children: 'content' }} />
-      </Grid>
+      />
     );
 
     const items = getAllByTestId('GridItem');
@@ -68,16 +67,17 @@ describe('@weavcraft/core/components/Grid', () => {
         itemVariant="unique"
         records={records}
         itemProps={{
+          content: [
+            <Container key="container" propMapping={{ children: 'content' }} />,
+            <Link key="link" propMapping={{ text: 'title' }} />,
+            <Button key="button" propMapping={{ text: 'icon' }} />,
+          ],
           propMapping: {
             icon: 'icon',
             title: 'title',
           },
         }}
-      >
-        <Container propMapping={{ children: 'content' }} />
-        <Link propMapping={{ text: 'title' }} />
-        <Button propMapping={{ text: 'icon' }} />
-      </Grid>
+      />
     );
 
     expect(getByTestId('Container')).toHaveTextContent(records[0].content);

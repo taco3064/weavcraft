@@ -1,42 +1,46 @@
 import { WidgetPropTypes } from '@weavcraft/common';
 
 import type { PropTypeDefinitions } from '../common';
-import type { WidgetType } from '../configs';
+import type { CoreComponent } from '../configs';
 
-type BasePropsWithPath<
+type BasePropDefinitions<
   T extends WidgetPropTypes,
-  D extends PropTypeDefinitions.PropTypes
-> = Partial<Record<`${Uncapitalize<T>}Props`, { [Path: string]: D }>>;
+  P extends { [Path: string]: PropTypeDefinitions.PropTypes }
+> = Partial<Record<`${Uncapitalize<T>}Props`, P>>;
 
-export type DataBindingPropsWithPath = BasePropsWithPath<
+export type DataBindingPropDefinition = BasePropDefinitions<
   'DataBinding',
-  PropTypeDefinitions.Data | PropTypeDefinitions.Mapping
+  Record<'propMapping' | `${string}.propMapping`, PropTypeDefinitions.Mapping> &
+    Record<'data' | 'records', PropTypeDefinitions.Data>
 >;
 
-export type ElementNodePropsWithPath = BasePropsWithPath<
+export type ElementNodePropDefinitions = BasePropDefinitions<
   'ElementNode',
-  PropTypeDefinitions.Node
+  { [Path: string]: PropTypeDefinitions.Node }
 >;
 
-export type EventCallbackPropsWithPath = BasePropsWithPath<
+export type EventCallbackPropDefinitions = BasePropDefinitions<
   'EventCallback',
-  PropTypeDefinitions.Function
+  { [Path: string]: PropTypeDefinitions.Function }
 >;
 
-export type PrimitiveValuePropsWithPath = BasePropsWithPath<
+export type PrimitivePropDefinitions = BasePropDefinitions<
   'PrimitiveValue',
-  | PropTypeDefinitions.Boolean
-  | PropTypeDefinitions.Icon
-  | PropTypeDefinitions.Number
-  | PropTypeDefinitions.OneOf
-  | PropTypeDefinitions.String
+  {
+    [Path: string]:
+      | PropTypeDefinitions.Boolean
+      | PropTypeDefinitions.Icon
+      | PropTypeDefinitions.Number
+      | PropTypeDefinitions.OneOf
+      | PropTypeDefinitions.String;
+  }
 >;
 
 export interface PropsDefinition
-  extends DataBindingPropsWithPath,
-    ElementNodePropsWithPath,
-    EventCallbackPropsWithPath,
-    PrimitiveValuePropsWithPath {
+  extends DataBindingPropDefinition,
+    ElementNodePropDefinitions,
+    EventCallbackPropDefinitions,
+    PrimitivePropDefinitions {
   componentName: string;
   group?: string;
 }
@@ -44,7 +48,7 @@ export interface PropsDefinition
 export type DefinitionIDB = Record<
   'core',
   {
-    key: WidgetType;
+    key: CoreComponent;
     value: PropsDefinition;
   }
 >;

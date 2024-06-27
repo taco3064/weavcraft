@@ -1,9 +1,13 @@
 import MuiListItem from '@mui/material/ListItem';
 import MuiListItemButton from '@mui/material/ListItemButton';
-import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import type { BaseItemProps, PropsWithMappedData } from '../../hooks';
+import type {
+  BaseItemProps,
+  PropsWithMappedData,
+  SlotElement,
+} from '../../hooks';
 
 export type ListItemVariant = 'button' | 'item' | 'link';
 
@@ -30,9 +34,9 @@ interface BaseListItemProps<
   nestedContent?: ReactNode;
   selected?: V extends 'button' ? boolean : undefined;
 
-  action?: ReactElement;
+  action?: SlotElement;
   disabled?: V extends 'item' ? undefined : boolean;
-  indicator?: ReactElement;
+  indicator?: SlotElement;
   variant?: V;
 
   onItemClick?: V extends 'button' ? (data: D) => void : undefined;

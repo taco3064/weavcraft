@@ -22,8 +22,6 @@ export default function List<
     disableSubheaderGutters,
 
     //* - ListItem
-    itemAction,
-    itemIndicator,
     itemProps,
     itemVariant,
     records = [],
@@ -35,8 +33,12 @@ export default function List<
     ...listProps
   } = useStoreProps(props);
 
-  const ItemAction = useSlotElement(itemAction, onItemActionClick);
-  const ItemIndicator = useSlotElement(itemIndicator, onItemIndicatorClick);
+  const ItemAction = useSlotElement(itemProps?.action, onItemActionClick);
+
+  const ItemIndicator = useSlotElement(
+    itemProps?.indicator,
+    onItemIndicatorClick
+  );
 
   return (
     <MuiList
@@ -54,7 +56,8 @@ export default function List<
                 variant="subtitle1"
                 color="primary"
                 display="flex"
-                gap={8}
+                fontWeight={600}
+                gap={2}
                 marginRight="auto"
               >
                 {icon && (

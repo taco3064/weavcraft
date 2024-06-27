@@ -1,4 +1,4 @@
-import type { HierarchyData, SuperiorHierarchy } from '~web/services';
+import type { HierarchyData, SuperiorHierarchy } from '../imports.types';
 
 export interface InitializationConfig<T> {
   hash: string;

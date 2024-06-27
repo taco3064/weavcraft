@@ -1,22 +1,41 @@
 import type { ContainerProps } from '@mui/material/Container';
+import type { DataStructureListProps } from '../DataStructureList';
 
-import type { ConfigChangeHandler } from '../PropsSettingTabs';
-import type { ConfigPaths, RenderConfig } from '~web/hooks';
-import type { PortalContainerEl } from '~web/contexts';
+import type {
+  ComponentConfig,
+  ConfigPaths,
+  CoreComponent,
+  PortalContainerEl,
+  PropsSettingChangeHandler,
+  WidgetConfigs,
+} from '../imports.types';
 
-import type { WidgetConfigs, WidgetType } from '~web/services';
+export enum EditModeEnum {
+  ElementNode,
+  PropsSetting,
+}
+
+export enum ViewModeEnum {
+  DataStructure,
+  Preview,
+}
 
 export type NodeCreateVariant = 'action' | 'node';
 
 export interface ChangeEvents {
-  onAddChild: (config: RenderConfig, path: string, widget: WidgetType) => void;
-  onConfigChange: ConfigChangeHandler;
+  onAddChild: (
+    config: ComponentConfig,
+    path: string,
+    component: CoreComponent
+  ) => void;
+  onConfigChange: PropsSettingChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
+  onStructureChange: NonNullable<DataStructureListProps['onChange']>;
 
   onAddLastChild: (
-    config: RenderConfig,
+    config: ComponentConfig,
     path: string,
-    widget: WidgetType
+    component: CoreComponent
   ) => void;
 }
 
@@ -32,8 +51,8 @@ export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
 }
 
 export interface NodeCreateButtonProps {
+  config?: ComponentConfig;
   path?: string;
   variant: NodeCreateVariant;
-  widgetId?: WidgetType;
-  onClick: (widget: WidgetType) => void;
+  onClick: (component: CoreComponent) => void;
 }

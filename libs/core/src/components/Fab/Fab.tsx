@@ -20,6 +20,7 @@ export default function Fab<D extends JsonObject>(props: FabProps<D>) {
   return (
     <GeneratePropsProvider>
       <PortalContainer
+        key={containerId}
         id={containerId}
         onContainerRetrieved={(container) => {
           setCssPosition('absolute');

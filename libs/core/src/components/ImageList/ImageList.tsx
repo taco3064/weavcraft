@@ -10,14 +10,13 @@ export default function ImageList<D extends JsonObject>(
   props: ImageListProps<D>
 ) {
   const {
-    itemAction,
     itemProps,
     records = [],
     onItemActionClick,
     ...imageListProps
   } = useStoreProps(props);
 
-  const Action = useSlotElement(itemAction, onItemActionClick);
+  const Action = useSlotElement(itemProps?.action, onItemActionClick);
   const { classes } = useCommonStyles();
 
   return (

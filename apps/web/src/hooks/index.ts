@@ -2,4 +2,6 @@ export * from './useAppMenuItems';
 export * from './useAuth';
 export * from './useBreakpoints';
 export * from './useInitializationConfig';
-export * from './useWidget';
+export * from './useNodeFinder';
+export * from './usePropsInjection';
+export * from './useWidgetRender';

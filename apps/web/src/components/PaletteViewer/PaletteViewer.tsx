@@ -44,7 +44,7 @@ export default function PaletteViewer({
   });
 
   const theme = useTheme();
-  const noneText = t('themes:lbl-none');
+  const noneText = t('lbl-none');
 
   const defaultSeriesProps = useMemo<DefaultSeriesProps>(
     () => ({

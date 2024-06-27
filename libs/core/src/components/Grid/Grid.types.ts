@@ -1,5 +1,5 @@
 import MuiGrid from '@mui/material/Grid';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import type { PropsWithMappedStore } from '../../hooks';
@@ -7,7 +7,7 @@ import type { GridItemProps } from '../GridItem';
 
 type MuiGridProps = Pick<
   ComponentProps<typeof MuiGrid>,
-  'columns' | 'justifyContent' | 'spacing'
+  'columns' | 'id' | 'justifyContent' | 'spacing'
 >;
 
 export type ItemVariant = 'common' | 'unique';
@@ -22,9 +22,8 @@ export type GridProps<
 > = PropsWithMappedStore<
   D,
   Pick<MuiGridProps, 'justifyContent' | 'spacing'> & {
-    children?: ReactNode;
     columns?: Extract<MuiGridProps['columns'], number>;
     itemVariant?: V;
-    itemProps?: Omit<GridItemProps<D>, 'children' | 'data' | 'icon' | 'title'>;
+    itemProps?: Omit<GridItemProps<D>, 'data'>;
   }
 >;

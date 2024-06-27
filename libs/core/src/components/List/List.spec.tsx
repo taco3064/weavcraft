@@ -60,14 +60,14 @@ describe('@weavcraft/core/components/List', () => {
     const { baseElement } = render(
       <List
         records={records}
-        itemIndicator={<button>O</button>}
+        onItemIndicatorClick={onItemIndicatorClick}
         itemProps={{
+          indicator: <button>O</button>,
           propMapping: {
             primary: 'title',
             secondary: 'content',
           },
         }}
-        onItemIndicatorClick={onItemIndicatorClick}
       />
     );
 
@@ -88,9 +88,9 @@ describe('@weavcraft/core/components/List', () => {
     const { baseElement } = render(
       <List
         records={records}
-        itemAction={<button>Click me</button>}
         onItemActionClick={onItemActionClick}
         itemProps={{
+          action: <button>Click me</button>,
           propMapping: {
             primary: 'title',
             secondary: 'content',
@@ -114,13 +114,13 @@ describe('@weavcraft/core/components/List', () => {
     const { getByText, getAllByTestId } = render(
       <List
         records={records}
-        itemAction={
-          <Collapse
-            toggle={<button>View</button>}
-            propMapping={{ children: 'content' }}
-          />
-        }
         itemProps={{
+          action: (
+            <Collapse
+              toggle={<button>View</button>}
+              propMapping={{ children: 'content' }}
+            />
+          ),
           propMapping: {
             primary: 'title',
           },

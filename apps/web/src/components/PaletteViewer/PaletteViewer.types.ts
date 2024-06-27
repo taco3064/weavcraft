@@ -1,5 +1,5 @@
 import type { PieChartProps } from '@mui/x-charts';
-import type { ThemePalette } from '~web/services';
+import type { ThemePalette } from '../imports.types';
 
 export type DefaultSeriesProps = Partial<PieChartProps['series'][number]>;
 export type PaletteColor = { name: ColorName; color?: string };

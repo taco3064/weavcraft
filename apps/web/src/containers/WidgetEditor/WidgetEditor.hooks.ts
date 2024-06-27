@@ -3,16 +3,22 @@ import _get from 'lodash/get';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { createElement, useMemo } from 'react';
-import { useTranslation } from 'next-i18next';
+import { nanoid } from 'nanoid';
 import type CoreType from '@weavcraft/core';
 import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
-import { getWidgetNodePaths } from '~web/hooks';
-import { usePropsDefinition } from '~web/contexts';
+import { useCorePropsGetter } from '~web/contexts';
+import { useNodePaths } from '~web/hooks';
+
 import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
-import type { MenuItemOptions, RenderConfig } from '~web/hooks';
-import type { WidgetConfigs, WidgetType } from '~web/services';
+
+import type {
+  MenuItemOptions,
+  ComponentConfig,
+  WidgetConfigs,
+  CoreComponent,
+} from '../imports.types';
 
 const { default: _Core, ...CATEGORIES } = Core;
 
@@ -24,27 +30,29 @@ const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
 };
 
 export function useChangeEvents(
-  value: RenderConfig,
-  onChange: (value: RenderConfig) => void
+  value: WidgetConfigs,
+  onChange: (value: WidgetConfigs) => void
 ): ChangeEvents {
+  const { getNodePaths } = useNodePaths();
+
   return {
-    onAddChild: (config, path, widget) => {
+    onAddChild: (config, path, component) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: { widget },
+        value: { component },
       };
 
       _set(config, ['props', path], propConfig);
       onChange({ ...value });
     },
 
-    onAddLastChild: (config, path, widget) => {
-      const nodes: WidgetConfigs[] =
+    onAddLastChild: (config, path, component) => {
+      const nodes: ComponentConfig[] =
         _get(config, ['props', path, 'value']) || [];
 
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: [...nodes, { widget }],
+        value: [...nodes, { component }],
       };
 
       _set(config, ['props', path], propConfig);
@@ -65,10 +73,10 @@ export function useChangeEvents(
 
     onDeleteNode: (paths) => {
       if (!paths.length) {
-        return onChange({} as RenderConfig);
+        return onChange({} as WidgetConfigs);
       }
 
-      const fullPaths = getWidgetNodePaths(paths);
+      const fullPaths = getNodePaths(paths);
       const lastPath = fullPaths.pop() as string | number;
 
       if (typeof lastPath !== 'number') {
@@ -82,85 +90,83 @@ export function useChangeEvents(
 
       onChange({ ...value });
     },
-  };
-}
 
-export function useNodeCreate({
-  path,
-  variant,
-  widgetId,
-}: Pick<NodeCreateButtonProps, 'path' | 'variant' | 'widgetId'>) {
-  const { t } = useTranslation();
-  const { getDefinition } = usePropsDefinition();
+    onStructureChange: ({ fieldPath, oldFieldPath, paths, isStructure }) => {
+      const structure = value.dataStructure || [];
 
-  const subtitle = [widgetId && t(`widgets:lbl-widgets.${widgetId}`), path]
-    .filter(Boolean)
-    .join(' - ');
+      const target = paths.reduce<WidgetConfigs['dataStructure']>(
+        (result, path) => {
+          const target = result?.find(
+            (field) => Array.isArray(field) && field[0] === path
+          );
 
-  return {
-    subtitle,
+          return Array.isArray(target) ? target[1] : undefined;
+        },
+        structure
+      );
 
-    tooltip: [
-      t(`widgets:btn-add-${variant === 'action' ? 'trigger' : 'widget'}`),
-      !subtitle ? '' : ` (${subtitle})`,
-    ].join(' '),
+      const index =
+        target?.findIndex((field) => {
+          const [fieldPath] = Array.isArray(field) ? field : [field];
 
-    items: useMemo(
-      () =>
-        Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
-          (acc, [category, widgets]) => {
-            const items = (Object.keys(widgets) as WidgetType[]).reduce<
-              MenuItemOptions[]
-            >((result, widget) => {
-              const { elementNodeProps = {}, eventCallbackProps = {} } =
-                getDefinition(widget);
+          return fieldPath === oldFieldPath;
+        }) ?? -1;
 
-              if (
-                variant !== 'action' ||
-                'onClick' in eventCallbackProps ||
-                _get(elementNodeProps, 'toggle.definition.clickable')
-              ) {
-                result.push({ label: `widgets:lbl-widgets.${widget}` });
-              }
+      if (index < 0) {
+        target?.push(isStructure ? [fieldPath, []] : fieldPath);
+      } else if (target && fieldPath !== oldFieldPath) {
+        _set(target, isStructure ? [index, 0] : [index], fieldPath);
+      } else {
+        target?.splice(index, 1);
+      }
 
-              return result;
-            }, []);
-
-            if (items.length) {
-              acc.push({
-                icon: ICON[category as keyof typeof ICON],
-                label: `widgets:lbl-category.${category}`,
-                items,
-              });
-            }
-
-            return acc;
-          },
-          []
-        ),
-      [variant, getDefinition]
-    ),
+      onChange({
+        ...value,
+        dataStructure: JSON.parse(JSON.stringify(structure)),
+      });
+    },
   };
 }
 
 export function useNodeCreateButton(
   AppendNode: ComponentType<NodeCreateButtonProps>,
+  dataStructure: WidgetConfigs['dataStructure'],
   disabled: boolean,
   {
     onAddChild,
     onAddLastChild,
   }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
 ) {
-  const { getDefinition } = usePropsDefinition();
+  const getCoreProps = useCorePropsGetter();
 
-  return <P extends object>(props: P, config: RenderConfig): P => {
+  return <P extends object>(props: P, config: ComponentConfig): P => {
     if (disabled) {
       return props;
     }
 
-    const { widget } = config;
-    const definition = getDefinition(widget);
-    const { elementNodeProps } = definition;
+    const { definition } = getCoreProps(config.component);
+    const { dataBindingProps, elementNodeProps } = definition;
+
+    if (
+      dataBindingProps &&
+      'records' in dataBindingProps &&
+      !_get(config, ['props', 'records', 'value'])
+    ) {
+      const mappingPath = Object.keys(dataBindingProps).find((key) =>
+        key.endsWith('.propMapping')
+      );
+
+      const idIndexes = _get(config, [
+        'props',
+        mappingPath as string,
+        'value',
+        'id',
+      ]);
+
+      const idField = _get(dataStructure, idIndexes) as string;
+
+      _set(props, 'records', [!idField ? {} : _set({}, idField, nanoid())]);
+    }
 
     return Object.entries(elementNodeProps || {}).reduce(
       (result, [path, { definition }]) => {
@@ -170,12 +176,12 @@ export function useNodeCreateButton(
         const appendNode = createElement(AppendNode, {
           key: 'append',
           path,
+          config,
           variant: clickable ? 'action' : 'node',
-          widgetId: widget,
-          onClick: (widget) => {
+          onClick: (component) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
-            onAdd(config, path, widget);
+            onAdd(config, path, component);
           },
         });
 
@@ -190,4 +196,47 @@ export function useNodeCreateButton(
       props
     );
   };
+}
+
+export function useWidgetOptions(variant: NodeCreateButtonProps['variant']) {
+  const getCoreProps = useCorePropsGetter();
+
+  return useMemo(
+    () =>
+      Object.entries(CATEGORIES).reduce<MenuItemOptions[]>(
+        (acc, [category, components]) => {
+          const items = (Object.keys(components) as CoreComponent[]).reduce<
+            MenuItemOptions[]
+          >((result, component) => {
+            const { definition } = getCoreProps(component);
+
+            const { elementNodeProps = {}, eventCallbackProps = {} } =
+              definition;
+
+            if (
+              /^(Avatar|Icon)$/.test(component) ||
+              variant !== 'action' ||
+              'onClick' in eventCallbackProps ||
+              _get(elementNodeProps, 'toggle.definition.clickable')
+            ) {
+              result.push({ label: `widgets:lbl-component.${component}` });
+            }
+
+            return result;
+          }, []);
+
+          if (items.length) {
+            acc.push({
+              icon: ICON[category as keyof typeof ICON],
+              label: `widgets:lbl-category.${category}`,
+              items,
+            });
+          }
+
+          return acc;
+        },
+        []
+      ),
+    [variant, getCoreProps]
+  );
 }
