@@ -16,7 +16,7 @@ export enum EnumAuthSupabaseProvider {
 export class AuthSupabaseSignInBodyDTO {
   @IsString()
   @JSONSchema({
-    example: 'http://localhost:3000',
+    example: 'https://weavcraft.com/_auth',
   })
   redirectTo: string;
 }

@@ -31,6 +31,13 @@ export function getSwaggerSpec(
     return routingControllersToSpec(storage, routingControllerOptions, {
       components: {
         schemas: Object(schemas),
+        securitySchemes: {
+          authentication: {
+            type: 'apiKey',
+            name: 'Authorization',
+            in: 'header',
+          },
+        },
       },
     });
   } catch (err) {

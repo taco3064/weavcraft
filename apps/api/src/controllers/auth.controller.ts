@@ -1,4 +1,5 @@
 import { AuthLoginBySupabaseBodyDTO, AuthLoginResDTO } from '@weavcraft/common';
+import { APIHelper } from '@weavcraft/helpers';
 import { AuthUseCase } from '@weavcraft/modules';
 import { Body, JsonController, Post } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
@@ -14,10 +15,14 @@ export class AuthController {
 
   @Post('/login/supabase')
   @ResponseSchema(AuthLoginResDTO)
-  async loginBySupabase(
-    @Body() body: AuthLoginBySupabaseBodyDTO
-  ): Promise<AuthLoginResDTO> {
-    return this.authUseCase.loginBySupabase(body.accessToken);
+  @APIHelper.ApiResDataSchema(AuthLoginResDTO, {
+    description: 'Login or create user by Supabase',
+  })
+  async loginBySupabase(@Body() body: AuthLoginBySupabaseBodyDTO) {
+    const data = await this.authUseCase.loginOrCreateUserBySupabase(
+      body.accessToken
+    );
+    return APIHelper.apiResData(data);
   }
 
   @Post('/logout')

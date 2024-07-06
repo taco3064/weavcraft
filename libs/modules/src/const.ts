@@ -6,6 +6,7 @@ export const INJECT_EXTERNAL_SUPABASE = 'supabaseClient';
 
 /* repositories */
 export const INJECT_REPO_TEST = 'testRepo';
+export const INJECT_REPO_USER = 'userRepo';
 
 export const INJECT_INSTANCE_JWT = 'jwtInstance';
 /* use case */
