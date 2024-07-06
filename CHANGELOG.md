@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.44](https://github.com/taco3064/weavcraft/compare/v0.0.43...v0.0.44) (2024-07-06)
+
+
+### Features
+
+* **api/controllers:** adjust auth controller use loginOrCreateUserBySupabase usecase ([40458ad](https://github.com/taco3064/weavcraft/commit/40458ad1fa03bde895400a52822ae953d5a11a0d))
+* **api/iocadpater:** register userRepository and devDbMongoClient ([2269476](https://github.com/taco3064/weavcraft/commit/22694764c87cda716ddd774d000db6e8ea1038c6))
+* **apps/api:** add dev mongodb client ([975de46](https://github.com/taco3064/weavcraft/commit/975de464e4eb9a5e2cbd239f4b7f2f1aae0d70c2))
+* **apps/api:** add user, me controllers ([a516ac0](https://github.com/taco3064/weavcraft/commit/a516ac058d534e2ffd318e886b23cb8c691fea06))
+* **apps/api:** openapi components add authentication security schema ([8716a8b](https://github.com/taco3064/weavcraft/commit/8716a8bc143c38e71c396f803810533801e474ea))
+* **common/types:** define user types ([866f926](https://github.com/taco3064/weavcraft/commit/866f9266a7bb8a228e825c4ced3c248af214e52c))
+* **libs/common:** add user dto, and adjust supabase redirectTo example ([6d845d5](https://github.com/taco3064/weavcraft/commit/6d845d54b6b545c5a4dfd0c7d3fca73fd81dc622))
+* **libs/modules:** export user and me modules ([cc8e34b](https://github.com/taco3064/weavcraft/commit/cc8e34bef4946a84e9ced10b598a8fad2d7ccf1a))
+* **libs/repos:** add mongoose user schema ([0773a07](https://github.com/taco3064/weavcraft/commit/0773a07217b8c6b0212bd44b4bb708c15d3ce9c9))
+* **modules/auth:** adjust usecase login or create user by supabase login ([b2c3b93](https://github.com/taco3064/weavcraft/commit/b2c3b93ad271891d5b407c52e2054bae79ae61fb))
+* **modules/me:** add me usecase module ([afdff53](https://github.com/taco3064/weavcraft/commit/afdff537e317f3b45a8ed38b7cc618acff185e5d))
+* **modules/user:** add user usecase, repository modules ([cb0d622](https://github.com/taco3064/weavcraft/commit/cb0d622b144ebc1538f48bc6b8e96e803a27efef))
+
 ### [0.0.43](https://github.com/taco3064/weavcraft/compare/v0.0.42...v0.0.43) (2024-06-27)
 
 
