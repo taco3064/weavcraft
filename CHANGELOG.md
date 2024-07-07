@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.45](https://github.com/taco3064/weavcraft/compare/v0.0.44...v0.0.45) (2024-07-07)
+
+
+### Features
+
+* **controllers/auth:** adjust /auth/login/supabase api, login or signup user by Supabase ([d2e891b](https://github.com/taco3064/weavcraft/commit/d2e891bc6092814837c2a1a6db69499f0a06e1ae)), closes [#138](https://github.com/taco3064/weavcraft/issues/138)
+* **libs/common:** user type add phone, nikename, avatarUrl, and providers ([dfc9cdd](https://github.com/taco3064/weavcraft/commit/dfc9cdd87e18fc4de01a843f0d88990a302fddbd)), closes [#138](https://github.com/taco3064/weavcraft/issues/138)
+* **libs/repos:** user schema add nickname, phone, acatarUrl, providers ([a482254](https://github.com/taco3064/weavcraft/commit/a482254bac6ee562caefcec559f285bdfb24c349))
+* **modules/auth:** adjust usecase supaLoginCreateOrUpdateUser ([e35d896](https://github.com/taco3064/weavcraft/commit/e35d896cdef25a1efa356b395062242dcc8ec224)), closes [#138](https://github.com/taco3064/weavcraft/issues/138)
+* **modules/user:** repo add updateById, usecase add updateBySupaUser ([0fd024b](https://github.com/taco3064/weavcraft/commit/0fd024b795a992031ab2f01fc7c2724dfb68d528)), closes [#138](https://github.com/taco3064/weavcraft/issues/138)
+
+
+### Bug Fixes
+
+* **modules/me:** throw invalid error if user not found ([f83ba16](https://github.com/taco3064/weavcraft/commit/f83ba16704344a647b2ec393fd968a23747c5b11))
+
 ### [0.0.44](https://github.com/taco3064/weavcraft/compare/v0.0.43...v0.0.44) (2024-07-06)
 
 
