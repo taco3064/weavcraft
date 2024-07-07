@@ -31,6 +31,11 @@ export class UserRepository {
     return created.toJSON();
   }
 
+  async updateById(id: string, data: User): Promise<UserData | null> {
+    const updated = await this.model.findByIdAndUpdate(id, data);
+    return updated?.toJSON() ?? null;
+  }
+
   async deleteById(id: string): Promise<DeleteResult | null> {
     const data = await this.model.findById(id);
     if (!data) {
