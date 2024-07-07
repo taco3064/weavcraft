@@ -14,11 +14,15 @@ export class MeUseCase {
   ) {}
 
   async getMeByToken(token: string) {
-    const { payload, err, errMsg } =
+    const { payload, err, errMsg, success } =
       this.jwtHelper.verifyToken<UserData>(token);
     if (err) {
       throw new HttpException(errMsg, 401);
     }
-    return await this.userRepo.findById(payload.id);
+    const data = await this.userRepo.findById(payload.id);
+    if (!success || !data) {
+      throw new HttpException('Invalid token', 401);
+    }
+    return data;
   }
 }
