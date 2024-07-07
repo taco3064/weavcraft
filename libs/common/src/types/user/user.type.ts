@@ -1,8 +1,12 @@
 import { CreatedAtDocument, UpdatedAtDocument } from '../mongodb';
 
 export type User = {
-  name?: string;
   email: string;
+  name?: string;
+  phone?: string;
+  nickname?: string;
+  avatarUrl?: string;
+  providers: string[];
 } & UpdatedAtDocument &
   CreatedAtDocument;
 
