@@ -4,8 +4,12 @@ import { Schema } from 'mongoose';
 
 export const userSchema = new Schema<UserData>(
   {
-    name: { type: String, required: false },
     email: { type: String, required: true },
+    name: { type: String, required: false },
+    nickname: { type: String, required: false },
+    phone: { type: String, required: false },
+    avatarUrl: { type: String, required: false },
+    providers: { type: [String], default: [] },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
