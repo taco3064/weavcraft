@@ -22,7 +22,7 @@ export class AuthUseCase {
     private readonly jwtHelper: Jwt
   ) {}
 
-  async loginOrCreateUserBySupabase(token: string): Promise<AuthLoginResDTO> {
+  async supaLoginCreateOrUpdateUser(token: string): Promise<AuthLoginResDTO> {
     const supaUserRes = await this.authSupabaseUCase.validateToken(token);
     const { data, error } = supaUserRes;
     if (error) {
@@ -36,6 +36,8 @@ export class AuthUseCase {
     let user = users[0] ?? null;
     if (!user) {
       user = await this.userUCase.createBySupaUser(supaUserRes);
+    } else {
+      user = await this.userUCase.updateBySupaUser(user, supaUserRes);
     }
     const accessToken = this.jwtHelper.createToken(user);
     return {
