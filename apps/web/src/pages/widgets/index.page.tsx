@@ -1,4 +1,5 @@
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';

@@ -34,6 +34,7 @@
   "msg-delete-hierarchy-group-confirm": "確定要刪除資料夾{{name}}及其所有內容嗎？",
   "msg-filter-placeholder": "搜尋資料夾或項目...",
   "msg-no-data": "沒有資料",
+  "msg-no-description": "沒有相關說明",
   "msg-success-create": "新增{{name}}完成",
   "msg-success-delete": "刪除{{name}}完成",
   "msg-success-update": "更新{{name}}完成",

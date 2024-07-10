@@ -1,15 +1,18 @@
 import * as Dnd from '@dnd-kit/core';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useId, useMemo, useState, useTransition } from 'react';
 
 import { EnumHierarchyType } from '~web/services';
+import type {
+  BodyScrollDeviation,
+  HierarchyListProps,
+} from './HierarchyList.types';
 import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
-import type { HierarchyListProps } from './HierarchyList.types';
 
-let bodyScrollTop = 0;
+let bodyScrollDeviation: BodyScrollDeviation = null;
 
-export function useDndContextProps(
-  ids: Record<Lowercase<EnumHierarchyType>, string>
-): Dnd.DndContextProps {
+export function useDndContextProps(): [string, Dnd.DndContextProps] {
+  const groupId = useId();
+
   const sensors = Dnd.useSensors(
     Dnd.useSensor(Dnd.MouseSensor, {
       activationConstraint: {
@@ -24,41 +27,58 @@ export function useDndContextProps(
     })
   );
 
-  return {
-    sensors,
-    onDragStart: () => {
-      Object.values(ids).forEach((id) => {
-        const el = global.document?.getElementById(id);
+  return [
+    groupId,
+    {
+      sensors,
+      onDragStart: () => {
+        const initScrollTop = global.document?.body.scrollTop || 0;
 
-        bodyScrollTop = global.document?.body.scrollTop || 0;
+        global.document?.getElementById(groupId)?.scrollIntoView({
+          behavior: 'auto',
+          block: 'start',
+        });
 
-        if (el) {
-          const { height } = el.getBoundingClientRect();
+        const scrollTop = global.document?.body.scrollTop || 0;
 
-          el.style.height = `${height}px`;
+        bodyScrollDeviation = {
+          hasLeft: false,
+          defaults: initScrollTop - scrollTop,
+          start: scrollTop,
+          value: 0,
+        };
+      },
+      onDragMove: ({ over }) => {
+        if (bodyScrollDeviation) {
+          const hasLeft = bodyScrollDeviation.hasLeft || !over;
+
+          bodyScrollDeviation = {
+            ...bodyScrollDeviation,
+            hasLeft,
+            ...(hasLeft &&
+              !over && {
+                value:
+                  bodyScrollDeviation.start -
+                  (global.document?.body.scrollTop || 0),
+              }),
+          };
         }
-      });
-    },
-    onDragEnd: ({ active, over }) => {
-      if (active && over) {
-        console.log('active:', active.id, ', over:', over.id);
-      }
+      },
+      onDragEnd: ({ active, over }) => {
+        bodyScrollDeviation = null;
 
-      bodyScrollTop = 0;
-
-      Object.values(ids).forEach((id) => {
-        const el = global.document?.getElementById(id);
-
-        if (el) {
-          el.style.height = '';
+        if (active && over) {
+          console.log('active:', active.id, ', over:', over.id);
         }
-      });
+      },
     },
-  };
+  ];
 }
 
-export function useDroppable<P>(data: HierarchyData<P>, disabled = false) {
-  const { id, type } = data;
+export function useDroppable<P>(
+  { id, type }: HierarchyData<P>,
+  disabled = false
+) {
   const drop = Dnd.useDroppable({
     id,
     disabled: disabled || type !== EnumHierarchyType.GROUP,
@@ -70,27 +90,33 @@ export function useDroppable<P>(data: HierarchyData<P>, disabled = false) {
   };
 }
 
-export function useDraggable<P>(data: HierarchyData<P>, disabled = false) {
-  const { id } = data;
+export function useDraggable<P>({ id }: HierarchyData<P>, disabled = false) {
   const { active } = Dnd.useDndContext();
+  const { defaults = 0, value = 0 } = bodyScrollDeviation || {};
+
   const drag = Dnd.useDraggable({ id, disabled });
+  const scrollTop = global.document?.body.scrollTop || 0;
 
   return {
     dragRef: drag.setNodeRef,
     isDragging: drag.isDragging,
-    dragProps: {
-      style: {
-        opacity: !active || active.id === id ? 1 : 0.6,
-        transform: !drag.transform
-          ? undefined
-          : `translate(${drag.transform.x}px, ${
-              drag.transform.y - bodyScrollTop
-            }px) scale(0.9)`,
+    props: {
+      draggable: {
+        style: {
+          opacity: !active || active.id === id ? 1 : 0.6,
+          ...(drag.transform && {
+            transform: `translate(${drag.transform.x}px, ${
+              drag.transform.y - scrollTop - defaults - value
+            }px) scale(${active?.id !== id ? 1 : 0.9})`,
+          }),
+        },
       },
-      ...(!disabled && {
-        ...drag.attributes,
-        ...drag.listeners,
-      }),
+      toggle: {
+        ...(!disabled && {
+          ...drag.attributes,
+          ...drag.listeners,
+        }),
+      },
     },
   };
 }
@@ -98,19 +124,23 @@ export function useDraggable<P>(data: HierarchyData<P>, disabled = false) {
 export function useQueryVariables<P>({
   category,
   superior,
-  renderPreview,
-}: Pick<HierarchyListProps<P>, 'category' | 'renderPreview' | 'superior'>) {
+  renderContent,
+}: Pick<HierarchyListProps<P>, 'category' | 'renderContent' | 'superior'>) {
   const [isPending, startTransition] = useTransition();
 
   const [params, setParams] = useState<SearchHierarchyParams>({
     category,
     superior,
-    withPayload: Boolean(renderPreview),
+    withPayload: renderContent instanceof Function,
   });
 
   useEffect(() => {
-    setParams({ category, superior, withPayload: Boolean(renderPreview) });
-  }, [category, superior, renderPreview]);
+    setParams({
+      category,
+      superior,
+      withPayload: renderContent instanceof Function,
+    });
+  }, [category, superior, renderContent]);
 
   return {
     isFiltering: Boolean(params.keyword?.trim()),

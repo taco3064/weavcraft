@@ -38,13 +38,14 @@ export default function HierarchyList<P>({
   maxWidth = false,
   superior,
   toolbarEl,
-  renderPreview,
+  renderContent,
   onMutationSuccess,
 }: HierarchyListProps<P>) {
   const isTutorialMode = useTutorialMode();
 
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
   const [upserted, setUpserted] = useState<UpsertedState<P>>();
+  const [groupId, contextProps] = useDndContextProps();
 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -52,7 +53,7 @@ export default function HierarchyList<P>({
   const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const { isFiltering, params, onParamsChange, ...variables } =
-    useQueryVariables({ category, superior, renderPreview });
+    useQueryVariables({ category, superior, renderContent });
 
   const {
     data = initialData || [],
@@ -78,8 +79,6 @@ export default function HierarchyList<P>({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [isTutorialMode, params]);
-  const ids = { group: useId(), item: useId() };
-  const contextProps = useDndContextProps(ids);
   const isLoading = [variables, query].some(({ isLoading }) => isLoading);
   const { group, item, selecteds, onDataSelect } = useDataStore(data);
 
@@ -137,16 +136,16 @@ export default function HierarchyList<P>({
                 </Typography>
               ) : (
                 <ImageList
-                  id={ids[type as keyof typeof ids]}
-                  variant="masonry"
+                  variant="quilted"
                   className={classes.list}
                   cols={cols}
                   gap={16}
+                  {...(type === 'group' && { id: groupId })}
                 >
                   {data.map((item) =>
                     item.type.toLowerCase() !== type ? null : (
                       <HierarchyListItem
-                        {...{ cols, icon, renderPreview }}
+                        {...{ cols, icon, renderContent }}
                         key={item.id}
                         data={item}
                         disableDrag={group.length < 1}

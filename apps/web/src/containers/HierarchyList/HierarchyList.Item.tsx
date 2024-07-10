@@ -1,11 +1,12 @@
-import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
 import Checkbox from '@mui/material/Checkbox';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import IconButton from '@mui/material/IconButton';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
@@ -25,17 +26,16 @@ export default function HierarchyListItem<P>({
   disableDrag = false,
   icon,
   selected = false,
-  renderPreview,
+  renderContent,
   onDeleteConfirm,
   onEditClick,
   onPublishClick,
   onSelect,
 }: HierarchyListItemProps<P>) {
   const { t } = useTranslation();
-  const { dragRef, isDragging, dragProps } = useDraggable(data, disableDrag);
+  const { dragRef, isDragging, props } = useDraggable(data, disableDrag);
   const { dropRef, isDropOver } = useDroppable(data, disableDrag);
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
-  const { style, ...toggleProps } = dragProps;
 
   const isTutorialMode = useTutorialMode();
   const isGroup = data.type === EnumHierarchyType.GROUP;
@@ -48,11 +48,11 @@ export default function HierarchyListItem<P>({
 
   return (
     <ImageListItem ref={dropRef}>
-      <Card className={classes.card} style={style}>
+      <Card {...props.draggable} className={classes.card}>
         <CardHeader
           title={data.title}
           titleTypographyProps={{
-            variant: 'subtitle2',
+            variant: 'subtitle1',
             color: 'text.primary',
             component: Link,
             href: `${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
@@ -70,40 +70,46 @@ export default function HierarchyListItem<P>({
             )
           }
           avatar={
-            <Avatar
+            <IconButton
               ref={dragRef}
               className={classes.dndToggle}
-              {...toggleProps}
+              disabled={disableDrag}
+              {...props.toggle}
             >
-              <Core.Icon
-                {...(!isGroup
-                  ? { code: icon, color: 'success' }
-                  : {
-                      code: isDropOver ? 'faFolderOpen' : 'faFolder',
-                      color: 'warning',
-                    })}
-              />
-            </Avatar>
+              <DragIndicatorIcon />
+            </IconButton>
           }
         />
 
-        {data.type === EnumHierarchyType.ITEM &&
-          !isDragging &&
-          renderPreview?.(data.payload)}
+        <CardMedia className={classes.icon}>
+          {data.type === EnumHierarchyType.GROUP && (
+            <Core.Icon
+              color="warning"
+              fontSize="inherit"
+              code={isDropOver ? 'faFolderOpen' : 'faFolder'}
+            />
+          )}
 
-        {data.description && (
-          <CardContent>
-            <Typography
-              role="textbox"
-              variant="body2"
-              color="text.secondary"
-              whiteSpace="pre-line"
-              className={classes.description}
-            >
-              {data.description}
-            </Typography>
-          </CardContent>
-        )}
+          {data.type === EnumHierarchyType.ITEM &&
+            !isDragging &&
+            (renderContent instanceof Function ? (
+              renderContent(data.payload)
+            ) : (
+              <Core.Icon code={icon} color="secondary" fontSize="inherit" />
+            ))}
+        </CardMedia>
+
+        <CardContent>
+          <Typography
+            className={classes.description}
+            variant="body2"
+            align="center"
+            color="text.secondary"
+            whiteSpace="pre-line"
+          >
+            {data.description || t('msg-no-description')}
+          </Typography>
+        </CardContent>
 
         {!isDragging && (
           <>

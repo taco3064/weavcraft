@@ -22,6 +22,13 @@ export type UpsertedState<P> = Pick<
   'data' | 'icon' | 'title'
 >;
 
+export type BodyScrollDeviation = null | {
+  hasLeft: boolean;
+  defaults: number;
+  start: number;
+  value: number;
+};
+
 //* Component Props
 type MuiContainerProps = Pick<ContainerProps, 'disableGutters' | 'maxWidth'>;
 
@@ -33,7 +40,7 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   initialData?: HierarchyData<P>[];
   superior?: string;
   toolbarEl?: PortalContainerEl;
-  renderPreview?: (payload?: P) => ReactNode;
+  renderContent?: (payload?: P) => ReactNode;
   onMutationSuccess?: (mode: MutationMode, item: HierarchyData<P>) => void;
 }
 
@@ -42,7 +49,7 @@ export interface HierarchyListSkeletonProps extends MuiContainerProps {
 }
 
 export interface HierarchyListItemProps<P>
-  extends Pick<HierarchyListProps<P>, 'icon' | 'renderPreview'> {
+  extends Pick<HierarchyListProps<P>, 'icon' | 'renderContent'> {
   cols: number;
   data: HierarchyData<P>;
   disableDrag?: boolean;

@@ -34,6 +34,7 @@
   "msg-delete-hierarchy-group-confirm": "Are you sure you want to delete the folder '{{name}}' and all its contents?",
   "msg-filter-placeholder": "Enter the search keyword...",
   "msg-no-data": "No data available.",
+  "msg-no-description": "No Description",
   "msg-success-create": "Successfully created {{name}}.",
   "msg-success-delete": "Successfully deleted {{name}}.",
   "msg-success-update": "Successfully updated {{name}}.",

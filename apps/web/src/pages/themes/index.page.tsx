@@ -64,7 +64,7 @@ export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
           icon="faPalette"
           maxWidth="md"
           superior={group}
-          renderPreview={(palette) => (
+          renderContent={(palette) => (
             <PaletteViewer
               disableBorder
               disableBorderRadius
