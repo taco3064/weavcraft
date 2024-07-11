@@ -1,5 +1,4 @@
 import Container from '@mui/material/Container';
-import Core from '@weavcraft/core';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -52,14 +51,13 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
         <TutorialModeAlert />
 
         <HierarchyList
-          {...{ initialData, toolbarEl }}
+          {...{ initialData, superiors, toolbarEl }}
           category="widgets"
           disableGroup={false}
           disableGutters
           disablePublish={false}
           icon="faPuzzlePiece"
           maxWidth="md"
-          superior={group}
         />
       </Container>
     );

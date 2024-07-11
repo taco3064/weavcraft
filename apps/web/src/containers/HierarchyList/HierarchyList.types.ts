@@ -1,15 +1,30 @@
 import type Core from '@weavcraft/core';
 import type { ContainerProps } from '@mui/material/Container';
+import type { DndContextProps } from '@dnd-kit/core';
 import type { ReactNode } from 'react';
 
 import type {
   HierarchyData,
   PortalContainerEl,
   SearchHierarchyParams,
+  SuperiorHierarchy,
 } from '../imports.types';
 
 //* Variables
 export type MutationMode = 'create' | 'update' | 'delete';
+
+export type SuperiorMutationHook = <P>(
+  options: Required<
+    Pick<
+      HierarchyListProps<P>,
+      'initialData' | 'superiors' | 'onMutationSuccess'
+    >
+  >
+) => {
+  isDragging: boolean;
+  ids: Record<'fab' | 'group', string>;
+  contextProps: DndContextProps;
+};
 
 export type UpsertedData<P> = Omit<
   Partial<HierarchyData<P>>,
@@ -38,7 +53,7 @@ export interface HierarchyListProps<P> extends MuiContainerProps {
   disablePublish?: boolean;
   icon: Core.IconCode;
   initialData?: HierarchyData<P>[];
-  superior?: string;
+  superiors: SuperiorHierarchy[];
   toolbarEl?: PortalContainerEl;
   renderContent?: (payload?: P) => ReactNode;
   onMutationSuccess?: (mode: MutationMode, item: HierarchyData<P>) => void;
@@ -53,22 +68,20 @@ export interface HierarchyListItemProps<P>
   cols: number;
   data: HierarchyData<P>;
   disableDrag?: boolean;
-  selected?: boolean;
   onDeleteConfirm?: (e: HierarchyData<P>) => void;
   onEditClick?: (e: UpsertedState<P>) => void;
   onPublishClick?: (e: HierarchyData<P>) => void;
-  onSelect?: (isSelected: boolean, data: HierarchyData<P>) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface HierarchyToolbarProps<P = any>
   extends Pick<
     HierarchyListProps<P>,
-    'category' | 'disableGroup' | 'superior' | 'toolbarEl'
+    'category' | 'disableGroup' | 'toolbarEl'
   > {
   children?: ReactNode;
+  superior?: string;
   onAdd: (e: UpsertedState<P>) => void;
-  onMoveToSuperiorFolder?: () => void;
 }
 
 export interface FilterToggleProps {
@@ -76,6 +89,12 @@ export interface FilterToggleProps {
   renderKey: string;
   values: SearchHierarchyParams;
   onSearch: (e: SearchHierarchyParams) => void;
+}
+
+export interface MoveToParentFolderFabProps {
+  className?: string;
+  disabled: boolean;
+  id: string;
 }
 
 export interface UpsertDialogProps<P> {

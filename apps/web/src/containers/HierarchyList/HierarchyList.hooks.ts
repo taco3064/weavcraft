@@ -1,17 +1,33 @@
 import * as Dnd from '@dnd-kit/core';
 import { useEffect, useId, useMemo, useState, useTransition } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useTranslation } from 'next-i18next';
 
-import { EnumHierarchyType } from '~web/services';
+import { EnumHierarchyType, updateHierarchyData } from '~web/services';
+import { useTutorialMode } from '~web/contexts';
+
+import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
+
 import type {
   BodyScrollDeviation,
   HierarchyListProps,
+  SuperiorMutationHook,
 } from './HierarchyList.types';
-import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
 
 let bodyScrollDeviation: BodyScrollDeviation = null;
 
-export function useDndContextProps(): [string, Dnd.DndContextProps] {
+export const useSuperiorMutation: SuperiorMutationHook = ({
+  initialData: data,
+  superiors,
+  onMutationSuccess,
+}) => {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+  const [dragging, setDragging] = useState(false);
+
   const groupId = useId();
+  const isTutorialMode = useTutorialMode();
 
   const sensors = Dnd.useSensors(
     Dnd.useSensor(Dnd.MouseSensor, {
@@ -27,19 +43,40 @@ export function useDndContextProps(): [string, Dnd.DndContextProps] {
     })
   );
 
-  return [
-    groupId,
-    {
+  const { mutate: updateSuperior } = useMutation({
+    mutationFn: updateHierarchyData,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: (data) => {
+      onMutationSuccess?.('update', data);
+
+      enqueueSnackbar(t('msg-success-update', { name: data.title }), {
+        variant: 'success',
+      });
+    },
+  });
+
+  return {
+    isDragging: dragging,
+
+    ids: {
+      fab: superiors[superiors.length - 2]?.id || 'root',
+      group: groupId,
+    },
+    contextProps: {
       sensors,
+
       onDragStart: () => {
         const initScrollTop = global.document?.body.scrollTop || 0;
+        const groupEl = global.document?.getElementById(groupId);
 
-        global.document?.getElementById(groupId)?.scrollIntoView({
+        groupEl?.scrollIntoView({
           behavior: 'auto',
-          block: 'start',
+          block: 'center',
         });
 
         const scrollTop = global.document?.body.scrollTop || 0;
+
+        setDragging(true);
 
         bodyScrollDeviation = {
           hasLeft: false,
@@ -65,15 +102,26 @@ export function useDndContextProps(): [string, Dnd.DndContextProps] {
         }
       },
       onDragEnd: ({ active, over }) => {
-        bodyScrollDeviation = null;
+        const target = data.find(({ id }) => active?.id === id);
 
-        if (active && over) {
-          console.log('active:', active.id, ', over:', over.id);
+        bodyScrollDeviation = null;
+        setDragging(false);
+
+        console.log(data, target, over);
+
+        if (target && over) {
+          updateSuperior({
+            isTutorialMode,
+            input: {
+              ...target,
+              superior: over.id === 'root' ? undefined : (over.id as string),
+            },
+          });
         }
       },
     },
-  ];
-}
+  };
+};
 
 export function useDroppable<P>(
   { id, type }: HierarchyData<P>,
@@ -100,6 +148,7 @@ export function useDraggable<P>({ id }: HierarchyData<P>, disabled = false) {
   return {
     dragRef: drag.setNodeRef,
     isDragging: drag.isDragging,
+
     props: {
       draggable: {
         style: {
@@ -123,9 +172,10 @@ export function useDraggable<P>({ id }: HierarchyData<P>, disabled = false) {
 
 export function useQueryVariables<P>({
   category,
-  superior,
+  superiors,
   renderContent,
-}: Pick<HierarchyListProps<P>, 'category' | 'renderContent' | 'superior'>) {
+}: Pick<HierarchyListProps<P>, 'category' | 'renderContent' | 'superiors'>) {
+  const superior = superiors[superiors.length - 1]?.id;
   const [isPending, startTransition] = useTransition();
 
   const [params, setParams] = useState<SearchHierarchyParams>({
@@ -152,39 +202,20 @@ export function useQueryVariables<P>({
   };
 }
 
-export function useDataStore<P>(data: HierarchyData<P>[]) {
-  const [selecteds, setSelecteds] = useState<string[]>([]);
+export function useDataCollections<P>(data: HierarchyData<P>[]) {
+  return useMemo(
+    () =>
+      data.reduce<Record<Lowercase<EnumHierarchyType>, HierarchyData<P>[]>>(
+        (result, item) => {
+          const type = item.type.toLowerCase() as Lowercase<EnumHierarchyType>;
 
-  useEffect(() => {
-    setSelecteds([]);
-  }, [data]);
-
-  return {
-    selecteds,
-
-    ...useMemo(
-      () =>
-        data.reduce<Record<Lowercase<EnumHierarchyType>, HierarchyData<P>[]>>(
-          (result, item) => {
-            const type =
-              item.type.toLowerCase() as Lowercase<EnumHierarchyType>;
-
-            return {
-              ...result,
-              [type]: [...result[type], item],
-            };
-          },
-          { group: [], item: [] }
-        ),
-      [data]
-    ),
-
-    onDataSelect: (isSelected: boolean, data: HierarchyData<P>) => {
-      const set = new Set(selecteds);
-
-      set.delete(data.id);
-      isSelected && set.add(data.id);
-      setSelecteds(Array.from(set));
-    },
-  };
+          return {
+            ...result,
+            [type]: [...result[type], item],
+          };
+        },
+        { group: [], item: [] }
+      ),
+    [data]
+  );
 }

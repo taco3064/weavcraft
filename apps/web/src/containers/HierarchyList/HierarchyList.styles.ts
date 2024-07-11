@@ -86,5 +86,11 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
       height: 'max-content',
       marginBottom: theme.spacing(6),
     },
+    toParentFab: {
+      position: 'fixed',
+      bottom: theme.spacing(2),
+      left: '50%',
+      transform: 'translateX(-50%)',
+    },
   })
 );

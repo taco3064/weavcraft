@@ -56,14 +56,13 @@ export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
         <TutorialModeAlert />
 
         <HierarchyList
-          {...{ initialData, toolbarEl }}
+          {...{ initialData, superiors, toolbarEl }}
           category="themes"
           disableGroup={false}
           disableGutters
           disablePublish={false}
           icon="faPalette"
           maxWidth="md"
-          superior={group}
           renderContent={(palette) => (
             <PaletteViewer
               disableBorder

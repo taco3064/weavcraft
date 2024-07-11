@@ -4,7 +4,7 @@ import Grow from '@mui/material/Grow';
 import ImageList from '@mui/material/ImageList';
 import Typography from '@mui/material/Typography';
 import { DndContext } from '@dnd-kit/core';
-import { Fragment, useId, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -14,6 +14,7 @@ import FilterToggle from './HierarchyList.FilterToggle';
 import HierarchyListItem from './HierarchyList.Item';
 import HierarchySkeleton from './HierarchyList.Skeleton';
 import HierarchyToolbar from './HierarchyList.Toolbar';
+import MoveToParentFolderFab from './HierarchyList.MoveToParentFolderFab';
 import UpsertDialog from './HierarchyList.UpsertDialog';
 import { deleteHierarchyData, getHierarchyData } from '~web/services';
 import { useBreakpointMatches } from '~web/hooks';
@@ -23,9 +24,9 @@ import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 import type { PortalContainerEl } from '../imports.types';
 
 import {
-  useDataStore,
-  useDndContextProps,
+  useDataCollections,
   useQueryVariables,
+  useSuperiorMutation,
 } from './HierarchyList.hooks';
 
 export default function HierarchyList<P>({
@@ -36,7 +37,7 @@ export default function HierarchyList<P>({
   icon,
   initialData,
   maxWidth = false,
-  superior,
+  superiors,
   toolbarEl,
   renderContent,
   onMutationSuccess,
@@ -45,7 +46,6 @@ export default function HierarchyList<P>({
 
   const [filterEl, setFilterEl] = useState<PortalContainerEl>(null);
   const [upserted, setUpserted] = useState<UpsertedState<P>>();
-  const [groupId, contextProps] = useDndContextProps();
 
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,7 +53,7 @@ export default function HierarchyList<P>({
   const { matched: cols } = useBreakpointMatches({ xs: 2, sm: 3 });
 
   const { isFiltering, params, onParamsChange, ...variables } =
-    useQueryVariables({ category, superior, renderContent });
+    useQueryVariables({ category, superiors, renderContent });
 
   const {
     data = initialData || [],
@@ -63,6 +63,15 @@ export default function HierarchyList<P>({
     enabled: Boolean(params.keyword?.trim()) || isTutorialMode,
     queryKey: [params, isTutorialMode],
     queryFn: getHierarchyData,
+  });
+
+  const { ids, isDragging, contextProps } = useSuperiorMutation({
+    initialData: data,
+    superiors,
+    onMutationSuccess: (...e) => {
+      onRefetch();
+      onMutationSuccess?.(...e);
+    },
   });
 
   const { mutate: onDelete } = useMutation({
@@ -79,21 +88,23 @@ export default function HierarchyList<P>({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderKey = useMemo(() => nanoid(), [isTutorialMode, params]);
+  const collections = useDataCollections(data);
   const isLoading = [variables, query].some(({ isLoading }) => isLoading);
-  const { group, item, selecteds, onDataSelect } = useDataStore(data);
 
   return isLoading ? (
     <HierarchySkeleton {...{ cols, disableGutters, maxWidth }} />
   ) : (
     <Grow key={JSON.stringify(params)} in timeout={1200}>
-      <Container {...{ disableGutters, maxWidth }} className={classes.root}>
+      <Container
+        {...{ disableGutters, maxWidth }}
+        className={classes.root}
+        sx={{ border: '1px solid red' }}
+      >
         <HierarchyToolbar
-          {...{ category, disableGroup, isTutorialMode, superior, toolbarEl }}
+          {...{ category, disableGroup, isTutorialMode, toolbarEl }}
           ref={setFilterEl}
+          superior={superiors[superiors.length - 1]?.id}
           onAdd={setUpserted}
-          onMoveToSuperiorFolder={
-            !superior || !selecteds.length ? undefined : console.log
-          }
         >
           <FilterToggle
             containerEl={filterEl}
@@ -113,7 +124,15 @@ export default function HierarchyList<P>({
         </HierarchyToolbar>
 
         <DndContext {...contextProps} key={renderKey}>
-          {Object.entries({ group, item }).map(([type, data]) => (
+          {isDragging && (
+            <MoveToParentFolderFab
+              className={classes.toParentFab}
+              disabled={!superiors.length}
+              id={ids.fab}
+            />
+          )}
+
+          {Object.entries(collections).map(([type, data]) => (
             <Fragment key={type}>
               <Divider>
                 {t(isFiltering ? 'ttl-filter-result' : '{{type}}', {
@@ -140,7 +159,7 @@ export default function HierarchyList<P>({
                   className={classes.list}
                   cols={cols}
                   gap={16}
-                  {...(type === 'group' && { id: groupId })}
+                  {...(type === 'group' && { id: ids.group })}
                 >
                   {data.map((item) =>
                     item.type.toLowerCase() !== type ? null : (
@@ -148,13 +167,13 @@ export default function HierarchyList<P>({
                         {...{ cols, icon, renderContent }}
                         key={item.id}
                         data={item}
-                        disableDrag={group.length < 1}
-                        selected={selecteds.includes(item.id)}
+                        disableDrag={
+                          collections.group.length < 1 && !superiors.length
+                        }
+                        onEditClick={(e) => setUpserted(e)}
                         onDeleteConfirm={(input) =>
                           onDelete({ input, isTutorialMode })
                         }
-                        onEditClick={(e) => setUpserted(e)}
-                        onSelect={!superior ? undefined : onDataSelect}
                         onPublishClick={
                           disablePublish ? undefined : console.log
                         }

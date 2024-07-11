@@ -3,7 +3,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import Checkbox from '@mui/material/Checkbox';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -25,12 +24,10 @@ export default function HierarchyListItem<P>({
   data,
   disableDrag = false,
   icon,
-  selected = false,
   renderContent,
   onDeleteConfirm,
   onEditClick,
   onPublishClick,
-  onSelect,
 }: HierarchyListItemProps<P>) {
   const { t } = useTranslation();
   const { dragRef, isDragging, props } = useDraggable(data, disableDrag);
@@ -59,16 +56,6 @@ export default function HierarchyListItem<P>({
               isGroup ? data.id : `detail/${data.id}`
             }`,
           }}
-          action={
-            !onSelect ? null : (
-              <Checkbox
-                size="large"
-                checked={selected}
-                color="secondary"
-                onChange={(e) => onSelect(e.target.checked, data)}
-              />
-            )
-          }
           avatar={
             <IconButton
               ref={dragRef}
