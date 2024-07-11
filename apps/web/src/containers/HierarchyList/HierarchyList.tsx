@@ -95,11 +95,7 @@ export default function HierarchyList<P>({
     <HierarchySkeleton {...{ cols, disableGutters, maxWidth }} />
   ) : (
     <Grow key={JSON.stringify(params)} in timeout={1200}>
-      <Container
-        {...{ disableGutters, maxWidth }}
-        className={classes.root}
-        sx={{ border: '1px solid red' }}
-      >
+      <Container {...{ disableGutters, maxWidth }} className={classes.root}>
         <HierarchyToolbar
           {...{ category, disableGroup, isTutorialMode, toolbarEl }}
           ref={setFilterEl}
