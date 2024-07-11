@@ -11,10 +11,12 @@ import { Trans } from 'next-i18next';
 import { lazy, useState, type ComponentType } from 'react';
 
 import { MenuDialog } from '~web/components';
-import { useAuth, SIGNIN_OPTIONS, USER_SETTINGS } from '~web/hooks';
+import { USER_SETTINGS } from './UserSettings.const';
+import { useAuth, SIGNIN_OPTIONS } from '~web/hooks';
 import { useExpanded } from './UserSettings.hooks';
 import { useMainStyles } from './UserSettings.styles';
-import type { SigninMethod, UserSettingId } from '../imports.types';
+import type { SigninMethod } from '../imports.types';
+import type { UserSettingId } from './UserSettings.types';
 
 const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
   analytics: lazy(() => import('./UserSettings.Analytics')),

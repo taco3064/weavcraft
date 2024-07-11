@@ -1,18 +1,34 @@
 import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { MenuDialog } from '~web/components';
-import { useAuth, SIGNIN_OPTIONS, USER_MENU_ITEMS } from '~web/hooks';
+import { USER_SETTINGS } from '../UserSettings';
+import { useAuth, SIGNIN_OPTIONS } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
-import type { SigninMethod } from '../imports.types';
+import type { MenuItemOptions, SigninMethod } from '../imports.types';
 
 export default function UserAvatarMenu() {
   const [open, setOpen] = useState(false);
 
   const { isAuthenticated, signin, signout } = useAuth();
   const { classes } = useMenuStyles({ isAuthenticated });
+
+  const settings = useMemo(
+    () =>
+      USER_SETTINGS.reduce<MenuItemOptions[]>((acc, { id, icon, auth }) => {
+        const label = `lbl-${id}`;
+        const href = `/user-settings#${id}`;
+
+        if (!auth || isAuthenticated) {
+          acc.push({ icon, label, href });
+        }
+
+        return acc;
+      }, []),
+    [isAuthenticated]
+  );
 
   const handleItemClick = (label: string) => {
     if (label === 'btn-signout') {
@@ -37,9 +53,8 @@ export default function UserAvatarMenu() {
         onClose={() => setOpen(false)}
         onItemClick={handleItemClick}
         items={[
-          ...USER_MENU_ITEMS.map((item) =>
-            item.auth !== false && !isAuthenticated ? null : item
-          ),
+          ...settings,
+          settings.length > 1 ? 'divider' : null,
           isAuthenticated
             ? {
                 icon: 'faArrowRightFromBracket',

@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { USER_SETTINGS, UserSettingId } from '~web/hooks';
+import { USER_SETTINGS } from './UserSettings.const';
+import type { UserSettingId } from './UserSettings.types';
 
 export function useExpanded(isAuthenticated: boolean) {
   const { pathname, asPath, replace } = useRouter();
