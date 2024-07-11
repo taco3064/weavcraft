@@ -1,10 +1,8 @@
 import Head from 'next/head';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import type { GetServerSideProps } from 'next';
 
 import { AppProviderManager } from '~web/contexts';
-import { getServerSideTranslations } from './pages.utils';
 import type { AppProps } from '~web/contexts';
 
 function App({ Component, pageProps }: AppProps) {
@@ -29,9 +27,3 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 export default appWithTranslation(App);
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => ({
-  props: {
-    ...(await getServerSideTranslations(ctx)),
-  },
-});

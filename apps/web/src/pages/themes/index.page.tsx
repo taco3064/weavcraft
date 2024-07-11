@@ -32,7 +32,7 @@ export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
-      queryKey: [group as string, true],
+      queryKey: [group as string, isTutorialMode],
       queryFn: getSuperiorHierarchies,
     });
 

@@ -71,7 +71,6 @@ export const useItemStyles = makeStyles<{
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    fontSize: '6rem',
   },
 }));
 

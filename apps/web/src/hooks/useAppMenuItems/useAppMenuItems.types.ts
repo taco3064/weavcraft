@@ -21,5 +21,7 @@ export interface NavItem
 
 export type NavItems = Record<string, Pick<NavItem, 'auth' | 'icon'>>;
 
+/** @deprecated */
 export const SIGNIN_METHODS = ['google'] as const;
+/** @deprecated */
 export type SigninMethod = (typeof SIGNIN_METHODS)[number];

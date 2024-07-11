@@ -28,7 +28,7 @@ const nextConfig = {
     },
     {
       source: '/service/:path*',
-      destination: 'http://127.0.0.1:4000/:path*',
+      destination: 'https://api.weavcraft.com/:path*',
     },
   ],
   webpack: ({ plugins, ...config }) => ({

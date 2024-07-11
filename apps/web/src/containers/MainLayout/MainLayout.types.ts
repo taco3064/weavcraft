@@ -15,6 +15,7 @@ export type DefaultProps = {
   title: Omit<TypographyProps, 'ref'>;
 };
 
+//* Component Props Type
 export interface MainLayoutProps {
   children: ReactNode;
 }

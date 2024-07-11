@@ -68,7 +68,16 @@ export default function HierarchyListItem<P>({
           }
         />
 
-        <CardMedia className={classes.icon}>
+        <CardMedia
+          className={classes.icon}
+          sx={{
+            fontSize:
+              data.type !== EnumHierarchyType.ITEM ||
+              !(renderContent instanceof Function)
+                ? '6rem'
+                : null,
+          }}
+        >
           {data.type === EnumHierarchyType.GROUP && (
             <Core.Icon
               color="warning"

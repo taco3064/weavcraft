@@ -23,31 +23,14 @@ import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 import CompressionContent from './MainLayout.CompressionContent';
-import Logo from '~web/assets/imgs/icon.svg';
 import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
+import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
 import { TogglePortalProvider } from '~web/contexts';
 import { useAuth, useAppNavItems } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
-
-import type {
-  DefaultProps,
-  MainLayoutProps,
-  MenuMode,
-} from './MainLayout.types';
-
-const DEFAULT_PROPS: DefaultProps = {
-  logo: {
-    inheritViewBox: true,
-    component: Logo,
-  },
-  title: {
-    color: 'text.primary',
-    fontFamily: ['Monaco', 'comic sans MS'],
-    variant: 'h6',
-  },
-};
+import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState<MenuMode>();

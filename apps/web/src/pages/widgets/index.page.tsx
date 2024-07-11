@@ -27,9 +27,11 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
-      queryKey: [group as string, true],
+      queryKey: [group as string, isTutorialMode],
       queryFn: getSuperiorHierarchies,
     });
+
+    console.log(group, superiors);
 
     return (
       <Container component="main" maxWidth="md" className={classes.root}>

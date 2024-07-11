@@ -5,11 +5,12 @@ import { useMemo, useState } from 'react';
 
 import { MenuDialog } from '~web/components';
 import { USER_SETTINGS } from '../UserSettings';
-import { useAuth, SIGNIN_OPTIONS } from '~web/hooks';
+import { useAuth, useSigninOptions } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
-import type { MenuItemOptions, SigninMethod } from '../imports.types';
+import type { MenuItemOptions, SigninProvider } from '../imports.types';
 
 export default function UserAvatarMenu() {
+  const signinOptions = useSigninOptions();
   const [open, setOpen] = useState(false);
 
   const { isAuthenticated, signin, signout } = useAuth();
@@ -34,7 +35,7 @@ export default function UserAvatarMenu() {
     if (label === 'btn-signout') {
       signout();
     } else if (label.startsWith('btn-signin-with-')) {
-      signin(label.replace(/^.+-/, '') as SigninMethod);
+      signin(label.replace(/^.+-/, '') as SigninProvider);
     }
 
     setOpen(false);
@@ -63,7 +64,7 @@ export default function UserAvatarMenu() {
             : {
                 icon: 'faArrowRightToBracket',
                 label: 'btn-signin',
-                items: SIGNIN_OPTIONS,
+                items: signinOptions,
               },
         ]}
       />

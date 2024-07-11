@@ -12,10 +12,10 @@ import { lazy, useState, type ComponentType } from 'react';
 
 import { MenuDialog } from '~web/components';
 import { USER_SETTINGS } from './UserSettings.const';
-import { useAuth, SIGNIN_OPTIONS } from '~web/hooks';
+import { useAuth, useSigninOptions } from '~web/hooks';
 import { useExpanded } from './UserSettings.hooks';
 import { useMainStyles } from './UserSettings.styles';
-import type { SigninMethod } from '../imports.types';
+import type { SigninProvider } from '../imports.types';
 import type { UserSettingId } from './UserSettings.types';
 
 const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
@@ -25,11 +25,19 @@ const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
 };
 
 export default function UserSettings() {
+  const signinOptions = useSigninOptions();
+
   const { isAuthenticated, signin, signout } = useAuth();
   const { classes } = useMainStyles();
 
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useExpanded(isAuthenticated);
+
+  const handleSignin = (label: string) => {
+    const provider = label.replace(/^.+-/, '') as SigninProvider;
+
+    console.log(provider);
+  };
 
   return (
     <>
@@ -100,12 +108,12 @@ export default function UserSettings() {
           </Button>
 
           <MenuDialog
+            indicator={<Core.Icon code="faArrowRightToBracket" />}
+            items={signinOptions}
             open={open}
             title="btn-signin"
-            indicator={<Core.Icon code="faArrowRightToBracket" />}
             onClose={() => setOpen(false)}
-            onItemClick={(e) => signin(e.replace(/^.+-/, '') as SigninMethod)}
-            items={SIGNIN_OPTIONS}
+            onItemClick={handleSignin}
           />
         </>
       )}

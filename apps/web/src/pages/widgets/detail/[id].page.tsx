@@ -39,6 +39,8 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
     props
   );
 
+  console.log(superiors, hierarchy);
+
   return !hierarchy ? null : (
     <Container component="main" maxWidth="md" className={classes.root}>
       <Breadcrumbs
