@@ -2,7 +2,7 @@
 import _set from 'lodash/set';
 import { nanoid } from 'nanoid';
 
-import { Mock } from '../common';
+import { Mock, getMockData } from '../common';
 import { getThemePalette } from '../configs/configs';
 
 import type {
@@ -37,7 +37,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
           }
         })(config.url?.split('/').pop() as string);
 
-        return [200, result];
+        return getMockData(result);
       });
 
     mock.onGet(new RegExp(`^${baseURL}/hierarchy/.+$`)).reply((config) => {
@@ -46,7 +46,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
 
       hierarchyDb.read();
 
-      return [200, hierarchyDb.data[id]];
+      return getMockData(hierarchyDb.data[id]);
     });
 
     mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
@@ -83,7 +83,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
         }
       }
 
-      return [200, result];
+      return getMockData(result);
     });
 
     mock.onPost(`${baseURL}/hierarchy/create`).reply((config) => {
@@ -97,7 +97,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       hierarchyDb.update((store) => _set(store, input.id, input));
       hierarchyDb.write();
 
-      return [200, input];
+      return getMockData(input);
     });
 
     mock.onPost(`${baseURL}/hierarchy/update`).reply((config) => {
@@ -107,7 +107,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       hierarchyDb.update((store) => _set(store, input.id, input));
       hierarchyDb.write();
 
-      return [200, input];
+      return getMockData(input);
     });
 
     mock
@@ -132,7 +132,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
 
         hierarchyDb.write();
 
-        return [200];
+        return getMockData(undefined);
       });
   })
 );

@@ -11,7 +11,6 @@
   "btn-edit-group": "Edit Folder",
   "btn-edit-item": "Edit {{category}}",
   "btn-filter": "Filter",
-  "btn-move-to-superior-folder": "Move To Superior Folder",
   "btn-preview": "Preview",
   "btn-publish": "Publish To Gallery",
   "btn-reset": "Reset",
@@ -34,15 +33,16 @@
   "msg-delete-hierarchy-group-confirm": "Are you sure you want to delete the folder '{{name}}' and all its contents?",
   "msg-filter-placeholder": "Enter the search keyword...",
   "msg-no-data": "No data available.",
+  "msg-no-description": "No Description",
   "msg-success-create": "Successfully created {{name}}.",
   "msg-success-delete": "Successfully deleted {{name}}.",
+  "msg-success-signout": "You have successfully logged out.",
   "msg-success-update": "Successfully updated {{name}}.",
   "ttl-delete-confirm": "Confirm Deletion",
   "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
   "ttl-navigation-confirm": "Confirm Navigation",
   "ttl-user-options": "User Options",
-  "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
     "GROUP": "Folder Name",
@@ -80,6 +80,9 @@
     "websites": {
       "label": "Websites",
       "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
+    },
+    "user-settings": {
+      "label": "User Settings"
     }
   }
 }

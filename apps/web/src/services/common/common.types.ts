@@ -14,6 +14,12 @@ export type QueryFunctionParams<T extends QueryKey> = Pick<
   'queryKey'
 >;
 
+export type ResponseData<T> = {
+  success: boolean;
+  status: number;
+  data: T;
+};
+
 //* - Props Type Schema
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace PropTypeDefinitions {

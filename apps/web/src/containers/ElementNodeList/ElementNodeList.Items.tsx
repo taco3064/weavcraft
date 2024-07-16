@@ -21,7 +21,6 @@ export default function Items({
   onDelete,
   onEdit,
 }: ItemsProps) {
-  const { props = {} } = config;
   const { t } = useTranslation();
 
   const { childGroups, onPathsGenerate, onWidgetChildrenGenerate } =

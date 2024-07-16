@@ -7,7 +7,7 @@ import { LowSync, MemorySync } from 'lowdb';
 import { compareVersions } from 'compare-versions';
 import type { DBSchema, StoreNames } from 'idb';
 
-import type { MockSetupOptions } from './common.types';
+import type { MockSetupOptions, ResponseData } from './common.types';
 
 //* - IDB version management and auto-upgrade
 export const Idb = (() => {
@@ -110,17 +110,22 @@ export const Mock = (() => {
 })();
 
 //* - Catches ECONNREFUSED and 404 errors
-export function withConnRefusedCatch<P extends any[], R = void>(
-  serviceFn: (...args: P) => Promise<R>,
-  initialResult?: R
-): (...args: P) => Promise<R> {
-  return async (...args: P) => {
+export function withConnRefusedCatch<P, R = void>(
+  serviceFn: (params: P) => Promise<ResponseData<R>>,
+  initialResult?: R | ((data: R) => R)
+): (params: P) => Promise<R> {
+  const isInitialFunction = initialResult instanceof Function;
+
+  return async (params) => {
     try {
-      return await serviceFn(...args);
+      const { data } = await serviceFn(params);
+
+      return isInitialFunction ? initialResult(data) : data;
     } catch (e) {
       const { code, response } = e as AxiosError;
 
       if (
+        !isInitialFunction &&
         /^(development|test)$/.test(process.env.NODE_ENV) &&
         (code === 'ECONNREFUSED' || response?.status === 404)
       ) {
@@ -130,4 +135,15 @@ export function withConnRefusedCatch<P extends any[], R = void>(
       throw e;
     }
   };
+}
+
+export function getMockData<T>(data: T): [number, ResponseData<T>] {
+  return [
+    200,
+    {
+      success: true,
+      status: 200,
+      data,
+    },
+  ];
 }

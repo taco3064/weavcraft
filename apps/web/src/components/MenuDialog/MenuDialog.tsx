@@ -6,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
@@ -20,6 +21,7 @@ import type { MenuDialogProps } from './MenuDialog.types';
 export default function MenuDialog({
   TransitionComponent = SlideUpTransition,
   indicator,
+  isLoading,
   items,
   open,
   subtitle,
@@ -37,6 +39,7 @@ export default function MenuDialog({
       {!subProps?.items?.length ? null : (
         <MenuDialog
           indicator={subProps.indicator}
+          isLoading={isLoading}
           items={subProps.items}
           open={Boolean(subProps.items.length)}
           title={subProps.title}
@@ -88,6 +91,8 @@ export default function MenuDialog({
         )}
 
         <DialogContent className={classes.content}>
+          {isLoading && <LinearProgress />}
+
           {open && (
             <MenuList>
               {items.map((item, i) => {
@@ -98,7 +103,6 @@ export default function MenuDialog({
                 }
 
                 const { href, icon, label, items: subItems } = item;
-
                 const indicator = !icon ? undefined : <Core.Icon code={icon} />;
 
                 return (
@@ -106,6 +110,7 @@ export default function MenuDialog({
                     {...(href && { component: NextLink, href })}
                     key={label}
                     className={classes.item}
+                    disabled={isLoading}
                     onClick={() => {
                       if (subItems?.length) {
                         setSubProps({

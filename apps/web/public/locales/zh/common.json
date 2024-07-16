@@ -11,7 +11,6 @@
   "btn-edit-group": "編輯資料夾",
   "btn-edit-item": "編輯{{category}}",
   "btn-filter": "查詢",
-  "btn-move-to-superior-folder": "移至上層資料夾",
   "btn-preview": "預覽",
   "btn-publish": "分享到展示迴廊",
   "btn-reset": "重設",
@@ -34,15 +33,16 @@
   "msg-delete-hierarchy-group-confirm": "確定要刪除資料夾{{name}}及其所有內容嗎？",
   "msg-filter-placeholder": "搜尋資料夾或項目...",
   "msg-no-data": "沒有資料",
+  "msg-no-description": "沒有相關說明",
   "msg-success-create": "新增{{name}}完成",
   "msg-success-delete": "刪除{{name}}完成",
+  "msg-success-signout": "已成功登出",
   "msg-success-update": "更新{{name}}完成",
   "ttl-delete-confirm": "刪除確認",
   "ttl-filter-result": "查詢結果: {{type}}",
   "ttl-hierarchy-search": "搜尋{{name}}",
   "ttl-navigation-confirm": "即將離開當前頁面",
   "ttl-user-options": "用戶選項",
-  "ttl-user-settings": "用戶設定",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
     "GROUP": "資料夾名稱",
@@ -80,6 +80,9 @@
     "websites": {
       "label": "個人網站",
       "description": "查看、管理和自訂你的個人網站，包括 URL 設置、頁面配置和主題選擇"
+    },
+    "user-settings": {
+      "label": "用戶設定"
     }
   }
 }

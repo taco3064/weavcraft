@@ -1,49 +1,54 @@
+import * as React from 'react';
 import Cookies from 'js-cookie';
-import cl from 'color';
+import axios from 'axios';
 import createEmotionCache from '@emotion/cache';
-import createPalette from '@mui/material/styles/createPalette';
+import _camelCase from 'lodash/camelCase';
+import _set from 'lodash/set';
 import { createTheme, type Palette } from '@mui/material/styles';
-
-import {
-  createContext,
-  createRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { useTranslation } from 'next-i18next';
 
 import { PALETTES, components } from '~web/themes';
-import type { PaletteCode, ThemePalette } from '../imports.types';
+import { doSingOut, getAccessToken } from '~web/services';
+import type { PaletteCode, SigninInfo } from '../imports.types';
 
 import type {
   AppSettingsContextValue,
+  AuthInfo,
   SetterFns,
 } from './AppProviderManager.types';
 
+let REQ_OVERRIDE_ID: number;
+const DEFAULT_THEME: PaletteCode = 'WEAVCRAFT';
 const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
 
-//* Custom Hooks
-export const AppSettingsContext = createContext<AppSettingsContextValue>({
+const AUTH_INFO_KEYS = [
+  'accessToken',
+  'providerToken',
+  'refreshToken',
+  'tokenType',
+] as (keyof SigninInfo)[];
+
+export const AppSettingsContext = React.createContext<AppSettingsContextValue>({
   isTutorialMode: false,
   language: NEXT_PUBLIC_DEFAULT_LANGUAGE,
   languages: [NEXT_PUBLIC_DEFAULT_LANGUAGE],
-  palette: 'WEAVCRAFT',
+  palette: DEFAULT_THEME,
   palettes: Object.keys(PALETTES) as PaletteCode[],
-  setterRef: createRef<SetterFns>(),
+  setterRef: React.createRef<SetterFns>(),
 });
 
 export function useTutorialMode() {
-  const { isTutorialMode } = useContext(AppSettingsContext);
+  const { isTutorialMode } = React.useContext(AppSettingsContext);
 
   return isTutorialMode;
 }
 
 export function useAppSettings() {
   const { language, languages, palette, palettes, setterRef } =
-    useContext(AppSettingsContext);
+    React.useContext(AppSettingsContext);
 
   return {
     language,
@@ -55,45 +60,68 @@ export function useAppSettings() {
   };
 }
 
-export function usePalettePreview() {
-  const { palette, setPalette } = useAppSettings();
-  const resetRef = useRef(() => setPalette?.(palette as PaletteCode));
+export function useAuth() {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+  const { token } = React.useContext(AppSettingsContext);
+  const { asPath, pathname, query, replace } = useRouter();
+  const [path, hash] = asPath.split('#');
 
-  useEffect(() => resetRef.current, [resetRef]);
+  const authRef = React.useRef<(token: string) => void>();
+  const signinInfo = useSigninInfo(hash);
+
+  const { data: { accessToken = token } = {}, ...tokenState } = useQuery({
+    enabled: Boolean(signinInfo),
+    queryKey: [signinInfo as AuthInfo],
+    queryFn: getAccessToken,
+  });
+
+  const { mutate: onSignout, ...signoutState } = useMutation({
+    mutationFn: doSingOut,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: () => {
+      Cookies.remove('token');
+      axios.interceptors.request.eject(REQ_OVERRIDE_ID);
+      global.location?.reload();
+
+      enqueueSnackbar(t('msg-success-signout'), {
+        variant: 'success',
+      });
+    },
+  });
+
+  React.useImperativeHandle(
+    authRef,
+    () => (token) => {
+      REQ_OVERRIDE_ID = axios.interceptors.request.use((config) =>
+        _set(config, ['headers', 'Authorization'], token)
+      );
+
+      Cookies.set('token', token);
+      replace({ pathname, query }, path, { shallow: false });
+    },
+    [pathname, query, path, replace]
+  );
+
+  React.useEffect(() => {
+    if (accessToken) {
+      authRef.current?.(accessToken);
+    }
+  }, [accessToken]);
 
   return {
-    isPreviewMode: typeof palette !== 'string',
-
-    onPaletteApply: (palette?: Partial<ThemePalette>) => {
-      if (palette) {
-        const bgcolor = cl(
-          palette.background?.default || palette.background?.paper
-        );
-
-        setPalette?.(
-          createPalette({
-            ...palette,
-            mode: bgcolor.isDark() ? 'dark' : 'light',
-            divider:
-              palette.divider ||
-              bgcolor.negate().grayscale().alpha(0.12).hexa(),
-          })
-        );
-
-        return;
-      }
-
-      resetRef.current();
-    },
+    isAuthenticated: Boolean(accessToken),
+    isLoading: tokenState.isLoading || signoutState.isPending,
+    onSignout,
   };
 }
 
 export function usePalette() {
-  const [palette, setPalette] = useState<string | Palette>(
-    Cookies.get('palette') || 'WEAVCRAFT'
+  const [palette, setPalette] = React.useState<string | Palette>(
+    Cookies.get('palette') || DEFAULT_THEME
   );
 
-  const { cache, theme } = useMemo(
+  const { cache, theme } = React.useMemo(
     () => ({
       cache: createEmotionCache({
         key: 'weavcraft',
@@ -117,7 +145,7 @@ export function usePalette() {
     palette,
     theme,
 
-    setPalette: useCallback((palette: string | Palette) => {
+    setPalette: React.useCallback((palette: string | Palette) => {
       if (typeof palette === 'string') {
         Cookies.set('palette', palette);
       }
@@ -125,4 +153,27 @@ export function usePalette() {
       setPalette(palette);
     }, []),
   };
+}
+
+function useSigninInfo(hash: string) {
+  return React.useMemo(() => {
+    const validKeys = Object.values(AUTH_INFO_KEYS).flat();
+
+    const params = Object.fromEntries(
+      Array.from(new URLSearchParams(hash).entries()).map(([key, value]) => [
+        _camelCase(key) as keyof AuthInfo,
+        value,
+      ])
+    );
+
+    return validKeys.some((key) => !(key in params))
+      ? undefined
+      : Object.entries(params).reduce((acc, [key, value]) => {
+          const fieldName = _camelCase(key) as keyof SigninInfo;
+
+          return !AUTH_INFO_KEYS.includes(fieldName)
+            ? acc
+            : { ...acc, [fieldName]: value };
+        }, {} as AuthInfo);
+  }, [hash]);
 }
