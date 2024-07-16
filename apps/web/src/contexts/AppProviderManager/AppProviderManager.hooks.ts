@@ -5,7 +5,7 @@ import createEmotionCache from '@emotion/cache';
 import _camelCase from 'lodash/camelCase';
 import _set from 'lodash/set';
 import { createTheme, type Palette } from '@mui/material/styles';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
