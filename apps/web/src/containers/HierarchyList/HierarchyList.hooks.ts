@@ -1,15 +1,34 @@
 import * as Dnd from '@dnd-kit/core';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useId, useMemo, useState, useTransition } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { useTranslation } from 'next-i18next';
 
-import { EnumHierarchyType } from '~web/services';
+import { EnumHierarchyType, updateHierarchyData } from '~web/services';
+import { useTutorialMode } from '~web/contexts';
+
 import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
-import type { HierarchyListProps } from './HierarchyList.types';
 
-let bodyScrollTop = 0;
+import type {
+  BodyScrollDeviation,
+  HierarchyListProps,
+  SuperiorMutationHook,
+} from './HierarchyList.types';
 
-export function useDndContextProps(
-  ids: Record<Lowercase<EnumHierarchyType>, string>
-): Dnd.DndContextProps {
+let bodyScrollDeviation: BodyScrollDeviation = null;
+
+export const useSuperiorMutation: SuperiorMutationHook = ({
+  initialData: data,
+  superiors,
+  onMutationSuccess,
+}) => {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+  const [dragging, setDragging] = useState(false);
+
+  const groupId = useId();
+  const isTutorialMode = useTutorialMode();
+
   const sensors = Dnd.useSensors(
     Dnd.useSensor(Dnd.MouseSensor, {
       activationConstraint: {
@@ -24,41 +43,90 @@ export function useDndContextProps(
     })
   );
 
-  return {
-    sensors,
-    onDragStart: () => {
-      Object.values(ids).forEach((id) => {
-        const el = global.document?.getElementById(id);
+  const { mutate: updateSuperior } = useMutation({
+    mutationFn: updateHierarchyData,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: (data) => {
+      onMutationSuccess?.('update', data);
 
-        bodyScrollTop = global.document?.body.scrollTop || 0;
-
-        if (el) {
-          const { height } = el.getBoundingClientRect();
-
-          el.style.height = `${height}px`;
-        }
+      enqueueSnackbar(t('msg-success-update', { name: data.title }), {
+        variant: 'success',
       });
     },
-    onDragEnd: ({ active, over }) => {
-      if (active && over) {
-        console.log('active:', active.id, ', over:', over.id);
-      }
+  });
 
-      bodyScrollTop = 0;
+  return {
+    isDragging: dragging,
 
-      Object.values(ids).forEach((id) => {
-        const el = global.document?.getElementById(id);
+    ids: {
+      fab: superiors[superiors.length - 2]?.id || 'root',
+      group: groupId,
+    },
+    contextProps: {
+      sensors,
 
-        if (el) {
-          el.style.height = '';
+      onDragStart: () => {
+        const initScrollTop = global.document?.body.scrollTop || 0;
+        const groupEl = global.document?.getElementById(groupId);
+
+        groupEl?.scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+        });
+
+        const scrollTop = global.document?.body.scrollTop || 0;
+
+        setDragging(true);
+
+        bodyScrollDeviation = {
+          hasLeft: false,
+          defaults: initScrollTop - scrollTop,
+          start: scrollTop,
+          value: 0,
+        };
+      },
+      onDragMove: ({ over }) => {
+        if (bodyScrollDeviation) {
+          const hasLeft = bodyScrollDeviation.hasLeft || !over;
+
+          bodyScrollDeviation = {
+            ...bodyScrollDeviation,
+            hasLeft,
+            ...(hasLeft &&
+              !over && {
+                value:
+                  bodyScrollDeviation.start -
+                  (global.document?.body.scrollTop || 0),
+              }),
+          };
         }
-      });
+      },
+      onDragEnd: ({ active, over }) => {
+        const target = data.find(({ id }) => active?.id === id);
+
+        bodyScrollDeviation = null;
+        setDragging(false);
+
+        console.log(data, target, over);
+
+        if (target && over) {
+          updateSuperior({
+            isTutorialMode,
+            input: {
+              ...target,
+              superior: over.id === 'root' ? undefined : (over.id as string),
+            },
+          });
+        }
+      },
     },
   };
-}
+};
 
-export function useDroppable<P>(data: HierarchyData<P>, disabled = false) {
-  const { id, type } = data;
+export function useDroppable<P>(
+  { id, type }: HierarchyData<P>,
+  disabled = false
+) {
   const drop = Dnd.useDroppable({
     id,
     disabled: disabled || type !== EnumHierarchyType.GROUP,
@@ -70,47 +138,59 @@ export function useDroppable<P>(data: HierarchyData<P>, disabled = false) {
   };
 }
 
-export function useDraggable<P>(data: HierarchyData<P>, disabled = false) {
-  const { id } = data;
+export function useDraggable<P>({ id }: HierarchyData<P>, disabled = false) {
   const { active } = Dnd.useDndContext();
+  const { defaults = 0, value = 0 } = bodyScrollDeviation || {};
+
   const drag = Dnd.useDraggable({ id, disabled });
+  const scrollTop = global.document?.body.scrollTop || 0;
 
   return {
     dragRef: drag.setNodeRef,
     isDragging: drag.isDragging,
-    dragProps: {
-      style: {
-        opacity: !active || active.id === id ? 1 : 0.6,
-        transform: !drag.transform
-          ? undefined
-          : `translate(${drag.transform.x}px, ${
-              drag.transform.y - bodyScrollTop
-            }px) scale(0.9)`,
+
+    props: {
+      draggable: {
+        style: {
+          opacity: !active || active.id === id ? 1 : 0.6,
+          ...(drag.transform && {
+            transform: `translate(${drag.transform.x}px, ${
+              drag.transform.y - scrollTop - defaults - value
+            }px) scale(${active?.id !== id ? 1 : 0.9})`,
+          }),
+        },
       },
-      ...(!disabled && {
-        ...drag.attributes,
-        ...drag.listeners,
-      }),
+      toggle: {
+        ...(!disabled && {
+          ...drag.attributes,
+          ...drag.listeners,
+        }),
+      },
     },
   };
 }
 
 export function useQueryVariables<P>({
   category,
-  superior,
-  renderPreview,
-}: Pick<HierarchyListProps<P>, 'category' | 'renderPreview' | 'superior'>) {
+  superiors,
+  renderContent,
+}: Pick<HierarchyListProps<P>, 'category' | 'renderContent' | 'superiors'>) {
+  const superior = superiors[superiors.length - 1]?.id;
   const [isPending, startTransition] = useTransition();
 
   const [params, setParams] = useState<SearchHierarchyParams>({
     category,
     superior,
-    withPayload: Boolean(renderPreview),
+    withPayload: renderContent instanceof Function,
   });
 
   useEffect(() => {
-    setParams({ category, superior, withPayload: Boolean(renderPreview) });
-  }, [category, superior, renderPreview]);
+    setParams({
+      category,
+      superior,
+      withPayload: renderContent instanceof Function,
+    });
+  }, [category, superior, renderContent]);
 
   return {
     isFiltering: Boolean(params.keyword?.trim()),
@@ -122,39 +202,20 @@ export function useQueryVariables<P>({
   };
 }
 
-export function useDataStore<P>(data: HierarchyData<P>[]) {
-  const [selecteds, setSelecteds] = useState<string[]>([]);
+export function useDataCollections<P>(data: HierarchyData<P>[]) {
+  return useMemo(
+    () =>
+      data.reduce<Record<Lowercase<EnumHierarchyType>, HierarchyData<P>[]>>(
+        (result, item) => {
+          const type = item.type.toLowerCase() as Lowercase<EnumHierarchyType>;
 
-  useEffect(() => {
-    setSelecteds([]);
-  }, [data]);
-
-  return {
-    selecteds,
-
-    ...useMemo(
-      () =>
-        data.reduce<Record<Lowercase<EnumHierarchyType>, HierarchyData<P>[]>>(
-          (result, item) => {
-            const type =
-              item.type.toLowerCase() as Lowercase<EnumHierarchyType>;
-
-            return {
-              ...result,
-              [type]: [...result[type], item],
-            };
-          },
-          { group: [], item: [] }
-        ),
-      [data]
-    ),
-
-    onDataSelect: (isSelected: boolean, data: HierarchyData<P>) => {
-      const set = new Set(selecteds);
-
-      set.delete(data.id);
-      isSelected && set.add(data.id);
-      setSelecteds(Array.from(set));
-    },
-  };
+          return {
+            ...result,
+            [type]: [...result[type], item],
+          };
+        },
+        { group: [], item: [] }
+      ),
+    [data]
+  );
 }

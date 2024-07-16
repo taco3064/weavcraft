@@ -32,7 +32,7 @@ export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
-      queryKey: [group as string, true],
+      queryKey: [group as string, isTutorialMode],
       queryFn: getSuperiorHierarchies,
     });
 
@@ -56,15 +56,14 @@ export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
         <TutorialModeAlert />
 
         <HierarchyList
-          {...{ initialData, toolbarEl }}
+          {...{ initialData, superiors, toolbarEl }}
           category="themes"
           disableGroup={false}
           disableGutters
           disablePublish={false}
           icon="faPalette"
           maxWidth="md"
-          superior={group}
-          renderPreview={(palette) => (
+          renderContent={(palette) => (
             <PaletteViewer
               disableBorder
               disableBorderRadius

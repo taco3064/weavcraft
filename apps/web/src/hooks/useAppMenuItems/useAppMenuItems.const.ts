@@ -1,10 +1,4 @@
-import { SIGNIN_METHODS } from './useAppMenuItems.types';
-
-import type {
-  MenuItemOptions,
-  NavItems,
-  UserSettings,
-} from './useAppMenuItems.types';
+import type { NavItems } from './useAppMenuItems.types';
 
 export const NAV_ITEMS: NavItems = {
   gallery: {
@@ -30,39 +24,3 @@ export const NAV_ITEMS: NavItems = {
     icon: 'faPuzzlePiece',
   },
 };
-
-export { SIGNIN_METHODS };
-
-export const SIGNIN_OPTIONS: Exclude<MenuItemOptions, 'divider'>[] =
-  SIGNIN_METHODS.map((method) => ({
-    label: `btn-signin-with-${method}`,
-    indicator: `fa${method.replace(/^./, method.charAt(0).toUpperCase())}`,
-  }));
-
-export const USER_SETTINGS: UserSettings = [
-  {
-    id: 'profile',
-    auth: true,
-    icon: 'faUser',
-  },
-  {
-    id: 'settings',
-    auth: false,
-    icon: 'faGear',
-  },
-  {
-    id: 'analytics',
-    auth: true,
-    icon: 'faChartLine',
-  },
-];
-
-export const USER_MENU_ITEMS: MenuItemOptions<{ auth?: boolean }>[] = [
-  ...USER_SETTINGS.map(({ id, icon, auth }) => ({
-    auth,
-    icon,
-    label: `lbl-${id}`,
-    href: `/user-settings#${id}`,
-  })),
-  'divider',
-];

@@ -7,56 +7,46 @@ import type {
   WidgetConfigs,
 } from './configs.types';
 
-export const getThemePalette = withConnRefusedCatch(async function ({
-  queryKey: [hierarchyId, isTutorialMode],
-}: QueryFunctionParams<[string]>) {
-  const { data } = await axios.get<ThemePalette>(
-    `/configs/themes/${hierarchyId}`,
-    {
-      baseURL: isTutorialMode ? '/mocks' : '/service',
-    }
-  );
+export const getThemePalette = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  ThemePalette
+>(async function ({ queryKey: [hierarchyId, isTutorialMode] }) {
+  const { data } = await axios.get(`/configs/themes/${hierarchyId}`, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
   return data;
 });
 
-export const getWidgetConfigs = withConnRefusedCatch(async function ({
-  queryKey: [hierarchyId, isTutorialMode],
-}: QueryFunctionParams<[string]>) {
-  const { data } = await axios.get<WidgetConfigs>(
-    `/configs/widgets/${hierarchyId}`,
-    {
-      baseURL: isTutorialMode ? '/mocks' : '/service',
-    }
-  );
+export const getWidgetConfigs = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  WidgetConfigs
+>(async function ({ queryKey: [hierarchyId, isTutorialMode] }) {
+  const { data } = await axios.get(`/configs/widgets/${hierarchyId}`, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
   return data;
 });
 
-export const upsertThemePalette = withConnRefusedCatch(async function ({
-  hierarchyId,
-  input,
-  isTutorialMode,
-}: MutationtConfigInput<ThemePalette>) {
-  const { data } = await axios.post<ThemePalette>(
-    `/configs/themes/${hierarchyId}`,
-    input,
-    { baseURL: isTutorialMode ? '/mocks' : '/service' }
-  );
+export const upsertThemePalette = withConnRefusedCatch<
+  MutationtConfigInput<ThemePalette>,
+  ThemePalette
+>(async function ({ hierarchyId, input, isTutorialMode }) {
+  const { data } = await axios.post(`/configs/themes/${hierarchyId}`, input, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
   return data;
 });
 
-export const upsertWidgetConfig = withConnRefusedCatch(async function ({
-  hierarchyId,
-  input,
-  isTutorialMode,
-}: MutationtConfigInput<WidgetConfigs>) {
-  const { data } = await axios.post<WidgetConfigs>(
-    `/configs/widgets/${hierarchyId}`,
-    input,
-    { baseURL: isTutorialMode ? '/mocks' : '/service' }
-  );
+export const upsertWidgetConfig = withConnRefusedCatch<
+  MutationtConfigInput<WidgetConfigs>,
+  WidgetConfigs
+>(async function ({ hierarchyId, input, isTutorialMode }) {
+  const { data } = await axios.post(`/configs/widgets/${hierarchyId}`, input, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
   return data;
 });

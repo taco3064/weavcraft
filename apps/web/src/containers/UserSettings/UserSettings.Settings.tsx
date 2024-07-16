@@ -1,3 +1,4 @@
+import AccordionDetails from '@mui/material/AccordionDetails';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,16 +9,17 @@ import { Trans } from 'next-i18next';
 import { PALETTES } from '~web/themes';
 import { useAppSettings } from '~web/contexts';
 import { useSettingsStyles } from './UserSettings.styles';
+import type { BaseSettingProps } from './UserSettings.types';
 import type { LanguageCode, PaletteCode } from '../imports.types';
 
-export default function Settings() {
+export default function Settings({ className }: BaseSettingProps) {
   const { classes } = useSettingsStyles();
 
   const { language, languages, palette, setLanguage, setPalette } =
     useAppSettings();
 
   return (
-    <>
+    <AccordionDetails className={className}>
       <TextField
         fullWidth
         select
@@ -82,6 +84,6 @@ export default function Settings() {
           )
         )}
       </TextField>
-    </>
+    </AccordionDetails>
   );
 }

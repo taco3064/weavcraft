@@ -8,70 +8,67 @@ import type {
   SuperiorHierarchy,
 } from './hierarchy.types';
 
-export const getSuperiorHierarchies = withConnRefusedCatch(async function ({
-  queryKey: [id, isTutorialMode],
-}: QueryFunctionParams<[string]>) {
-  const { data } = await axios.get<SuperiorHierarchy[]>(
-    `/hierarchy/superiors/${id}`,
-    { baseURL: isTutorialMode ? '/mocks' : '/service' }
-  );
-
-  return data.reverse();
-},
-[]);
-
-export const getHierarchyDataById = withConnRefusedCatch(
-  async ({ queryKey: [id, isTutorialMode] }: QueryFunctionParams<[string]>) => {
-    const { data } = await axios.get<HierarchyData>(`/hierarchy/${id}`, {
+export const getSuperiorHierarchies = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  SuperiorHierarchy[]
+>(
+  async function ({ queryKey: [id, isTutorialMode] }) {
+    const { data } = await axios.get(`/hierarchy/superiors/${id}`, {
       baseURL: isTutorialMode ? '/mocks' : '/service',
     });
 
     return data;
-  }
+  },
+  (data) => data.reverse()
 );
 
-export const getHierarchyData = withConnRefusedCatch(async function <
-  P = never
->({
-  queryKey: [params, isTutorialMode],
-}: QueryFunctionParams<[SearchHierarchyParams]>) {
-  const { data } = await axios.post<HierarchyData<P>[]>(
-    '/hierarchy/search',
-    params,
-    { baseURL: isTutorialMode ? '/mocks' : '/service' }
-  );
+export const getHierarchyDataById = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  HierarchyData
+>(async ({ queryKey: [id, isTutorialMode] }) => {
+  const { data } = await axios.get(`/hierarchy/${id}`, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
   return data;
-},
-[]);
+});
 
-export const createHierarchyData = withConnRefusedCatch(
-  async ({ input, isTutorialMode }: MutationtHierarchyInput) => {
-    const { data } = await axios.post<HierarchyData>(
-      '/hierarchy/create',
-      input,
-      { baseURL: isTutorialMode ? '/mocks' : '/service' }
-    );
+export const getHierarchyData = withConnRefusedCatch<
+  QueryFunctionParams<[SearchHierarchyParams]>,
+  HierarchyData[]
+>(async function ({ queryKey: [params, isTutorialMode] }) {
+  const { data } = await axios.post('/hierarchy/search', params, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
-    return data;
-  }
-);
+  return data;
+});
 
-export const updateHierarchyData = withConnRefusedCatch(
-  async ({ input, isTutorialMode }: MutationtHierarchyInput) => {
-    const { data } = await axios.post<HierarchyData>(
-      '/hierarchy/update',
-      input,
-      { baseURL: isTutorialMode ? '/mocks' : '/service' }
-    );
+export const createHierarchyData = withConnRefusedCatch<
+  MutationtHierarchyInput,
+  HierarchyData
+>(async ({ input, isTutorialMode }) => {
+  const { data } = await axios.post('/hierarchy/create', input, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
 
-    return data;
-  }
-);
+  return data;
+});
 
-export const deleteHierarchyData = withConnRefusedCatch(
-  ({ input, isTutorialMode }: MutationtHierarchyInput) =>
-    axios.delete<void>(`/hierarchy/delete/${input.id}`, {
+export const updateHierarchyData = withConnRefusedCatch<
+  MutationtHierarchyInput,
+  HierarchyData
+>(async ({ input, isTutorialMode }) => {
+  const { data } = await axios.post('/hierarchy/update', input, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
+
+  return data;
+});
+
+export const deleteHierarchyData =
+  withConnRefusedCatch<MutationtHierarchyInput>(({ input, isTutorialMode }) =>
+    axios.delete(`/hierarchy/delete/${input.id}`, {
       baseURL: isTutorialMode ? '/mocks' : '/service',
     })
-);
+  );

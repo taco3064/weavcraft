@@ -7,7 +7,7 @@ export { makePerPageLayout } from './AppProviderManager.hocs';
 
 export {
   useAppSettings,
-  usePalettePreview,
+  useAuth,
   useTutorialMode,
 } from './AppProviderManager.hooks';
 

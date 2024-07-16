@@ -1,7 +1,7 @@
 import _set from 'lodash/set';
 import { nanoid } from 'nanoid';
 
-import { Mock } from '../common';
+import { Mock, getMockData } from '../common';
 import type { HierarchyData } from '../hierarchy/hierarchy.types';
 import type { ThemePalette, WidgetConfigs } from './configs.types';
 
@@ -20,10 +20,9 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
       hierarchyDb.read();
       themesDb.read();
 
-      return [
-        200,
-        themesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
-      ];
+      return getMockData(
+        themesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string]
+      );
     });
 
     mock
@@ -47,7 +46,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
         themesDb.write();
         hierarchyDb.write();
 
-        return [200, input];
+        return getMockData(input);
       });
   });
 
@@ -62,10 +61,9 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
         hierarchyDb.read();
         widgetsDb.read();
 
-        return [
-          200,
-          widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string],
-        ];
+        return getMockData(
+          widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string]
+        );
       });
 
     mock
@@ -89,7 +87,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
         widgetsDb.write();
         hierarchyDb.write();
 
-        return [200, input];
+        return getMockData(input);
       });
   });
 });

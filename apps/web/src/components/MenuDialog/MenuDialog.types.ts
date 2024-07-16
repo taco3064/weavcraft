@@ -6,6 +6,7 @@ import type { MenuItemOptions } from '../imports.types';
 export interface MenuDialogProps
   extends Pick<DialogProps, 'TransitionComponent'> {
   indicator?: ReactNode;
+  isLoading?: boolean;
   items: (null | false | undefined | MenuItemOptions)[];
   open: boolean;
   subtitle?: string;

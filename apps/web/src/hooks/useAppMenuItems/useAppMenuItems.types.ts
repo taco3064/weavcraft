@@ -20,13 +20,3 @@ export interface NavItem
 }
 
 export type NavItems = Record<string, Pick<NavItem, 'auth' | 'icon'>>;
-
-export const SIGNIN_METHODS = ['google'] as const;
-export type SigninMethod = (typeof SIGNIN_METHODS)[number];
-export type UserSettingId = 'profile' | 'settings' | 'analytics';
-
-export type UserSettings = {
-  auth: boolean;
-  id: UserSettingId;
-  icon: Core.IconCode;
-}[];
