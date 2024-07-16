@@ -1,24 +1,21 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import * as React from 'react';
 
 import type { TogglePortalContextValue } from './TogglePortal.types';
 
-export const TogglePortalContext = createContext<TogglePortalContextValue>({
-  open: false,
-});
+export const TogglePortalContext =
+  React.createContext<TogglePortalContextValue>({
+    open: false,
+  });
 
 export function useTogglePortal(onClose?: () => void) {
-  const closeRef = useRef(onClose);
-  const { containerEl, open, toggleRef } = useContext(TogglePortalContext);
+  const closeRef = React.useRef(onClose);
 
-  useImperativeHandle(closeRef, () => onClose, [onClose]);
+  const { containerEl, open, toggleRef } =
+    React.useContext(TogglePortalContext);
 
-  useEffect(() => {
+  React.useImperativeHandle(closeRef, () => onClose, [onClose]);
+
+  React.useEffect(() => {
     if (!open) {
       closeRef.current?.();
     }

@@ -25,6 +25,7 @@ const client = new QueryClient();
 export default function AppProviderManager({
   children,
   isTutorialMode,
+  token,
 }: AppProviderManagerProps) {
   const setterRef = useRef<SetterFns>();
 
@@ -40,8 +41,9 @@ export default function AppProviderManager({
       palette,
       palettes: Object.keys(PALETTES) as PaletteCode[],
       setterRef,
+      token,
     }),
-    [isTutorialMode, locale, locales, palette]
+    [isTutorialMode, locale, locales, palette, token]
   );
 
   //* Sync Setter Functions

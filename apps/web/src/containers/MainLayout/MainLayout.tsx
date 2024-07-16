@@ -27,8 +27,8 @@ import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { TogglePortalProvider } from '~web/contexts';
-import { useAuth, useAppNavItems } from '~web/hooks';
+import { TogglePortalProvider, useAuth } from '~web/contexts';
+import { useAppNavItems } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
 import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
@@ -76,7 +76,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
                 <Toolbar disableGutters role="status" variant="dense">
                   <NotificationBell />
-                  {pathname !== '/user-settings' && <UserAvatarMenu />}
+                  {pathname !== '/user-settings/[type]' && <UserAvatarMenu />}
                 </Toolbar>
               </Toolbar>
             </AppBar>

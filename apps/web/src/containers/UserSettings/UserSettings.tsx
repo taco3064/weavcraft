@@ -1,46 +1,59 @@
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LinearProgress from '@mui/material/LinearProgress';
 import { Trans } from 'next-i18next';
-import { lazy, useState, type ComponentType } from 'react';
+import { lazy, useEffect, useState, type ComponentType } from 'react';
+import { useRouter } from 'next/router';
 
 import { MenuDialog } from '~web/components';
 import { USER_SETTINGS } from './UserSettings.const';
-import { useAuth, useSigninOptions } from '~web/hooks';
-import { useExpanded } from './UserSettings.hooks';
+import { useAuth } from '~web/contexts';
+import { useSigninOptions } from '~web/hooks';
 import { useMainStyles } from './UserSettings.styles';
 import type { SigninProvider } from '../imports.types';
-import type { UserSettingId } from './UserSettings.types';
 
-const ACCORDION_CONTENTS: Record<UserSettingId, ComponentType> = {
+import type {
+  BaseSettingProps,
+  UserSettingType,
+  UserSettingsProps,
+} from './UserSettings.types';
+
+const ACCORDION_CONTENTS: Record<
+  UserSettingType,
+  ComponentType<BaseSettingProps>
+> = {
   analytics: lazy(() => import('./UserSettings.Analytics')),
   profile: lazy(() => import('./UserSettings.Profile')),
   settings: lazy(() => import('./UserSettings.Settings')),
 };
 
-export default function UserSettings() {
-  const signinOptions = useSigninOptions();
-
-  const { isAuthenticated, signin, signout } = useAuth();
-  const { classes } = useMainStyles();
-
+export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useExpanded(isAuthenticated);
 
-  const handleSignin = (label: string) => {
-    const provider = label.replace(/^.+-/, '') as SigninProvider;
+  const { pathname, push, replace } = useRouter();
+  const { isAuthenticated, onSignout, ...auth } = useAuth();
+  const { classes } = useMainStyles();
+  const { options: providers, onSignin, ...options } = useSigninOptions(!open);
 
-    console.log(provider);
-  };
+  const isLoading = [options, auth].some(({ isLoading }) => isLoading);
+
+  useEffect(() => {
+    if (!isAuthenticated && type !== 'settings') {
+      replace({ pathname, query: { type: 'settings' } }, undefined, {
+        shallow: false,
+      });
+    }
+  }, [isAuthenticated, pathname, replace, type]);
 
   return (
     <>
+      {isLoading && <LinearProgress />}
+
       <Container disableGutters maxWidth={false}>
         {USER_SETTINGS.map(({ id, icon, auth }) => {
           const Component = ACCORDION_CONTENTS[id];
@@ -49,8 +62,10 @@ export default function UserSettings() {
             <Accordion
               key={id}
               id={id}
-              expanded={expanded === id}
-              onChange={(_e, isExpanded) => isExpanded && setExpanded(id)}
+              expanded={type === id}
+              onChange={(_e, isExpanded) =>
+                isExpanded && push({ pathname, query: { type: id } })
+              }
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Core.Icon color="primary" code={icon} />
@@ -58,12 +73,7 @@ export default function UserSettings() {
               </AccordionSummary>
 
               <Divider />
-
-              <AccordionDetails className={classes.details}>
-                <Component />
-              </AccordionDetails>
-
-              <AccordionActions id={`actions-${id}`} />
+              <Component className={classes.details} />
             </Accordion>
           );
         })}
@@ -79,7 +89,7 @@ export default function UserSettings() {
             color="secondary"
             size="large"
             startIcon={<Core.Icon code="faArrowRightFromBracket" />}
-            onClick={signout}
+            onClick={() => onSignout()}
           >
             <Trans i18nKey="btn-signout" />
           </Button>
@@ -109,11 +119,13 @@ export default function UserSettings() {
 
           <MenuDialog
             indicator={<Core.Icon code="faArrowRightToBracket" />}
-            items={signinOptions}
+            items={providers}
             open={open}
             title="btn-signin"
             onClose={() => setOpen(false)}
-            onItemClick={handleSignin}
+            onItemClick={(label) =>
+              onSignin(label.replace(/^btn-signin-with-/, '') as SigninProvider)
+            }
           />
         </>
       )}

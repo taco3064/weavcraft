@@ -13,17 +13,12 @@ import { useTranslation } from 'next-i18next';
 
 import ColorEditor from './PaletteEditor.ColorEditor';
 import { PaletteViewer } from '~web/components';
+import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
+import { usePalettePreview } from './PaletteEditor.hooks';
 import type { PaletteEditorProps } from './PaletteEditor.types';
 import type { ColorName, ThemePalette } from '../imports.types';
-
-import {
-  PortalWrapper,
-  usePalettePreview,
-  useTogglePortal,
-  useTutorialMode,
-} from '~web/contexts';
 
 export default function PaletteEditor({
   config,

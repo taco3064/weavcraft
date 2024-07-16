@@ -1,11 +1,13 @@
+import App, { type AppContext } from 'next/app';
 import Head from 'next/head';
+import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
 import type { AppProps } from '~web/contexts';
 
-function App({ Component, pageProps }: AppProps) {
+function WeavcraftApp({ Component, pageProps, token }: AppProps) {
   const { asPath } = useRouter();
   const { t } = useTranslation();
 
@@ -19,11 +21,21 @@ function App({ Component, pageProps }: AppProps) {
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager isTutorialMode={isTutorialMode}>
+      <AppProviderManager {...{ isTutorialMode, token }}>
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
     </>
   );
 }
 
-export default appWithTranslation(App);
+WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
+  const { ctx } = appContext;
+  const { token } = cookie.parse(ctx.req?.headers.cookie || '');
+
+  return {
+    ...(await App.getInitialProps(appContext)),
+    token,
+  };
+};
+
+export default appWithTranslation(WeavcraftApp);
