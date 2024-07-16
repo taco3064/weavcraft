@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://github.com/taco3064/weavcraft/compare/v0.0.45...v0.0.46) (2024-07-16)
+
+
+### Features
+
+* **web/*:** add signin/signout features ([679985a](https://github.com/taco3064/weavcraft/commit/679985ad607c87e213d5f9b0783b562f70a93cdf))
+
+
+### Bug Fixes
+
+* **web/*:** fixed the eslint issues ([49f2a97](https://github.com/taco3064/weavcraft/commit/49f2a97646587c0678afc14b348819ef10f7f42d))
+* **web/hierarchy-list:** fixed the superior changing bugs ([b072999](https://github.com/taco3064/weavcraft/commit/b072999cc0b3b62656ed96489012012259c7baca))
+* **web/hierarchy-list:** update the styles of HierarchyList ([87da65c](https://github.com/taco3064/weavcraft/commit/87da65c5079365c3b9aaeabfea50f4dda7242c3b))
+
 ### [0.0.45](https://github.com/taco3064/weavcraft/compare/v0.0.44...v0.0.45) (2024-07-07)
 
 
