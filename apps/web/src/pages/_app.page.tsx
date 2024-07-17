@@ -5,11 +5,17 @@ import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
-import type { AppProps } from '~web/contexts';
+import type { AppProps } from './pages.types';
 
-function WeavcraftApp({ Component, pageProps, token }: AppProps) {
-  const { asPath } = useRouter();
+function WeavcraftApp({
+  Component,
+  defaultLanguage,
+  defaultPalette,
+  pageProps,
+  token,
+}: AppProps) {
   const { t } = useTranslation();
+  const { asPath } = useRouter();
 
   const getLayout = Component.getLayout || ((page) => page);
   const isTutorialMode = asPath.startsWith('/tutorial');
@@ -21,7 +27,9 @@ function WeavcraftApp({ Component, pageProps, token }: AppProps) {
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager {...{ isTutorialMode, token }}>
+      <AppProviderManager
+        {...{ defaultLanguage, defaultPalette, isTutorialMode, token }}
+      >
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
     </>
@@ -30,10 +38,17 @@ function WeavcraftApp({ Component, pageProps, token }: AppProps) {
 
 WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
   const { ctx } = appContext;
-  const { token } = cookie.parse(ctx.req?.headers.cookie || '');
+
+  const {
+    language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
+    palette,
+    token,
+  } = cookie.parse(ctx.req?.headers.cookie || '');
 
   return {
     ...(await App.getInitialProps(appContext)),
+    defaultLanguage: language,
+    defaultPalette: palette,
     token,
   };
 };

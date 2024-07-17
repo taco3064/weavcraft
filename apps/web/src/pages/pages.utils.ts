@@ -1,3 +1,4 @@
+import cookie from 'cookie';
 import { i18n } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSidePropsContext } from 'next';
@@ -23,15 +24,16 @@ export async function isUserEnvStatus(
 }
 
 export async function getServerSideTranslations(
-  { locale }: GetServerSidePropsContext,
+  { req }: GetServerSidePropsContext,
   ...ns: string[]
 ) {
+  const { language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE } = cookie.parse(
+    req.headers.cookie || ''
+  );
+
   if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();
   }
 
-  return await serverSideTranslations(
-    locale || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
-    ['common', 'tutorial', ...ns]
-  );
+  return await serverSideTranslations(language, ['common', 'tutorial', ...ns]);
 }

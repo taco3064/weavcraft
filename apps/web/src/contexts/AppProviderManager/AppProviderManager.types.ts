@@ -1,29 +1,17 @@
-import type { ComponentType, ReactElement, ReactNode, RefObject } from 'react';
-import type { AppProps as NextAppProps } from 'next/app';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { Palette } from '@mui/material/styles';
 
-import type { PaletteCode, SigninInfo } from '../imports.types';
+import type { PaletteCode } from '../imports.types';
 
-type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
+export type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   P,
   InitialProps
 > & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export { PaletteCode };
 export type LanguageCode = string;
-
-export interface AuthInfo extends SigninInfo {
-  expiresAt: number;
-  expiresIn: number;
-}
-
-export type SetterFns = {
-  setLanguage: (language: LanguageCode) => void;
-  setPalette: (palette: PaletteCode | Palette) => void;
-};
 
 //* Custom Hooks
 export interface AppSettingsContextValue {
@@ -34,7 +22,8 @@ export interface AppSettingsContextValue {
   readonly palettes: PaletteCode[];
   readonly token?: string;
 
-  setterRef: RefObject<SetterFns | undefined>;
+  setLanguage: (language: LanguageCode) => void;
+  setPalette: (palette: PaletteCode | Palette) => void;
 }
 
 //* HOCs
@@ -48,11 +37,8 @@ export type MakePerPageLayout = <P = {}>(
 //* Component Props
 export interface AppProviderManagerProps {
   children: ReactNode;
+  defaultLanguage: LanguageCode;
+  defaultPalette?: PaletteCode;
   isTutorialMode: boolean;
   token?: string;
 }
-
-export type AppProps = NextAppProps & {
-  Component: NextPageWithLayout;
-  token?: string;
-};

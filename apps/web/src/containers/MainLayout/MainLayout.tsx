@@ -27,28 +27,31 @@ import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { TogglePortalProvider, useAuth } from '~web/contexts';
-import { useAppNavItems } from '~web/hooks';
+import { TogglePortalProvider, useAuthState } from '~web/contexts';
+import { useAuthMutation, useAppNavItems } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
 import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  const [open, setOpen] = useState<MenuMode>();
+  const [open, setOpen] = useState(false);
+  const [menuMode, setMenuMode] = useState<MenuMode>();
+
   const { pathname } = useRouter();
-  const { isAuthenticated } = useAuth();
-  const { classes } = useMainStyles({ open });
+  const { isAuth } = useAuthState();
+  const { isPending, ...props } = useAuthMutation(!open);
+  const { classes } = useMainStyles({ menuMode });
 
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
   const navItems = useAppNavItems();
 
   useEffect(() => {
-    setOpen(undefined);
+    setMenuMode(undefined);
   }, [pathname]);
 
   return (
     <TogglePortalProvider
-      open={open === 'custom'}
-      onToggle={(isOpen) => setOpen(isOpen ? 'custom' : undefined)}
+      open={menuMode === 'custom'}
+      onToggle={(isOpen) => setMenuMode(isOpen ? 'custom' : undefined)}
       render={(containerRef) => (
         <>
           <Container
@@ -58,14 +61,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
           >
             <AppBar position="sticky" className={classes.header} elevation={1}>
               <Toolbar>
-                <Fade in={open !== 'nav'}>
+                <Fade in={menuMode !== 'nav'}>
                   <Toolbar disableGutters variant="dense">
                     <SwitchIconButton
+                      disabled={isPending}
                       icon={logo}
+                      onClick={() => setMenuMode('nav')}
                       hoveredIcon={
                         <Core.Icon code="faBars" fontSize="medium" />
                       }
-                      onClick={() => setOpen('nav')}
                     />
 
                     <Link {...DEFAULT_PROPS.title} href="/">
@@ -76,13 +80,21 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
                 <Toolbar disableGutters role="status" variant="dense">
                   <NotificationBell />
-                  {pathname !== '/user-settings/[type]' && <UserAvatarMenu />}
+                  {pathname !== '/user-settings/[type]' && (
+                    <UserAvatarMenu
+                      {...{ isPending, open }}
+                      {...props}
+                      onToggle={setOpen}
+                    />
+                  )}
                 </Toolbar>
               </Toolbar>
             </AppBar>
 
+            {isPending && <LinearProgress />}
+
             <Suspense fallback={<LinearProgress />}>
-              <CompressionContent isDrawerOpen={open !== undefined}>
+              <CompressionContent isDrawerOpen={menuMode !== undefined}>
                 {children}
               </CompressionContent>
             </Suspense>
@@ -91,19 +103,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <Drawer
             anchor="right"
             variant="persistent"
-            open={open === 'custom'}
+            open={menuMode === 'custom'}
             PaperProps={{
               className: classes.drawer,
               elevation: 1,
             }}
           >
-            {open === 'custom' && (
+            {menuMode === 'custom' && (
               <ClickAwayListener
                 mouseEvent="onPointerDown"
                 touchEvent="onTouchEnd"
                 onClickAway={(e) => {
                   if (e.target !== global.document?.body) {
-                    setOpen(undefined);
+                    setMenuMode(undefined);
                   }
                 }}
               >
@@ -119,17 +131,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <Drawer
             anchor="left"
             variant="persistent"
-            open={open === 'nav'}
+            open={menuMode === 'nav'}
             PaperProps={{
               className: classes.drawer,
               elevation: 1,
             }}
           >
-            {open === 'nav' && (
+            {menuMode === 'nav' && (
               <ClickAwayListener
                 mouseEvent="onPointerDown"
                 touchEvent="onTouchEnd"
-                onClickAway={() => setOpen(undefined)}
+                onClickAway={() => setMenuMode(undefined)}
               >
                 <List
                   role="navigation"
@@ -148,7 +160,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                           }}
                         />
 
-                        <IconButton onClick={() => setOpen(undefined)}>
+                        <IconButton onClick={() => setMenuMode(undefined)}>
                           <Core.Icon code="faAngleLeft" />
                         </IconButton>
                       </ListSubheader>
@@ -158,7 +170,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   }
                 >
                   {navItems.map(({ icon, label, href, auth = false }) =>
-                    auth && !isAuthenticated ? null : (
+                    auth && !isAuth ? null : (
                       <ListItemButton
                         LinkComponent={NextLink}
                         key={label}

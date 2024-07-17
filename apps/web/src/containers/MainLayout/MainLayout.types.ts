@@ -3,11 +3,13 @@ import type { ReactNode } from 'react';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { TypographyProps } from '@mui/material/Typography';
 
+import { useAuthMutation } from '~web/hooks';
+
 export type MenuMode = 'nav' | 'custom';
 
 export type StyleParams = {
   maxWidth?: Breakpoint;
-  open?: MenuMode;
+  menuMode?: MenuMode;
 };
 
 export type DefaultProps = {
@@ -23,4 +25,10 @@ export interface MainLayoutProps {
 export interface CompressionContentProps {
   children: ReactNode;
   isDrawerOpen: boolean;
+}
+
+export interface UserAvatarMenuProps
+  extends ReturnType<typeof useAuthMutation> {
+  open: boolean;
+  onToggle: (open: boolean) => void;
 }

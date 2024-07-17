@@ -9,7 +9,7 @@ import type {
   PrimitivePropDefinitions,
   PropTypeDefinitions,
   PropsDefinition,
-} from '~web/services';
+} from '../../imports.types';
 
 type WidgetPropDefinitions = {
   ElementNode: Get<ElementNodePropDefinitions, ['elementNodeProps', string]>;

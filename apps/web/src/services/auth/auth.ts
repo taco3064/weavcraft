@@ -1,8 +1,20 @@
 import axios from 'axios';
+import _camelCase from 'lodash/camelCase';
 
-import { withConnRefusedCatch } from '../common';
-import type { QueryFunctionParams } from '../common';
-import type { SigninInfo, SigninOptions } from './auth.types';
+import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
+
+import type {
+  AccessTokenInfo,
+  AccessTokenWithExpiry,
+  SigninOptions,
+} from './auth.types';
+
+const TOKEN_INFO_KEYS = [
+  'accessToken',
+  'providerToken',
+  'refreshToken',
+  'tokenType',
+] as (keyof AccessTokenWithExpiry)[];
 
 export const getSigninOptions = withConnRefusedCatch<
   QueryFunctionParams<[string]>,
@@ -15,24 +27,56 @@ export const getSigninOptions = withConnRefusedCatch<
   return data;
 });
 
-export const getAccessToken = withConnRefusedCatch<
-  QueryFunctionParams<[SigninInfo]>,
-  { accessToken: string }
->(async function ({
-  queryKey: [{ accessToken, providerToken, refreshToken, tokenType }],
-}) {
-  const { data } = await axios.post('/service/auth/login/supabase', {
-    accessToken,
-    providerToken,
-    refreshToken,
-    tokenType,
-  });
-
-  return data;
-});
-
 export const doSingOut = withConnRefusedCatch<void, void>(async function () {
   const { data } = await axios.post('/service/auth/logout');
 
   return data;
 });
+
+export const doSignIn = withConnRefusedCatch<
+  SigninOptions,
+  { accessToken: string }
+>(async function (info) {
+  const iframe = global.document?.createElement('iframe');
+
+  iframe?.setAttribute('src', info.url);
+  iframe?.setAttribute('style', 'display:none;');
+  global.document.body.appendChild(iframe);
+
+  return new Promise((resolve) =>
+    iframe?.addEventListener('load', async () => {
+      const { hash } = iframe.contentWindow?.location || {};
+      const info = getTokenInfo(hash);
+
+      if (!info) {
+        return;
+      }
+
+      const { data } = await axios.post('/service/auth/login/supabase', info);
+
+      iframe.remove();
+      resolve(data);
+    })
+  );
+});
+
+function getTokenInfo(hash?: string) {
+  const validKeys = Object.values(TOKEN_INFO_KEYS).flat();
+
+  const params = Object.fromEntries(
+    Array.from(new URLSearchParams(hash).entries()).map(([key, value]) => [
+      _camelCase(key) as keyof AccessTokenInfo,
+      value,
+    ])
+  );
+
+  return validKeys.some((key) => !(key in params))
+    ? undefined
+    : Object.entries(params).reduce((acc, [key, value]) => {
+        const fieldName = _camelCase(key) as keyof AccessTokenWithExpiry;
+
+        return !TOKEN_INFO_KEYS.includes(fieldName)
+          ? acc
+          : { ...acc, [fieldName]: value };
+      }, {} as AccessTokenInfo);
+}

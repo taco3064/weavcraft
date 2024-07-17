@@ -5,15 +5,14 @@ import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import LinearProgress from '@mui/material/LinearProgress';
 import { Trans } from 'next-i18next';
 import { lazy, useEffect, useState, type ComponentType } from 'react';
 import { useRouter } from 'next/router';
 
 import { MenuDialog } from '~web/components';
 import { USER_SETTINGS } from './UserSettings.const';
-import { useAuth } from '~web/contexts';
-import { useSigninOptions } from '~web/hooks';
+import { useAuthState } from '~web/contexts';
+import { useAuthMutation } from '~web/hooks';
 import { useMainStyles } from './UserSettings.styles';
 import type { SigninProvider } from '../imports.types';
 
@@ -36,32 +35,29 @@ export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
 
   const { pathname, push, replace } = useRouter();
-  const { isAuthenticated, onSignout, ...auth } = useAuth();
+  const { isAuth } = useAuthState();
   const { classes } = useMainStyles();
-  const { options: providers, onSignin, ...options } = useSigninOptions(!open);
-
-  const isLoading = [options, auth].some(({ isLoading }) => isLoading);
+  const { providers, isPending, onSignin, onSignout } = useAuthMutation(!open);
 
   useEffect(() => {
-    if (!isAuthenticated && type !== 'settings') {
+    if (!isAuth && type !== 'settings') {
       replace({ pathname, query: { type: 'settings' } }, undefined, {
         shallow: false,
       });
     }
-  }, [isAuthenticated, pathname, replace, type]);
+  }, [isAuth, pathname, replace, type]);
 
   return (
     <>
-      {isLoading && <LinearProgress />}
-
       <Container disableGutters maxWidth={false}>
         {USER_SETTINGS.map(({ id, icon, auth }) => {
           const Component = ACCORDION_CONTENTS[id];
 
-          return auth && !isAuthenticated ? null : (
+          return auth && !isAuth ? null : (
             <Accordion
               key={id}
               id={id}
+              disabled={isPending}
               expanded={type === id}
               onChange={(_e, isExpanded) =>
                 isExpanded && push({ pathname, query: { type: id } })
@@ -73,7 +69,7 @@ export default function UserSettings({ type }: UserSettingsProps) {
               </AccordionSummary>
 
               <Divider />
-              <Component className={classes.details} />
+              <Component className={classes.details} disabled={isPending} />
             </Accordion>
           );
         })}
@@ -81,24 +77,27 @@ export default function UserSettings({ type }: UserSettingsProps) {
 
       <Divider />
 
-      {isAuthenticated ? (
+      {isAuth ? (
         <>
           <Button
             fullWidth
-            variant="contained"
             color="secondary"
+            disabled={isPending}
             size="large"
             startIcon={<Core.Icon code="faArrowRightFromBracket" />}
+            variant="contained"
             onClick={() => onSignout()}
           >
             <Trans i18nKey="btn-signout" />
           </Button>
 
           <Button
+            //! Backend not implemented
+            disabled
             fullWidth
-            variant="outlined"
             color="error"
             size="large"
+            variant="outlined"
             startIcon={<Core.Icon code="faUserSlash" />}
           >
             <Trans i18nKey="btn-delete-account" />
@@ -108,10 +107,11 @@ export default function UserSettings({ type }: UserSettingsProps) {
         <>
           <Button
             fullWidth
-            variant="contained"
             color="primary"
+            disabled={isPending}
             size="large"
             startIcon={<Core.Icon code="faArrowRightToBracket" />}
+            variant="contained"
             onClick={() => setOpen(true)}
           >
             <Trans i18nKey="btn-signin" />
@@ -119,6 +119,7 @@ export default function UserSettings({ type }: UserSettingsProps) {
 
           <MenuDialog
             indicator={<Core.Icon code="faArrowRightToBracket" />}
+            isLoading={isPending}
             items={providers}
             open={open}
             title="btn-signin"
