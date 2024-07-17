@@ -1,4 +1,5 @@
 export * from './useAppMenuItems';
+export * from './useAuthMutation';
 export * from './useBreakpoints';
 export * from './useInitializationConfig';
 export * from './useNodeFinder';

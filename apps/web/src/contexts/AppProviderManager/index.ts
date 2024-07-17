@@ -1,18 +1,17 @@
+export { makePerPageLayout } from './AppProviderManager.hocs';
+
 export {
   default,
   default as AppProviderManager,
 } from './AppProviderManager.Provider';
 
-export { makePerPageLayout } from './AppProviderManager.hocs';
-
 export {
   useAppSettings,
-  useAuth,
+  useAuthState,
   useTutorialMode,
 } from './AppProviderManager.hooks';
 
 export type {
-  AppProps,
   LanguageCode,
-  PaletteCode,
+  NextPageWithLayout,
 } from './AppProviderManager.types';

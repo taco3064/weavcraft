@@ -15,4 +15,5 @@ export interface UserSettingsProps {
 
 export interface BaseSettingProps {
   className?: string;
+  disabled?: boolean;
 }
