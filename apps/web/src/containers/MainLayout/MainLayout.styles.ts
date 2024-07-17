@@ -1,13 +1,13 @@
 import { makeStyles } from 'tss-react/mui';
 import type { StyleParams } from './MainLayout.types';
 
-export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
+export const useMenuStyles = makeStyles<{ isAuth: boolean }>({
   name: 'UserAvatarMenu',
-})((theme, { isAuthenticated }) => ({
+})((theme, { isAuth }) => ({
   thumb: {
     width: theme.spacing(5),
     height: theme.spacing(5),
-    filter: `brightness(${isAuthenticated ? 1 : 0.6})`,
+    filter: `brightness(${isAuth ? 1 : 0.6})`,
   },
   content: {
     padding: 0,
@@ -18,7 +18,7 @@ export const useMenuStyles = makeStyles<{ isAuthenticated: boolean }>({
 }));
 
 export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
-  (theme, { maxWidth = 'xs', open }) => {
+  (theme, { maxWidth = 'xs', menuMode }) => {
     const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
 
     const nextWidth =
@@ -31,13 +31,13 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
       },
       header: {
         display: 'flex',
-        height: theme.spacing(open ? 4 : 8),
-        top: theme.spacing(open ? 2 : 0),
-        marginBottom: theme.spacing(open ? 4 : 0),
+        height: theme.spacing(menuMode ? 4 : 8),
+        top: theme.spacing(menuMode ? 2 : 0),
+        marginBottom: theme.spacing(menuMode ? 4 : 0),
 
-        borderRadius: !open
+        borderRadius: !menuMode
           ? 0
-          : open === 'nav'
+          : menuMode === 'nav'
           ? theme.spacing(4, 0, 0, 4)
           : theme.spacing(0, 4, 4, 0),
 
@@ -60,7 +60,7 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         display: 'flex',
         flexDirection: 'column',
         gap: theme.spacing(1.5),
-        width: `calc(100vw - ${open ? drawerWidth + 8 : 0}px)`,
+        width: `calc(100vw - ${menuMode ? drawerWidth + 8 : 0}px)`,
 
         transition: theme.transitions.create(['margin', 'width'], {
           easing: theme.transitions.easing.sharp,
@@ -70,8 +70,8 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
           width: '100%',
         },
         [theme.breakpoints.up('md')]: {
-          marginLeft: open !== 'nav' ? 0 : drawerWidth + 8,
-          marginRight: open !== 'custom' ? 0 : drawerWidth + 8,
+          marginLeft: menuMode !== 'nav' ? 0 : drawerWidth + 8,
+          marginRight: menuMode !== 'custom' ? 0 : drawerWidth + 8,
         },
       },
       drawer: {
@@ -82,7 +82,7 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
 
         [theme.breakpoints.up(nextWidth)]: {
           borderRadius:
-            open === 'custom'
+            menuMode === 'custom'
               ? theme.spacing(4, 0, 0, 4)
               : theme.spacing(0, 4, 4, 0),
         },

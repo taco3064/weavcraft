@@ -1,76 +1,60 @@
 import CssBaseline from '@mui/material/CssBaseline';
+import axios from 'axios';
+import _set from 'lodash/set';
 import { CacheProvider } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
-import { useImperativeHandle, useMemo, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 
 import NotistackProvider from '../Notistack';
-import { PALETTES } from '~web/themes';
-import { AppSettingsContext, usePalette } from './AppProviderManager.hooks';
-import type { PaletteCode } from '../imports.types';
+import type { AppProviderManagerProps } from './AppProviderManager.types';
 
-import type {
-  AppProviderManagerProps,
-  AppSettingsContextValue,
-  LanguageCode,
-  SetterFns,
-} from './AppProviderManager.types';
+import {
+  AppSettingsContext,
+  useLanguage,
+  usePalette,
+} from './AppProviderManager.hooks';
 
 //* Base Configs
-const client = new QueryClient();
+let REQ_OVERRIDE_ID: number;
+const QUERY_CLIENT = new QueryClient();
 
 //* Provider Component
 export default function AppProviderManager({
   children,
+  defaultLanguage,
+  defaultPalette,
   isTutorialMode,
   token,
 }: AppProviderManagerProps) {
-  const setterRef = useRef<SetterFns>();
+  const language = useLanguage(defaultLanguage);
+  const { cache, theme, ...palette } = usePalette(defaultPalette);
 
-  const { i18n } = useTranslation();
-  const { locale, locales, pathname, query, asPath, replace } = useRouter();
-  const { cache, palette, theme, setPalette } = usePalette();
+  useEffect(() => {
+    if (token) {
+      REQ_OVERRIDE_ID = axios.interceptors.request.use((config) =>
+        _set(config, ['headers', 'Authorization'], token)
+      );
 
-  const context = useMemo<AppSettingsContextValue>(
-    () => ({
-      isTutorialMode,
-      language: locale as LanguageCode,
-      languages: locales as LanguageCode[],
-      palette,
-      palettes: Object.keys(PALETTES) as PaletteCode[],
-      setterRef,
-      token,
-    }),
-    [isTutorialMode, locale, locales, palette, token]
-  );
-
-  //* Sync Setter Functions
-  useImperativeHandle(
-    setterRef,
-    () => ({
-      setLanguage: async (language: LanguageCode) => {
-        await replace({ pathname, query }, asPath, {
-          shallow: true,
-          locale: language,
-        });
-
-        i18n.changeLanguage(language);
-      },
-      setPalette,
-    }),
-    [asPath, i18n, pathname, query, replace, setPalette]
-  );
+      return () => axios.interceptors.request.eject(REQ_OVERRIDE_ID);
+    }
+  }, [token]);
 
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={QUERY_CLIENT}>
       <CacheProvider value={cache}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
 
           <NotistackProvider>
-            <AppSettingsContext.Provider value={context}>
+            <AppSettingsContext.Provider
+              value={{
+                ...language,
+                ...palette,
+                isTutorialMode,
+                token,
+              }}
+            >
               {children}
             </AppSettingsContext.Provider>
           </NotistackProvider>

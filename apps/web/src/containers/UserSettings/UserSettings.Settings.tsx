@@ -12,7 +12,7 @@ import { useSettingsStyles } from './UserSettings.styles';
 import type { BaseSettingProps } from './UserSettings.types';
 import type { LanguageCode, PaletteCode } from '../imports.types';
 
-export default function Settings({ className }: BaseSettingProps) {
+export default function Settings({ className, disabled }: BaseSettingProps) {
   const { classes } = useSettingsStyles();
 
   const { language, languages, palette, setLanguage, setPalette } =
@@ -23,6 +23,7 @@ export default function Settings({ className }: BaseSettingProps) {
       <TextField
         fullWidth
         select
+        disabled={disabled}
         label={<Trans i18nKey="lbl-language" />}
         value={language}
         onChange={(e) => setLanguage?.(e.target.value as LanguageCode)}
@@ -37,6 +38,7 @@ export default function Settings({ className }: BaseSettingProps) {
       <TextField
         fullWidth
         select
+        disabled={disabled}
         label={<Trans i18nKey="lbl-theme" />}
         value={palette}
         onChange={(e) => setPalette?.(e.target.value as PaletteCode)}
