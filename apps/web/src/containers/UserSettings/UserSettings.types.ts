@@ -1,12 +1,4 @@
-import type Core from '@weavcraft/core';
-
-export type UserSettingType = 'profile' | 'settings' | 'analytics';
-
-export type UserSettings = {
-  auth: boolean;
-  id: UserSettingType;
-  icon: Core.IconCode;
-}[];
+import type { UserSettingType } from '~web/hooks';
 
 //* Component Props
 export interface UserSettingsProps {

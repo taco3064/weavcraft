@@ -1,14 +1,14 @@
 import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
-import { useMemo } from 'react';
+import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
-import { USER_SETTINGS } from '../UserSettings';
 import { useAuthState } from '~web/contexts';
-import { useAuthMutation } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
-import type { MenuItemOptions, SigninProvider } from '../imports.types';
+import { useUserinfo, useUserSettings } from '~web/hooks';
+import type { SigninProvider } from '../imports.types';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 
 export default function UserAvatarMenu({
@@ -19,23 +19,12 @@ export default function UserAvatarMenu({
   onSignout,
   onToggle,
 }: UserAvatarMenuProps) {
+  const setting = useUserSettings();
+  const userinfo = useUserinfo();
+
+  const { t } = useTranslation();
   const { isAuth } = useAuthState();
   const { classes } = useMenuStyles({ isAuth });
-
-  const settings = useMemo(
-    () =>
-      USER_SETTINGS.reduce<MenuItemOptions[]>((acc, { id, icon, auth }) => {
-        const label = `lbl-${id}`;
-        const href = `/user-settings/${id}`;
-
-        if (!auth || isAuth) {
-          acc.push({ icon, label, href });
-        }
-
-        return acc;
-      }, []),
-    [isAuth]
-  );
 
   const handleItemClick = (label: string) => {
     if (label === 'btn-signout') {
@@ -49,9 +38,11 @@ export default function UserAvatarMenu({
 
   return (
     <>
-      <IconButton size="large" sx={{ p: 0 }} onClick={() => onToggle(true)}>
-        <Avatar className={classes.thumb} />
-      </IconButton>
+      <Tooltip title={t('ttl-user-options')}>
+        <IconButton size="large" sx={{ p: 0 }} onClick={() => onToggle(true)}>
+          <Avatar className={classes.thumb} src={userinfo?.avatarUrl} />
+        </IconButton>
+      </Tooltip>
 
       <MenuDialog
         isLoading={isPending}
@@ -61,8 +52,8 @@ export default function UserAvatarMenu({
         onClose={() => onToggle(false)}
         onItemClick={handleItemClick}
         items={[
-          ...settings,
-          settings.length > 1 ? 'divider' : null,
+          ...setting.options,
+          setting.options.length > 1 ? 'divider' : null,
           isAuth
             ? {
                 icon: 'faArrowRightFromBracket',

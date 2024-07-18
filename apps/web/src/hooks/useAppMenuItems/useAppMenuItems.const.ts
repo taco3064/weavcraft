@@ -1,4 +1,4 @@
-import type { NavItems } from './useAppMenuItems.types';
+import type { NavItems, UserSettings } from './useAppMenuItems.types';
 
 export const NAV_ITEMS: NavItems = {
   gallery: {
@@ -24,3 +24,21 @@ export const NAV_ITEMS: NavItems = {
     icon: 'faPuzzlePiece',
   },
 };
+
+export const USER_SETTINGS: UserSettings = [
+  {
+    id: 'profile',
+    auth: true,
+    icon: 'faUser',
+  },
+  {
+    id: 'settings',
+    auth: false,
+    icon: 'faGear',
+  },
+  {
+    id: 'analytics',
+    auth: true,
+    icon: 'faChartLine',
+  },
+];

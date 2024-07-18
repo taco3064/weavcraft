@@ -1,4 +1,4 @@
-export * from './auth';
+export * from './account';
 export * from './configs';
 export * from './hierarchy';
 export * from './notifications';
