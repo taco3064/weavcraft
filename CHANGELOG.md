@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.48](https://github.com/taco3064/weavcraft/compare/v0.0.47...v0.0.48) (2024-07-18)
+
+
+### Features
+
+* **web/*:** add get user me service ([0c801d1](https://github.com/taco3064/weavcraft/commit/0c801d102c65a26fb1e67175eae7450c795aa7a3))
+
 ### [0.0.47](https://github.com/taco3064/weavcraft/compare/v0.0.46...v0.0.47) (2024-07-17)
 
 ### [0.0.46](https://github.com/taco3064/weavcraft/compare/v0.0.45...v0.0.46) (2024-07-16)
