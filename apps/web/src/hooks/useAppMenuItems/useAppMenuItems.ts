@@ -1,13 +1,19 @@
+import Core from '@weavcraft/core';
 import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { NAV_ITEMS, USER_SETTINGS } from './useAppMenuItems.const';
 import { useAuthState } from '~web/contexts';
+
 import type {
   MenuItemOptions,
   NavItem,
   UserSettingType,
 } from './useAppMenuItems.types';
+
+export function useNavIcon(id: string) {
+  return NAV_ITEMS[id]?.icon as Core.IconCode;
+}
 
 export function useAppNavItems() {
   const { i18n } = useTranslation();

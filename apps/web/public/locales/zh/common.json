@@ -38,6 +38,7 @@
   "msg-success-delete": "刪除{{name}}完成",
   "msg-success-signout": "已成功登出",
   "msg-success-update": "更新{{name}}完成",
+  "ttl-breadcrumbs.user-settings.label": "用戶設定",
   "ttl-delete-confirm": "刪除確認",
   "ttl-filter-result": "查詢結果: {{type}}",
   "ttl-hierarchy-search": "搜尋{{name}}",
@@ -80,9 +81,6 @@
     "websites": {
       "label": "個人網站",
       "description": "查看、管理和自訂你的個人網站，包括 URL 設置、頁面配置和主題選擇"
-    },
-    "user-settings": {
-      "label": "用戶設定"
     }
   }
 }

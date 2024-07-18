@@ -8,7 +8,7 @@ import { InView } from 'react-intersection-observer';
 import { Trans } from 'next-i18next';
 import type { Variant } from '@mui/material/styles/createTypography';
 
-import { FallbackTrans } from '~web/components';
+import { FallbackTrans, PageContainer } from '~web/components';
 import { useBreakpointMatches } from '~web/hooks';
 import { useMainStyles } from './Intro.styles';
 
@@ -34,7 +34,7 @@ export default function Intro() {
   });
 
   return (
-    <Container disableGutters className={classes.root} maxWidth={false}>
+    <PageContainer maxWidth="md" className={classes.root}>
       <Grid container className={classes.paragraph} spacing={2}>
         <Fade in timeout={BASE_TIMEOUT}>
           <Grid item xs={12}>
@@ -132,6 +132,6 @@ export default function Intro() {
           }}
         </InView>
       ))}
-    </Container>
+    </PageContainer>
   );
 }

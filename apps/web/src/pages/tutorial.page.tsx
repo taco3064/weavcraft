@@ -15,20 +15,18 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
+import { PageContainer } from '~web/components';
 import { getServerSideTranslations } from './pages.utils';
 import { makePerPageLayout } from '~web/contexts';
 import { useTutorialLessons } from '~web/hooks';
-import { usePageStyles } from './pages.styles';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   const { t } = useTranslation();
-  const { classes } = usePageStyles();
-
   const tutorials = useTutorialLessons();
   const [expanded, setExpanded] = useState(tutorials[0].id);
 
   return (
-    <Container component="main" maxWidth="sm" className={classes.root}>
+    <PageContainer maxWidth="sm">
       <Breadcrumbs
         disableGutters
         currentPageTitle={t('ttl-breadcrumbs.tutorial.label')}
@@ -118,7 +116,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
           </Accordion>
         ))}
       </Container>
-    </Container>
+    </PageContainer>
   );
 });
 

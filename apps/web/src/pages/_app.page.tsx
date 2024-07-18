@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
 import { setAuthorizationInterceptor } from '~web/services';
-import type { AppProps } from './pages.types';
+import type { AppProps } from './imports.types';
 
 function WeavcraftApp({
   Component,

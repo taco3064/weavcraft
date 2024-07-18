@@ -1,29 +1,20 @@
-import Container from '@mui/material/Container';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { TutorialModeAlert } from '~web/components';
+import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
-import { usePageStyles } from '../pages.styles';
-import type { BaseHierarchyProps } from '../pages.types';
-
-import {
-  makePerPageLayout,
-  useTutorialMode,
-  type PortalContainerEl,
-} from '~web/contexts';
+import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import type { BaseHierarchyProps, PortalContainerEl } from '../imports.types';
 
 export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
   function WidgetGroupsPage({ group, initialData, initialSuperiors }) {
+    const { t } = useTranslation();
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
     const isTutorialMode = useTutorialMode();
-
-    const { t } = useTranslation();
-    const { classes } = usePageStyles();
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
@@ -31,10 +22,8 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
       queryFn: getSuperiorHierarchies,
     });
 
-    console.log(group, superiors);
-
     return (
-      <Container component="main" maxWidth="md" className={classes.root}>
+      <PageContainer maxWidth="md">
         <Breadcrumbs
           disableGutters
           currentBreadcrumbLabel={group}
@@ -61,7 +50,7 @@ export default makePerPageLayout<BaseHierarchyProps>(MainLayout)(
           icon="faPuzzlePiece"
           maxWidth="md"
         />
-      </Container>
+      </PageContainer>
     );
   }
 );

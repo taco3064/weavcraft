@@ -1,36 +1,32 @@
-import Container from '@mui/material/Container';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
-import { TutorialModeAlert } from '~web/components';
+import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
-import { useInitializationConfig, type InitializationConfig } from '~web/hooks';
-import { usePageStyles } from '../../pages.styles';
-
-import {
-  makePerPageLayout,
-  useTutorialMode,
-  type PortalContainerEl,
-} from '~web/contexts';
+import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import { useInitializationConfig } from '~web/hooks';
 
 import {
   getHierarchyDataById,
   getThemePalette,
   getSuperiorHierarchies,
-  type ThemePalette,
 } from '~web/services';
+
+import type {
+  InitializationConfig,
+  PortalContainerEl,
+  ThemePalette,
+} from '../../imports.types';
 
 export default makePerPageLayout<InitializationConfig<ThemePalette>>(
   MainLayout
 )(function ThemeDetailPage(props) {
+  const { t } = useTranslation();
   const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
   const isTutorialMode = useTutorialMode();
-
-  const { t } = useTranslation();
-  const { classes } = usePageStyles();
 
   const { config, hierarchy, superiors } = useInitializationConfig(
     getThemePalette,
@@ -38,7 +34,7 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
   );
 
   return !hierarchy ? null : (
-    <Container component="main" maxWidth="md" className={classes.root}>
+    <PageContainer maxWidth="md">
       <Breadcrumbs
         disableGutters
         toolbar={setToolbarEl}
@@ -67,7 +63,7 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
         title={hierarchy.title}
         toolbarEl={toolbarEl}
       />
-    </Container>
+    </PageContainer>
   );
 });
 
