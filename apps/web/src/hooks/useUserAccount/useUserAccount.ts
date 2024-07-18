@@ -12,11 +12,11 @@ import type { MenuItemOptions } from '../useAppMenuItems';
 import type { SigninOptions, SigninProvider } from '../imports.types';
 
 export function useUserinfo() {
-  const { isAuth } = useAuthState();
+  const { isAuth, token } = useAuthState();
 
   const { data: userinfo } = useQuery({
     enabled: isAuth,
-    queryKey: [],
+    queryKey: [token as string],
     queryFn: getMe,
   });
 

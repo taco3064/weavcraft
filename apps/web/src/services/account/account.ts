@@ -11,13 +11,16 @@ import type {
 } from './account.types';
 
 //* - User Account Services
-export const getMe = withConnRefusedCatch<QueryFunctionParams<[]>, UserData>(
-  async function () {
-    const { data } = await axios.get('/service/me');
+export const getMe = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  UserData
+>(async function ({ queryKey: [token] }) {
+  const { data } = await axios.get('/service/me', {
+    headers: { Authorization: token },
+  });
 
-    return data;
-  }
-);
+  return data;
+});
 
 //* - Auth Services
 export const getSigninOptions = withConnRefusedCatch<

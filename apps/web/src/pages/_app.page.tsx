@@ -1,10 +1,13 @@
 import App, { type AppContext } from 'next/app';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
+import { setAuthorizationInterceptor } from '~web/services';
 import type { AppProps } from './pages.types';
 
 function WeavcraftApp({
@@ -19,6 +22,20 @@ function WeavcraftApp({
 
   const getLayout = Component.getLayout || ((page) => page);
   const isTutorialMode = asPath.startsWith('/tutorial');
+
+  useEffect(() => {
+    if (token) {
+      setAuthorizationInterceptor({
+        token,
+        onUnauthorized: () => {
+          Cookies.remove('token');
+          global.location?.reload();
+        },
+      });
+    }
+
+    return () => setAuthorizationInterceptor(false);
+  }, [token]);
 
   return (
     <>
@@ -44,6 +61,15 @@ WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
     palette,
     token,
   } = cookie.parse(ctx.req?.headers.cookie || '');
+
+  setAuthorizationInterceptor(
+    !token
+      ? false
+      : {
+          token,
+          onUnauthorized: () => cookie.serialize('token', '', { maxAge: -1 }),
+        }
+  );
 
   return {
     ...(await App.getInitialProps(appContext)),
