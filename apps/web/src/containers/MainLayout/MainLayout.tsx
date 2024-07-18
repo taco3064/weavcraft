@@ -60,7 +60,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             maxWidth={false}
           >
             <AppBar position="sticky" className={classes.header} elevation={1}>
-              <Toolbar>
+              <Toolbar role="toolbar">
                 <Fade in={menuMode !== 'nav'}>
                   <Toolbar disableGutters variant="dense">
                     <SwitchIconButton
@@ -89,9 +89,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   )}
                 </Toolbar>
               </Toolbar>
-            </AppBar>
 
-            {isPending && <LinearProgress />}
+              {isPending && <LinearProgress />}
+            </AppBar>
 
             <Suspense fallback={<LinearProgress />}>
               <CompressionContent isDrawerOpen={menuMode !== undefined}>

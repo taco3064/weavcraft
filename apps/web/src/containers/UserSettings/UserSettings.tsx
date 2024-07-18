@@ -22,7 +22,7 @@ import type { SigninProvider } from '../imports.types';
 export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
 
-  const { pathname, push, replace } = useRouter();
+  const { pathname, replace } = useRouter();
   const { isAuth } = useAuthState();
   const { classes } = useMainStyles();
   const { providers, isPending, onSignin, onSignout } = useAuthMutation(!open);
@@ -52,7 +52,10 @@ export default function UserSettings({ type }: UserSettingsProps) {
               disabled={isPending}
               expanded={type === id}
               onChange={(_e, isExpanded) =>
-                isExpanded && push({ pathname, query: { type: id } })
+                isExpanded &&
+                replace({ pathname, query: { type: id } }, undefined, {
+                  shallow: false,
+                })
               }
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>

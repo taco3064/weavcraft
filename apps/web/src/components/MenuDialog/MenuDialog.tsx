@@ -1,12 +1,12 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Core from '@weavcraft/core';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import LinearProgress from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import NextLink from 'next/link';
@@ -91,47 +91,53 @@ export default function MenuDialog({
         )}
 
         <DialogContent className={classes.content}>
-          {isLoading && <LinearProgress />}
-
           {open && (
-            <MenuList>
-              {items.map((item, i) => {
-                if (!item) {
-                  return null;
-                } else if (item === 'divider') {
-                  return <Divider key="divider" />;
-                }
+            <>
+              {isLoading ? (
+                <CircularProgress className={classes.progress} />
+              ) : (
+                <MenuList>
+                  {items.map((item, i) => {
+                    if (!item) {
+                      return null;
+                    } else if (item === 'divider') {
+                      return <Divider key="divider" />;
+                    }
 
-                const { href, icon, label, items: subItems } = item;
-                const indicator = !icon ? undefined : <Core.Icon code={icon} />;
+                    const { href, icon, label, items: subItems } = item;
+                    const indicator = !icon ? undefined : (
+                      <Core.Icon code={icon} />
+                    );
 
-                return (
-                  <MenuItem
-                    {...(href && { component: NextLink, href })}
-                    key={label}
-                    className={classes.item}
-                    disabled={isLoading}
-                    onClick={() => {
-                      if (subItems?.length) {
-                        setSubProps({
-                          indicator,
-                          title: label,
-                          items: subItems,
-                        });
-                      } else {
-                        onItemClick?.(label, i);
-                        onClose();
-                      }
-                    }}
-                  >
-                    <Typography variant="subtitle1" color="text.primary">
-                      {indicator}
-                      <Trans i18nKey={label} />
-                    </Typography>
-                  </MenuItem>
-                );
-              })}
-            </MenuList>
+                    return (
+                      <MenuItem
+                        {...(href && { component: NextLink, href })}
+                        key={label}
+                        className={classes.item}
+                        disabled={isLoading}
+                        onClick={() => {
+                          if (subItems?.length) {
+                            setSubProps({
+                              indicator,
+                              title: label,
+                              items: subItems,
+                            });
+                          } else {
+                            onItemClick?.(label, i);
+                            onClose();
+                          }
+                        }}
+                      >
+                        <Typography variant="subtitle1" color="text.primary">
+                          {indicator}
+                          <Trans i18nKey={label} />
+                        </Typography>
+                      </MenuItem>
+                    );
+                  })}
+                </MenuList>
+              )}
+            </>
           )}
         </DialogContent>
 

@@ -31,7 +31,8 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
       },
       header: {
         display: 'flex',
-        height: theme.spacing(menuMode ? 4 : 8),
+        flexDirection: 'column',
+        height: menuMode ? theme.spacing(4) : 'max-content',
         top: theme.spacing(menuMode ? 2 : 0),
         marginBottom: theme.spacing(menuMode ? 4 : 0),
 
@@ -48,7 +49,7 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
             duration: theme.transitions.duration.leavingScreen,
           }
         ),
-        '& > *': {
+        '& > [role="toolbar"]': {
           height: theme.spacing(8),
 
           '& > [role="status"]': {
