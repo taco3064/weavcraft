@@ -16,7 +16,21 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
 
   return (
     <Container component="main" maxWidth="sm" className={classes.root}>
-      <Breadcrumbs disableGutters currentPageTitle={t('ttl-user-settings')} />
+      <Breadcrumbs
+        disableGutters
+        currentPageTitle={t('ttl-user-settings')}
+        customBreadcrumbs={{ '/user-settings': 'nonLinkable' }}
+        onCatchAllRoutesTransform={(key, value) => {
+          if (key === 'type' && typeof value === 'string') {
+            return [
+              {
+                href: `/user-settings/${value}`,
+                label: t(`lbl-${value}`),
+              },
+            ];
+          }
+        }}
+      />
       <UserSettings type={query.type as UserSettingType} />
     </Container>
   );
