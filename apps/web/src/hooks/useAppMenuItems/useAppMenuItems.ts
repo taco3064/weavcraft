@@ -11,8 +11,8 @@ import type {
   UserSettingType,
 } from './useAppMenuItems.types';
 
-export function useNavIcon(id: string) {
-  return NAV_ITEMS[id]?.icon as Core.IconCode;
+export function useNavIcon(category: string) {
+  return NAV_ITEMS[category]?.icon as Core.IconCode;
 }
 
 export function useAppNavItems() {
@@ -25,12 +25,12 @@ export function useAppNavItems() {
       'ttl-breadcrumbs'
     );
 
-    return Object.keys(resource).reduce<NavItem[]>((result, id) => {
-      if (id in NAV_ITEMS) {
+    return Object.keys(resource).reduce<NavItem[]>((result, category) => {
+      if (category in NAV_ITEMS) {
         result.push({
-          ...NAV_ITEMS[id],
-          label: `ttl-breadcrumbs.${id}`,
-          href: `/${id}`,
+          ...NAV_ITEMS[category],
+          label: `ttl-breadcrumbs.${category}`,
+          href: `/${category}`,
         });
       }
 

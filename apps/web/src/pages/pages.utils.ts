@@ -1,7 +1,11 @@
 import cookie from 'cookie';
 import { i18n } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetServerSideProps } from 'next';
 import type { GetServerSidePropsContext } from 'next';
+
+import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
+import type { BaseHierarchyProps } from './imports.types';
 
 export async function isUserEnvStatus(
   { query, req }: GetServerSidePropsContext,
@@ -36,4 +40,42 @@ export async function getServerSideTranslations(
   }
 
   return await serverSideTranslations(language, ['common', 'tutorial', ...ns]);
+}
+
+export function getBaseGroupServerSideProps<P>(category: string) {
+  const result: GetServerSideProps<BaseHierarchyProps<P>> = async (ctx) => {
+    const group =
+      typeof ctx.query.group === 'string' ? ctx.query.group : undefined;
+
+    const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
+
+    const initialSuperiors =
+      !group || isTutorialMode
+        ? []
+        : await getSuperiorHierarchies({ queryKey: [group] });
+
+    if (await isUserEnvStatus(ctx, 'unauth', 'nontutorial')) {
+      //* Redirect to home page if not authenticated and not in tutorial mode
+      return { redirect: { destination: '/', permanent: false } };
+    } else if (!isTutorialMode && group && !initialSuperiors.length) {
+      //* Redirect to 404 page if group does not exist
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        initialSuperiors,
+        ...(group && { group }),
+        ...(await getServerSideTranslations(ctx, category)),
+
+        initialData: isTutorialMode
+          ? []
+          : await getHierarchyData({
+              queryKey: [{ category, superior: group, withPayload: true }],
+            }),
+      },
+    };
+  };
+
+  return result;
 }
