@@ -3,16 +3,11 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
+import { Breadcrumbs, MainLayout, UserSettings } from '~web/containers';
 import { getServerSideTranslations } from '../pages.utils';
 import { makePerPageLayout } from '~web/contexts';
 import { usePageStyles } from '../pages.styles';
-
-import {
-  Breadcrumbs,
-  MainLayout,
-  UserSettings,
-  type UserSettingType,
-} from '~web/containers';
+import type { UserSettingType } from '../imports.types';
 
 export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
   const { t } = useTranslation();

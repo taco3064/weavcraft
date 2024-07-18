@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _camelCase from 'lodash/camelCase';
+import type { UserData } from '@weavcraft/common';
 
 import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
 
@@ -7,15 +8,18 @@ import type {
   AccessTokenInfo,
   AccessTokenWithExpiry,
   SigninOptions,
-} from './auth.types';
+} from './account.types';
 
-const TOKEN_INFO_KEYS = [
-  'accessToken',
-  'providerToken',
-  'refreshToken',
-  'tokenType',
-] as (keyof AccessTokenWithExpiry)[];
+//* - User Account Services
+export const getMe = withConnRefusedCatch<QueryFunctionParams<[]>, UserData>(
+  async function () {
+    const { data } = await axios.get('/service/me');
 
+    return data;
+  }
+);
+
+//* - Auth Services
 export const getSigninOptions = withConnRefusedCatch<
   QueryFunctionParams<[string]>,
   SigninOptions[]
@@ -59,6 +63,13 @@ export const doSignIn = withConnRefusedCatch<
     })
   );
 });
+
+const TOKEN_INFO_KEYS = [
+  'accessToken',
+  'providerToken',
+  'refreshToken',
+  'tokenType',
+] as (keyof AccessTokenWithExpiry)[];
 
 function getTokenInfo(hash?: string) {
   const validKeys = Object.values(TOKEN_INFO_KEYS).flat();

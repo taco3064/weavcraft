@@ -1,8 +1,13 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { NAV_ITEMS } from './useAppMenuItems.const';
-import type { MenuItemOptions, NavItem } from './useAppMenuItems.types';
+import { NAV_ITEMS, USER_SETTINGS } from './useAppMenuItems.const';
+import { useAuthState } from '~web/contexts';
+import type {
+  MenuItemOptions,
+  NavItem,
+  UserSettingType,
+} from './useAppMenuItems.types';
 
 export function useAppNavItems() {
   const { i18n } = useTranslation();
@@ -14,17 +19,17 @@ export function useAppNavItems() {
       'ttl-breadcrumbs'
     );
 
-    return Object.keys(resource).reduce<NavItem[]>(
-      (result, id) => [
-        ...result,
-        {
+    return Object.keys(resource).reduce<NavItem[]>((result, id) => {
+      if (id in NAV_ITEMS) {
+        result.push({
           ...NAV_ITEMS[id],
           label: `ttl-breadcrumbs.${id}`,
           href: `/${id}`,
-        },
-      ],
-      []
-    );
+        });
+      }
+
+      return result;
+    }, []);
   }, [i18n]);
 }
 
@@ -54,4 +59,29 @@ export function useTutorialLessons() {
       ];
     }, []);
   }, [i18n]);
+}
+
+export function useUserSettings<T>(externals?: Record<UserSettingType, T>) {
+  const { isAuth } = useAuthState();
+
+  return {
+    options: useMemo(
+      () =>
+        USER_SETTINGS.reduce<MenuItemOptions[]>((acc, { id, icon, auth }) => {
+          const label = `lbl-${id}`;
+          const href = `/user-settings/${id}`;
+
+          if (!auth || isAuth) {
+            acc.push({ icon, label, href });
+          }
+
+          return acc;
+        }, []),
+      [isAuth]
+    ),
+    settings: USER_SETTINGS.map((setting) => ({
+      ...setting,
+      external: externals?.[setting.id] as T,
+    })),
+  };
 }
