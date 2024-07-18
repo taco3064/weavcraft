@@ -5,15 +5,25 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
 
-import { doSignIn, doSingOut, getSigninOptions } from '~web/services';
+import { doSignIn, doSingOut, getMe, getSigninOptions } from '~web/services';
 import { useAuthState } from '~web/contexts';
 import type { MenuItemOptions } from '../useAppMenuItems';
 
 import type { SigninOptions, SigninProvider } from '../imports.types';
 
-export function useAuthMutation(disabled = false) {
-  // const tokenInfo = useTokenInfo();
+export function useUserinfo() {
+  const { isAuth } = useAuthState();
 
+  const { data: userinfo } = useQuery({
+    enabled: isAuth,
+    queryKey: [],
+    queryFn: getMe,
+  });
+
+  return userinfo;
+}
+
+export function useAuthMutation(disabled = false) {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { providers, ...providerState } = useSigninProviders(disabled);

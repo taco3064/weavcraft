@@ -6,30 +6,18 @@ import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Trans } from 'next-i18next';
-import { lazy, useEffect, useState, type ComponentType } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { useRouter } from 'next/router';
 
+import Analytics from './UserSettings.Analytics';
+import Profile from './UserSettings.Profile';
+import Settings from './UserSettings.Settings';
 import { MenuDialog } from '~web/components';
-import { USER_SETTINGS } from './UserSettings.const';
 import { useAuthState } from '~web/contexts';
-import { useAuthMutation } from '~web/hooks';
+import { useAuthMutation, useUserSettings } from '~web/hooks';
 import { useMainStyles } from './UserSettings.styles';
+import type { BaseSettingProps, UserSettingsProps } from './UserSettings.types';
 import type { SigninProvider } from '../imports.types';
-
-import type {
-  BaseSettingProps,
-  UserSettingType,
-  UserSettingsProps,
-} from './UserSettings.types';
-
-const ACCORDION_CONTENTS: Record<
-  UserSettingType,
-  ComponentType<BaseSettingProps>
-> = {
-  analytics: lazy(() => import('./UserSettings.Analytics')),
-  profile: lazy(() => import('./UserSettings.Profile')),
-  settings: lazy(() => import('./UserSettings.Settings')),
-};
 
 export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
@@ -38,6 +26,12 @@ export default function UserSettings({ type }: UserSettingsProps) {
   const { isAuth } = useAuthState();
   const { classes } = useMainStyles();
   const { providers, isPending, onSignin, onSignout } = useAuthMutation(!open);
+
+  const { settings } = useUserSettings<ComponentType<BaseSettingProps>>({
+    analytics: Analytics,
+    profile: Profile,
+    settings: Settings,
+  });
 
   useEffect(() => {
     if (!isAuth && type !== 'settings') {
@@ -50,10 +44,8 @@ export default function UserSettings({ type }: UserSettingsProps) {
   return (
     <>
       <Container disableGutters maxWidth={false}>
-        {USER_SETTINGS.map(({ id, icon, auth }) => {
-          const Component = ACCORDION_CONTENTS[id];
-
-          return auth && !isAuth ? null : (
+        {settings.map(({ id, icon, auth, external: Component }) =>
+          auth && !isAuth ? null : (
             <Accordion
               key={id}
               id={id}
@@ -71,8 +63,8 @@ export default function UserSettings({ type }: UserSettingsProps) {
               <Divider />
               <Component className={classes.details} disabled={isPending} />
             </Accordion>
-          );
-        })}
+          )
+        )}
       </Container>
 
       <Divider />

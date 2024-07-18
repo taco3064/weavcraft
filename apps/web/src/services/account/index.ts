@@ -1,7 +1,7 @@
-export * from './auth';
+export * from './account';
 
 export type {
   AccessTokenInfo,
   SigninOptions,
   SigninProvider,
-} from './auth.types';
+} from './account.types';
