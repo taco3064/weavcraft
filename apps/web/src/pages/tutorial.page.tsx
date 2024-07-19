@@ -16,7 +16,7 @@ import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
 import { PageContainer } from '~web/components';
-import { getServerSideTranslations } from './pages.utils';
+import { getServerSideTranslations } from './common.server.side';
 import { makePerPageLayout } from '~web/contexts';
 import { useTutorialLessons } from '~web/hooks';
 

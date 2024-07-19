@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next';
 
 import { Intro, MainLayout } from '~web/containers';
-import { getServerSideTranslations } from './pages.utils';
+import { getServerSideTranslations } from './common.server.side';
 import { makePerPageLayout } from '~web/contexts';
 
 export default makePerPageLayout(MainLayout)(Intro);

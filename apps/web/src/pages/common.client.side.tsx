@@ -21,9 +21,6 @@ export function getBaseGroupPage<P>(
     'disableGroup' | 'disablePublish' | 'renderContent'
   >
 ) {
-  const { disableGroup, disablePublish, renderContent } =
-    hierarchyListProps || {};
-
   return function BaseGroupPage({
     group,
     initialData,
@@ -65,16 +62,8 @@ export function getBaseGroupPage<P>(
         <TutorialModeAlert />
 
         <HierarchyList
-          {...{
-            category,
-            disableGroup,
-            disablePublish,
-            icon,
-            initialData,
-            renderContent,
-            superiors,
-            toolbarEl,
-          }}
+          {...hierarchyListProps}
+          {...{ category, icon, initialData, superiors, toolbarEl }}
           disableGutters
           maxWidth="md"
         />
