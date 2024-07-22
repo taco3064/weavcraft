@@ -9,3 +9,4 @@ export * from './themes';
 export * from './payload';
 export * from './widgets';
 export * from './user';
+export * from './auth';
