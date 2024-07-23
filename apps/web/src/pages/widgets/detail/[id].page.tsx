@@ -1,4 +1,3 @@
-import Container from '@mui/material/Container';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import { Suspense, useState } from 'react';
@@ -7,42 +6,40 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, WidgetEditor } from '~web/containers';
-import { TutorialModeAlert } from '~web/components';
-import { getServerSideTranslations, isUserEnvStatus } from '../../pages.utils';
-import { useInitializationConfig, type InitializationConfig } from '~web/hooks';
-import { usePageStyles } from '../../pages.styles';
-
+import { PageContainer, TutorialModeAlert } from '~web/components';
 import {
-  makePerPageLayout,
-  useTutorialMode,
-  type PortalContainerEl,
-} from '~web/contexts';
+  getServerSideTranslations,
+  isUserEnvStatus,
+} from '../../common.server.side';
+import { makePerPageLayout, useTutorialMode } from '~web/contexts';
+import { useInitializationConfig } from '~web/hooks';
 
 import {
   getHierarchyDataById,
   getSuperiorHierarchies,
   getWidgetConfigs,
-  type WidgetConfigs,
 } from '~web/services';
+
+import type {
+  InitializationConfig,
+  PortalContainerEl,
+  WidgetConfigs,
+} from '../../imports.types';
 
 export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
   MainLayout
 )(function ThemeDetailPage(props) {
+  const { t } = useTranslation();
   const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
   const isTutorialMode = useTutorialMode();
-
-  const { t } = useTranslation();
-  const { classes } = usePageStyles();
 
   const { config, hierarchy, superiors } = useInitializationConfig(
     getWidgetConfigs,
     props
   );
 
-  console.log(superiors, hierarchy);
-
   return !hierarchy ? null : (
-    <Container component="main" maxWidth="md" className={classes.root}>
+    <PageContainer maxWidth="md">
       <Breadcrumbs
         disableGutters
         toolbar={setToolbarEl}
@@ -82,7 +79,7 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
           toolbarEl={toolbarEl}
         />
       </Suspense>
-    </Container>
+    </PageContainer>
   );
 });
 

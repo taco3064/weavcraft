@@ -2,6 +2,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
+import { useMemo } from 'react';
 
 import NotistackProvider from '../Notistack';
 import type { AppProviderManagerProps } from './AppProviderManager.types';
@@ -23,8 +24,33 @@ export default function AppProviderManager({
   isTutorialMode,
   token,
 }: AppProviderManagerProps) {
-  const language = useLanguage(defaultLanguage);
-  const { cache, theme, ...palette } = usePalette(defaultPalette);
+  const { language, languages, setLanguage } = useLanguage(defaultLanguage);
+
+  const { cache, theme, palette, palettes, setPalette } =
+    usePalette(defaultPalette);
+
+  const value = useMemo(
+    () => ({
+      language,
+      languages,
+      palette,
+      palettes,
+      isTutorialMode,
+      token,
+      setLanguage,
+      setPalette,
+    }),
+    [
+      isTutorialMode,
+      language,
+      languages,
+      palette,
+      palettes,
+      setLanguage,
+      setPalette,
+      token,
+    ]
+  );
 
   return (
     <QueryClientProvider client={QUERY_CLIENT}>
@@ -33,14 +59,7 @@ export default function AppProviderManager({
           <CssBaseline />
 
           <NotistackProvider>
-            <AppSettingsContext.Provider
-              value={{
-                ...language,
-                ...palette,
-                isTutorialMode,
-                token,
-              }}
-            >
+            <AppSettingsContext.Provider value={value}>
               {children}
             </AppSettingsContext.Provider>
           </NotistackProvider>

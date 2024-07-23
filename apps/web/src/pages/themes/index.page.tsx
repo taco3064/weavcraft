@@ -1,116 +1,25 @@
-import Container from '@mui/material/Container';
-import { useTranslation } from 'next-i18next';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { MainLayout } from '~web/containers';
+import { PaletteViewer } from '~web/components';
+import { getBaseGroupPage } from '../common.client.side';
+import { getBaseGroupServerSideProps } from '../common.server.side';
+import { makePerPageLayout } from '~web/contexts';
 
-import { Breadcrumbs, HierarchyList, MainLayout } from '~web/containers';
-import { PaletteViewer, TutorialModeAlert } from '~web/components';
-import { getServerSideTranslations, isUserEnvStatus } from '../pages.utils';
-import { usePageStyles } from '../pages.styles';
-import type { BaseHierarchyProps } from '../pages.types';
+import type { BaseHierarchyProps, ThemePalette } from '../imports.types';
 
-import {
-  getHierarchyData,
-  getSuperiorHierarchies,
-  type ThemePalette,
-} from '~web/services';
-
-import {
-  makePerPageLayout,
-  useTutorialMode,
-  type PortalContainerEl,
-} from '~web/contexts';
+const category = 'themes';
 
 export default makePerPageLayout<BaseHierarchyProps<ThemePalette>>(MainLayout)(
-  function ThemeGroupsPage({ group, initialData, initialSuperiors }) {
-    const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
-    const isTutorialMode = useTutorialMode();
-
-    const { t } = useTranslation();
-    const { classes } = usePageStyles();
-
-    const { data: superiors = initialSuperiors } = useQuery({
-      enabled: Boolean(isTutorialMode && group),
-      queryKey: [group as string, isTutorialMode],
-      queryFn: getSuperiorHierarchies,
-    });
-
-    return (
-      <Container component="main" maxWidth="md" className={classes.root}>
-        <Breadcrumbs
-          disableGutters
-          currentBreadcrumbLabel={group}
-          currentPageTitle={!group ? t('ttl-breadcrumbs.themes.label') : group}
-          toolbar={setToolbarEl}
-          onCatchAllRoutesTransform={(key, value) => {
-            if (key === 'group' && typeof value === 'string') {
-              return superiors.map(({ id, title }) => ({
-                href: `${isTutorialMode ? '/tutorial' : ''}/themes/${id}`,
-                label: title,
-              }));
-            }
-          }}
-        />
-
-        <TutorialModeAlert />
-
-        <HierarchyList
-          {...{ initialData, superiors, toolbarEl }}
-          category="themes"
-          disableGroup={false}
-          disableGutters
-          disablePublish={false}
-          icon="faPalette"
-          maxWidth="md"
-          renderContent={(palette) => (
-            <PaletteViewer
-              disableBorder
-              disableBorderRadius
-              config={palette}
-              size={200}
-            />
-          )}
-        />
-      </Container>
-    );
-  }
+  getBaseGroupPage(category, {
+    renderContent: (palette) => (
+      <PaletteViewer
+        disableBorder
+        disableBorderRadius
+        config={palette}
+        size={200}
+      />
+    ),
+  })
 );
 
-export const getServerSideProps: GetServerSideProps<
-  BaseHierarchyProps<ThemePalette>
-> = async (ctx) => {
-  const group =
-    typeof ctx.query.group === 'string' ? ctx.query.group : undefined;
-
-  const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
-
-  const initialSuperiors =
-    !group || isTutorialMode
-      ? []
-      : await getSuperiorHierarchies({ queryKey: [group] });
-
-  if (await isUserEnvStatus(ctx, 'unauth', 'nontutorial')) {
-    //* Redirect to home page if not authenticated and not in tutorial mode
-    return { redirect: { destination: '/', permanent: false } };
-  } else if (!isTutorialMode && group && !initialSuperiors.length) {
-    //* Redirect to 404 page if group does not exist
-    return { notFound: true };
-  }
-
-  return {
-    props: {
-      initialSuperiors,
-      ...(group && { group }),
-      ...(await getServerSideTranslations(ctx, 'themes')),
-
-      initialData: isTutorialMode
-        ? []
-        : await getHierarchyData({
-            queryKey: [
-              { category: 'themes', superior: group, withPayload: true },
-            ],
-          }),
-    },
-  };
-};
+export const getServerSideProps =
+  getBaseGroupServerSideProps<ThemePalette>(category);
