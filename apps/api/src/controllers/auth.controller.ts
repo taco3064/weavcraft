@@ -1,7 +1,18 @@
-import { AuthLoginBySupabaseBodyDTO, AuthLoginResDTO } from '@weavcraft/common';
+import {
+  AuthLoginBySupabaseBodyDTO,
+  AuthLoginResDTO,
+  AuthLogoutResDTO,
+  ReqAuthLogoutDTO,
+  ReqAuthRefreshAccessTokenDTO,
+} from '@weavcraft/common';
 import { APIHelper } from '@weavcraft/helpers';
-import { AuthUseCase } from '@weavcraft/modules';
-import { Body, JsonController, Post } from 'routing-controllers';
+import {
+  AuthUseCase,
+  INJECT_REPO_REFRESH_TOKEN,
+  RefreshTokenRepository,
+} from '@weavcraft/modules';
+import { Body, Get, JsonController, Post } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -9,7 +20,9 @@ import { inject, injectable } from 'tsyringe';
 export class AuthController {
   constructor(
     @inject(AuthUseCase)
-    private readonly authUseCase: AuthUseCase
+    private readonly authUseCase: AuthUseCase,
+    @inject(INJECT_REPO_REFRESH_TOKEN)
+    private readonly refreshTokenRepo: RefreshTokenRepository
   ) {}
 
   @Post('/login/supabase')
@@ -23,10 +36,30 @@ export class AuthController {
     return APIHelper.apiResData(data);
   }
 
+  @Post('/refresh-access-token')
+  @APIHelper.ApiResDataSchema(AuthLoginResDTO, {
+    description: 'Refresh accessToken by refreshToken',
+  })
+  async refreshAccessToken(@Body() body: ReqAuthRefreshAccessTokenDTO) {
+    const data = await this.authUseCase.refreshAccessToken(body);
+    return APIHelper.apiResData(data);
+  }
+
   @Post('/logout')
-  async logout() {
-    return {
-      success: true,
-    };
+  @APIHelper.ApiResDataSchema(AuthLogoutResDTO, {
+    description: 'Logout by refreshToken',
+  })
+  async logout(@Body() body: ReqAuthLogoutDTO) {
+    const data = await this.authUseCase.logoutByToken(body);
+    return APIHelper.apiResData(data);
+  }
+
+  @Get('/refresh-tokens')
+  @OpenAPI({
+    title: '[For Test] Get all refresh tokens',
+  })
+  async getRefreshTokens() {
+    const data = await this.refreshTokenRepo.findAll();
+    return APIHelper.apiResDataList(data);
   }
 }

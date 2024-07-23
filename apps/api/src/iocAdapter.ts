@@ -1,14 +1,16 @@
 import { ClassConstructor, IocAdapter } from 'routing-controllers';
-import { DependencyContainer, container } from 'tsyringe';
+import { DependencyContainer, InjectionToken, container } from 'tsyringe';
 import { IocLogger } from './common/helpers/logger.helper';
 import {
   INJECT_EXTERNAL_SUPABASE,
   INJECT_INSTANCE_JWT,
   INJECT_MONGO_CLIENT,
   INJECT_MONGO_CLIENT_DEMO,
+  INJECT_REPO_REFRESH_TOKEN,
   INJECT_REPO_TEST,
   INJECT_REPO_USER,
   ITestRepository,
+  RefreshTokenRepository,
   TestRepository,
   UserRepository,
 } from '@weavcraft/modules';
@@ -48,13 +50,17 @@ export class TsyringeAdapter implements IocAdapter {
       INJECT_REPO_TEST,
       TestRepository
     );
+    this.container.registerSingleton<RefreshTokenRepository>(
+      INJECT_REPO_REFRESH_TOKEN,
+      RefreshTokenRepository
+    );
     this.container.registerSingleton<UserRepository>(
       INJECT_REPO_USER,
       UserRepository
     );
   }
 
-  get<T>(someClass: ClassConstructor<T>): T {
+  get<T>(someClass: InjectionToken<T>): T {
     const childContainer = this.container.createChildContainer();
     return childContainer.resolve<T>(someClass);
   }
