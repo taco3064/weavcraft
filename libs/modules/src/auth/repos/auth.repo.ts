@@ -5,7 +5,7 @@ import {
   TTL_IDX_REFRESH_TOKEN,
 } from '@weavcraft/repos';
 import { Model } from 'mongoose';
-import { container, inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { INJECT_MONGO_CLIENT } from '../../const';
 import * as moment from 'moment';
 import { v4 } from 'uuid';

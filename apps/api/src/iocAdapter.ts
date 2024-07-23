@@ -1,4 +1,4 @@
-import { ClassConstructor, IocAdapter } from 'routing-controllers';
+import { IocAdapter } from 'routing-controllers';
 import { DependencyContainer, InjectionToken, container } from 'tsyringe';
 import { IocLogger } from './common/helpers/logger.helper';
 import {
