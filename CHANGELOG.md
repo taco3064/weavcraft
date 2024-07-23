@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.50](https://github.com/taco3064/weavcraft/compare/v0.0.49...v0.0.50) (2024-07-23)
+
+
+### Features
+
+* **apps/api:** adjust auth controller logout and refresh access token ([97f67f5](https://github.com/taco3064/weavcraft/commit/97f67f578c023553897c9557715a5e2c34ef2adc))
+* **apps/api:** adjust mongo client initialize in api app, and setting refresh token ttl index ([770dd48](https://github.com/taco3064/weavcraft/commit/770dd4820cd696f920cd38603eafd496aa19ff90))
+* **common/types:** add auth refresh token types ([ddd8e2f](https://github.com/taco3064/weavcraft/commit/ddd8e2fe6eba54b7dc5e6036c4a35fa3c508fcca))
+* **libs/common:** add refresh-token types and refresh-token api dto ([caed54d](https://github.com/taco3064/weavcraft/commit/caed54d1c133642d093e94fa10aa8d8ec74d5485))
+* **libs/modules:** add auth respoitory and inject auth usecase ([551b3a7](https://github.com/taco3064/weavcraft/commit/551b3a73add0dadd999ac7c180d72b4e61a4a65c))
+* **repos/mongoose:** add mongo refresh token schema ([ed45552](https://github.com/taco3064/weavcraft/commit/ed4555280bb53c398495d558f552b15acd423036))
+* **web/pages:** add web page editor pages ([84d2b34](https://github.com/taco3064/weavcraft/commit/84d2b3414385183cc0b32c0f4497600f33613af8))
+
+
+### Bug Fixes
+
+* **sonar:** remove unused imports ([3cd81e5](https://github.com/taco3064/weavcraft/commit/3cd81e58e7698f9a1984207579ae55f91a9a9e82))
+* **web/*:** fixed sonar qube issues ([fee20c8](https://github.com/taco3064/weavcraft/commit/fee20c81bfd76bf54f92c1fe042b4790f7aaec40))
+* **web/*:** fixed sonar qube issues ([b22cf53](https://github.com/taco3064/weavcraft/commit/b22cf53fb75e7f544cc4744e3172302ce6238d35))
+* **web/*:** fixed the next error ([902a1bf](https://github.com/taco3064/weavcraft/commit/902a1bf92042a24ae369ab09306e39a1d891de33))
+* **web/*:** fixed the sonar qube issues ([0591480](https://github.com/taco3064/weavcraft/commit/05914809db24070c09dbe9da04d83cc0792f0a64))
+
 ### [0.0.49](https://github.com/taco3064/weavcraft/compare/v0.0.48...v0.0.49) (2024-07-18)
 
 ### [0.0.48](https://github.com/taco3064/weavcraft/compare/v0.0.47...v0.0.48) (2024-07-18)
