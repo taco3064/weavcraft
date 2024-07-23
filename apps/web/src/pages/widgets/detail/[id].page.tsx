@@ -7,10 +7,7 @@ import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, WidgetEditor } from '~web/containers';
 import { PageContainer, TutorialModeAlert } from '~web/components';
-import {
-  getServerSideTranslations,
-  isUserEnvStatus,
-} from '../../common.server.side';
+import { getTranslations, isUserEnvStatus } from '../../common.server.side';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { useInitializationConfig } from '~web/hooks';
 
@@ -116,7 +113,7 @@ export const getServerSideProps: GetServerSideProps<
       superiors,
       ...(hierarchy && { hierarchy }),
       ...(config && { config }),
-      ...(await getServerSideTranslations(ctx, 'widgets')),
+      ...(await getTranslations(ctx, 'widgets')),
     },
   };
 };

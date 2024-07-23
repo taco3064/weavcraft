@@ -3,7 +3,11 @@ import { nanoid } from 'nanoid';
 
 import { Mock, getMockData } from '../common';
 import type { HierarchyData } from '../hierarchy/hierarchy.types';
-import type { ThemePalette, WidgetConfigs } from './configs.types';
+import type {
+  PageLayoutConfigs,
+  ThemePalette,
+  WidgetConfigs,
+} from './configs.types';
 
 const setup = {
   '/service': Mock.setupTesting,
@@ -89,5 +93,42 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
 
         return getMockData(input);
       });
+  });
+
+  setupMock('pages', {}, ({ mock, getDb }) => {
+    mock.onGet(new RegExp(`^${baseURL}/configs/pages/.+$`)).reply((config) => {
+      const hierarchyId = config.url?.split('/').pop() as string;
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
+      const pagesDb = getDb<PageLayoutConfigs>('pages');
+
+      hierarchyDb.read();
+      pagesDb.read();
+
+      return getMockData(
+        pagesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string]
+      );
+    });
+
+    mock.onPost(new RegExp(`^${baseURL}/configs/pages/.+$`)).reply((config) => {
+      const hierarchyId = config.url?.split('/').pop() as string;
+      const input = JSON.parse(config.data) as PageLayoutConfigs;
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
+      const pagesDb = getDb<PageLayoutConfigs>('pages');
+
+      hierarchyDb.update((hierarchyStore) => {
+        const payloadId = hierarchyStore[hierarchyId]?.payloadId || nanoid();
+
+        _set(hierarchyStore, [hierarchyId, 'payloadId'], payloadId);
+
+        pagesDb.update((pageStore) => {
+          _set(pageStore, payloadId, { ...input, id: payloadId });
+        });
+      });
+
+      pagesDb.write();
+      hierarchyDb.write();
+
+      return getMockData(input);
+    });
   });
 });

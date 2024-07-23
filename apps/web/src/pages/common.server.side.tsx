@@ -26,7 +26,7 @@ export async function isUserEnvStatus(
   return target.length > 0 && target.every((t) => status[t]);
 }
 
-export async function getServerSideTranslations(
+export async function getTranslations(
   { req }: GetServerSidePropsContext,
   ...ns: string[]
 ) {
@@ -65,7 +65,7 @@ export function getBaseGroupServerSideProps<P>(category: string) {
       props: {
         initialSuperiors,
         ...(group && { group }),
-        ...(await getServerSideTranslations(ctx, category)),
+        ...(await getTranslations(ctx, category)),
 
         initialData: isTutorialMode
           ? []
