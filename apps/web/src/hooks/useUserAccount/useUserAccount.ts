@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie';
-import Core from '@weavcraft/core';
 import _capitalize from 'lodash/capitalize';
 import { useMemo } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
