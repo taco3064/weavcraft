@@ -103,7 +103,7 @@ export default function HierarchyListItem<P>({
             color="text.secondary"
             whiteSpace="pre-line"
           >
-            {data.description || t('msg-no-description')}
+            {data.description ? data.description : t('msg-no-description')}
           </Typography>
         </CardContent>
 

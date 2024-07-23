@@ -80,14 +80,18 @@ function useSigninProviders(disabled: boolean) {
 
     providers: useMemo<MenuItemOptions<{ options: SigninOptions }>[]>(
       () =>
-        providers?.map((options) => ({
-          options,
-          label: `btn-signin-with-${options.provider}`,
-          icon: `fa${options.provider.replace(
+        providers?.map((options) => {
+          const icon = `fa${options.provider.replace(
             /^./,
             options.provider.charAt(0).toUpperCase()
-          )}` as Core.IconCode,
-        })) || [],
+          )}`;
+
+          return {
+            options,
+            icon: icon as Core.IconCode,
+            label: `btn-signin-with-${options.provider}`,
+          };
+        }) || [],
       [providers]
     ),
   };

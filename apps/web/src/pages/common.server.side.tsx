@@ -1,8 +1,7 @@
 import cookie from 'cookie';
 import { i18n } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { GetServerSideProps } from 'next';
-import type { GetServerSidePropsContext } from 'next';
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
 import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
 import type { BaseHierarchyProps } from './imports.types';

@@ -55,13 +55,11 @@ export function useAppSettings() {
   };
 }
 
-export function useLanguage(defaultLanguage: string) {
+export function useLanguage(defaultLanguage: LanguageCode) {
+  const [language, setLanguage] = React.useState(defaultLanguage);
+
   const { i18n } = useTranslation();
   const { locales } = useRouter();
-
-  const [language, setLanguage] = React.useState(
-    defaultLanguage as LanguageCode
-  );
 
   return {
     language,
