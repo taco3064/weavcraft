@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import Core from '@weavcraft/core';
+import _capitalize from 'lodash/capitalize';
 import { useMemo } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -81,15 +82,16 @@ function useSigninProviders(disabled: boolean) {
     providers: useMemo<MenuItemOptions<{ options: SigninOptions }>[]>(
       () =>
         providers?.map((options) => {
-          const icon = `fa${options.provider.replace(
-            /^./,
-            options.provider.charAt(0).toUpperCase()
-          )}`;
+          const { provider } = options;
+
+          const icon = `fa${
+            _capitalize(provider) as Capitalize<SigninProvider>
+          }` as const;
 
           return {
             options,
-            icon: icon as Core.IconCode,
-            label: `btn-signin-with-${options.provider}`,
+            icon,
+            label: `btn-signin-with-${provider}`,
           };
         }) || [],
       [providers]

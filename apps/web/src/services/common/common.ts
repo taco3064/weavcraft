@@ -45,7 +45,7 @@ export function setAuthorizationInterceptor(
           options.onUnauthorized();
         }
 
-        return Promise.reject(error);
+        return Promise.reject(AxiosError.from(error));
       }
     );
   }
