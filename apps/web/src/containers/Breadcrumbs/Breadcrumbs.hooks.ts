@@ -37,12 +37,15 @@ export function useBreadcrumbs({
         const href = `/${paths.join('/')}` as const;
         const { [href]: status } = customBreadcrumbs || {};
 
-        if (status !== 'hidden') {
+        if (status === 'nonLinkable') {
           result.push({
-            href:
-              status === 'nonLinkable'
-                ? undefined
-                : `${isTutorialMode ? '/tutorial' : ''}${href}`,
+            label: isLast
+              ? currentBreadcrumbLabel
+              : t(`ttl-breadcrumbs.${paths.join('.')}.label`),
+          });
+        } else if (status !== 'hidden') {
+          result.push({
+            href: `${isTutorialMode ? '/tutorial' : ''}${href}`,
             label: isLast
               ? currentBreadcrumbLabel
               : t(`ttl-breadcrumbs.${paths.join('.')}.label`),

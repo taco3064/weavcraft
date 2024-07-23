@@ -1,8 +1,25 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsString, IsUUID } from 'class-validator';
 
 export class AuthLoginResDTO {
   @IsString()
   accessToken: string;
+  @IsUUID(4)
+  refreshToken: string;
+}
+
+export class AuthLogoutResDTO {
+  @IsBoolean()
+  success: boolean;
+}
+
+export class ReqAuthRefreshAccessTokenDTO {
+  @IsUUID(4)
+  refreshToken: string;
+}
+
+export class ReqAuthLogoutDTO {
+  @IsUUID(4)
+  refreshToken: string;
 }
 
 /**

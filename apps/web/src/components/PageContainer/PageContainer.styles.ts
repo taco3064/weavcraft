@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const usePageStyles = makeStyles({ name: 'Page' })((theme) => ({
+export const useMainStyles = makeStyles({ name: 'PageContainer' })((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',

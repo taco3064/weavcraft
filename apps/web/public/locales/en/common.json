@@ -38,6 +38,7 @@
   "msg-success-delete": "Successfully deleted {{name}}.",
   "msg-success-signout": "You have successfully logged out.",
   "msg-success-update": "Successfully updated {{name}}.",
+  "ttl-breadcrumbs.user-settings.label": "User Settings",
   "ttl-delete-confirm": "Confirm Deletion",
   "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
@@ -74,15 +75,12 @@
       "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
     },
     "pages": {
-      "label": "Web Page Editor",
+      "label": "Web Pages",
       "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
     },
     "websites": {
       "label": "Websites",
       "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
-    },
-    "user-settings": {
-      "label": "User Settings"
     }
   }
 }

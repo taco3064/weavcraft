@@ -1,13 +1,19 @@
+import Core from '@weavcraft/core';
 import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { NAV_ITEMS, USER_SETTINGS } from './useAppMenuItems.const';
 import { useAuthState } from '~web/contexts';
+
 import type {
   MenuItemOptions,
   NavItem,
   UserSettingType,
 } from './useAppMenuItems.types';
+
+export function useNavIcon(category: string) {
+  return NAV_ITEMS[category]?.icon as Core.IconCode;
+}
 
 export function useAppNavItems() {
   const { i18n } = useTranslation();
@@ -19,12 +25,12 @@ export function useAppNavItems() {
       'ttl-breadcrumbs'
     );
 
-    return Object.keys(resource).reduce<NavItem[]>((result, id) => {
-      if (id in NAV_ITEMS) {
+    return Object.keys(resource).reduce<NavItem[]>((result, category) => {
+      if (category in NAV_ITEMS) {
         result.push({
-          ...NAV_ITEMS[id],
-          label: `ttl-breadcrumbs.${id}`,
-          href: `/${id}`,
+          ...NAV_ITEMS[category],
+          label: `ttl-breadcrumbs.${category}`,
+          href: `/${category}`,
         });
       }
 

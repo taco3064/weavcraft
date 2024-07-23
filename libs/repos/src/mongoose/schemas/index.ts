@@ -3,6 +3,7 @@ export * from './payload.schema';
 export * from './hierarchy.schema';
 export * from './notification.schema';
 export * from './user.schema';
+export * from './refresh-token.schema';
 export * from './const';
 
 export * as MgoModel from './const';
