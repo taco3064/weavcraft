@@ -2,9 +2,32 @@ import 'reflect-metadata';
 import { server } from './server';
 import { LoggerHelper } from './common/helpers/logger.helper';
 import { Configs } from './configs';
+import {
+  RefreshTokenRepository,
+  INJECT_REPO_REFRESH_TOKEN,
+  INJECT_MONGO_CLIENT,
+  INJECT_MONGO_CLIENT_DEMO,
+} from '@weavcraft/modules';
+import { iocAdapter } from './iocAdapter';
+import { DevDbMongoClient } from './common/database/mongodb/devDB';
+import { DemoDbMongoClient } from './common/database/mongodb/testDB';
 
 async function main() {
   await Configs.instance.loadGCPEnv();
+
+  const demoClient = iocAdapter.container.resolve<DemoDbMongoClient>(
+    INJECT_MONGO_CLIENT_DEMO
+  );
+  await demoClient.initialize();
+  const client =
+    iocAdapter.container.resolve<DevDbMongoClient>(INJECT_MONGO_CLIENT);
+  await client.initialize();
+
+  const refreshTokenRepo = iocAdapter.get<RefreshTokenRepository>(
+    INJECT_REPO_REFRESH_TOKEN
+  );
+  await refreshTokenRepo.setRefreshTokenTTLIndex();
+
   const { httpServer } = await server();
 
   const closeProcesses = async (code = 1) => {
