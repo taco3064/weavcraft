@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import { v4 } from 'uuid';
 
 const defaultConfig = {
-  refreshTokenExpired: 1800000,
+  refreshTokenExpired: 3600,
 };
 
 @injectable()
@@ -29,7 +29,7 @@ export class RefreshTokenRepository {
   async setRefreshTokenTTLIndex(
     refreshTokenExpired: number = defaultConfig.refreshTokenExpired
   ) {
-    const duration = moment.duration(refreshTokenExpired, 'milliseconds');
+    const duration = moment.duration(refreshTokenExpired, 'seconds');
     const expireAfterSeconds = duration.asSeconds();
     const collections = await this.mongoClient.connection.db
       .listCollections()
