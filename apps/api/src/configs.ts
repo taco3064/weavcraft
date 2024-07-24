@@ -35,7 +35,11 @@ export class Configs {
       env: this._env.NODE_ENV,
       jwt: {
         secret: this._env.JWT_SECRET,
-        expiresIn: Number(this._env.JWT_EXPIRES_IN) || 3600,
+        expiresIn: Number(this._env.JWT_EXPIRES_IN) || 60 * 60 * 24 * 7, // default 7 days
+      },
+      auth: {
+        refreshTokenExpiredIn:
+          Number(this._env.REFRESH_TOKEN_EXPIRES_IN) || 60 * 60 * 24 * 30, // default 30 days
       },
       app: {
         host: this._env.HOST || 'localhost',
