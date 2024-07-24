@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.51](https://github.com/taco3064/weavcraft/compare/v0.0.50...v0.0.51) (2024-07-24)
+
+
+### Features
+
+* **apps/api:** add preboot, and configs add REFRESH_TOKEN_EXPIRES_IN env ([cdcca46](https://github.com/taco3064/weavcraft/commit/cdcca46365704a53d0d517c8afbc797593550061))
+* **apps/api:** update controller summary and deprecated ([d994e76](https://github.com/taco3064/weavcraft/commit/d994e762acf8921df600f671e3e70d5dc4f2fb71))
+* **modules/auth:** refresh-token repo setRefreshTokenTTLIndex external refreshTokenExpired ([4b59de3](https://github.com/taco3064/weavcraft/commit/4b59de3d1c7b14d62906df0501fb489ac47a8b33))
+* **modules/auth:** set refreshTokenExpired duration seconds ([cecccee](https://github.com/taco3064/weavcraft/commit/cecccee7b50c3e74f2af6e76ea2d4be0dff535aa))
+
 ### [0.0.50](https://github.com/taco3064/weavcraft/compare/v0.0.49...v0.0.50) (2024-07-23)
 
 
