@@ -56,7 +56,8 @@ export class AuthController {
 
   @Get('/refresh-tokens')
   @OpenAPI({
-    title: '[For Test] Get all refresh tokens',
+    summary: '[For Test] Get all refresh tokens',
+    deprecated: true,
   })
   async getRefreshTokens() {
     const data = await this.refreshTokenRepo.findAll();

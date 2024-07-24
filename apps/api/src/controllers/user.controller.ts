@@ -2,6 +2,7 @@ import { UserDataDTO } from '@weavcraft/common';
 import { APIHelper } from '@weavcraft/helpers';
 import { INJECT_REPO_USER, UserRepository } from '@weavcraft/modules';
 import { Delete, Get, JsonController, Param } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -19,6 +20,10 @@ export class UserController {
     return APIHelper.apiResDataList(data);
   }
 
+  @OpenAPI({
+    summary: '[For Test] Delete user by id',
+    deprecated: true,
+  })
   @Delete('/:id')
   async deletedById(@Param('id') id: string) {
     const data = await this.userRepo.deleteById(id);

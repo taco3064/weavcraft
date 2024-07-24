@@ -53,6 +53,7 @@ export class AuthSupabaseController {
 
   @OpenAPI({
     summary: '[For Test] run Supabase access signout',
+    deprecated: true,
   })
   @Post('/signOut')
   async signOut(@Ctx() ctx: Context, @Body() body: AuthSupabaseSignOutBodyDTO) {
@@ -66,6 +67,7 @@ export class AuthSupabaseController {
 
   @OpenAPI({
     summary: '[For Test] validate Supabase access token',
+    deprecated: true,
   })
   @Post('/accessToken')
   async supabaseToken(
@@ -80,6 +82,7 @@ export class AuthSupabaseController {
 
   @OpenAPI({
     summary: '[For Test] refresh Supabase session',
+    deprecated: true,
   })
   @Post('/refresh')
   async refresh(
