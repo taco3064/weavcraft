@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://github.com/taco3064/weavcraft/compare/v0.0.51...v0.0.52) (2024-07-26)
+
+
+### Features
+
+* **@weavcraft/common:** add new type: PageLayoutConfigs ([e914c97](https://github.com/taco3064/weavcraft/commit/e914c97c302cb2701e62415dd0b462fac6b60b2f))
+* **web/page-layouts-editor:** add new container: PageLayoutsEditor ([1d092b9](https://github.com/taco3064/weavcraft/commit/1d092b939fbf0aa334f90e18ff3013320d94448f))
+
+
+### Bug Fixes
+
+* **web/*:** fixed the sonarqube issues ([bc01732](https://github.com/taco3064/weavcraft/commit/bc0173291213826c6d0123e6ee51ddf1ba933ab6))
+* **web/auth:** update auth services ([2098aa1](https://github.com/taco3064/weavcraft/commit/2098aa1e041f709ece8e287521335c2fa15ca14e))
+
 ### [0.0.51](https://github.com/taco3064/weavcraft/compare/v0.0.50...v0.0.51) (2024-07-24)
 
 
