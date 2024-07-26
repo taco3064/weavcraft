@@ -70,9 +70,9 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
         <TutorialModeAlert />
 
         <WidgetEditor
-          maxWidth="md"
           config={config}
           marginTop={DETAIL_MARGIN_TOP}
+          maxWidth="md"
           title={hierarchy.title}
           toolbarEl={toolbarEl}
         />

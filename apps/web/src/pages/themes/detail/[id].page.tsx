@@ -57,9 +57,9 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
       <TutorialModeAlert />
 
       <PaletteEditor
-        maxWidth="md"
         config={config}
         marginTop={DETAIL_MARGIN_TOP}
+        maxWidth="md"
         size={360}
         title={hierarchy.title}
         toolbarEl={toolbarEl}
