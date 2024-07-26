@@ -1,5 +1,4 @@
 import Core from '@weavcraft/core';
-import type { Get } from 'type-fest';
 
 import type {
   PageLayoutConfigs,
