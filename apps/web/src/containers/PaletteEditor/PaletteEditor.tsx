@@ -1,24 +1,30 @@
+import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import Slide from '@mui/material/Slide';
+import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import _get from 'lodash/get';
 import _set from 'lodash/set';
+import { HexAlphaColorPicker } from 'react-colorful';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import ColorEditor from './PaletteEditor.ColorEditor';
-import { PaletteViewer } from '~web/components';
+import { ColorInput, EditorList, PaletteViewer } from '~web/components';
 import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import { usePalettePreview } from './PaletteEditor.hooks';
 import type { PaletteEditorProps } from './PaletteEditor.types';
-import type { ColorName, ThemePalette } from '../imports.types';
+import type { ColorName, PaletteColor, ThemePalette } from '../imports.types';
 
 export default function PaletteEditor({
   config,
@@ -56,6 +62,9 @@ export default function PaletteEditor({
         { variant: 'success' }
       ),
   });
+
+  const handleColorChange = ({ name, color }: PaletteColor) =>
+    setValue({ ..._set(value, name, color?.toUpperCase()) });
 
   return (
     <Slide in direction="up" timeout={1200}>
@@ -107,12 +116,65 @@ export default function PaletteEditor({
         />
 
         <PortalWrapper containerEl={containerEl}>
-          <ColorEditor
-            items={editing}
-            value={value}
+          <EditorList
+            key={editing?.join('|')}
+            title={t('themes:ttl-editor')}
             onClose={() => onToggle(false)}
-            onChange={({ name, color }) =>
-              setValue({ ..._set(value, name, color?.toUpperCase()) })
+            render={(editorClasses) =>
+              editing?.map((name) => {
+                const color = _get(value, name);
+
+                return (
+                  <ListItem key={name}>
+                    <ListItemAvatar className={editorClasses.avatar}>
+                      <Avatar>
+                        <Core.Icon fontSize="large" code="faPalette" />
+                      </Avatar>
+                    </ListItemAvatar>
+
+                    <ListItemText
+                      primary={t(`themes:lbl-color.${name}`)}
+                      primaryTypographyProps={{
+                        color: 'secondary',
+                        fontWeight: 600,
+                      }}
+                      secondaryTypographyProps={{
+                        className: classes.colorPicker,
+                        component: 'div',
+                      }}
+                      secondary={
+                        <>
+                          <HexAlphaColorPicker
+                            color={color}
+                            onChange={(color) =>
+                              handleColorChange({ name, color })
+                            }
+                          />
+
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            label={t('themes:lbl-color-code')}
+                            onChange={(e) =>
+                              handleColorChange({ name, color: e.toString() })
+                            }
+                            InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                              inputComponent: ColorInput as never,
+                              inputProps: {
+                                prefixed: true,
+                                alpha: true,
+                                color,
+                              },
+                            }}
+                          />
+                        </>
+                      }
+                    />
+                  </ListItem>
+                );
+              })
             }
           />
         </PortalWrapper>

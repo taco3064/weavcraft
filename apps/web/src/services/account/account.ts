@@ -1,8 +1,7 @@
 import axios from 'axios';
 import _camelCase from 'lodash/camelCase';
-import type { UserData } from '@weavcraft/common';
-
 import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
+import type { UserData } from '@weavcraft/common';
 
 import type {
   AccessTokenInfo,
@@ -14,9 +13,9 @@ import type {
 export const getMe = withConnRefusedCatch<
   QueryFunctionParams<[string]>,
   UserData
->(async function ({ queryKey: [token] }) {
+>(async function ({ queryKey: [accessToken] }) {
   const { data } = await axios.get('/service/me', {
-    headers: { Authorization: token },
+    headers: { Authorization: accessToken },
   });
 
   return data;
@@ -34,45 +33,47 @@ export const getSigninOptions = withConnRefusedCatch<
   return data;
 });
 
-export const doSingOut = withConnRefusedCatch<void, void>(async function () {
-  const { data } = await axios.post('/service/auth/logout');
+export const getAuthTokens = withConnRefusedCatch<
+  QueryFunctionParams<[]>,
+  Pick<AccessTokenInfo, 'accessToken' | 'refreshToken'> | null
+>(async function () {
+  const { hash } = global.location || {};
+  const info = getTokenInfo(hash);
+
+  if (info) {
+    const { data } = await axios.post('/service/auth/login/supabase', info);
+
+    return data;
+  }
+
+  return { status: 200, success: true, data: null };
+});
+
+export const refreshTokens = withConnRefusedCatch<
+  string,
+  Pick<AccessTokenInfo, 'accessToken' | 'refreshToken'>
+>(async function (refreshToken) {
+  const { data } = await axios.post('/service/auth/refresh-access-token', {
+    refreshToken,
+  });
 
   return data;
 });
 
-export const doSignIn = withConnRefusedCatch<
-  SigninOptions,
-  { accessToken: string }
->(async function (info) {
-  const iframe = global.document?.createElement('iframe');
+export const doSingOut = withConnRefusedCatch<string, void>(async function (
+  refreshToken
+) {
+  const { data } = await axios.post('/service/auth/logout', { refreshToken });
 
-  iframe?.setAttribute('src', info.url);
-  iframe?.setAttribute('style', 'display:none;');
-  global.document.body.appendChild(iframe);
-
-  return new Promise((resolve) =>
-    iframe?.addEventListener('load', async () => {
-      const { hash } = iframe.contentWindow?.location || {};
-      const info = getTokenInfo(hash);
-
-      if (!info) {
-        return;
-      }
-
-      const { data } = await axios.post('/service/auth/login/supabase', info);
-
-      iframe.remove();
-      resolve(data);
-    })
-  );
+  return data;
 });
 
-const TOKEN_INFO_KEYS = [
+const TOKEN_INFO_KEYS: (keyof AccessTokenWithExpiry)[] = [
   'accessToken',
   'providerToken',
   'refreshToken',
   'tokenType',
-] as (keyof AccessTokenWithExpiry)[];
+];
 
 function getTokenInfo(hash?: string) {
   const validKeys = Object.values(TOKEN_INFO_KEYS).flat();

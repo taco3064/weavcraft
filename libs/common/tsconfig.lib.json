@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "noImplicitReturns": false,
     "strictPropertyInitialization": false,
     "outDir": "../../dist/out-tsc",

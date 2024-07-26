@@ -1,8 +1,9 @@
 import './configs.mock';
-
 export * from './configs';
+
 export type {
+  CoreComponent,
+  PageLayoutConfigs,
   ThemePalette,
   WidgetConfigs,
-  CoreComponent,
 } from './configs.types';
