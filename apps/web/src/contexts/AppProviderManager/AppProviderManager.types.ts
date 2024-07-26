@@ -2,7 +2,11 @@ import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import type { Palette } from '@mui/material/styles';
 
-import type { PaletteCode } from '../imports.types';
+import type { AccessTokenInfo, PaletteCode } from '../imports.types';
+
+export type Tokens = Partial<
+  Pick<AccessTokenInfo, 'accessToken' | 'refreshToken'>
+>;
 
 export type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   P,
@@ -14,13 +18,12 @@ export type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
 export type LanguageCode = string;
 
 //* Custom Hooks
-export interface AppSettingsContextValue {
+export interface AppSettingsContextValue extends Readonly<Tokens> {
   readonly isTutorialMode: boolean;
   readonly language: LanguageCode;
   readonly palette: string | Palette;
   readonly languages: LanguageCode[];
   readonly palettes: PaletteCode[];
-  readonly token?: string;
 
   setLanguage: (language: LanguageCode) => void;
   setPalette: (palette: PaletteCode | Palette) => void;
@@ -35,10 +38,14 @@ export type MakePerPageLayout = <P = {}>(
 ) => NextPageWithLayout<P, InitialProps>;
 
 //* Component Props
-export interface AppProviderManagerProps {
+export interface AppProviderManagerProps extends Tokens {
   children: ReactNode;
   defaultLanguage: LanguageCode;
   defaultPalette?: PaletteCode;
   isTutorialMode: boolean;
-  token?: string;
+}
+
+export interface AppSettingsProviderProps {
+  children: ReactNode;
+  value: AppSettingsContextValue;
 }

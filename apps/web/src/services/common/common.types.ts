@@ -5,7 +5,7 @@ import type { QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 
 //* - Common Service Types
 export type AuthorizationInterceptorOptions = {
-  token: string;
+  accessToken: string;
   onUnauthorized: () => void;
 };
 

@@ -12,10 +12,11 @@ import type { AppProps } from './imports.types';
 
 function WeavcraftApp({
   Component,
+  accessToken,
   defaultLanguage,
   defaultPalette,
   pageProps,
-  token,
+  refreshToken,
 }: AppProps) {
   const { t } = useTranslation();
   const { asPath } = useRouter();
@@ -24,18 +25,18 @@ function WeavcraftApp({
   const isTutorialMode = asPath.startsWith('/tutorial');
 
   useEffect(() => {
-    if (token) {
+    if (accessToken) {
       setAuthorizationInterceptor({
-        token,
+        accessToken,
         onUnauthorized: () => {
-          Cookies.remove('token');
+          Cookies.remove('accessToken');
           global.location?.reload();
         },
       });
     }
 
     return () => setAuthorizationInterceptor(false);
-  }, [token]);
+  }, [accessToken]);
 
   return (
     <>
@@ -45,7 +46,13 @@ function WeavcraftApp({
       </Head>
 
       <AppProviderManager
-        {...{ defaultLanguage, defaultPalette, isTutorialMode, token }}
+        {...{
+          accessToken,
+          defaultLanguage,
+          defaultPalette,
+          isTutorialMode,
+          refreshToken,
+        }}
       >
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
@@ -57,25 +64,28 @@ WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
   const { ctx } = appContext;
 
   const {
+    accessToken,
     language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     palette,
-    token,
+    refreshToken,
   } = cookie.parse(ctx.req?.headers.cookie || '');
 
   setAuthorizationInterceptor(
-    !token
+    !accessToken
       ? false
       : {
-          token,
-          onUnauthorized: () => cookie.serialize('token', '', { maxAge: -1 }),
+          accessToken,
+          onUnauthorized: () =>
+            cookie.serialize('accessToken', '', { maxAge: -1 }),
         }
   );
 
   return {
     ...(await App.getInitialProps(appContext)),
+    accessToken,
     defaultLanguage: language,
     defaultPalette: palette,
-    token,
+    refreshToken,
   };
 };
 

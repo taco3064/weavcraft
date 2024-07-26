@@ -4,7 +4,7 @@ import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, UserSettings } from '~web/containers';
 import { PageContainer } from '~web/components';
-import { getServerSideTranslations } from '../common.server.side';
+import { getTranslations } from '../common.server.side';
 import { makePerPageLayout } from '~web/contexts';
 import type { UserSettingType } from '../imports.types';
 
@@ -36,6 +36,6 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => ({
   props: {
-    ...(await getServerSideTranslations(ctx)),
+    ...(await getTranslations(ctx)),
   },
 });

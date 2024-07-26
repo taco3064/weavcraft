@@ -1,9 +1,8 @@
-export { makePerPageLayout } from './AppProviderManager.hocs';
-
 export {
   default,
   default as AppProviderManager,
-} from './AppProviderManager.Provider';
+  makePerPageLayout,
+} from './AppProviderManager';
 
 export {
   useAppSettings,
@@ -14,4 +13,5 @@ export {
 export type {
   LanguageCode,
   NextPageWithLayout,
+  Tokens,
 } from './AppProviderManager.types';

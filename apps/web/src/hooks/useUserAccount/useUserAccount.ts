@@ -5,18 +5,17 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
 
-import { doSignIn, doSingOut, getMe, getSigninOptions } from '~web/services';
+import { doSingOut, getMe, getSigninOptions } from '~web/services';
 import { useAuthState } from '~web/contexts';
 import type { MenuItemOptions } from '../useAppMenuItems';
-
 import type { SigninOptions, SigninProvider } from '../imports.types';
 
 export function useUserinfo() {
-  const { isAuth, token } = useAuthState();
+  const { isAuth, accessToken } = useAuthState();
 
   const { data: userinfo } = useQuery({
     enabled: isAuth,
-    queryKey: [token as string],
+    queryKey: [accessToken as string],
     queryFn: getMe,
   });
 
@@ -28,20 +27,12 @@ export function useAuthMutation(disabled = false) {
   const { enqueueSnackbar } = useSnackbar();
   const { providers, ...providerState } = useSigninProviders(disabled);
 
-  const { mutate: onSignin, ...signinState } = useMutation({
-    mutationFn: doSignIn,
-    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
-    onSuccess: ({ accessToken }) => {
-      Cookies.set('token', accessToken);
-      global.location?.reload();
-    },
-  });
-
   const { mutate: onSignout, ...signoutState } = useMutation({
     mutationFn: doSingOut,
     onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
     onSuccess: () => {
-      Cookies.remove('token');
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
       global.location?.reload();
 
       enqueueSnackbar(t('msg-success-signout'), {
@@ -52,16 +43,18 @@ export function useAuthMutation(disabled = false) {
 
   return {
     providers,
-    isPending: [providerState, signinState, signoutState].some(
-      ({ isPending }) => isPending
-    ),
+    isPending: [providerState, signoutState].some(({ isPending }) => isPending),
+    onSignout: () => onSignout(Cookies.get('refreshToken') as string),
 
-    onSignout,
-    onSignin: (provider: SigninProvider) =>
-      onSignin(
-        providers.find(({ options }) => options.provider === provider)
-          ?.options as SigninOptions
-      ),
+    onSignin: (provider: SigninProvider) => {
+      if (global.location) {
+        const { url } = providers.find(
+          ({ options }) => options.provider === provider
+        )?.options as SigninOptions;
+
+        global.location.replace(url);
+      }
+    },
   };
 }
 

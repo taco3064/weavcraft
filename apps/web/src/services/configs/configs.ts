@@ -3,6 +3,7 @@ import { withConnRefusedCatch, type QueryFunctionParams } from '../common';
 
 import type {
   MutationtConfigInput,
+  PageLayoutConfigs,
   ThemePalette,
   WidgetConfigs,
 } from './configs.types';
@@ -29,6 +30,17 @@ export const getWidgetConfigs = withConnRefusedCatch<
   return data;
 });
 
+export const getPageLayouts = withConnRefusedCatch<
+  QueryFunctionParams<[string]>,
+  PageLayoutConfigs
+>(async function ({ queryKey: [hierarchyId, isTutorialMode] }) {
+  const { data } = await axios.get(`/configs/pages/${hierarchyId}`, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
+
+  return data;
+});
+
 export const upsertThemePalette = withConnRefusedCatch<
   MutationtConfigInput<ThemePalette>,
   ThemePalette
@@ -45,6 +57,17 @@ export const upsertWidgetConfig = withConnRefusedCatch<
   WidgetConfigs
 >(async function ({ hierarchyId, input, isTutorialMode }) {
   const { data } = await axios.post(`/configs/widgets/${hierarchyId}`, input, {
+    baseURL: isTutorialMode ? '/mocks' : '/service',
+  });
+
+  return data;
+});
+
+export const upsertPageLayouts = withConnRefusedCatch<
+  MutationtConfigInput<PageLayoutConfigs>,
+  PageLayoutConfigs
+>(async function ({ hierarchyId, input, isTutorialMode }) {
+  const { data } = await axios.post(`/configs/pages/${hierarchyId}`, input, {
     baseURL: isTutorialMode ? '/mocks' : '/service',
   });
 

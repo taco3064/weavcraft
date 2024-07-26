@@ -4,11 +4,9 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
+import { DETAIL_MARGIN_TOP } from '../../common.client.side';
 import { PageContainer, TutorialModeAlert } from '~web/components';
-import {
-  getServerSideTranslations,
-  isUserEnvStatus,
-} from '../../common.server.side';
+import { getTranslations, isUserEnvStatus } from '../../common.server.side';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { useInitializationConfig } from '~web/hooks';
 
@@ -59,9 +57,9 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
       <TutorialModeAlert />
 
       <PaletteEditor
-        maxWidth="md"
         config={config}
-        marginTop={16}
+        marginTop={DETAIL_MARGIN_TOP}
+        maxWidth="md"
         size={360}
         title={hierarchy.title}
         toolbarEl={toolbarEl}
@@ -104,7 +102,7 @@ export const getServerSideProps: GetServerSideProps<
       superiors,
       ...(hierarchy && { hierarchy }),
       ...(config && { config }),
-      ...(await getServerSideTranslations(ctx, 'themes')),
+      ...(await getTranslations(ctx, 'themes')),
     },
   };
 };
