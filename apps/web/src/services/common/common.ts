@@ -35,7 +35,7 @@ export function setAuthorizationInterceptor(
 
   if (options) {
     INTERCEPTOR.REQ = axios.interceptors.request.use((config) =>
-      _set(config, ['headers', 'Authorization'], options.token)
+      _set(config, ['headers', 'Authorization'], options.accessToken)
     );
 
     INTERCEPTOR.RES = axios.interceptors.response.use(

@@ -27,11 +27,12 @@ export const AppSettingsContext = React.createContext<AppSettingsContextValue>({
 });
 
 export function useAuthState() {
-  const { token } = React.useContext(AppSettingsContext);
+  const { accessToken, refreshToken } = React.useContext(AppSettingsContext);
 
   return {
-    isAuth: Boolean(token),
-    token: token,
+    isAuth: Boolean(accessToken),
+    accessToken,
+    refreshToken,
   };
 }
 

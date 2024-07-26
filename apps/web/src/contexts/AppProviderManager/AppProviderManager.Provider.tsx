@@ -1,70 +1,63 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '@mui/material/styles';
-import { useMemo } from 'react';
+import Cookies from 'js-cookie';
+import { useEffect, useImperativeHandle, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 
-import NotistackProvider from '../Notistack';
-import type { AppProviderManagerProps } from './AppProviderManager.types';
+import { AppSettingsContext } from './AppProviderManager.hooks';
+import { getAuthTokens, refreshTokens } from '~web/services';
+import type { AppSettingsProviderProps } from './AppProviderManager.types';
 
-import {
-  AppSettingsContext,
-  useLanguage,
-  usePalette,
-} from './AppProviderManager.hooks';
-
-//* Base Configs
-const QUERY_CLIENT = new QueryClient();
-
-//* Provider Component
-export default function AppProviderManager({
+export default function AppSettingsProvider({
   children,
-  defaultLanguage,
-  defaultPalette,
-  isTutorialMode,
-  token,
-}: AppProviderManagerProps) {
-  const { language, languages, setLanguage } = useLanguage(defaultLanguage);
+  value,
+}: AppSettingsProviderProps) {
+  const handleRef = useRef<Record<'refresh' | 'replace', () => void>>();
+  const { asPath } = useRouter();
 
-  const { cache, theme, palette, palettes, setPalette } =
-    usePalette(defaultPalette);
+  const { data: tokens } = useSuspenseQuery({
+    queryHash: 'auth-tokens',
+    queryKey: [],
+    queryFn: getAuthTokens,
+  });
 
-  const value = useMemo(
+  const { mutate: onRefresh } = useMutation({
+    mutationFn: refreshTokens,
+    onSuccess: ({ accessToken, refreshToken }) => {
+      Cookies.set('accessToken', accessToken);
+      Cookies.set('refreshToken', refreshToken);
+    },
+  });
+
+  useImperativeHandle(
+    handleRef,
     () => ({
-      language,
-      languages,
-      palette,
-      palettes,
-      isTutorialMode,
-      token,
-      setLanguage,
-      setPalette,
+      replace: () => global.location?.replace(asPath.replace(/#.*$/, '')),
+      refresh: () => {
+        const refreshToken = Cookies.get('refreshToken');
+
+        if (refreshToken) {
+          onRefresh(refreshToken);
+        }
+      },
     }),
-    [
-      isTutorialMode,
-      language,
-      languages,
-      palette,
-      palettes,
-      setLanguage,
-      setPalette,
-      token,
-    ]
+    [asPath, onRefresh]
   );
 
-  return (
-    <QueryClientProvider client={QUERY_CLIENT}>
-      <CacheProvider value={cache}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+  useEffect(() => {
+    const { refresh, replace } = handleRef.current || {};
 
-          <NotistackProvider>
-            <AppSettingsContext.Provider value={value}>
-              {children}
-            </AppSettingsContext.Provider>
-          </NotistackProvider>
-        </ThemeProvider>
-      </CacheProvider>
-    </QueryClientProvider>
+    if (!tokens) {
+      refresh?.();
+    } else {
+      Cookies.set('accessToken', tokens.accessToken);
+      Cookies.set('refreshToken', tokens.refreshToken);
+      replace?.();
+    }
+  }, [tokens]);
+
+  return (
+    <AppSettingsContext.Provider value={value}>
+      {tokens ? null : children}
+    </AppSettingsContext.Provider>
   );
 }
