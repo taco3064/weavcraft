@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
+import { DETAIL_MARGIN_TOP } from '../../common.client.side';
 import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getTranslations, isUserEnvStatus } from '../../common.server.side';
 import { makePerPageLayout, useTutorialMode } from '~web/contexts';
@@ -58,7 +59,7 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
       <PaletteEditor
         maxWidth="md"
         config={config}
-        marginTop={16}
+        marginTop={DETAIL_MARGIN_TOP}
         size={360}
         title={hierarchy.title}
         toolbarEl={toolbarEl}

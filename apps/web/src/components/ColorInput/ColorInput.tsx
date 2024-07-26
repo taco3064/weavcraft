@@ -1,7 +1,7 @@
 import { HexColorInput } from 'react-colorful';
 import { forwardRef, useImperativeHandle } from 'react';
 
-import type { ColorInputProps } from './PaletteEditor.types';
+import type { ColorInputProps } from './ColorInput.types';
 
 export default forwardRef<HTMLInputElement, ColorInputProps>(
   function ColorInput(props, ref) {

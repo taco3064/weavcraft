@@ -2,10 +2,10 @@ import type { ContainerProps } from '@mui/material/Container';
 import type { DataStructureListProps } from '../DataStructureList';
 
 import type {
+  BaseEditorProps,
   ComponentConfig,
   ConfigPaths,
   CoreComponent,
-  PortalContainerEl,
   PropsSettingChangeHandler,
   WidgetConfigs,
 } from '../imports.types';
@@ -43,12 +43,8 @@ export interface ChangeEvents {
 export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 
 //* Component Props Type
-export interface WidgetEditorProps extends Pick<ContainerProps, 'maxWidth'> {
-  config?: WidgetConfigs;
-  marginTop?: number;
-  title: string;
-  toolbarEl?: PortalContainerEl;
-}
+export type WidgetEditorProps = Pick<ContainerProps, 'maxWidth'> &
+  BaseEditorProps<WidgetConfigs>;
 
 export interface NodeCreateButtonProps {
   config?: ComponentConfig;

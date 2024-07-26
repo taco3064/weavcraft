@@ -1,3 +1,4 @@
+export * from './ColorInput';
 export * from './ConfirmDialog';
 export * from './ConfirmToggle';
 export * from './EditorDialog';

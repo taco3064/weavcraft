@@ -14,6 +14,8 @@ import type {
   PortalContainerEl,
 } from './imports.types';
 
+export const DETAIL_MARGIN_TOP = 16;
+
 export function getBaseGroupPage<P>(
   category: string,
   hierarchyListProps?: Pick<
