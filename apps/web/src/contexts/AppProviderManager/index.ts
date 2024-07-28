@@ -1,17 +1,12 @@
+export type { LanguageCode, Tokens } from './AppProviderManager.types';
+
 export {
   default,
   default as AppProviderManager,
-  makePerPageLayout,
-} from './AppProviderManager';
+} from './AppProviderManager.Provider';
 
 export {
   useAppSettings,
-  useAuthState,
+  useAuth,
   useTutorialMode,
 } from './AppProviderManager.hooks';
-
-export type {
-  LanguageCode,
-  NextPageWithLayout,
-  Tokens,
-} from './AppProviderManager.types';

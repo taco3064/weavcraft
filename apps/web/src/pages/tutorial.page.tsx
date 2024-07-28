@@ -17,7 +17,7 @@ import type { GetServerSideProps } from 'next';
 import { Breadcrumbs, MainLayout } from '~web/containers';
 import { PageContainer } from '~web/components';
 import { getTranslations } from './common.server.side';
-import { makePerPageLayout } from '~web/contexts';
+import { makePerPageLayout } from './common.client.side';
 import { useTutorialLessons } from '~web/hooks';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {

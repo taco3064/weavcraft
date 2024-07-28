@@ -5,9 +5,9 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
-import { useAuthState } from '~web/contexts';
+import { useAuth } from '~web/contexts';
 import { useMenuStyles } from './MainLayout.styles';
-import { useUserinfo, useUserSettings } from '~web/hooks';
+import { useUserSettings } from '~web/hooks';
 import type { SigninProvider } from '../imports.types';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 
@@ -16,14 +16,12 @@ export default function UserAvatarMenu({
   open,
   providers,
   onSignin,
-  onSignout,
   onToggle,
 }: UserAvatarMenuProps) {
   const setting = useUserSettings();
-  const userinfo = useUserinfo();
 
   const { t } = useTranslation();
-  const { isAuth } = useAuthState();
+  const { isAuth, userinfo, onSignout } = useAuth();
   const { classes } = useMenuStyles({ isAuth });
 
   const handleItemClick = (label: string) => {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as idb from 'idb';
 import MockAdapter from 'axios-mock-adapter';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import _set from 'lodash/set';
 import { LocalStorage } from 'lowdb/browser';
 import { LowSync, MemorySync } from 'lowdb';
@@ -42,7 +42,14 @@ export function setAuthorizationInterceptor(
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          options.onUnauthorized();
+          const { onRefreshed, onError } = options;
+
+          return onRefreshed()
+            .then(() => axios(error.config as AxiosRequestConfig))
+            .catch(() => {
+              onError();
+              throw error;
+            });
         }
 
         return Promise.reject(error);

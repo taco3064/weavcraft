@@ -1,42 +1,20 @@
 import App, { type AppContext } from 'next/app';
-import Cookies from 'js-cookie';
 import Head from 'next/head';
 import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import type { UserData } from '@weavcraft/common';
 
 import { AppProviderManager } from '~web/contexts';
-import { setAuthorizationInterceptor } from '~web/services';
+import { getMe, refreshTokens } from '~web/services';
 import type { AppProps } from './imports.types';
 
-function WeavcraftApp({
-  Component,
-  accessToken,
-  defaultLanguage,
-  defaultPalette,
-  pageProps,
-  refreshToken,
-}: AppProps) {
+function WeavcraftApp({ Component, pageProps, ...props }: AppProps) {
   const { t } = useTranslation();
   const { asPath } = useRouter();
 
   const getLayout = Component.getLayout || ((page) => page);
   const isTutorialMode = asPath.startsWith('/tutorial');
-
-  useEffect(() => {
-    if (accessToken) {
-      setAuthorizationInterceptor({
-        accessToken,
-        onUnauthorized: () => {
-          Cookies.remove('accessToken');
-          global.location?.reload();
-        },
-      });
-    }
-
-    return () => setAuthorizationInterceptor(false);
-  }, [accessToken]);
 
   return (
     <>
@@ -45,15 +23,7 @@ function WeavcraftApp({
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager
-        {...{
-          accessToken,
-          defaultLanguage,
-          defaultPalette,
-          isTutorialMode,
-          refreshToken,
-        }}
-      >
+      <AppProviderManager {...props} isTutorialMode={isTutorialMode}>
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
     </>
@@ -61,31 +31,57 @@ function WeavcraftApp({
 }
 
 WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
-  const { ctx } = appContext;
+  const { req, res } = appContext.ctx;
+
+  const cookies: string[] = [
+    cookie.serialize('accessToken', '', { maxAge: -1 }),
+    cookie.serialize('refreshToken', '', { maxAge: -1 }),
+    cookie.serialize('userinfo', '', { maxAge: -1 }),
+  ];
 
   const {
-    accessToken,
     language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     palette,
     refreshToken,
-  } = cookie.parse(ctx.req?.headers.cookie || '');
+    userinfo,
+  } = cookie.parse(req?.headers.cookie || '');
 
-  setAuthorizationInterceptor(
-    !accessToken
-      ? false
-      : {
-          accessToken,
-          onUnauthorized: () =>
-            cookie.serialize('accessToken', '', { maxAge: -1 }),
-        }
-  );
+  let user = userinfo
+    ? (JSON.parse(decodeURIComponent(userinfo)) as UserData)
+    : undefined;
+
+  const tokens = !refreshToken
+    ? null
+    : await refreshTokens({
+        refreshToken,
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+      });
+
+  if (tokens) {
+    user =
+      user ||
+      (await getMe({
+        accessToken: tokens.accessToken,
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+      }));
+
+    Object.entries(tokens).forEach(([key, value]) =>
+      cookies.push(cookie.serialize(key, value, { path: '/' }))
+    );
+
+    cookies.push(
+      cookie.serialize('userinfo', JSON.stringify(user), { path: '/' })
+    );
+  }
+
+  res?.setHeader('Set-Cookie', cookies);
 
   return {
     ...(await App.getInitialProps(appContext)),
-    accessToken,
+    ...tokens,
     defaultLanguage: language,
     defaultPalette: palette,
-    refreshToken,
+    userinfo: user,
   };
 };
 

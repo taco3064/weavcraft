@@ -11,11 +11,20 @@ import { useTutorialMode } from '~web/contexts';
 import type {
   BaseHierarchyProps,
   HierarchyListProps,
+  MakePerPageLayout,
   PortalContainerEl,
 } from './imports.types';
 
 export const DETAIL_MARGIN_TOP = 16;
 
+//* Per page layout HOC
+export const makePerPageLayout: MakePerPageLayout = (Layout) => (Page) => {
+  Page.getLayout = (page) => <Layout>{page}</Layout>;
+
+  return Page;
+};
+
+//* Generate the base group page component
 export function getBaseGroupPage<P>(
   category: string,
   hierarchyListProps?: Pick<

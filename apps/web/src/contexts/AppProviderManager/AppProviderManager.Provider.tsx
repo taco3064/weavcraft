@@ -1,63 +1,46 @@
-import Cookies from 'js-cookie';
-import { useEffect, useImperativeHandle, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import CssBaseline from '@mui/material/CssBaseline';
+import { CacheProvider } from '@emotion/react';
+import { ThemeProvider } from '@mui/material/styles';
 
-import { AppSettingsContext } from './AppProviderManager.hooks';
-import { getAuthTokens, refreshTokens } from '~web/services';
-import type { AppSettingsProviderProps } from './AppProviderManager.types';
+import NotistackProvider from '../Notistack';
+import { withQueryClientProvider } from './AppProviderManager.hocs';
+import type { AppProviderManagerProps } from './AppProviderManager.types';
 
-export default function AppSettingsProvider({
-  children,
-  value,
-}: AppSettingsProviderProps) {
-  const handleRef = useRef<Record<'refresh' | 'replace', () => void>>();
-  const { asPath } = useRouter();
+import {
+  AppSettingsContext,
+  useContextInit,
+  useLanguage,
+  usePalette,
+} from './AppProviderManager.hooks';
 
-  const { data: tokens } = useSuspenseQuery({
-    queryHash: 'auth-tokens',
-    queryKey: [],
-    queryFn: getAuthTokens,
-  });
+export default withQueryClientProvider<AppProviderManagerProps>(
+  function AppProviderManager({
+    children,
+    defaultLanguage,
+    defaultPalette,
+    ...props
+  }) {
+    const language = useLanguage(defaultLanguage);
+    const { cache, theme, ...palette } = usePalette(defaultPalette);
 
-  const { mutate: onRefresh } = useMutation({
-    mutationFn: refreshTokens,
-    onSuccess: ({ accessToken, refreshToken }) => {
-      Cookies.set('accessToken', accessToken);
-      Cookies.set('refreshToken', refreshToken);
-    },
-  });
+    const [tokens, value] = useContextInit({
+      ...language,
+      ...palette,
+      ...props,
+    });
 
-  useImperativeHandle(
-    handleRef,
-    () => ({
-      replace: () => global.location?.replace(asPath.replace(/#.*$/, '')),
-      refresh: () => {
-        const refreshToken = Cookies.get('refreshToken');
+    return (
+      <CacheProvider value={cache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
 
-        if (refreshToken) {
-          onRefresh(refreshToken);
-        }
-      },
-    }),
-    [asPath, onRefresh]
-  );
-
-  useEffect(() => {
-    const { refresh, replace } = handleRef.current || {};
-
-    if (!tokens) {
-      refresh?.();
-    } else {
-      Cookies.set('accessToken', tokens.accessToken);
-      Cookies.set('refreshToken', tokens.refreshToken);
-      replace?.();
-    }
-  }, [tokens]);
-
-  return (
-    <AppSettingsContext.Provider value={value}>
-      {tokens ? null : children}
-    </AppSettingsContext.Provider>
-  );
-}
+          <NotistackProvider>
+            <AppSettingsContext.Provider value={value}>
+              {tokens ? null : children}
+            </AppSettingsContext.Provider>
+          </NotistackProvider>
+        </ThemeProvider>
+      </CacheProvider>
+    );
+  }
+);

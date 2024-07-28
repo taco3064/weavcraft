@@ -2,11 +2,20 @@ import * as React from 'react';
 import Cookies from 'js-cookie';
 import createEmotionCache from '@emotion/cache';
 import { createTheme, type Palette } from '@mui/material/styles';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
 
 import { PALETTES, components } from '~web/themes';
 import type { PaletteCode } from '../imports.types';
+
+import {
+  doSingOut,
+  getRefreshToken,
+  refreshTokens,
+  setAuthorizationInterceptor,
+} from '~web/services';
 
 import type {
   AppSettingsContextValue,
@@ -26,13 +35,32 @@ export const AppSettingsContext = React.createContext<AppSettingsContextValue>({
   setPalette: () => null,
 });
 
-export function useAuthState() {
-  const { accessToken, refreshToken } = React.useContext(AppSettingsContext);
+export function useAuth() {
+  const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { accessToken, refreshToken, userinfo } =
+    React.useContext(AppSettingsContext);
+
+  const { mutate: onSignout } = useMutation({
+    mutationFn: doSingOut,
+    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
+    onSuccess: () => {
+      Cookies.remove('refreshToken');
+      global.location?.reload();
+
+      enqueueSnackbar(t('msg-success-signout'), {
+        variant: 'success',
+      });
+    },
+  });
 
   return {
     isAuth: Boolean(accessToken),
     accessToken,
     refreshToken,
+    userinfo,
+    onSignout: () => onSignout(Cookies.get('refreshToken') as string),
   };
 }
 
@@ -112,4 +140,86 @@ export function usePalette(defaultPalette: string = DEFAULT_THEME) {
       setPalette(palette);
     }, []),
   };
+}
+
+export function useContextInit({
+  accessToken,
+  isTutorialMode,
+  language,
+  languages,
+  palette,
+  palettes,
+  refreshToken,
+  userinfo,
+  setLanguage,
+  setPalette,
+}: AppSettingsContextValue) {
+  const signinRef = React.useRef<void>();
+  const { asPath } = useRouter();
+
+  //* This query is only used in client-side
+  const { data: newToken } = useSuspenseQuery({
+    queryHash: 'auth-tokens',
+    queryKey: [],
+    queryFn: getRefreshToken,
+  });
+
+  React.useImperativeHandle(
+    signinRef,
+    () => {
+      if (newToken && global.location?.hash) {
+        Cookies.set('refreshToken', newToken);
+        global.location?.replace(asPath.replace(/#.*$/, ''));
+      }
+    },
+    [asPath, newToken]
+  );
+
+  React.useEffect(() => {
+    if (accessToken && refreshToken) {
+      setAuthorizationInterceptor({
+        accessToken,
+        onError: global.location?.reload,
+        onRefreshed: async () => {
+          const tokens = await refreshTokens(refreshToken);
+
+          Object.entries(tokens).forEach(([key, value]) =>
+            Cookies.set(key, value)
+          );
+        },
+      });
+    }
+
+    return () => setAuthorizationInterceptor(false);
+  }, [accessToken, refreshToken]);
+
+  return [
+    Boolean(global.location?.hash),
+    React.useMemo(
+      () => ({
+        accessToken,
+        isTutorialMode,
+        language,
+        languages,
+        palette,
+        palettes,
+        refreshToken,
+        userinfo,
+        setLanguage,
+        setPalette,
+      }),
+      [
+        accessToken,
+        isTutorialMode,
+        language,
+        languages,
+        palette,
+        palettes,
+        refreshToken,
+        userinfo,
+        setLanguage,
+        setPalette,
+      ]
+    ),
+  ] as const;
 }

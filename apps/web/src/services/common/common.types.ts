@@ -6,7 +6,8 @@ import type { QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 //* - Common Service Types
 export type AuthorizationInterceptorOptions = {
   accessToken: string;
-  onUnauthorized: () => void;
+  onRefreshed: () => Promise<void>;
+  onError: () => void;
 };
 
 export type MockSetupOptions = {

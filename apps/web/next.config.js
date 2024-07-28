@@ -5,6 +5,7 @@ const sha256 = require('crypto-js/sha256');
 //* 取得 App 支援的 Languages
 const { i18n } = require('./next-i18next.config');
 const { version } = require('../../package.json');
+const API_URL = 'https://api.weavcraft.com';
 const TUTORIAL_TOKEN = sha256(`tutorial-${version}`).toString();
 
 /**
@@ -28,7 +29,7 @@ const nextConfig = {
     },
     {
       source: '/service/:path*',
-      destination: 'https://api.weavcraft.com/:path*',
+      destination: `${API_URL}/:path*`,
     },
   ],
   webpack: ({ plugins, ...config }) => ({
@@ -36,6 +37,7 @@ const nextConfig = {
     plugins: [
       ...plugins,
       new DefinePlugin({
+        'process.env.NEXT_PUBLIC_API_URL': JSON.stringify(API_URL),
         'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
         'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
         'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
