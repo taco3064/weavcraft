@@ -9,7 +9,7 @@ import { compareVersions } from 'compare-versions';
 import type { DBSchema, StoreNames } from 'idb';
 
 import type {
-  AuthorizationInterceptorOptions,
+  AuthInterceptorOptions,
   MockSetupOptions,
   ResponseData,
 } from './common.types';
@@ -20,9 +20,7 @@ const INTERCEPTOR: Record<'REQ' | 'RES', number | undefined> = {
   RES: undefined,
 };
 
-export function setAuthorizationInterceptor(
-  options: AuthorizationInterceptorOptions | false
-) {
+export function setAuthInterceptor(options: AuthInterceptorOptions | false) {
   if (typeof INTERCEPTOR.REQ === 'number') {
     axios.interceptors.request.eject(INTERCEPTOR.REQ);
     INTERCEPTOR.REQ = undefined;
@@ -42,9 +40,9 @@ export function setAuthorizationInterceptor(
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          const { onRefreshed, onError } = options;
+          const { onRefresh, onError } = options;
 
-          return onRefreshed()
+          return onRefresh()
             .then(() => axios(error.config as AxiosRequestConfig))
             .catch(() => {
               onError();

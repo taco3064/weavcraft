@@ -14,7 +14,7 @@ import {
   doSingOut,
   getRefreshToken,
   refreshTokens,
-  setAuthorizationInterceptor,
+  setAuthInterceptor,
 } from '~web/services';
 
 import type {
@@ -48,10 +48,7 @@ export function useAuth() {
     onSuccess: () => {
       Cookies.remove('refreshToken');
       global.location?.reload();
-
-      enqueueSnackbar(t('msg-success-signout'), {
-        variant: 'success',
-      });
+      enqueueSnackbar(t('msg-success-signout'), { variant: 'success' });
     },
   });
 
@@ -60,7 +57,7 @@ export function useAuth() {
     accessToken,
     refreshToken,
     userinfo,
-    onSignout: () => onSignout(Cookies.get('refreshToken') as string),
+    onSignout: () => refreshToken && onSignout(refreshToken),
   };
 }
 
@@ -177,10 +174,10 @@ export function useContextInit({
 
   React.useEffect(() => {
     if (accessToken && refreshToken) {
-      setAuthorizationInterceptor({
+      setAuthInterceptor({
         accessToken,
         onError: global.location?.reload,
-        onRefreshed: async () => {
+        onRefresh: async () => {
           const tokens = await refreshTokens(refreshToken);
 
           Object.entries(tokens).forEach(([key, value]) =>
@@ -190,7 +187,7 @@ export function useContextInit({
       });
     }
 
-    return () => setAuthorizationInterceptor(false);
+    return () => setAuthInterceptor(false);
   }, [accessToken, refreshToken]);
 
   return [

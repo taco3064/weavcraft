@@ -4,10 +4,10 @@ import type { JsonPrimitive } from 'type-fest';
 import type { QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 
 //* - Common Service Types
-export type AuthorizationInterceptorOptions = {
+export type AuthInterceptorOptions = {
   accessToken: string;
-  onRefreshed: () => Promise<void>;
   onError: () => void;
+  onRefresh: () => Promise<void>;
 };
 
 export type MockSetupOptions = {

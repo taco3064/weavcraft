@@ -1,5 +1,5 @@
-import App, { type AppContext } from 'next/app';
 import Head from 'next/head';
+import NextApp, { type AppContext } from 'next/app';
 import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -9,7 +9,7 @@ import { AppProviderManager } from '~web/contexts';
 import { getMe, refreshTokens } from '~web/services';
 import type { AppProps } from './imports.types';
 
-function WeavcraftApp({ Component, pageProps, ...props }: AppProps) {
+function App({ Component, pageProps, ...props }: AppProps) {
   const { t } = useTranslation();
   const { asPath } = useRouter();
 
@@ -30,7 +30,7 @@ function WeavcraftApp({ Component, pageProps, ...props }: AppProps) {
   );
 }
 
-WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
+App.getInitialProps = async (appContext: AppContext) => {
   const { req, res } = appContext.ctx;
 
   const cookies: string[] = [
@@ -77,7 +77,7 @@ WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
   res?.setHeader('Set-Cookie', cookies);
 
   return {
-    ...(await App.getInitialProps(appContext)),
+    ...(await NextApp.getInitialProps(appContext)),
     ...tokens,
     defaultLanguage: language,
     defaultPalette: palette,
@@ -85,4 +85,4 @@ WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
   };
 };
 
-export default appWithTranslation(WeavcraftApp);
+export default appWithTranslation(App);
