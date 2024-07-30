@@ -1,60 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as idb from 'idb';
 import MockAdapter from 'axios-mock-adapter';
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
-import _set from 'lodash/set';
+import axios, { type AxiosError } from 'axios';
 import { LocalStorage } from 'lowdb/browser';
 import { LowSync, MemorySync } from 'lowdb';
 import { compareVersions } from 'compare-versions';
 import type { DBSchema, StoreNames } from 'idb';
 
-import type {
-  AuthInterceptorOptions,
-  MockSetupOptions,
-  ResponseData,
-} from './common.types';
-
-//* - Axios Authorization Interceptor
-const INTERCEPTOR: Record<'REQ' | 'RES', number | undefined> = {
-  REQ: undefined,
-  RES: undefined,
-};
-
-export function setAuthInterceptor(options: AuthInterceptorOptions | false) {
-  if (typeof INTERCEPTOR.REQ === 'number') {
-    axios.interceptors.request.eject(INTERCEPTOR.REQ);
-    INTERCEPTOR.REQ = undefined;
-  }
-
-  if (typeof INTERCEPTOR.RES === 'number') {
-    axios.interceptors.response.eject(INTERCEPTOR.RES);
-    INTERCEPTOR.RES = undefined;
-  }
-
-  if (options) {
-    INTERCEPTOR.REQ = axios.interceptors.request.use((config) =>
-      _set(config, ['headers', 'Authorization'], options.accessToken)
-    );
-
-    INTERCEPTOR.RES = axios.interceptors.response.use(
-      (response) => response,
-      (error: AxiosError) => {
-        if (error.response?.status === 401) {
-          const { onRefresh, onError } = options;
-
-          return onRefresh()
-            .then(() => axios(error.config as AxiosRequestConfig))
-            .catch(() => {
-              onError();
-              throw error;
-            });
-        }
-
-        return Promise.reject(error);
-      }
-    );
-  }
-}
+import type { MockSetupOptions, ResponseData } from './common.types';
 
 //* - IDB version management and auto-upgrade
 export const Idb = (() => {

@@ -1,4 +1,4 @@
-export type { LanguageCode, Tokens } from './AppProviderManager.types';
+export type { LanguageCode } from './AppProviderManager.types';
 
 export {
   default,

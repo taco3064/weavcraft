@@ -2,6 +2,8 @@ import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
@@ -21,6 +23,7 @@ export default function UserAvatarMenu({
   const setting = useUserSettings();
 
   const { t } = useTranslation();
+  const { data: session } = useSession();
   const { isAuth, userinfo, onSignout } = useAuth();
   const { classes } = useMenuStyles({ isAuth });
 
@@ -33,6 +36,12 @@ export default function UserAvatarMenu({
 
     onToggle(false);
   };
+
+  useEffect(() => {
+    if (session?.error === 'RefreshAccessTokenError') {
+      onToggle(true);
+    }
+  }, [session?.error, onToggle]);
 
   return (
     <>

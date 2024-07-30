@@ -1,10 +1,9 @@
 import type { AppProps as NextAppProps } from 'next/app';
 import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
-import type { UserData } from '@weavcraft/common';
 
 import type { HierarchyData, SuperiorHierarchy } from '~web/services';
-import type { LanguageCode, Tokens } from '~web/contexts';
+import type { LanguageCode } from '~web/contexts';
 import type { PaletteCode } from '~web/themes';
 
 export type * from '~web/components';
@@ -21,11 +20,10 @@ type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export interface AppProps extends NextAppProps, Tokens {
+export interface AppProps extends NextAppProps {
   Component: NextPageWithLayout;
   defaultLanguage: LanguageCode;
   defaultPalette?: PaletteCode;
-  userinfo?: UserData;
 }
 
 export interface BaseHierarchyProps<P = never> {

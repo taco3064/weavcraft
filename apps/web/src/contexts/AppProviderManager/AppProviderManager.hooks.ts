@@ -1,24 +1,20 @@
 import * as React from 'react';
 import Cookies from 'js-cookie';
 import createEmotionCache from '@emotion/cache';
+import _camelCase from 'lodash/camelCase';
+import _get from 'lodash/get';
 import { createTheme, type Palette } from '@mui/material/styles';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
+import type { UserData } from '@weavcraft/common';
 
 import { PALETTES, components } from '~web/themes';
-import type { PaletteCode } from '../imports.types';
-
-import {
-  doSingOut,
-  getRefreshToken,
-  refreshTokens,
-  setAuthInterceptor,
-} from '~web/services';
+import type { Credentials, PaletteCode } from '../imports.types';
 
 import type {
   AppSettingsContextValue,
+  CredentialKeys,
   LanguageCode,
 } from './AppProviderManager.types';
 
@@ -36,28 +32,12 @@ export const AppSettingsContext = React.createContext<AppSettingsContextValue>({
 });
 
 export function useAuth() {
-  const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { accessToken, refreshToken, userinfo } =
-    React.useContext(AppSettingsContext);
-
-  const { mutate: onSignout } = useMutation({
-    mutationFn: doSingOut,
-    onError: (err) => enqueueSnackbar(err.message, { variant: 'error' }),
-    onSuccess: () => {
-      Cookies.remove('refreshToken');
-      global.location?.reload();
-      enqueueSnackbar(t('msg-success-signout'), { variant: 'success' });
-    },
-  });
+  const { data: session, status } = useSession();
 
   return {
-    isAuth: Boolean(accessToken),
-    accessToken,
-    refreshToken,
-    userinfo,
-    onSignout: () => refreshToken && onSignout(refreshToken),
+    isAuth: status === 'authenticated',
+    userinfo: _get(session, ['user']) as UserData | undefined,
+    onSignout: () => signOut({ callbackUrl: '/', redirect: true }),
   };
 }
 
@@ -140,83 +120,78 @@ export function usePalette(defaultPalette: string = DEFAULT_THEME) {
 }
 
 export function useContextInit({
-  accessToken,
   isTutorialMode,
   language,
   languages,
   palette,
   palettes,
-  refreshToken,
-  userinfo,
   setLanguage,
   setPalette,
 }: AppSettingsContextValue) {
-  const signinRef = React.useRef<void>();
+  const { status } = useSession();
   const { asPath } = useRouter();
 
-  //* This query is only used in client-side
-  const { data: newToken } = useSuspenseQuery({
-    queryHash: 'auth-tokens',
-    queryKey: [],
-    queryFn: getRefreshToken,
-  });
-
-  React.useImperativeHandle(
-    signinRef,
-    () => {
-      if (newToken && global.location?.hash) {
-        Cookies.set('refreshToken', newToken);
-        global.location?.replace(asPath.replace(/#.*$/, ''));
-      }
-    },
-    [asPath, newToken]
-  );
+  //* This credentials is only generated in client-side
+  const credentials = useCredentials(asPath, status === 'unauthenticated');
 
   React.useEffect(() => {
-    if (accessToken && refreshToken) {
-      setAuthInterceptor({
-        accessToken,
-        onError: global.location?.reload,
-        onRefresh: async () => {
-          const tokens = await refreshTokens(refreshToken);
-
-          Object.entries(tokens).forEach(([key, value]) =>
-            Cookies.set(key, value)
-          );
-        },
-      });
+    if (status === 'unauthenticated' && credentials) {
+      signIn('credentials', { ...credentials, redirect: true });
     }
-
-    return () => setAuthInterceptor(false);
-  }, [accessToken, refreshToken]);
+  }, [credentials, status]);
 
   return [
-    Boolean(global.location?.hash),
+    status === 'loading' || Boolean(credentials),
     React.useMemo(
       () => ({
-        accessToken,
         isTutorialMode,
         language,
         languages,
         palette,
         palettes,
-        refreshToken,
-        userinfo,
         setLanguage,
         setPalette,
       }),
       [
-        accessToken,
         isTutorialMode,
         language,
         languages,
         palette,
         palettes,
-        refreshToken,
-        userinfo,
         setLanguage,
         setPalette,
       ]
     ),
   ] as const;
+}
+
+const CREDENTIALS_KEYS: CredentialKeys[] = [
+  'accessToken',
+  'providerToken',
+  'refreshToken',
+  'tokenType',
+];
+
+function useCredentials(asPath: string, isUnauthenticated: boolean) {
+  return React.useMemo(() => {
+    const hash = asPath.split('#')[1];
+    const validKeys = Object.values(CREDENTIALS_KEYS).flat();
+
+    const params = Object.fromEntries(
+      Array.from(new URLSearchParams(hash).entries()).map(([key, value]) => [
+        _camelCase(key) as keyof Credentials,
+        value,
+      ])
+    );
+
+    return !isUnauthenticated || validKeys.some((key) => !(key in params))
+      ? undefined
+      : Object.entries(params).reduce((acc, [key, value]) => {
+          const fieldName = _camelCase(key) as CredentialKeys;
+
+          return !CREDENTIALS_KEYS.includes(fieldName)
+            ? acc
+            : { ...acc, [fieldName]: value };
+        }, {} as Credentials);
+  }, [asPath, isUnauthenticated]);
 }

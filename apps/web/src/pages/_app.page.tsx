@@ -1,12 +1,11 @@
 import Head from 'next/head';
 import NextApp, { type AppContext } from 'next/app';
+import _get from 'lodash/get';
 import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import type { UserData } from '@weavcraft/common';
 
 import { AppProviderManager } from '~web/contexts';
-import { getMe, refreshTokens } from '~web/services';
 import type { AppProps } from './imports.types';
 
 function App({ Component, pageProps, ...props }: AppProps) {
@@ -31,57 +30,21 @@ function App({ Component, pageProps, ...props }: AppProps) {
 }
 
 App.getInitialProps = async (appContext: AppContext) => {
-  const { req, res } = appContext.ctx;
+  const req = appContext.ctx.req;
+  const cookies = cookie.parse((req && _get(req, ['headers', 'cookie'])) || '');
 
-  const cookies: string[] = [
-    cookie.serialize('accessToken', '', { maxAge: -1 }),
-    cookie.serialize('refreshToken', '', { maxAge: -1 }),
-    cookie.serialize('userinfo', '', { maxAge: -1 }),
-  ];
+  const { language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE, palette } =
+    cookies;
 
-  const {
-    language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
-    palette,
-    refreshToken,
-    userinfo,
-  } = cookie.parse(req?.headers.cookie || '');
-
-  let user = userinfo
-    ? (JSON.parse(decodeURIComponent(userinfo)) as UserData)
-    : undefined;
-
-  const tokens = !refreshToken
-    ? null
-    : await refreshTokens({
-        refreshToken,
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
-      });
-
-  if (tokens) {
-    user =
-      user ||
-      (await getMe({
-        accessToken: tokens.accessToken,
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
-      }));
-
-    Object.entries(tokens).forEach(([key, value]) =>
-      cookies.push(cookie.serialize(key, value, { path: '/' }))
-    );
-
-    cookies.push(
-      cookie.serialize('userinfo', JSON.stringify(user), { path: '/' })
-    );
-  }
-
-  res?.setHeader('Set-Cookie', cookies);
+  // const token = await getToken({
+  //   req: { ...req, cookies } as GetServerSidePropsContext['req'],
+  //   secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
+  // });
 
   return {
     ...(await NextApp.getInitialProps(appContext)),
-    ...tokens,
     defaultLanguage: language,
     defaultPalette: palette,
-    userinfo: user,
   };
 };
 

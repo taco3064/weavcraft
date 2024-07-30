@@ -18,15 +18,15 @@ export default withQueryClientProvider<AppProviderManagerProps>(
     children,
     defaultLanguage,
     defaultPalette,
-    ...props
+    isTutorialMode,
   }) {
     const language = useLanguage(defaultLanguage);
     const { cache, theme, ...palette } = usePalette(defaultPalette);
 
-    const [tokens, value] = useContextInit({
+    const [isPending, value] = useContextInit({
       ...language,
       ...palette,
-      ...props,
+      isTutorialMode,
     });
 
     return (
@@ -36,7 +36,7 @@ export default withQueryClientProvider<AppProviderManagerProps>(
 
           <NotistackProvider>
             <AppSettingsContext.Provider value={value}>
-              {tokens ? null : children}
+              {isPending ? null : children}
             </AppSettingsContext.Provider>
           </NotistackProvider>
         </ThemeProvider>
