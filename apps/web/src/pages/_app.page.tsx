@@ -1,42 +1,19 @@
-import App, { type AppContext } from 'next/app';
-import Cookies from 'js-cookie';
 import Head from 'next/head';
+import NextApp, { type AppContext } from 'next/app';
+import _get from 'lodash/get';
 import cookie from 'cookie';
 import { appWithTranslation, useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
-import { setAuthorizationInterceptor } from '~web/services';
 import type { AppProps } from './imports.types';
 
-function WeavcraftApp({
-  Component,
-  accessToken,
-  defaultLanguage,
-  defaultPalette,
-  pageProps,
-  refreshToken,
-}: AppProps) {
+function App({ Component, pageProps, ...props }: AppProps) {
   const { t } = useTranslation();
   const { asPath } = useRouter();
 
   const getLayout = Component.getLayout || ((page) => page);
   const isTutorialMode = asPath.startsWith('/tutorial');
-
-  useEffect(() => {
-    if (accessToken) {
-      setAuthorizationInterceptor({
-        accessToken,
-        onUnauthorized: () => {
-          Cookies.remove('accessToken');
-          global.location?.reload();
-        },
-      });
-    }
-
-    return () => setAuthorizationInterceptor(false);
-  }, [accessToken]);
 
   return (
     <>
@@ -45,48 +22,30 @@ function WeavcraftApp({
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager
-        {...{
-          accessToken,
-          defaultLanguage,
-          defaultPalette,
-          isTutorialMode,
-          refreshToken,
-        }}
-      >
+      <AppProviderManager {...props} isTutorialMode={isTutorialMode}>
         {getLayout(<Component {...pageProps} />)}
       </AppProviderManager>
     </>
   );
 }
 
-WeavcraftApp.getInitialProps = async (appContext: AppContext) => {
-  const { ctx } = appContext;
+App.getInitialProps = async (appContext: AppContext) => {
+  const req = appContext.ctx.req;
+  const cookies = cookie.parse((req && _get(req, ['headers', 'cookie'])) || '');
 
-  const {
-    accessToken,
-    language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
-    palette,
-    refreshToken,
-  } = cookie.parse(ctx.req?.headers.cookie || '');
+  const { language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE, palette } =
+    cookies;
 
-  setAuthorizationInterceptor(
-    !accessToken
-      ? false
-      : {
-          accessToken,
-          onUnauthorized: () =>
-            cookie.serialize('accessToken', '', { maxAge: -1 }),
-        }
-  );
+  // const token = await getToken({
+  //   req: { ...req, cookies } as GetServerSidePropsContext['req'],
+  //   secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
+  // });
 
   return {
-    ...(await App.getInitialProps(appContext)),
-    accessToken,
+    ...(await NextApp.getInitialProps(appContext)),
     defaultLanguage: language,
     defaultPalette: palette,
-    refreshToken,
   };
 };
 
-export default appWithTranslation(WeavcraftApp);
+export default appWithTranslation(App);

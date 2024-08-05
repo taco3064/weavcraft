@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { TypographyProps } from '@mui/material/Typography';
 
-import { useAuthMutation } from '~web/hooks';
+import { useSigninProviders } from '~web/hooks';
 
 export type MenuMode = 'nav' | 'custom';
 
@@ -28,7 +28,7 @@ export interface CompressionContentProps {
 }
 
 export interface UserAvatarMenuProps
-  extends ReturnType<typeof useAuthMutation> {
+  extends ReturnType<typeof useSigninProviders> {
   open: boolean;
   onToggle: (open: boolean) => void;
 }

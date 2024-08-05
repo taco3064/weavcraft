@@ -4,11 +4,11 @@ import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
-import { DETAIL_MARGIN_TOP } from '../../common.client.side';
+import { DETAIL_MARGIN_TOP, makePerPageLayout } from '../../common.client.side';
 import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getTranslations, isUserEnvStatus } from '../../common.server.side';
-import { makePerPageLayout, useTutorialMode } from '~web/contexts';
 import { useInitializationConfig } from '~web/hooks';
+import { useTutorialMode } from '~web/contexts';
 
 import {
   getHierarchyDataById,

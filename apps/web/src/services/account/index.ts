@@ -1,7 +1,8 @@
 export * from './account';
 
 export type {
-  AccessTokenInfo,
+  CredentialTokens,
+  Credentials,
   SigninOptions,
   SigninProvider,
 } from './account.types';
