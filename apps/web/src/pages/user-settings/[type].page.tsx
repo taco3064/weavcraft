@@ -5,7 +5,7 @@ import type { GetServerSideProps } from 'next';
 import { Breadcrumbs, MainLayout, UserSettings } from '~web/containers';
 import { PageContainer } from '~web/components';
 import { getTranslations } from '../common.server.side';
-import { makePerPageLayout } from '~web/contexts';
+import { makePerPageLayout } from '../common.client.side';
 import type { UserSettingType } from '../imports.types';
 
 export default makePerPageLayout(MainLayout)(function UserSettingsPage() {

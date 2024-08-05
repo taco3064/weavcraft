@@ -2,12 +2,14 @@ import Avatar from '@mui/material/Avatar';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
-import { useAuthState } from '~web/contexts';
+import { useAuth } from '~web/contexts';
 import { useMenuStyles } from './MainLayout.styles';
-import { useUserinfo, useUserSettings } from '~web/hooks';
+import { useUserSettings } from '~web/hooks';
 import type { SigninProvider } from '../imports.types';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 
@@ -16,14 +18,13 @@ export default function UserAvatarMenu({
   open,
   providers,
   onSignin,
-  onSignout,
   onToggle,
 }: UserAvatarMenuProps) {
   const setting = useUserSettings();
-  const userinfo = useUserinfo();
 
   const { t } = useTranslation();
-  const { isAuth } = useAuthState();
+  const { data: session } = useSession();
+  const { isAuth, userinfo, onSignout } = useAuth();
   const { classes } = useMenuStyles({ isAuth });
 
   const handleItemClick = (label: string) => {
@@ -35,6 +36,12 @@ export default function UserAvatarMenu({
 
     onToggle(false);
   };
+
+  useEffect(() => {
+    if (session?.error === 'RefreshAccessTokenError') {
+      onToggle(true);
+    }
+  }, [session?.error, onToggle]);
 
   return (
     <>

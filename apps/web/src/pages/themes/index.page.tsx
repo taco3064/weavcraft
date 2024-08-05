@@ -1,8 +1,7 @@
 import { MainLayout } from '~web/containers';
 import { PaletteViewer } from '~web/components';
-import { getBaseGroupPage } from '../common.client.side';
+import { getBaseGroupPage, makePerPageLayout } from '../common.client.side';
 import { getBaseGroupServerSideProps } from '../common.server.side';
-import { makePerPageLayout } from '~web/contexts';
 
 import type { BaseHierarchyProps, ThemePalette } from '../imports.types';
 

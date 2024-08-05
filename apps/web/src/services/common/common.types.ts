@@ -4,11 +4,6 @@ import type { JsonPrimitive } from 'type-fest';
 import type { QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 
 //* - Common Service Types
-export type AuthorizationInterceptorOptions = {
-  accessToken: string;
-  onUnauthorized: () => void;
-};
-
 export type MockSetupOptions = {
   mock: MockAdapter;
   getDb: <D>(name: string) => LowSync<Record<string, D>>;

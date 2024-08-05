@@ -13,9 +13,9 @@ import Analytics from './UserSettings.Analytics';
 import Profile from './UserSettings.Profile';
 import Settings from './UserSettings.Settings';
 import { MenuDialog } from '~web/components';
-import { useAuthState } from '~web/contexts';
-import { useAuthMutation, useUserSettings } from '~web/hooks';
+import { useAuth } from '~web/contexts';
 import { useMainStyles } from './UserSettings.styles';
+import { useSigninProviders, useUserSettings } from '~web/hooks';
 import type { BaseSettingProps, UserSettingsProps } from './UserSettings.types';
 import type { SigninProvider } from '../imports.types';
 
@@ -23,9 +23,9 @@ export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
 
   const { pathname, replace } = useRouter();
-  const { isAuth } = useAuthState();
+  const { isAuth, onSignout } = useAuth();
   const { classes } = useMainStyles();
-  const { providers, isPending, onSignin, onSignout } = useAuthMutation(!open);
+  const { providers, isPending, onSignin } = useSigninProviders(!open);
 
   const { settings } = useUserSettings<ComponentType<BaseSettingProps>>({
     analytics: Analytics,

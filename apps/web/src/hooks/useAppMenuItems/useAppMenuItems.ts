@@ -1,9 +1,13 @@
 import Core from '@weavcraft/core';
+import _capitalize from 'lodash/capitalize';
 import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 
 import { NAV_ITEMS, USER_SETTINGS } from './useAppMenuItems.const';
-import { useAuthState } from '~web/contexts';
+import { getSigninOptions } from '~web/services';
+import { useAuth } from '~web/contexts';
+import type { SigninOptions, SigninProvider } from '../imports.types';
 
 import type {
   MenuItemOptions,
@@ -39,6 +43,50 @@ export function useAppNavItems() {
   }, [i18n]);
 }
 
+export function useSigninProviders(disabled = false) {
+  const { origin, pathname, search } = global.location || {};
+  const { isAuth } = useAuth();
+
+  const { data: providers, isLoading: isPending } = useQuery({
+    enabled: !disabled && !isAuth,
+    queryKey: [[origin, pathname, search].join('')],
+    queryFn: getSigninOptions,
+  });
+
+  const options = useMemo<MenuItemOptions<{ options: SigninOptions }>[]>(
+    () =>
+      providers?.map((options) => {
+        const { provider } = options;
+
+        const icon = `fa${
+          _capitalize(provider) as Capitalize<SigninProvider>
+        }` as const;
+
+        return {
+          options,
+          icon,
+          label: `btn-signin-with-${provider}`,
+        };
+      }) || [],
+    [providers]
+  );
+
+  return {
+    isPending,
+    providers: options,
+
+    onSignin: (provider: SigninProvider) => {
+      if (global.location) {
+        const { url } = options.find(
+          ({ options }) => options.provider === provider
+        )?.options as SigninOptions;
+
+        global.location.replace(url);
+      }
+    },
+  };
+}
+
 export function useTutorialLessons() {
   const { i18n } = useTranslation();
 
@@ -68,7 +116,7 @@ export function useTutorialLessons() {
 }
 
 export function useUserSettings<T>(externals?: Record<UserSettingType, T>) {
-  const { isAuth } = useAuthState();
+  const { isAuth } = useAuth();
 
   return {
     options: useMemo(

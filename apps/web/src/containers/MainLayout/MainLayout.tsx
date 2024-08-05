@@ -27,8 +27,8 @@ import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { TogglePortalProvider, useAuthState } from '~web/contexts';
-import { useAuthMutation, useAppNavItems } from '~web/hooks';
+import { TogglePortalProvider, useAuth } from '~web/contexts';
+import { useAppNavItems, useSigninProviders } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
 import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
@@ -37,8 +37,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [menuMode, setMenuMode] = useState<MenuMode>();
 
   const { pathname } = useRouter();
-  const { isAuth } = useAuthState();
-  const { isPending, ...props } = useAuthMutation(!open);
+  const { isAuth } = useAuth();
+  const { isPending, ...props } = useSigninProviders(!open);
   const { classes } = useMainStyles({ menuMode });
 
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
