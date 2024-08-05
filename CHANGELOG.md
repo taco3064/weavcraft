@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://github.com/taco3064/weavcraft/compare/v0.0.52...v0.0.53) (2024-08-05)
+
+
+### Features
+
+* **web/*:** add next-auth ([9009d8b](https://github.com/taco3064/weavcraft/commit/9009d8baf475bc2addb32bdaa8a424e8d48e42d2))
+
+
+### Bug Fixes
+
+* **web/auth:** add id in credentials ([f02c58f](https://github.com/taco3064/weavcraft/commit/f02c58f63785b9f861450f6f7fa68eb23bc4fdce))
+
 ### [0.0.52](https://github.com/taco3064/weavcraft/compare/v0.0.51...v0.0.52) (2024-07-26)
 
 
