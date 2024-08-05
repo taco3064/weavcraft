@@ -26,8 +26,7 @@ export const getCredentialTokens = withConnRefusedCatch<
         baseURL: process.env.NEXT_PUBLIC_API_URL,
       }));
 
-  return _set(data, ['data', 'expiresAt'], now + 10000);
-  // return _set(data, ['data', 'expiresAt'], now + 1000 * 60 * 60 * 24 * 7);
+  return _set(data, ['data', 'expiresAt'], now + 1000 * 60 * 60 * 24 * 7);
 });
 
 export const doSingOut = withConnRefusedCatch<string, void>(async function (
