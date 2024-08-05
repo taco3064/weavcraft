@@ -20,6 +20,7 @@ export default NextAuth({
   secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
   providers: [
     CredentialsProviders({
+      id: 'credentials',
       credentials,
       authorize: async (credentials) =>
         !credentials ? null : withMe(await getCredentialTokens(credentials)),
