@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/taco3064/weavcraft/compare/v0.0.55...v0.0.56) (2024-08-07)
+
+
+### Features
+
+* **web/*:** add next-sitemap settings ([ec272d4](https://github.com/taco3064/weavcraft/commit/ec272d458a6d5e2c25378652895c0466d57e1f85))
+
 ### [0.0.55](https://github.com/taco3064/weavcraft/compare/v0.0.54...v0.0.55) (2024-08-07)
 
 
