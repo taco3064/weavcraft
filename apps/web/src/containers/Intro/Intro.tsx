@@ -4,16 +4,17 @@ import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { InView } from 'react-intersection-observer';
-import { Trans } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import type { Variant } from '@mui/material/styles/createTypography';
 
-import { FallbackTrans, PageContainer } from '~web/components';
+import { FallbackTrans, PageContainer, WeavcraftSEO } from '~web/components';
 import { useBreakpointMatches } from '~web/hooks';
 import { useMainStyles } from './Intro.styles';
 
 const BASE_TIMEOUT = 1200;
 
 export default function Intro() {
+  const { t } = useTranslation();
   const { classes } = useMainStyles();
   const { matched: size } = useBreakpointMatches({ xs: 'tiny', sm: 'normal' });
 
@@ -34,6 +35,13 @@ export default function Intro() {
 
   return (
     <PageContainer maxWidth="md" className={classes.root}>
+      <WeavcraftSEO
+        title={t('ttl-weavcraft')}
+        description={t('intro:msg-intro').replace(/\n/g, '')}
+        keywords={t('intro:lbl-keywords')}
+        path="/"
+      />
+
       <Grid container className={classes.paragraph} spacing={2}>
         <Fade in timeout={BASE_TIMEOUT}>
           <Grid item xs={12}>
@@ -51,7 +59,7 @@ export default function Intro() {
         <Fade in timeout={BASE_TIMEOUT * 2}>
           <Grid item xs={12} sm={6} md={8}>
             <Typography variant={contentVariant} lineHeight={2}>
-              <Trans i18nKey="intro:msg-intro" />
+              {t('intro:msg-intro')}
             </Typography>
           </Grid>
         </Fade>
@@ -96,7 +104,7 @@ export default function Intro() {
               <Fade key="description" in={inView} timeout={BASE_TIMEOUT * 2}>
                 <Grid item xs={12} sm={6}>
                   <Typography variant={contentVariant} lineHeight={2}>
-                    <Trans i18nKey={`intro:msg-${label}`} />
+                    {t(`intro:msg-${label}`)}
                   </Typography>
                 </Grid>
               </Fade>,
