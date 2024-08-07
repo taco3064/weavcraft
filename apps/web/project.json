@@ -4,6 +4,14 @@
   "sourceRoot": "apps/web",
   "projectType": "application",
   "targets": {
+    "postbuild": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "next-sitemap --config apps/web/next-sitemap.config.js"
+        ]
+      }
+    },
     "tsc": {
       "executor": "nx:run-commands",
       "options": {
