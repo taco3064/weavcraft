@@ -11,6 +11,7 @@ export interface BreadcrumbsProps {
   currentPageTitle: string;
   customBreadcrumbs?: Record<`/${string}`, 'nonLinkable' | 'hidden'>;
   disableGutters?: boolean;
+  disableHeaderTitle?: boolean;
   stickyTop?: number;
   toolbar?: ReactElement | ((toolbarEl: PortalContainerEl) => void);
 

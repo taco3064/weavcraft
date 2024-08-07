@@ -28,6 +28,7 @@ export default function Breadcrumbs({
   currentPageTitle,
   customBreadcrumbs,
   disableGutters,
+  disableHeaderTitle,
   stickyTop = 64,
   toolbar,
   onCatchAllRoutesTransform,
@@ -40,7 +41,6 @@ export default function Breadcrumbs({
   const { classes } = useBreadcrumbsStyles({ stickyTop });
 
   const isTutorialMode = useTutorialMode();
-  const tutorialTitle = t('ttl-breadcrumbs.tutorial.label');
 
   const breadcrumbs = useBreadcrumbs({
     currentBreadcrumbLabel,
@@ -52,13 +52,15 @@ export default function Breadcrumbs({
 
   return (
     <>
-      <Head>
-        <title>{`${t('ttl-weavcraft')}${
-          !isTutorialMode || tutorialTitle === currentPageTitle
-            ? ''
-            : ` ${t('ttl-breadcrumbs.tutorial.label')}`
-        } | ${currentPageTitle}`}</title>
-      </Head>
+      {!disableHeaderTitle && (
+        <Head>
+          <title>
+            {`${t('ttl-weavcraft')}${
+              !isTutorialMode ? '' : ` ${t('ttl-breadcrumbs.tutorial.label')}`
+            } | ${currentPageTitle}`}
+          </title>
+        </Head>
+      )}
 
       <MenuDialog
         open={open}
@@ -93,6 +95,7 @@ export default function Breadcrumbs({
               return !href || isLast ? (
                 <Typography
                   key={i}
+                  component={isLast ? 'h1' : 'h6'}
                   variant="subtitle2"
                   color={isLast ? 'secondary' : 'text.disabled'}
                 >

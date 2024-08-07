@@ -15,20 +15,29 @@ import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
-import { PageContainer } from '~web/components';
+import { PageContainer, WeavcraftSEO } from '~web/components';
 import { getTranslations } from './common.server.side';
 import { makePerPageLayout } from './common.client.side';
 import { useTutorialLessons } from '~web/hooks';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   const { t } = useTranslation();
+
   const tutorials = useTutorialLessons();
   const [expanded, setExpanded] = useState(tutorials[0].id);
 
   return (
     <PageContainer maxWidth="sm">
+      <WeavcraftSEO
+        title={t('ttl-breadcrumbs.tutorial.label')}
+        description={t('ttl-breadcrumbs.tutorial.description')}
+        keywords={t('ttl-breadcrumbs.tutorial.keywords')}
+        path="/tutorial"
+      />
+
       <Breadcrumbs
         disableGutters
+        disableHeaderTitle
         currentPageTitle={t('ttl-breadcrumbs.tutorial.label')}
       />
 

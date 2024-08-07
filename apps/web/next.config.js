@@ -47,6 +47,9 @@ const nextConfig = {
           process.env.NEXT_PUBLIC_AUTH_SECRET ||
             crypto.randomBytes(32).toString('base64')
         ),
+        'process.env.NEXT_PUBLIC_BASE_URL': JSON.stringify(
+          'https://www.weavcraft.com'
+        ),
         'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
           i18n.defaultLocale
         ),
