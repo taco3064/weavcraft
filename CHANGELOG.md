@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.54](https://github.com/taco3064/weavcraft/compare/v0.0.53...v0.0.54) (2024-08-07)
+
+
+### Features
+
+* **web/*:** add seo settings ([5c63c91](https://github.com/taco3064/weavcraft/commit/5c63c91ba77d974397f7fd3e980f2ce3b14b948f))
+
 ### [0.0.53](https://github.com/taco3064/weavcraft/compare/v0.0.52...v0.0.53) (2024-08-05)
 
 
