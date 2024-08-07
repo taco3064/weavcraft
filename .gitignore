@@ -87,6 +87,9 @@ web_modules/
 .next
 out
 apps/web/public/definitions
+apps/web/public/robots.txt
+apps/web/public/sitemap-0.xml
+apps/web/public/sitemap.xml
 
 # Nuxt.js build / generate output
 .nuxt
