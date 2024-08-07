@@ -3,10 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Breadcrumbs, HierarchyList } from '~web/containers';
-import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getSuperiorHierarchies } from '~web/services';
 import { useNavIcon } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
+
+import {
+  PageContainer,
+  TutorialModeAlert,
+  WeavcraftSEO,
+} from '~web/components';
 
 import type {
   BaseHierarchyProps,
@@ -51,8 +56,18 @@ export function getBaseGroupPage<P>(
 
     return (
       <PageContainer maxWidth="md">
+        {!isTutorialMode && (
+          <WeavcraftSEO
+            title={t(`ttl-breadcrumbs.${category}.label`)}
+            description={t(`ttl-breadcrumbs.${category}.description`)}
+            keywords={t(`ttl-breadcrumbs.${category}.keywords`)}
+            path={`/${category}`}
+          />
+        )}
+
         <Breadcrumbs
           disableGutters
+          disableHeaderTitle={!isTutorialMode}
           currentBreadcrumbLabel={group}
           currentPageTitle={
             !group ? t(`ttl-breadcrumbs.${category}.label`) : group

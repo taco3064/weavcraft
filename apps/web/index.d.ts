@@ -15,6 +15,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     NEXT_PUBLIC_API_URL: string;
     NEXT_PUBLIC_AUTH_SECRET: string;
+    NEXT_PUBLIC_BASE_URL: string;
     NEXT_PUBLIC_DEFAULT_LANGUAGE: string;
     NEXT_PUBLIC_TRANSITION_DURATION: number;
     NEXT_PUBLIC_TUTORIAL_TOKEN: string;

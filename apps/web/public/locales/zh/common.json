@@ -60,7 +60,8 @@
   "ttl-breadcrumbs": {
     "tutorial": {
       "label": "教學指南",
-      "description": "查看有關 Weavcraft 的教學指南，了解如何使用各種功能和工具"
+      "description": "查看有關 Weavcraft 的教學指南，了解如何使用各種功能和工具",
+      "keywords": "Weavcraft 教學, Weavcraft 功能介紹, 網站建置, 網頁設計, 互動網頁, 個人風格, "
     },
     "gallery": {
       "label": "展示迴廊",
@@ -68,15 +69,18 @@
     },
     "themes": {
       "label": "主題風格",
-      "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性"
+      "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性",
+      "keywords": "網站主題, 客製化風格, 個人風格, 自行配色, Weavcraft 主題風格"
     },
     "widgets": {
       "label": "組件管理",
-      "description": "管理和組織你的自定義組件集合，輕鬆存取並在你的網頁中重複使用"
+      "description": "管理和組織你的自定義組件集合，輕鬆結合資料存取並在你的網頁中重複使用",
+      "keywords": "網頁組件, 自定義組件, 網頁元素, 網頁設計, 網頁開發, 重複使用, 資料綁定, Weavcraft 組件"
     },
     "pages": {
       "label": "網頁配置",
-      "description": "輕鬆創建和編輯你的網頁，配置資料來源、將事件綁定到組件並添加互動元素的選項"
+      "description": "輕鬆創建和編輯你的網頁，配置資料來源、將事件綁定到組件並添加互動元素的選項",
+      "keywords": "網頁設計, 網頁建置, 自定義格局, 網頁編輯, 網頁配置, 互動元素, 互動功能, Weavcraft 網頁"
     },
     "websites": {
       "label": "個人網站",
