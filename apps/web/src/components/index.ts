@@ -13,3 +13,4 @@ export * from './PrimitiveField';
 export * from './SwitchIconButton';
 export * from './SwitchListItem';
 export * from './TutorialModeAlert';
+export * from './WeavcraftSEO';
