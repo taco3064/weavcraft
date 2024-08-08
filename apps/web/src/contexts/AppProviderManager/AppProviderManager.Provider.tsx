@@ -1,9 +1,10 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { useSession } from 'next-auth/react';
 
 import NotistackProvider from '../Notistack';
-import { withQueryClientProvider } from './AppProviderManager.hocs';
+import { withBaseProvider } from './AppProviderManager.hocs';
 import type { AppProviderManagerProps } from './AppProviderManager.types';
 
 import {
@@ -13,17 +14,14 @@ import {
   usePalette,
 } from './AppProviderManager.hooks';
 
-export default withQueryClientProvider<AppProviderManagerProps>(
-  function AppProviderManager({
-    children,
-    defaultLanguage,
-    defaultPalette,
-    isTutorialMode,
-  }) {
-    const language = useLanguage(defaultLanguage);
-    const { cache, theme, ...palette } = usePalette(defaultPalette);
+export default withBaseProvider<AppProviderManagerProps>(
+  function AppProviderManager({ children, isTutorialMode }) {
+    const { data: session, status } = useSession();
+    const { cache, theme, ...palette } = usePalette(session?.palette);
 
-    const [isPending, value] = useContextInit({
+    const language = useLanguage(session?.language);
+
+    const [isPending, value] = useContextInit(status, {
       ...language,
       ...palette,
       isTutorialMode,
