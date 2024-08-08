@@ -1,6 +1,9 @@
 import Container from '@mui/material/Container';
+import Core from '@weavcraft/core';
+import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -55,7 +58,21 @@ export default function PageLayoutsEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          Toolbar
+          <Tooltip title={t('btn-save')}>
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() =>
+                upsert({
+                  hierarchyId: query.id as string,
+                  input: value as PageLayoutConfigs,
+                  isTutorialMode,
+                })
+              }
+            >
+              <Core.Icon code="faSave" />
+            </IconButton>
+          </Tooltip>
         </PortalWrapper>
 
         <>Page Layouts Preview</>

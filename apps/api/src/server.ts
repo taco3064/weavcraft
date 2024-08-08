@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import configs from './configs';
-import { iocAdapter } from './iocAdapter';
-import { RoutingControllersOptions, useContainer } from 'routing-controllers';
+
 import * as _indexControllers from './controllers';
-import { initKoaApp } from './koaApp';
+import configs from './configs';
 import { HttpLogger } from './common/helpers/logger.helper';
+import { RoutingControllersOptions, useContainer } from 'routing-controllers';
+import { initKoaApp } from './koaApp';
+import { iocAdapter } from './iocAdapter';
 
 export async function server() {
   const controllers = Object.values(_indexControllers).values();

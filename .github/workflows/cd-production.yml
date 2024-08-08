@@ -8,13 +8,13 @@ on:
       - closed
 
 jobs:
-  standard-version:
+  get-version:
+    name: Get the latest version
     if: github.event.pull_request.merged == true
-    name: Run standard-version
     runs-on: ubuntu-latest
     environment: actions
     outputs:
-      current-version: ${{ steps.version.outputs.current-version }}
+      latest: ${{ steps.version.outputs.current-version }}
     strategy:
       matrix:
         node-version: [20.x]
@@ -47,12 +47,24 @@ jobs:
         id: version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-  release:
-    needs: standard-version
+  get-affected-projects:
+    name: Get affected projects
     if: github.event.pull_request.merged == true
-    name: Release
+    needs: get-version
+    uses: ./.github/workflows/affected-projects.yml
+    with:
+      main_branch_name: production
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+  release-tag:
+    name: Publish libs
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: actions
+    needs:
+      - get-version
+      - get-affected-projects
     strategy:
       matrix:
         node-version: [20.x]
@@ -76,91 +88,66 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        id: 'setSHAs'
-        uses: nrwl/nx-set-shas@v3
-        with:
-          main-branch-name: production
-
-      - name: Initialization
-        id: init
+      - name: Pull project
         run: |
           git config --global user.email "${{ secrets.USEWR_EMAIL }}"
           git config --global user.name "Taco Chang"
           git pull
-          npm ci
-
-      - name: Get Package Version
-        id: version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: Release Tag
         run: |
           git tag \
             -f \
-            -a "v${{ steps.version.outputs.current-version }}" \
-            -m "$( \
-              npx nx show projects \
-                --affected \
-                --withTarget=build \
-                --base=${{ steps.setSHAs.outputs.base }} \
-                --head=${{ steps.setSHAs.outputs.head }} \
-            )"
+            -a "v${{ needs.get-version.outputs.latest }}" \
+            -m "${{ needs.get-affected-projects.outputs.list }}"
 
           git push --tags origin HEAD:production
 
-      - name: Trigger Affected Actions(Libs)
-        run: |
-          IFS=', ' read -r -a affecteds <<< "$( \
-            npx nx show projects \
-              --affected \
-              --withTarget=build \
-              --type=lib \
-              --base=${{ steps.setSHAs.outputs.base }} \
-              --head=${{ steps.setSHAs.outputs.head }} \
-          )"
+  publish-core:
+    name: Publish @weavcraft/core to NPM
+    if: needs.get-affected-projects.outputs.core == '1'
+    uses: ./.github/workflows/publish-core.yml
+    with:
+      version: ${{ needs.get-version.outputs.latest }}
+    needs:
+      - get-version
+      - get-affected-projects
 
-          for lib in "${affecteds[@]}"; do
-            curl -L \
-              -X POST \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/taco3064/weavcraft/actions/workflows/publish-$lib.yml/dispatches \
-              -d "{ \
-                \"ref\": \"production\", \
-                \"inputs\": { \
-                  \"base\": \"${{ steps.setSHAs.outputs.base }}\", \
-                  \"head\": \"${{ steps.setSHAs.outputs.head }}\", \
-                  \"version\": \"${{ steps.version.outputs.current-version }}\" \
-                } \
-              }"
-          done
+  deploy-api:
+    name: Deploy api with K8s
+    if: needs.get-affected-projects.outputs.api == '1'
+    uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
+    needs:
+      - get-version
+      - get-affected-projects
+    with:
+      appVersion: ${{ needs.get-version.outputs.latest }}
+      helmVersion: ${{ needs.get-version.outputs.latest }}
+      environment: k8s-weavcraft
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+      ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
+      ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
+      ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
+      ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
+      ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
 
-      - name: Trigger Affected Actions(Apps)
-        run: |
-          IFS=', ' read -r -a affecteds <<< "$( \
-            npx nx show projects \
-              --affected \
-              --withTarget=build \
-              --type=app \
-              --base=${{ steps.setSHAs.outputs.base }} \
-              --head=${{ steps.setSHAs.outputs.head }} \
-          )"
-
-          for app in "${affecteds[@]}"; do
-            curl -L \
-              -X POST \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/taco3064/weavcraft/actions/workflows/deploy-$app.yml/dispatches \
-              -d "{ \
-                \"ref\": \"production\", \
-                \"inputs\": { \
-                  \"base\": \"${{ steps.setSHAs.outputs.base }}\", \
-                  \"head\": \"${{ steps.setSHAs.outputs.head }}\", \
-                  \"version\": \"${{ steps.version.outputs.current-version }}\" \
-                } \
-              }"
-          done
+  deploy-web:
+    name: Deploy web to Vercel
+    if: needs.get-affected-projects.outputs.web == '1'
+    uses: ./.github/workflows/deploy-web.yml
+    with:
+      version: ${{ needs.get-version.outputs.latest }}
+    needs:
+      - get-version
+      - get-affected-projects
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
