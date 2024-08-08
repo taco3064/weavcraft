@@ -1,10 +1,12 @@
 import type { Palette } from '@mui/material/styles';
 import type { ReactNode } from 'react';
+import type { SessionContextValue } from 'next-auth/react';
 
 import type { Credentials, PaletteCode } from '../imports.types';
 
 export type CredentialKeys = keyof Credentials;
 export type LanguageCode = string;
+export type SessionStatus = SessionContextValue['status'];
 
 //* Custom Hooks
 export interface AppSettingsContextValue {
@@ -21,8 +23,6 @@ export interface AppSettingsContextValue {
 //* Component Props
 export interface AppProviderManagerProps {
   children: ReactNode;
-  defaultLanguage: LanguageCode;
-  defaultPalette?: PaletteCode;
   isTutorialMode: boolean;
 }
 

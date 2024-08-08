@@ -3,8 +3,6 @@ import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 
 import type { HierarchyData, SuperiorHierarchy } from '~web/services';
-import type { LanguageCode } from '~web/contexts';
-import type { PaletteCode } from '~web/themes';
 
 export type * from '~web/components';
 export type * from '~web/containers';
@@ -22,8 +20,6 @@ type NextPageWithLayout<P = {}, InitialProps = P> = NextPage<
 
 export interface AppProps extends NextAppProps {
   Component: NextPageWithLayout;
-  defaultLanguage: LanguageCode;
-  defaultPalette?: PaletteCode;
 }
 
 export interface BaseHierarchyProps<P = never> {

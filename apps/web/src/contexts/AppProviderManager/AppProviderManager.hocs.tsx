@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import type { ComponentType, ReactNode } from 'react';
 
-export function withQueryClientProvider<P extends { children: ReactNode }>(
+export function withBaseProvider<P extends { children: ReactNode }>(
   TargetComponent: ComponentType<P>
 ) {
   const QUERY_CLIENT = new QueryClient();
