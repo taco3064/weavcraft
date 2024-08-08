@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.60](https://github.com/taco3064/weavcraft/compare/v0.0.59...v0.0.60) (2024-08-08)
+
+
+### Bug Fixes
+
+* fixed bugs ([9ba8b92](https://github.com/taco3064/weavcraft/commit/9ba8b923006ce232704f8873c84d569bd6bbfba9))
+* test ([0a54c88](https://github.com/taco3064/weavcraft/commit/0a54c88e5d2bcddae8e9bcc2816b708514e9e5f8))
+
 ### [0.0.59](https://github.com/taco3064/weavcraft/compare/v0.0.58...v0.0.59) (2024-08-08)
 
 
