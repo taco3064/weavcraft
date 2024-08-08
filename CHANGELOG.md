@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.58](https://github.com/taco3064/weavcraft/compare/v0.0.57...v0.0.58) (2024-08-08)
+
+
+### Bug Fixes
+
+* **web/_app:** remove getInitialProps ([688c373](https://github.com/taco3064/weavcraft/commit/688c37378a5977a7013136fdb507b33be4c993b8))
+
 ### [0.0.57](https://github.com/taco3064/weavcraft/compare/v0.0.56...v0.0.57) (2024-08-07)
 
 
