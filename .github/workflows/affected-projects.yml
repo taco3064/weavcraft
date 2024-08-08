@@ -67,6 +67,7 @@ jobs:
             --affected \
             --base=${{ steps.setSHAs.outputs.base }} \
             --head=${{ steps.setSHAs.outputs.head }} \
+            | tr '\n' ' '
           )" >> $GITHUB_OUTPUT
 
       - name: Check apps/api is affected
