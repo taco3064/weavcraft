@@ -1,4 +1,4 @@
-name: Publish @weavcraft/core to NPM
+name: Publish @weavcraft libs to NPM
 
 on:
   workflow_call:
@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  publish-to-npm:
+  publish-core:
     name: Publish @weavcraft/core to NPM
     runs-on: ubuntu-latest
     environment: actions
