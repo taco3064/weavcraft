@@ -1,0 +1,85 @@
+name: CI/CD flow - Get affected projects
+
+on:
+  workflow_call:
+    secrets:
+      GIT_TOKEN:
+        required: true
+    inputs:
+      main_branch_name:
+        required: true
+        type: string
+    outputs:
+      list:
+        description: 'All affected project list'
+        value: ${{ jobs.get-affected-projects.outputs.list }}
+      api:
+        description: 'Affected API projects'
+        value: ${{ jobs.get-affected-projects.outputs.api }}
+      web:
+        description: 'Affected Web projects'
+        value: ${{ jobs.get-affected-projects.outputs.web }}
+      core:
+        description: 'Affected Libs projects'
+        value: ${{ jobs.get-affected-projects.outputs.core }}
+
+jobs:
+  get-affected-projects:
+    name: Get affected projects
+    runs-on: ubuntu-latest
+    environment: actions
+    outputs:
+      list: ${{ steps.list.outputs.projects }}
+      api: ${{ steps.api.outputs.affected }}
+      web: ${{ steps.web.outputs.affected }}
+      core: ${{ steps.core.outputs.affected }}
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: 'setSHAs'
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: ${{ inputs.main_branch_name }}
+
+      - name: Get affected projects
+        id: list
+        run: |
+          echo "projects=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+          )" >> $GITHUB_OUTPUT
+
+      - name: Check apps/api is affected
+        id: api
+        run: |
+          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "api")
+          echo "affected=$affected" >> $GITHUB_OUTPUT
+
+      - name: Check apps/web is affected
+        id: web
+        run: |
+          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "web")
+          echo "affected=$affected" >> $GITHUB_OUTPUT
+
+      - name: Check libs/core is affected
+        id: core
+        run: |
+          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "core")
+          echo "affected=$affected" >> $GITHUB_OUTPUT

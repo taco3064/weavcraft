@@ -7,7 +7,7 @@ on:
         type: string
       web_affected_count:
         type: string
-      libs_affected_count:
+      core_affected_count:
         type: string
     secrets:
       SONAR_HOST_URL:
@@ -49,7 +49,7 @@ jobs:
   sonarqube-scan-libs:
     uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
     name: Scan libs
-    if: inputs.libs_affected_count == '1'
+    if: inputs.core_affected_count == '1'
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
