@@ -49,10 +49,75 @@ jobs:
             --base=${{ steps.setSHAs.outputs.base }} \
             --head=${{ steps.setSHAs.outputs.head }}
 
-  sonarqube-scan:
+  get-affected-projects:
     name: Scan Projects
     needs: ci-with-nx
+    runs-on: ubuntu-latest
+    environment: actions
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: 'setSHAs'
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: main
+
+      - name: Get affected projects for apps/api
+        id: api
+        run: |
+          echo "affected=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "api" \
+          )" >> $GITHUB_OUTPUT
+
+      - name: Get affected projects for apps/web
+        id: web
+        run: |
+          echo "affected=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "web" \
+          )" >> $GITHUB_OUTPUT
+
+      - name: Get affected projects for libs/core
+        id: libs
+        run: |
+          echo "affected=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "core" \
+          )" >> $GITHUB_OUTPUT
+
+  sonarqube-scan:
+    name: Scan Projects
+    needs: get-affected-projects
     uses: ./.github/workflows/sonar-scan-projects.yml
+    with:
+      api_affected_count: ${{needs.get-affected-projects.outputs.api}}
+      web_affected_count: ${{needs.get-affected-projects.outputs.web}}
+      libs_affected_count: ${{needs.get-affected-projects.outputs.libs}}
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_API_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
@@ -81,12 +146,23 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: 'setSHAs'
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: main
 
       - name: Check project
         id: check_project
-        run: echo "::set-output name=web::$(npx nx show projects --projects "apps/web" | grep -c "web")"
+        run: |
+          echo "web=$( \
+            npx nx show projects \
+            --projects "apps/web" \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "web" \
+          )" >> $GITHUB_OUTPUT
 
       - name: Deploy to Vercel
         if: steps.check_project.outputs.web == '1'

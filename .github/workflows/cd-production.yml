@@ -43,10 +43,6 @@ jobs:
           npx standard-version --skip.tag
           git push origin HEAD:production -f
 
-      - name: Get Package Version
-        id: version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-
   release:
     needs: standard-version
     if: github.event.pull_request.merged == true
