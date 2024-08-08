@@ -50,69 +50,13 @@ jobs:
             --head=${{ steps.setSHAs.outputs.head }}
 
   get-affected-projects:
-    name: Scan Projects
+    name: Get affected projects
     needs: ci-with-nx
-    runs-on: ubuntu-latest
-    environment: actions
-    outputs:
-      api: ${{ steps.api.outputs.affected }}
-      web: ${{ steps.web.outputs.affected }}
-      libs: ${{ steps.libs.outputs.affected }}
-    strategy:
-      matrix:
-        node-version: [20.x]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GIT_TOKEN }}
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        id: 'setSHAs'
-        uses: nrwl/nx-set-shas@v3
-        with:
-          main-branch-name: main
-
-      - name: Get affected projects for apps/api
-        id: api
-        run: |
-          echo "affected=$( \
-            npx nx show projects \
-            --affected \
-            --base=${{ steps.setSHAs.outputs.base }} \
-            --head=${{ steps.setSHAs.outputs.head }} \
-            | grep -c "api" \
-          )" >> $GITHUB_OUTPUT
-
-      - name: Get affected projects for apps/web
-        id: web
-        run: |
-          echo "affected=$( \
-            npx nx show projects \
-            --affected \
-            --base=${{ steps.setSHAs.outputs.base }} \
-            --head=${{ steps.setSHAs.outputs.head }} \
-            | grep -c "web" \
-          )" >> $GITHUB_OUTPUT
-
-      - name: Get affected projects for libs/core
-        id: libs
-        run: |
-          echo "affected=$( \
-            npx nx show projects \
-            --affected \
-            --base=${{ steps.setSHAs.outputs.base }} \
-            --head=${{ steps.setSHAs.outputs.head }} \
-            | grep -c "core" \
-          )" >> $GITHUB_OUTPUT
+    uses: ./.github/workflows/affected-projects.yml
+    with:
+      main_branch_name: main
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
   sonarqube-scan:
     name: Scan Projects
@@ -121,7 +65,7 @@ jobs:
     with:
       api_affected_count: ${{needs.get-affected-projects.outputs.api}}
       web_affected_count: ${{needs.get-affected-projects.outputs.web}}
-      libs_affected_count: ${{needs.get-affected-projects.outputs.libs}}
+      core_affected_count: ${{needs.get-affected-projects.outputs.core}}
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_API_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
@@ -130,9 +74,11 @@ jobs:
 
   preview-with-vercel:
     name: CI preview with vercel
-    needs: sonarqube-scan
     runs-on: ubuntu-latest
     environment: actions
+    needs:
+      - get-affected-projects
+      - sonarqube-scan
     strategy:
       matrix:
         node-version: [20.x]
@@ -144,32 +90,8 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        id: 'setSHAs'
-        uses: nrwl/nx-set-shas@v3
-        with:
-          main-branch-name: main
-
-      - name: Check project
-        id: check_project
-        run: |
-          echo "web=$( \
-            npx nx show projects \
-            --projects "apps/web" \
-            --affected \
-            --base=${{ steps.setSHAs.outputs.base }} \
-            --head=${{ steps.setSHAs.outputs.head }} \
-            | grep -c "web" \
-          )" >> $GITHUB_OUTPUT
-
       - name: Deploy to Vercel
-        if: steps.check_project.outputs.web == '1'
+        if: needs.get-affected-projects.outputs.web == '1'
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
