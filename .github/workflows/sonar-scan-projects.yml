@@ -17,6 +17,10 @@ jobs:
     name: Get affected projects
     runs-on: ubuntu-latest
     environment: actions
+    outputs:
+      api: ${{ steps.api.outputs.affected }}
+      web: ${{ steps.web.outputs.affected }}
+      libs: ${{ steps.libs.outputs.affected }}
     strategy:
       matrix:
         node-version: [20.x]
@@ -41,8 +45,9 @@ jobs:
           main-branch-name: main
 
       - name: Get affected projects for apps/api
+        id: api
         run: |
-          echo "api=$( \
+          echo "affected=$( \
             npx nx show projects \
             --affected \
             --base=${{ steps.setSHAs.outputs.base }} \
@@ -51,8 +56,9 @@ jobs:
           )" >> $GITHUB_OUTPUT
 
       - name: Get affected projects for apps/web
+        id: web
         run: |
-          echo "web=$( \
+          echo "affected=$( \
             npx nx show projects \
             --affected \
             --base=${{ steps.setSHAs.outputs.base }} \
@@ -61,8 +67,9 @@ jobs:
           )" >> $GITHUB_OUTPUT
 
       - name: Get affected projects for libs/core
+        id: libs
         run: |
-          echo "libs=$( \
+          echo "affected=$( \
             npx nx show projects \
             --affected \
             --base=${{ steps.setSHAs.outputs.base }} \
