@@ -72,17 +72,20 @@ jobs:
       - name: Check apps/api is affected
         id: api
         run: |
-          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "api")
-          echo "affected=$affected" >> $GITHUB_OUTPUT
+          echo "affected=$( \
+            echo "${{ steps.list.outputs.projects }}" | grep -c "api" \
+          )" >> $GITHUB_OUTPUT
 
       - name: Check apps/web is affected
         id: web
         run: |
-          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "web")
-          echo "affected=$affected" >> $GITHUB_OUTPUT
+          echo "affected=$( \
+            echo "${{ steps.list.outputs.projects }}" | grep -c "web" \
+          )" >> $GITHUB_OUTPUT
 
       - name: Check libs/core is affected
         id: core
         run: |
-          affected=$(echo "${{ steps.list.outputs.projects }}" | grep -c "core")
-          echo "affected=$affected" >> $GITHUB_OUTPUT
+          echo "affected=$( \
+            echo "${{ steps.list.outputs.projects }}" | grep -c "core" \
+          )" >> $GITHUB_OUTPUT
