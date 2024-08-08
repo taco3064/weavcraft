@@ -112,6 +112,9 @@ jobs:
     needs:
       - get-version
       - get-affected-projects
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   deploy-api:
     name: Deploy api with K8s
