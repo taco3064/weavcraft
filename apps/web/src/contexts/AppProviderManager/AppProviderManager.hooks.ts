@@ -16,6 +16,7 @@ import type {
   AppSettingsContextValue,
   CredentialKeys,
   LanguageCode,
+  SessionStatus,
 } from './AppProviderManager.types';
 
 const DEFAULT_THEME: PaletteCode = 'WEAVCRAFT';
@@ -61,28 +62,26 @@ export function useAppSettings() {
   };
 }
 
-export function useLanguage(defaultLanguage: LanguageCode) {
-  const [language, setLanguage] = React.useState(defaultLanguage);
-
+export function useLanguage(
+  defaultLanguage: LanguageCode = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE
+) {
   const { i18n } = useTranslation();
   const { locales } = useRouter();
 
   return {
-    language,
+    language: defaultLanguage,
     languages: locales as LanguageCode[],
 
     setLanguage: (language: LanguageCode) =>
       i18n.changeLanguage(language, () => {
         Cookies.set('language', language);
-        setLanguage(language);
+        global.location?.reload();
       }),
   };
 }
 
-export function usePalette(defaultPalette: string = DEFAULT_THEME) {
-  const [palette, setPalette] = React.useState<string | Palette>(
-    defaultPalette
-  );
+export function usePalette(defaultPalette: PaletteCode = DEFAULT_THEME) {
+  const [palette, setPalette] = React.useState<Palette>();
 
   const { cache, theme } = React.useMemo(
     () => ({
@@ -91,44 +90,44 @@ export function usePalette(defaultPalette: string = DEFAULT_THEME) {
       }),
       theme: createTheme({
         components,
-        palette:
-          typeof palette === 'string'
-            ? PALETTES[palette as PaletteCode]
-            : palette,
+        palette: palette || PALETTES[defaultPalette],
         typography: {
           fontFamily: '"Verdana", "微軟雅黑"',
         },
       }),
     }),
-    [palette]
+    [defaultPalette, palette]
   );
 
   return {
     cache,
-    palette,
+    palette: palette || defaultPalette,
     palettes: Object.keys(PALETTES) as PaletteCode[],
     theme,
 
     setPalette: React.useCallback((palette: string | Palette) => {
       if (typeof palette === 'string') {
         Cookies.set('palette', palette);
+        global.location?.reload();
+      } else {
+        setPalette(palette);
       }
-
-      setPalette(palette);
     }, []),
   };
 }
 
-export function useContextInit({
-  isTutorialMode,
-  language,
-  languages,
-  palette,
-  palettes,
-  setLanguage,
-  setPalette,
-}: AppSettingsContextValue) {
-  const { status } = useSession();
+export function useContextInit(
+  status: SessionStatus,
+  {
+    isTutorialMode,
+    language,
+    languages,
+    palette,
+    palettes,
+    setLanguage,
+    setPalette,
+  }: AppSettingsContextValue
+) {
   const { asPath } = useRouter();
 
   //* This credentials is only generated in client-side
