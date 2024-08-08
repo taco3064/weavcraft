@@ -90,14 +90,14 @@ jobs:
       - name: Check project
         id: check_project
         run: |
-          echo "::set-output name=web::$( \
+          echo "web=$( \
             npx nx show projects \
             --projects "apps/web" \
             --affected \
             --base=${{ steps.setSHAs.outputs.base }} \
             --head=${{ steps.setSHAs.outputs.head }} \
             | grep -c "web" \
-          )"
+          )" >> $GITHUB_OUTPUT
 
       - name: Deploy to Vercel
         if: steps.check_project.outputs.web == '1'

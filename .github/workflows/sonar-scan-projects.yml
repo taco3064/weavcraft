@@ -13,9 +13,68 @@ on:
         required: true
 
 jobs:
+  get-affected-projects:
+    name: Get affected projects
+    runs-on: ubuntu-latest
+    environment: actions
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: 'setSHAs'
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: main
+
+      - name: Get affected projects for apps/api
+        run: |
+          echo "api=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "api" \
+          )" >> $GITHUB_OUTPUT
+
+      - name: Get affected projects for apps/web
+        run: |
+          echo "web=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "web" \
+          )" >> $GITHUB_OUTPUT
+
+      - name: Get affected projects for libs/core
+        run: |
+          echo "libs=$( \
+            npx nx show projects \
+            --affected \
+            --base=${{ steps.setSHAs.outputs.base }} \
+            --head=${{ steps.setSHAs.outputs.head }} \
+            | grep -c "core" \
+          )" >> $GITHUB_OUTPUT
+
   sonarqube-scan-api:
     uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
     name: Scan apps/api
+    needs: get-affected-projects
+    if: needs.get-affected-projects.outputs.api == '1'
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
@@ -28,6 +87,8 @@ jobs:
   sonarqube-scan-web:
     uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
     name: Scan apps/web
+    needs: get-affected-projects
+    if: needs.get-affected-projects.outputs.web == '1'
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
@@ -40,6 +101,8 @@ jobs:
   sonarqube-scan-libs:
     uses: royfuwei/rf-devops/.github/workflows/_sonarqube.yml@main
     name: Scan libs
+    needs: get-affected-projects
+    if: needs.get-affected-projects.outputs.libs == '1'
     secrets:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
