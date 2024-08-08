@@ -43,6 +43,10 @@ jobs:
           npx standard-version --skip.tag
           git push origin HEAD:production -f
 
+      - name: Get Package Version
+        id: version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
   release:
     needs: standard-version
     if: github.event.pull_request.merged == true
@@ -86,15 +90,11 @@ jobs:
           git pull
           npm ci
 
-      - name: Get Package Version
-        id: version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-
       - name: Release Tag
         run: |
           git tag \
             -f \
-            -a "v${{ steps.version.outputs.current-version }}" \
+            -a "v${{ needs.standard-version.outputs.current-version }}" \
             -m "$( \
               npx nx show projects \
                 --affected \
@@ -128,7 +128,7 @@ jobs:
                 \"inputs\": { \
                   \"base\": \"${{ steps.setSHAs.outputs.base }}\", \
                   \"head\": \"${{ steps.setSHAs.outputs.head }}\", \
-                  \"version\": \"${{ steps.version.outputs.current-version }}\" \
+                  \"version\": \"${{ needs.standard-version.outputs.current-version }}\" \
                 } \
               }"
           done
@@ -156,7 +156,7 @@ jobs:
                 \"inputs\": { \
                   \"base\": \"${{ steps.setSHAs.outputs.base }}\", \
                   \"head\": \"${{ steps.setSHAs.outputs.head }}\", \
-                  \"version\": \"${{ steps.version.outputs.current-version }}\" \
+                  \"version\": \"${{ needs.standard-version.outputs.current-version }}\" \
                 } \
               }"
           done
