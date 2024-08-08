@@ -49,7 +49,7 @@ jobs:
             --base=${{ steps.setSHAs.outputs.base }} \
             --head=${{ steps.setSHAs.outputs.head }}
 
-  sonarqube-scan:
+  get-affected-projects:
     name: Scan Projects
     needs: ci-with-nx
     runs-on: ubuntu-latest
@@ -110,16 +110,19 @@ jobs:
             | grep -c "core" \
           )" >> $GITHUB_OUTPUT
 
-      - name: Scan
-        uses: ./.github/workflows/sonar-scan-projects.yml
-        with:
-          api_affected_count: ${{ steps.api.outputs.affected }}
-          web_affected_count: ${{ steps.web.outputs.affected }}
-          libs_affected_count: ${{ steps.libs.outputs.affected }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_API_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
-          SONAR_WEB_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
-          SONAR_LIBS_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
+  sonarqube-scan:
+    name: Scan Projects
+    needs: get-affected-projects
+    uses: ./.github/workflows/sonar-scan-projects.yml
+    with:
+      api_affected_count: ${{needs.get-affected-projects.outputs.api}}
+      web_affected_count: ${{needs.get-affected-projects.outputs.web}}
+      libs_affected_count: ${{needs.get-affected-projects.outputs.libs}}
+    secrets:
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_API_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
+      SONAR_WEB_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
+      SONAR_LIBS_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
 
   preview-with-vercel:
     name: CI preview with vercel

@@ -9,18 +9,15 @@ on:
         type: string
       libs_affected_count:
         type: string
+    secrets:
       SONAR_HOST_URL:
         required: true
-        type: string
       SONAR_API_TOKEN:
         required: true
-        type: string
       SONAR_WEB_TOKEN:
         required: true
-        type: string
       SONAR_LIBS_TOKEN:
         required: true
-        type: string
 
 jobs:
   sonarqube-scan-api:
@@ -28,8 +25,8 @@ jobs:
     name: Scan apps/api
     if: inputs.api_affected_count == '1'
     secrets:
-      SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
-      SONAR_TOKEN: ${{ inputs.SONAR_API_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
     with:
       projectKey: weavcraft-api
       projectName: weavcraft/api
@@ -41,8 +38,8 @@ jobs:
     name: Scan apps/web
     if: inputs.web_affected_count == '1'
     secrets:
-      SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
-      SONAR_TOKEN: ${{ inputs.SONAR_WEB_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_WEB_TOKEN }}
     with:
       projectKey: weavcraft-web
       projectName: weavcraft/web
@@ -54,8 +51,8 @@ jobs:
     name: Scan libs
     if: inputs.libs_affected_count == '1'
     secrets:
-      SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
-      SONAR_TOKEN: ${{ inputs.SONAR_LIBS_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_LIBS_TOKEN }}
     with:
       projectKey: weavcraft-libs
       projectName: weavcraft/libs
