@@ -103,10 +103,10 @@ jobs:
 
           git push --tags origin HEAD:production
 
-  publish-core:
-    name: Publish @weavcraft/core to NPM
+  publish-libs:
+    name: Publish @weavcraft libs to NPM
     if: needs.get-affected-projects.outputs.core == '1'
-    uses: ./.github/workflows/publish-core.yml
+    uses: ./.github/workflows/publish-libs.yml
     with:
       version: ${{ needs.get-version.outputs.latest }}
     needs:
@@ -139,15 +139,25 @@ jobs:
   deploy-web:
     name: Deploy web to Vercel
     if: needs.get-affected-projects.outputs.web == '1'
-    uses: ./.github/workflows/deploy-web.yml
-    with:
-      version: ${{ needs.get-version.outputs.latest }}
+    runs-on: ubuntu-latest
+    environment: actions
     needs:
       - get-version
       - get-affected-projects
-    secrets:
-      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_SCOPE: ${{ secrets.VERCEL_SCOPE }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-project-name: web
+          vercel-args: '--prod'
+          scope: ${{ secrets.VERCEL_SCOPE }}

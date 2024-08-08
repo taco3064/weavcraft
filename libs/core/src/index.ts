@@ -2,6 +2,8 @@ import * as Comp from './components';
 
 export default Comp;
 
+console.debug('Core components loaded');
+
 export const Display = {
   Avatar: Comp.Avatar,
   AvatarGroup: Comp.AvatarGroup,
