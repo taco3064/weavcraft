@@ -49,6 +49,7 @@ export default function Intro() {
               paragraph
               variant={titleVariant}
               color="secondary"
+              component="h1"
               fontWeight={600}
             >
               <FallbackTrans i18nKey="intro:ttl-welcome" value={size} />
@@ -123,6 +124,7 @@ export default function Intro() {
                       paragraph
                       variant={subjectVariant}
                       color="secondary"
+                      component="h2"
                       fontWeight={600}
                     >
                       <FallbackTrans

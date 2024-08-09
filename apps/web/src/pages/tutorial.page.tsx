@@ -10,8 +10,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import NextLink from 'next/link';
-import { Trans, useTranslation } from 'next-i18next';
+import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
@@ -21,9 +22,8 @@ import { makePerPageLayout } from './common.client.side';
 import { useTutorialLessons } from '~web/hooks';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
-  const { t } = useTranslation();
-
   const tutorials = useTutorialLessons();
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(tutorials[0].id);
 
   return (
@@ -41,6 +41,10 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
         currentPageTitle={t('ttl-breadcrumbs.tutorial.label')}
       />
 
+      <Typography variant="body2" color="text.secondary" paragraph>
+        {t('tutorial:msg-feature-description')}
+      </Typography>
+
       <Container disableGutters maxWidth={false}>
         {tutorials.map(({ id, label, icon, href, items }) => (
           <Accordion
@@ -51,7 +55,10 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Core.Icon color="primary" code={icon} />
-              <Trans i18nKey={label} />
+
+              <Typography variant="inherit" color="inherit" component="h2">
+                {t(label)}
+              </Typography>
             </AccordionSummary>
 
             <Divider />
@@ -68,14 +75,13 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                   </ListItemIcon>
 
                   <ListItemText
-                    primary={<Trans i18nKey="tutorial:btn-sandbox-mode" />}
-                    secondary={
-                      <Trans i18nKey="tutorial:msg-sandbox-mode-description" />
-                    }
+                    primary={t('tutorial:btn-sandbox-mode')}
+                    secondary={t('tutorial:msg-sandbox-mode-description')}
                     primaryTypographyProps={{
                       variant: 'subtitle1',
                       color: 'secondary',
                       fontWeight: 'bolder',
+                      component: 'h3',
                     }}
                     secondaryTypographyProps={{
                       variant: 'caption',
@@ -101,8 +107,8 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
                         </ListItemIcon>
 
                         <ListItemText
-                          primary={<Trans i18nKey={`${label}.label`} />}
-                          secondary={<Trans i18nKey={`${label}.description`} />}
+                          primary={t(`${label}.label`)}
+                          secondary={t(`${label}.description`)}
                           primaryTypographyProps={{
                             variant: 'subtitle1',
                             color: 'secondary',

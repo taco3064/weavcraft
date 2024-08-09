@@ -25,7 +25,7 @@ export default function WeavcraftSEO({
       <meta
         name="og:image"
         content={`${process.env.NEXT_PUBLIC_BASE_URL}${
-          image || '/imgs/logo.svg'
+          image || '/imgs/logo.png'
         }`}
       />
 
