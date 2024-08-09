@@ -5,7 +5,10 @@ import { useRouter } from 'next/router';
 import { AppProviderManager } from '~web/contexts';
 import type { AppProps } from './imports.types';
 
-function App({ Component, pageProps }: AppProps) {
+export default appWithTranslation(function App({
+  Component,
+  pageProps,
+}: AppProps) {
   const { t } = useTranslation();
   const { asPath } = useRouter();
 
@@ -24,6 +27,4 @@ function App({ Component, pageProps }: AppProps) {
       </AppProviderManager>
     </>
   );
-}
-
-export default appWithTranslation(App);
+});

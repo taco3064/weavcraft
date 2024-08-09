@@ -6,7 +6,6 @@ import _get from 'lodash/get';
 import { createTheme, type Palette } from '@mui/material/styles';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 import type { UserData } from '@weavcraft/common';
 
 import { PALETTES, components } from '~web/themes';
@@ -16,7 +15,6 @@ import type {
   AppSettingsContextValue,
   CredentialKeys,
   LanguageCode,
-  SessionStatus,
 } from './AppProviderManager.types';
 
 const DEFAULT_THEME: PaletteCode = 'WEAVCRAFT';
@@ -62,26 +60,29 @@ export function useAppSettings() {
   };
 }
 
-export function useLanguage(
-  defaultLanguage: LanguageCode = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE
-) {
-  const { i18n } = useTranslation();
-  const { locales } = useRouter();
+export function useLanguage() {
+  const { locales, pathname, asPath, query, replace } = useRouter();
 
   return {
-    language: defaultLanguage,
+    language:
+      Cookies.get('language') || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     languages: locales as LanguageCode[],
 
-    setLanguage: (language: LanguageCode) =>
-      i18n.changeLanguage(language, () => {
-        Cookies.set('language', language);
-        global.location?.reload();
-      }),
+    setLanguage: (language: LanguageCode) => {
+      Cookies.set('language', language);
+
+      replace({ pathname, query }, asPath, {
+        locale: language,
+        shallow: false,
+      });
+    },
   };
 }
 
-export function usePalette(defaultPalette: PaletteCode = DEFAULT_THEME) {
-  const [palette, setPalette] = React.useState<Palette>();
+export function usePalette() {
+  const [palette, setPalette] = React.useState<Palette | PaletteCode>(
+    (Cookies.get('palette') || DEFAULT_THEME) as PaletteCode
+  );
 
   const { cache, theme } = React.useMemo(
     () => ({
@@ -90,44 +91,41 @@ export function usePalette(defaultPalette: PaletteCode = DEFAULT_THEME) {
       }),
       theme: createTheme({
         components,
-        palette: palette || PALETTES[defaultPalette],
+        palette: typeof palette === 'string' ? PALETTES[palette] : palette,
         typography: {
           fontFamily: '"Verdana", "微軟雅黑"',
         },
       }),
     }),
-    [defaultPalette, palette]
+    [palette]
   );
 
   return {
     cache,
-    palette: palette || defaultPalette,
+    palette,
     palettes: Object.keys(PALETTES) as PaletteCode[],
     theme,
 
-    setPalette: React.useCallback((palette: string | Palette) => {
+    setPalette: React.useCallback((palette: PaletteCode | Palette) => {
       if (typeof palette === 'string') {
         Cookies.set('palette', palette);
-        global.location?.reload();
-      } else {
-        setPalette(palette);
       }
+
+      setPalette(palette);
     }, []),
   };
 }
 
-export function useContextInit(
-  status: SessionStatus,
-  {
-    isTutorialMode,
-    language,
-    languages,
-    palette,
-    palettes,
-    setLanguage,
-    setPalette,
-  }: AppSettingsContextValue
-) {
+export function useContextInit({
+  isTutorialMode,
+  language,
+  languages,
+  palette,
+  palettes,
+  setLanguage,
+  setPalette,
+}: AppSettingsContextValue) {
+  const { status } = useSession();
   const { asPath } = useRouter();
 
   //* This credentials is only generated in client-side

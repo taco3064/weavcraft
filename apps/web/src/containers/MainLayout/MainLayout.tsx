@@ -33,7 +33,7 @@ import { useMainStyles } from './MainLayout.styles';
 import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  const [open, setOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
   const [menuMode, setMenuMode] = useState<MenuMode>();
 
   const { pathname } = useRouter();
@@ -82,9 +82,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <NotificationBell />
                   {pathname !== '/user-settings/[type]' && (
                     <UserAvatarMenu
-                      {...{ isPending, open }}
                       {...props}
-                      onToggle={setOpen}
+                      isPending={isPending}
+                      open={settingOpen}
+                      onToggle={setSettingOpen}
                     />
                   )}
                 </Toolbar>
