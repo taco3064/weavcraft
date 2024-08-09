@@ -12,12 +12,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import NextLink from 'next/link';
 import Typography from '@mui/material/Typography';
+import { NextSeo } from 'next-seo';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
 import { Breadcrumbs, MainLayout } from '~web/containers';
-import { PageContainer, WeavcraftSEO } from '~web/components';
+import { PageContainer } from '~web/components';
 import { getTranslations } from './common.server.side';
 import { makePerPageLayout } from './common.client.side';
 import { useTutorialLessons } from '~web/hooks';
@@ -29,11 +30,23 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
 
   return (
     <PageContainer maxWidth="sm">
-      <WeavcraftSEO
+      <NextSeo
         title={t('ttl-breadcrumbs.tutorial.label')}
         description={t('ttl-breadcrumbs.tutorial.description')}
-        keywords={t('ttl-breadcrumbs.tutorial.keywords')}
-        path="/tutorial"
+        canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/tutorial`}
+        openGraph={{
+          title: t('ttl-weavcraft'),
+          description: t('msg-short-intro'),
+          images: [
+            {
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
+              width: 256,
+              height: 256,
+              alt: 'Logo',
+              type: 'image/png',
+            },
+          ],
+        }}
       />
 
       <Breadcrumbs
