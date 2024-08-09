@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.63](https://github.com/taco3064/weavcraft/compare/v0.0.62...v0.0.63) (2024-08-09)
+
+
+### Bug Fixes
+
+* **web/*:** update logo images ([99203b1](https://github.com/taco3064/weavcraft/commit/99203b11d4d296e6e7383eb28089d59ce6ca4b21))
+
 ### [0.0.62](https://github.com/taco3064/weavcraft/compare/v0.0.61...v0.0.62) (2024-08-09)
 
 
