@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.64](https://github.com/taco3064/weavcraft/compare/v0.0.63...v0.0.64) (2024-08-09)
+
+
+### Features
+
+* **web/*:** add next-seo lib ([a40f4b7](https://github.com/taco3064/weavcraft/commit/a40f4b761a7521bf2b47a90d4561d8f726641b36))
+
 ### [0.0.63](https://github.com/taco3064/weavcraft/compare/v0.0.62...v0.0.63) (2024-08-09)
 
 
