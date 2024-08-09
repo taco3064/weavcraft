@@ -9,7 +9,7 @@ export type MockSetupOptions = {
   getDb: <D>(name: string) => LowSync<Record<string, D>>;
 };
 
-export type QueryFunctionParams<T extends QueryKey> = Pick<
+export type QueryFunctionParams<T extends QueryKey = []> = Pick<
   QueryFunctionContext<T | [...T, boolean]>,
   'queryKey'
 >;
