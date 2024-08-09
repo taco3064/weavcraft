@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.62](https://github.com/taco3064/weavcraft/compare/v0.0.61...v0.0.62) (2024-08-09)
+
+
+### Bug Fixes
+
+* **web/*:** optimize Frontend Code ([6ed4971](https://github.com/taco3064/weavcraft/commit/6ed4971de5ebfc92702685d68b1dbe358ff7e33b))
+
 ### [0.0.61](https://github.com/taco3064/weavcraft/compare/v0.0.60...v0.0.61) (2024-08-08)
 
 ### [0.0.60](https://github.com/taco3064/weavcraft/compare/v0.0.59...v0.0.60) (2024-08-08)
