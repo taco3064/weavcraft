@@ -9,6 +9,7 @@ import Fade from '@mui/material/Fade';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -135,46 +136,46 @@ export default function MainLayout({ children }: MainLayoutProps) {
             open={menuMode === 'nav'}
             PaperProps={{
               className: classes.drawer,
+              component: 'nav',
               elevation: 1,
             }}
           >
-            {menuMode === 'nav' && (
-              <ClickAwayListener
-                mouseEvent="onPointerDown"
-                touchEvent="onTouchEnd"
-                onClickAway={() => setMenuMode(undefined)}
+            <ClickAwayListener
+              mouseEvent={menuMode === 'nav' ? 'onPointerDown' : false}
+              touchEvent={menuMode === 'nav' ? 'onTouchEnd' : false}
+              onClickAway={() => setMenuMode(undefined)}
+            >
+              <List
+                role="navigation"
+                subheader={
+                  <>
+                    <ListSubheader role="heading">
+                      <ListItemIcon>{logo}</ListItemIcon>
+
+                      <ListItemText
+                        primary={<Trans i18nKey="ttl-weavcraft" />}
+                        secondary={process.env.NEXT_PUBLIC_VERSION}
+                        primaryTypographyProps={DEFAULT_PROPS.title}
+                        secondaryTypographyProps={{
+                          variant: 'caption',
+                          color: 'text.secondary',
+                        }}
+                      />
+
+                      <IconButton onClick={() => setMenuMode(undefined)}>
+                        <Core.Icon code="faAngleLeft" />
+                      </IconButton>
+                    </ListSubheader>
+
+                    <Divider />
+                  </>
+                }
               >
-                <List
-                  role="navigation"
-                  subheader={
-                    <>
-                      <ListSubheader role="heading">
-                        <ListItemIcon>{logo}</ListItemIcon>
-
-                        <ListItemText
-                          primary={<Trans i18nKey="ttl-weavcraft" />}
-                          secondary={process.env.NEXT_PUBLIC_VERSION}
-                          primaryTypographyProps={DEFAULT_PROPS.title}
-                          secondaryTypographyProps={{
-                            variant: 'caption',
-                            color: 'text.secondary',
-                          }}
-                        />
-
-                        <IconButton onClick={() => setMenuMode(undefined)}>
-                          <Core.Icon code="faAngleLeft" />
-                        </IconButton>
-                      </ListSubheader>
-
-                      <Divider />
-                    </>
-                  }
-                >
-                  {navItems.map(({ icon, label, href, auth = false }) =>
-                    auth && !isAuth ? null : (
+                {navItems.map(({ icon, label, href, auth = false }) =>
+                  auth && !isAuth ? null : (
+                    <ListItem key={label} disableGutters disablePadding>
                       <ListItemButton
                         LinkComponent={NextLink}
-                        key={label}
                         href={href}
                         selected={pathname.startsWith(href)}
                       >
@@ -199,11 +200,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                           }}
                         />
                       </ListItemButton>
-                    )
-                  )}
-                </List>
-              </ClickAwayListener>
-            )}
+                    </ListItem>
+                  )
+                )}
+              </List>
+            </ClickAwayListener>
           </Drawer>
         </>
       )}

@@ -1,17 +1,13 @@
+import { NextSeo } from 'next-seo';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Breadcrumbs, HierarchyList } from '~web/containers';
+import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getSuperiorHierarchies } from '~web/services';
 import { useNavIcon } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
-
-import {
-  PageContainer,
-  TutorialModeAlert,
-  WeavcraftSEO,
-} from '~web/components';
 
 import type {
   BaseHierarchyProps,
@@ -56,12 +52,27 @@ export function getBaseGroupPage<P>(
 
     return (
       <PageContainer maxWidth="md">
-        {!isTutorialMode && (
-          <WeavcraftSEO
-            title={t(`ttl-breadcrumbs.${category}.label`)}
+        {isTutorialMode && (
+          <NextSeo
+            title={[
+              t(`ttl-breadcrumbs.${category}.label`),
+              t('ttl-breadcrumbs.tutorial.label'),
+            ].join(' | ')}
             description={t(`ttl-breadcrumbs.${category}.description`)}
-            keywords={t(`ttl-breadcrumbs.${category}.keywords`)}
-            path={`/${category}`}
+            canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/tutorial/${category}`}
+            openGraph={{
+              title: t('ttl-weavcraft'),
+              description: t('msg-short-intro'),
+              images: [
+                {
+                  url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
+                  width: 256,
+                  height: 256,
+                  alt: 'Logo',
+                  type: 'image/png',
+                },
+              ],
+            }}
           />
         )}
 

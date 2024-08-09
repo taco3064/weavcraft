@@ -60,8 +60,7 @@
   "ttl-breadcrumbs": {
     "tutorial": {
       "label": "Tutorial",
-      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features.",
-      "keywords": "Weavcraft Tutorial, Weavcraft Features, Website Building, Web Design, Interactive Web Page, Theme Customization"
+      "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
     },
     "gallery": {
       "label": "Craft Gallery",
@@ -69,18 +68,15 @@
     },
     "themes": {
       "label": "Theme Styles",
-      "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles.",
-      "keywords": "Theme Styles, Website Customization, Color Adjustment, Weavcraft Themes"
+      "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
     },
     "widgets": {
       "label": "Widget Storage",
-      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages.",
-      "keywords": "Widget Management, Widget Storage, Web Components, Weavcraft Widgets, Reusable Widgets"
+      "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
     },
     "pages": {
       "label": "Web Pages",
-      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements.",
-      "keywords": "Web Page Editor, Drag and Drop, Dnd, Web Page Customization, Layout Customization, Interactive Web Pages, Weavcraft Pages"
+      "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
     },
     "websites": {
       "label": "Websites",
