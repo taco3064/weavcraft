@@ -98,6 +98,7 @@ export default function Breadcrumbs({
                   component={isLast ? 'h1' : 'h6'}
                   variant="subtitle2"
                   color={isLast ? 'secondary' : 'text.disabled'}
+                  fontWeight={isLast ? 'bold' : undefined}
                 >
                   {label}
                 </Typography>
