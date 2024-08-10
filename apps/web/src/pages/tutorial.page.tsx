@@ -31,7 +31,7 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
   return (
     <PageContainer maxWidth="sm">
       <NextSeo
-        title={t('ttl-breadcrumbs.tutorial.label')}
+        title={`${t('ttl-breadcrumbs.tutorial.label')} | ${t('ttl-weavcraft')}`}
         description={t('ttl-breadcrumbs.tutorial.description')}
         canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/tutorial`}
         openGraph={{
@@ -51,7 +51,6 @@ export default makePerPageLayout(MainLayout)(function TutorialsPage() {
 
       <Breadcrumbs
         disableGutters
-        disableHeaderTitle
         currentPageTitle={t('ttl-breadcrumbs.tutorial.label')}
       />
 

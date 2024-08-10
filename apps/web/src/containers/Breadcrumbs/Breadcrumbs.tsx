@@ -1,6 +1,5 @@
 import AppBar from '@mui/material/AppBar';
 import Core from '@weavcraft/core';
-import Head from 'next/head';
 import IconButton from '@mui/material/IconButton';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Toolbar from '@mui/material/Toolbar';
@@ -28,7 +27,6 @@ export default function Breadcrumbs({
   currentPageTitle,
   customBreadcrumbs,
   disableGutters,
-  disableHeaderTitle,
   stickyTop = 64,
   toolbar,
   onCatchAllRoutesTransform,
@@ -52,16 +50,6 @@ export default function Breadcrumbs({
 
   return (
     <>
-      {!disableHeaderTitle && (
-        <Head>
-          <title>
-            {`${t('ttl-weavcraft')}${
-              !isTutorialMode ? '' : ` ${t('ttl-breadcrumbs.tutorial.label')}`
-            } | ${currentPageTitle}`}
-          </title>
-        </Head>
-      )}
-
       <MenuDialog
         open={open}
         onClose={() => setOpen(false)}

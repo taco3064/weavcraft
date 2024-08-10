@@ -5,9 +5,10 @@ import Container from '@mui/material/Container';
 import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Trans } from 'next-i18next';
+import Typography from '@mui/material/Typography';
 import { useEffect, useState, type ComponentType } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 import Analytics from './UserSettings.Analytics';
 import Profile from './UserSettings.Profile';
@@ -22,6 +23,7 @@ import type { SigninProvider } from '../imports.types';
 export default function UserSettings({ type }: UserSettingsProps) {
   const [open, setOpen] = useState(false);
 
+  const { t } = useTranslation();
   const { pathname, replace } = useRouter();
   const { isAuth, onSignout } = useAuth();
   const { classes } = useMainStyles();
@@ -59,8 +61,11 @@ export default function UserSettings({ type }: UserSettingsProps) {
               }
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Core.Icon color="primary" code={icon} />
-                <Trans i18nKey={`lbl-${id}`} />
+                <Typography variant="inherit" color="inherit" component="h2">
+                  <Core.Icon color="primary" code={icon} />
+
+                  {t(`lbl-${id}`)}
+                </Typography>
               </AccordionSummary>
 
               <Divider />
@@ -83,7 +88,7 @@ export default function UserSettings({ type }: UserSettingsProps) {
             variant="contained"
             onClick={() => onSignout()}
           >
-            <Trans i18nKey="btn-signout" />
+            {t('btn-signout')}
           </Button>
 
           <Button
@@ -95,7 +100,7 @@ export default function UserSettings({ type }: UserSettingsProps) {
             variant="outlined"
             startIcon={<Core.Icon code="faUserSlash" />}
           >
-            <Trans i18nKey="btn-delete-account" />
+            {t('btn-delete-account')}
           </Button>
         </>
       ) : (
@@ -109,7 +114,7 @@ export default function UserSettings({ type }: UserSettingsProps) {
             variant="contained"
             onClick={() => setOpen(true)}
           >
-            <Trans i18nKey="btn-signin" />
+            {t('btn-signin')}
           </Button>
 
           <MenuDialog

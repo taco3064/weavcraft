@@ -1,5 +1,6 @@
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
+import { NextSeo } from 'next-seo';
 import { Suspense, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useTranslation } from 'next-i18next';
@@ -38,6 +39,12 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
 
   return !hierarchy ? null : (
     <PageContainer maxWidth="md">
+      <NextSeo
+        title={`${t('ttl-breadcrumbs.widgets.label')} - ${
+          hierarchy.title
+        } | ${t('ttl-weavcraft')}`}
+      />
+
       <Breadcrumbs
         disableGutters
         toolbar={setToolbarEl}
