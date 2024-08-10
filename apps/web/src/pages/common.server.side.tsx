@@ -1,4 +1,5 @@
 import cookie from 'cookie';
+import { getSession } from 'next-auth/react';
 import { i18n } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
@@ -10,8 +11,7 @@ export async function isUserEnvStatus(
   { query, req }: GetServerSidePropsContext,
   ...target: ('tutorial' | 'nontutorial' | 'auth' | 'unauth')[]
 ) {
-  const { cookies } = req;
-  const isAuth = Boolean(cookies['accessToken']);
+  const isAuth = Boolean(await getSession({ req }));
 
   const isTutorialMode =
     query.tutorial === process.env.NEXT_PUBLIC_TUTORIAL_TOKEN;
@@ -43,10 +43,10 @@ export async function getTranslations(
 
 export function getBaseGroupServerSideProps<P>(category: string) {
   const result: GetServerSideProps<BaseHierarchyProps<P>> = async (ctx) => {
+    const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
+
     const group =
       typeof ctx.query.group === 'string' ? ctx.query.group : undefined;
-
-    const isTutorialMode = await isUserEnvStatus(ctx, 'tutorial');
 
     const initialSuperiors =
       !group || isTutorialMode
@@ -70,7 +70,13 @@ export function getBaseGroupServerSideProps<P>(category: string) {
         initialData: isTutorialMode
           ? []
           : await getHierarchyData({
-              queryKey: [{ category, superior: group, withPayload: true }],
+              queryKey: [
+                {
+                  category,
+                  superior: group,
+                  withPayload: category === 'themes',
+                },
+              ],
             }),
       },
     };
