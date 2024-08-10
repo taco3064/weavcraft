@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useTranslation } from 'next-i18next';
 
 import { MenuDialog, Link } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
@@ -33,7 +32,6 @@ export default function Breadcrumbs({
 }: BreadcrumbsProps) {
   const [open, setOpen] = useState(false);
 
-  const { t } = useTranslation();
   const { back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
   const { classes } = useBreadcrumbsStyles({ stickyTop });
