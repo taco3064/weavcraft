@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.66](https://github.com/taco3064/weavcraft/compare/v0.0.65...v0.0.66) (2024-08-10)
+
+
+### Bug Fixes
+
+* **web/breadcrumbs:** fixed the sonarqube issues ([6c6f5bc](https://github.com/taco3064/weavcraft/commit/6c6f5bce9d032340962b4d9202d9878d0c9e5ca4))
+
 ### [0.0.65](https://github.com/taco3064/weavcraft/compare/v0.0.64...v0.0.65) (2024-08-10)
 
 ### [0.0.64](https://github.com/taco3064/weavcraft/compare/v0.0.63...v0.0.64) (2024-08-09)
