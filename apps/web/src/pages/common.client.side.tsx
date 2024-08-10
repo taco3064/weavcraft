@@ -43,6 +43,7 @@ export function getBaseGroupPage<P>(
 
     const icon = useNavIcon(category);
     const isTutorialMode = useTutorialMode();
+    const categoryTitle = t(`ttl-breadcrumbs.${category}.label`);
 
     const { data: superiors = initialSuperiors } = useQuery({
       enabled: Boolean(isTutorialMode && group),
@@ -54,10 +55,7 @@ export function getBaseGroupPage<P>(
       <PageContainer maxWidth="md">
         {isTutorialMode && (
           <NextSeo
-            title={[
-              t(`ttl-breadcrumbs.${category}.label`),
-              t('ttl-breadcrumbs.tutorial.label'),
-            ].join(' | ')}
+            title={`${categoryTitle} | ${t('tutorial:ttl-tutorial')}`}
             description={t(`ttl-breadcrumbs.${category}.description`)}
             canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/tutorial/${category}`}
             openGraph={{
@@ -78,11 +76,8 @@ export function getBaseGroupPage<P>(
 
         <Breadcrumbs
           disableGutters
-          disableHeaderTitle={!isTutorialMode}
           currentBreadcrumbLabel={group}
-          currentPageTitle={
-            !group ? t(`ttl-breadcrumbs.${category}.label`) : group
-          }
+          currentPageTitle={!group ? categoryTitle : group}
           toolbar={setToolbarEl}
           onCatchAllRoutesTransform={(key, value) => {
             if (key === 'group' && typeof value === 'string') {

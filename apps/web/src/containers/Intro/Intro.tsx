@@ -4,7 +4,6 @@ import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { InView } from 'react-intersection-observer';
-import { NextSeo } from 'next-seo';
 import { useTranslation } from 'next-i18next';
 import type { Variant } from '@mui/material/styles/createTypography';
 
@@ -36,26 +35,6 @@ export default function Intro() {
 
   return (
     <PageContainer maxWidth="md" className={classes.root}>
-      <NextSeo
-        title={t('intro:ttl-welcome.normal')}
-        description={t('intro:msg-short-intro')}
-        canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/`}
-        openGraph={{
-          title: t('ttl-weavcraft'),
-          description: t('msg-short-intro'),
-          url: process.env.NEXT_PUBLIC_BASE_URL,
-          images: [
-            {
-              url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
-              width: 256,
-              height: 256,
-              alt: 'Logo',
-              type: 'image/png',
-            },
-          ],
-        }}
-      />
-
       <Grid container className={classes.paragraph} spacing={2}>
         <Fade in timeout={BASE_TIMEOUT}>
           <Grid item xs={12}>

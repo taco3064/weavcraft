@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
@@ -14,6 +15,24 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
 
   return (
     <PageContainer maxWidth="sm">
+      <NextSeo
+        title={`${t('ttl-user-settings')} | ${t('ttl-weavcraft')}`}
+        canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/user-settings/settings`}
+        openGraph={{
+          title: t('ttl-weavcraft'),
+          description: t('msg-short-intro'),
+          images: [
+            {
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
+              width: 256,
+              height: 256,
+              alt: 'Logo',
+              type: 'image/png',
+            },
+          ],
+        }}
+      />
+
       <Breadcrumbs
         disableGutters
         currentPageTitle={t('ttl-user-settings')}

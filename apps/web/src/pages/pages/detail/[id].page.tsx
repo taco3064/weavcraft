@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -36,6 +37,12 @@ export default makePerPageLayout<InitializationConfig<PageLayoutConfigs>>(
 
   return !hierarchy ? null : (
     <PageContainer maxWidth="md">
+      <NextSeo
+        title={`${t('ttl-breadcrumbs.pages.label')} - ${hierarchy.title} | ${t(
+          'ttl-weavcraft'
+        )}`}
+      />
+
       <Breadcrumbs
         disableGutters
         toolbar={setToolbarEl}

@@ -38,12 +38,12 @@
   "msg-success-delete": "刪除{{name}}完成",
   "msg-success-signout": "已成功登出",
   "msg-success-update": "更新{{name}}完成",
-  "ttl-breadcrumbs.user-settings.label": "用戶設定",
   "ttl-delete-confirm": "刪除確認",
   "ttl-filter-result": "查詢結果: {{type}}",
   "ttl-hierarchy-search": "搜尋{{name}}",
   "ttl-navigation-confirm": "即將離開當前頁面",
   "ttl-user-options": "用戶選項",
+  "ttl-user-settings": "用戶設定",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
     "GROUP": "資料夾名稱",
