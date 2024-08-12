@@ -1,4 +1,5 @@
 import { NextSeo } from 'next-seo';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
@@ -8,6 +9,7 @@ import { makePerPageLayout } from './common.client.side';
 
 export default makePerPageLayout(MainLayout)(function IndexPage() {
   const { t } = useTranslation();
+  const { locale } = useRouter();
 
   return (
     <>
@@ -15,6 +17,12 @@ export default makePerPageLayout(MainLayout)(function IndexPage() {
         title={`${t('intro:ttl-welcome.normal')} | ${t('ttl-weavcraft')}`}
         description={t('intro:msg-short-intro')}
         canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/`}
+        languageAlternates={[
+          {
+            hrefLang: locale as string,
+            href: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+          },
+        ]}
         openGraph={{
           title: t('ttl-weavcraft'),
           description: t('msg-short-intro'),

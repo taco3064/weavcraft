@@ -16,7 +16,9 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
   return (
     <PageContainer maxWidth="sm">
       <NextSeo
-        title={`${t('ttl-user-settings')} | ${t('ttl-weavcraft')}`}
+        title={`${t('ttl-breadcrumbs.user-settings.label')} | ${t(
+          'ttl-weavcraft'
+        )}`}
         canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/user-settings/settings`}
         openGraph={{
           title: t('ttl-weavcraft'),
@@ -35,7 +37,7 @@ export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
 
       <Breadcrumbs
         disableGutters
-        currentPageTitle={t('ttl-user-settings')}
+        currentPageTitle={t('ttl-breadcrumbs.user-settings.label')}
         customBreadcrumbs={{ '/user-settings': 'nonLinkable' }}
         onCatchAllRoutesTransform={(key, value) => {
           if (key === 'type' && typeof value === 'string') {
