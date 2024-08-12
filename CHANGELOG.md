@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.69](https://github.com/taco3064/weavcraft/compare/v0.0.68...v0.0.69) (2024-08-12)
+
+
+### Bug Fixes
+
+* **web/next-sitemap:** add exclude settings ([c96f06e](https://github.com/taco3064/weavcraft/commit/c96f06eef5d37fdd18448aef3aa577eb9bdc8115))
+
 ### [0.0.68](https://github.com/taco3064/weavcraft/compare/v0.0.67...v0.0.68) (2024-08-12)
 
 
