@@ -39,7 +39,10 @@ module.exports = {
         },
       ],
       alternateRefs: i18n.locales.map((locale) => ({
-        href: new URL(`${locale}${path}`, config.siteUrl).href,
+        href: new URL(
+          [locale === 'en' ? '' : `/${locale}`, path].join(''),
+          config.siteUrl
+        ).href,
         hreflang: locale,
         hrefIsAbsolute: true,
       })),
