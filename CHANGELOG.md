@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.67](https://github.com/taco3064/weavcraft/compare/v0.0.66...v0.0.67) (2024-08-12)
+
+
+### Bug Fixes
+
+* **web/*:** enhance SEO with locales ([841b0b3](https://github.com/taco3064/weavcraft/commit/841b0b3c79ee58bec351f6f1d5c6749804468778))
+* **web/*:** enhance SEO with locales ([9ab44fb](https://github.com/taco3064/weavcraft/commit/9ab44fbd3f6827a07b0337a4905436a3cfdc374e))
+* **web/*:** fixed sonarqube issues ([9cf7a6f](https://github.com/taco3064/weavcraft/commit/9cf7a6ffd2a2abc228b7dd1ba6c1f3a399ddf57b))
+* **web/*:** fixed sonarqube issues ([84b53a7](https://github.com/taco3064/weavcraft/commit/84b53a70ff6f579739d587000f17637cd76b159d))
+
 ### [0.0.66](https://github.com/taco3064/weavcraft/compare/v0.0.65...v0.0.66) (2024-08-10)
 
 
