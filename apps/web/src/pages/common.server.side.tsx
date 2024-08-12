@@ -27,18 +27,19 @@ export async function isUserEnvStatus(
 }
 
 export async function getTranslations(
-  { req }: GetServerSidePropsContext,
+  { locale, req }: GetServerSidePropsContext,
   ...ns: string[]
 ) {
-  const { language = process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE } = cookie.parse(
-    req.headers.cookie || ''
-  );
+  const { language } = cookie.parse(req.headers.cookie || '');
 
   if (process.env.NODE_ENV === 'development') {
     await i18n?.reloadResources();
   }
 
-  return await serverSideTranslations(language, ['common', 'tutorial', ...ns]);
+  return await serverSideTranslations(
+    language || locale || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
+    ['common', 'tutorial', ...ns]
+  );
 }
 
 export function getBaseGroupServerSideProps<P>(category: string) {

@@ -1,3 +1,5 @@
+const { i18n } = require('./next-i18next.config');
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: 'https://www.weavcraft.com',
@@ -7,8 +9,8 @@ module.exports = {
   outDir: 'apps/web/public',
   additionalPaths: async (config) => [
     config.transform(config, '/user-settings/settings'),
-    ...['/themes', '/widgets', '/pages'].map((path) =>
-      config.transform(config, `/tutorial${path}`)
+    ...['themes', 'widgets', 'pages'].map((path) =>
+      config.transform(config, `/tutorial/${path}`)
     ),
   ],
   transform: (config, path) => {
@@ -22,9 +24,9 @@ module.exports = {
     };
 
     return {
-      loc: path,
       changefreq: config.changefreq,
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      loc: path,
       priority: Math.max(
         0,
         Math.min(1, 1 - (level + (adjust[paths[0]] || 0)) * 0.1)
@@ -36,6 +38,11 @@ module.exports = {
           title: 'Weavcraft',
         },
       ],
+      alternateRefs: i18n.locales.map((locale) => ({
+        href: new URL(`${locale}${path}`, config.siteUrl).href,
+        hreflang: locale,
+        hrefIsAbsolute: true,
+      })),
     };
   },
 };

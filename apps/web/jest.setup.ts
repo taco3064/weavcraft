@@ -42,3 +42,7 @@ jest.mock('@mui/material/styles/createPalette', () => ({
 jest.mock('react-json-tree', () => ({
   JSONTree: jest.fn().mockImplementation(({ children }) => children),
 }));
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn().mockReturnValue({ locale: 'en' }),
+}));

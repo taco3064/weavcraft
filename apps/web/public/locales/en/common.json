@@ -38,12 +38,12 @@
   "msg-success-delete": "Successfully deleted {{name}}.",
   "msg-success-signout": "You have successfully logged out.",
   "msg-success-update": "Successfully updated {{name}}.",
+  "ttl-breadcrumbs.user-settings.label": "User Settings",
   "ttl-delete-confirm": "Confirm Deletion",
   "ttl-filter-result": "Search Result: {{type}}",
   "ttl-hierarchy-search": "Search {{name}}",
   "ttl-navigation-confirm": "Confirm Navigation",
   "ttl-user-options": "User Options",
-  "ttl-user-settings": "User Settings",
   "ttl-weavcraft": "Weavcraft",
   "lbl-hierarchy-name": {
     "GROUP": "Folder Name",

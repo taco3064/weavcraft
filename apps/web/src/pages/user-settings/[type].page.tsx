@@ -7,35 +7,27 @@ import { Breadcrumbs, MainLayout, UserSettings } from '~web/containers';
 import { PageContainer } from '~web/components';
 import { getTranslations } from '../common.server.side';
 import { makePerPageLayout } from '../common.client.side';
+import { useNextSeoProps } from '~web/hooks';
 import type { UserSettingType } from '../imports.types';
 
 export default makePerPageLayout(MainLayout)(function UserSettingsPage() {
+  const seoProps = useNextSeoProps();
+
   const { t } = useTranslation();
   const { query } = useRouter();
 
   return (
     <PageContainer maxWidth="sm">
       <NextSeo
-        title={`${t('ttl-user-settings')} | ${t('ttl-weavcraft')}`}
-        canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/user-settings/settings`}
-        openGraph={{
-          title: t('ttl-weavcraft'),
-          description: t('msg-short-intro'),
-          images: [
-            {
-              url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
-              width: 256,
-              height: 256,
-              alt: 'Logo',
-              type: 'image/png',
-            },
-          ],
-        }}
+        {...seoProps}
+        title={`${t('ttl-breadcrumbs.user-settings.label')} | ${t(
+          'ttl-weavcraft'
+        )}`}
       />
 
       <Breadcrumbs
         disableGutters
-        currentPageTitle={t('ttl-user-settings')}
+        currentPageTitle={t('ttl-breadcrumbs.user-settings.label')}
         customBreadcrumbs={{ '/user-settings': 'nonLinkable' }}
         onCatchAllRoutesTransform={(key, value) => {
           if (key === 'type' && typeof value === 'string') {
