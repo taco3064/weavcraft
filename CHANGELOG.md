@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.68](https://github.com/taco3064/weavcraft/compare/v0.0.67...v0.0.68) (2024-08-12)
+
+
+### Bug Fixes
+
+* **web/gethierarchydata:** add initial value ([4db224c](https://github.com/taco3064/weavcraft/commit/4db224cc8522e295307d8d1ee4e497657b1ef696))
+* **web/next-sitemap.config:** update sitemap config ([0c4691c](https://github.com/taco3064/weavcraft/commit/0c4691c033f82fc08b31ba4701afccec91a8e236))
+
 ### [0.0.67](https://github.com/taco3064/weavcraft/compare/v0.0.66...v0.0.67) (2024-08-12)
 
 
