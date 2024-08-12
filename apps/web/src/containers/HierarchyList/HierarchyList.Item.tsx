@@ -31,11 +31,12 @@ export default function HierarchyListItem<P>({
 }: HierarchyListItemProps<P>) {
   const { t } = useTranslation();
   const { dragRef, isDragging, props } = useDraggable(data, disableDrag);
-  const { dropRef, isDropOver } = useDroppable(data, disableDrag);
+  const { dropRef, isDropOver } = useDroppable(data);
   const { classes } = useItemStyles({ cols, isDragging, isDropOver });
 
   const isTutorialMode = useTutorialMode();
   const isGroup = data.type === EnumHierarchyType.GROUP;
+  const isCustomContent = !isDragging && renderContent instanceof Function;
 
   const editTitle = isGroup
     ? t('btn-edit-group')
@@ -51,10 +52,6 @@ export default function HierarchyListItem<P>({
           titleTypographyProps={{
             variant: 'subtitle1',
             color: 'text.primary',
-            component: Link,
-            href: `${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
-              isGroup ? data.id : `detail/${data.id}`
-            }`,
           }}
           avatar={
             <IconButton
@@ -68,44 +65,49 @@ export default function HierarchyListItem<P>({
           }
         />
 
-        <CardMedia
-          className={classes.icon}
-          sx={{
-            fontSize:
-              data.type !== EnumHierarchyType.ITEM ||
-              !(renderContent instanceof Function)
-                ? '6rem'
-                : null,
-          }}
+        <Link
+          className={classes.link}
+          href={`${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
+            isGroup ? data.id : `detail/${data.id}`
+          }`}
         >
-          {data.type === EnumHierarchyType.GROUP && (
-            <Core.Icon
-              color="warning"
-              fontSize="inherit"
-              code={isDropOver ? 'faFolderOpen' : 'faFolder'}
-            />
-          )}
-
-          {data.type === EnumHierarchyType.ITEM &&
-            !isDragging &&
-            (renderContent instanceof Function ? (
-              renderContent(data.payload)
-            ) : (
-              <Core.Icon code={icon} color="secondary" fontSize="inherit" />
-            ))}
-        </CardMedia>
-
-        <CardContent>
-          <Typography
-            className={classes.description}
-            variant="body2"
-            align="center"
-            color="text.secondary"
-            whiteSpace="pre-line"
+          <CardMedia
+            className={classes.icon}
+            sx={{
+              fontSize:
+                data.type !== EnumHierarchyType.ITEM || !isCustomContent
+                  ? '6rem'
+                  : null,
+            }}
           >
-            {data.description ? data.description : t('msg-no-description')}
-          </Typography>
-        </CardContent>
+            {data.type === EnumHierarchyType.GROUP && (
+              <Core.Icon
+                color="warning"
+                fontSize="inherit"
+                code={isDropOver ? 'faFolderOpen' : 'faFolder'}
+              />
+            )}
+
+            {data.type === EnumHierarchyType.ITEM &&
+              (isCustomContent ? (
+                renderContent(data.payload)
+              ) : (
+                <Core.Icon code={icon} color="secondary" fontSize="inherit" />
+              ))}
+          </CardMedia>
+
+          <CardContent>
+            <Typography
+              className={classes.description}
+              variant="body2"
+              align="center"
+              color="text.secondary"
+              whiteSpace="pre-line"
+            >
+              {data.description ? data.description : t('msg-no-description')}
+            </Typography>
+          </CardContent>
+        </Link>
 
         {!isDragging && (
           <>

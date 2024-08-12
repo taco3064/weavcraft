@@ -164,7 +164,8 @@ export default function HierarchyList<P>({
                         key={item.id}
                         data={item}
                         disableDrag={
-                          collections.group.length < 1 && !superiors.length
+                          collections.group.length <
+                            (type === 'group' ? 2 : 1) && !superiors.length
                         }
                         onEditClick={(e) => setUpserted(e)}
                         onDeleteConfirm={(input) =>
