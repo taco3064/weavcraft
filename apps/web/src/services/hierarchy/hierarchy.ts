@@ -42,7 +42,7 @@ export const getHierarchyData = withConnRefusedCatch<
   });
 
   return data;
-});
+}, []);
 
 export const createHierarchyData = withConnRefusedCatch<
   MutationtHierarchyInput,
