@@ -21,32 +21,21 @@ import { Breadcrumbs, MainLayout } from '~web/containers';
 import { PageContainer } from '~web/components';
 import { getTranslations } from './common.server.side';
 import { makePerPageLayout } from './common.client.side';
-import { useTutorialLessons } from '~web/hooks';
+import { useNextSeoProps, useTutorialLessons } from '~web/hooks';
 
 export default makePerPageLayout(MainLayout)(function TutorialsPage() {
+  const seoProps = useNextSeoProps();
   const tutorials = useTutorialLessons();
+
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(tutorials[0].id);
 
   return (
     <PageContainer maxWidth="sm">
       <NextSeo
+        {...seoProps}
         title={`${t('ttl-breadcrumbs.tutorial.label')} | ${t('ttl-weavcraft')}`}
         description={t('ttl-breadcrumbs.tutorial.description')}
-        canonical={`${process.env.NEXT_PUBLIC_BASE_URL}/tutorial`}
-        openGraph={{
-          title: t('ttl-weavcraft'),
-          description: t('msg-short-intro'),
-          images: [
-            {
-              url: `${process.env.NEXT_PUBLIC_BASE_URL}/imgs/logo.png`,
-              width: 256,
-              height: 256,
-              alt: 'Logo',
-              type: 'image/png',
-            },
-          ],
-        }}
       />
 
       <Breadcrumbs
