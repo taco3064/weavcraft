@@ -1,17 +1,17 @@
 const { i18n } = require('./next-i18next.config');
+const features = ['themes', 'widgets', 'pages'];
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: 'https://www.weavcraft.com',
   autoLastmod: true,
+  exclude: features.map((path) => `/${path}`),
   generateRobotsTxt: true,
-  sourceDir: 'apps/web/.next',
   outDir: 'apps/web/public',
+  sourceDir: 'apps/web/.next',
   additionalPaths: async (config) => [
     config.transform(config, '/user-settings/settings'),
-    ...['themes', 'widgets', 'pages'].map((path) =>
-      config.transform(config, `/tutorial/${path}`)
-    ),
+    ...features.map((path) => config.transform(config, `/tutorial/${path}`)),
   ],
   transform: (config, path) => {
     const paths = path.substring(1).split('/');
