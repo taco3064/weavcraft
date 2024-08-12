@@ -1,16 +1,9 @@
 import type { UserData } from '@weavcraft/common';
-
-import type {
-  CredentialTokens,
-  LanguageCode,
-  PaletteCode,
-} from '../../imports.types';
+import type { CredentialTokens } from '../../imports.types';
 
 declare module 'next-auth' {
   interface Session {
     error?: 'RefreshAccessTokenError';
-    language?: LanguageCode;
-    palette?: PaletteCode;
     user?: UserData;
   }
 

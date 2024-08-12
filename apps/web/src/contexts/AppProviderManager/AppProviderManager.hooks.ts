@@ -61,11 +61,10 @@ export function useAppSettings() {
 }
 
 export function useLanguage() {
-  const { locales, pathname, asPath, query, replace } = useRouter();
+  const { locale, locales, pathname, asPath, query, replace } = useRouter();
 
   return {
-    language:
-      Cookies.get('language') || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
+    language: locale || process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE,
     languages: locales as LanguageCode[],
 
     setLanguage: (language: LanguageCode) => {

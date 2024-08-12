@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-imports */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { useRouter } from 'next/router';
 import 'intersection-observer';
 
 import commonEn from './public/locales/en/common.json';
@@ -41,4 +42,8 @@ jest.mock('@mui/material/styles/createPalette', () => ({
 
 jest.mock('react-json-tree', () => ({
   JSONTree: jest.fn().mockImplementation(({ children }) => children),
+}));
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn().mockReturnValue({ locale: 'en' }),
 }));

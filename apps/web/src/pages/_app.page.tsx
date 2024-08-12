@@ -1,5 +1,7 @@
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import { appWithTranslation, useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { AppProviderManager } from '~web/contexts';
@@ -10,10 +12,16 @@ export default appWithTranslation(function App({
   pageProps,
 }: AppProps) {
   const { t } = useTranslation();
-  const { asPath } = useRouter();
+  const { locale, asPath, pathname, query, replace } = useRouter();
 
   const getLayout = Component.getLayout || ((page) => page);
   const isTutorialMode = asPath.startsWith('/tutorial');
+
+  useEffect(() => {
+    if (Cookies.get('language') !== locale) {
+      replace({ pathname, query }, asPath, { locale: Cookies.get('language') });
+    }
+  }, [locale, asPath, pathname, query, replace]);
 
   return (
     <>
