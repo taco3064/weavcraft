@@ -4,11 +4,11 @@ import Slide from '@mui/material/Slide';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { InView } from 'react-intersection-observer';
+import { useBreakpointMatches } from '@weavcraft/core';
 import { useTranslation } from 'next-i18next';
 import type { Variant } from '@mui/material/styles/createTypography';
 
 import { FallbackTrans, PageContainer } from '~web/components';
-import { useBreakpointMatches } from '~web/hooks';
 import { useMainStyles } from './Intro.styles';
 
 const BASE_TIMEOUT = 1200;

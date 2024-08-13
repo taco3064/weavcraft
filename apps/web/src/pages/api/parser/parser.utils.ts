@@ -85,10 +85,11 @@ export function getParser(): CoreParser {
       .getExportSymbols()
       .filter((symbol) => symbol.getName().endsWith('Props')) || [];
 
-  const coreGroups = source.getExportSymbols().reduce((result, symbol) => {
+  const groupMap = source.getExportSymbols().reduce((result, symbol) => {
     const type = symbol.getTypeAtLocation(source);
 
-    if (symbol.getName() !== key && type.isObject()) {
+    //? The group name must be in uppercase and the type must be an object
+    if (/^[A-Z]/.test(symbol.getName()) && type.isObject()) {
       type
         .getProperties()
         .forEach((property) =>
@@ -103,7 +104,7 @@ export function getParser(): CoreParser {
     source,
     propSymbols,
 
-    getCoreGroup: (component) => coreGroups.get(component),
+    getCoreGroup: (component) => groupMap.get(component),
 
     getPropSymbol: (component) =>
       propSymbols.find((symbol) => symbol.getName() === `${component}Props`),

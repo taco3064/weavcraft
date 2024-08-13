@@ -10,7 +10,7 @@ type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
 export type { PageLayoutConfigs, ThemePalette };
 export type CoreComponent = Exclude<keyof typeof Core, Lowercase<string>>;
-export type WidgetSize = WidgetLayout['size'];
+export type WidgetSpans = WidgetLayout['spans'];
 
 export type MutationtConfigInput<T> = {
   hierarchyId: string;

@@ -4,14 +4,14 @@ import path from 'path';
 import { getParser } from './src/pages/api/parser/parser.utils';
 import type { PropsDefinition } from './src/services';
 
-const dirpath = path.resolve(process.cwd(), './public/definitions');
+const outputDir = path.resolve(process.cwd(), './public/definitions');
 const { propSymbols, getCoreGroup, getPropsDefinitions } = getParser();
 
-if (fs.existsSync(dirpath)) {
-  fs.rmdirSync(dirpath, { recursive: true });
+if (fs.existsSync(outputDir)) {
+  fs.rmdirSync(outputDir, { recursive: true });
 }
 
-fs.mkdirSync(dirpath);
+fs.mkdirSync(outputDir);
 
 propSymbols?.forEach((symbol) => {
   const componentName = symbol.getName().replace(/Props$/, '');
@@ -23,7 +23,7 @@ propSymbols?.forEach((symbol) => {
   };
 
   fs.writeFileSync(
-    path.resolve(dirpath, `./${componentName}.json`),
+    path.resolve(outputDir, `./${componentName}.json`),
     JSON.stringify(json, null, 2)
   );
 });

@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import Core from '@weavcraft/core';
+import Core, { ResponsiveGrid, ResponsiveItem } from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
@@ -75,7 +75,17 @@ export default function PageLayoutsEditor({
           </Tooltip>
         </PortalWrapper>
 
-        <>Page Layouts Preview</>
+        <ResponsiveGrid
+          items={value.layouts}
+          rowHeight={64}
+          onResize={console.log}
+          onResort={console.log}
+          renderItem={({ id, spans }) => (
+            <ResponsiveItem {...{ id, spans }} actions={<>TEST</>}>
+              <div style={{ background: 'red' }}>TES</div>
+            </ResponsiveItem>
+          )}
+        />
 
         <PortalWrapper containerEl={containerEl}>
           Page Layouts Editor
