@@ -9,7 +9,9 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
+import type { Breakpoint } from '@mui/material/styles';
 
+import { BreakpointStepper } from '~web/components';
 import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { upsertPageLayouts } from '~web/services';
 import { useMainStyles } from './PageLayoutsEditor.styles';
@@ -25,6 +27,7 @@ export default function PageLayoutsEditor({
   const isTutorialMode = useTutorialMode();
 
   const [, startTransition] = useTransition();
+  const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
   const [editing, setEditing] = useState<unknown>();
 
   const [value, setValue] = useState<Partial<PageLayoutConfigs>>(() =>
@@ -85,6 +88,12 @@ export default function PageLayoutsEditor({
               <div style={{ background: 'red' }}>TES</div>
             </ResponsiveItem>
           )}
+        />
+
+        <BreakpointStepper
+          // disableNextButton={!value.layouts?.length}
+          value={breakpoint}
+          onChange={setBreakpoint}
         />
 
         <PortalWrapper containerEl={containerEl}>

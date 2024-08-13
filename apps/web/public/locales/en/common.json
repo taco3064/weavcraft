@@ -45,6 +45,13 @@
   "ttl-navigation-confirm": "Confirm Navigation",
   "ttl-user-options": "User Options",
   "ttl-weavcraft": "Weavcraft",
+  "lbl-breakpoint": {
+    "lg": "Large",
+    "md": "Medium",
+    "sm": "Small",
+    "xl": "Extra Large",
+    "xs": "Extra Small"
+  },
   "lbl-hierarchy-name": {
     "GROUP": "Folder Name",
     "ITEM": "{{category}} Name"
