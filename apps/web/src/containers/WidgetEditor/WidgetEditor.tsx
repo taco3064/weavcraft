@@ -185,7 +185,7 @@ export default withCorePropsDefinition(function WidgetEditor({
           ) : (
             <NodeCreateButton
               variant="node"
-              onClick={(component) => setValue({ ...value, component })}
+              onCreate={(component) => setValue({ ...value, component })}
             />
           )}
 

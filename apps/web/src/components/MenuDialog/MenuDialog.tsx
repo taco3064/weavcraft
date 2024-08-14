@@ -16,7 +16,8 @@ import { useState } from 'react';
 
 import { SlideDownTransition, SlideUpTransition } from '~web/themes';
 import { useDialogStyles } from './MenuDialog.styles';
-import type { MenuDialogProps } from './MenuDialog.types';
+import type { MenuDialogProps, SubProps } from './MenuDialog.types';
+import type { MenuItemOptions } from '../imports.types';
 
 export default function MenuDialog({
   TransitionComponent = SlideUpTransition,
@@ -24,27 +25,46 @@ export default function MenuDialog({
   isLoading,
   items,
   open,
+  subMenu = false,
   subtitle,
   title,
   onClose,
   onItemClick,
 }: MenuDialogProps) {
+  const [subProps, setSubProps] = useState<SubProps>();
   const { classes } = useDialogStyles();
+  const options = items.filter(Boolean) as MenuItemOptions[];
 
-  const [subProps, setSubProps] =
-    useState<Pick<MenuDialogProps, 'items' | 'title' | 'indicator'>>();
+  const handleItemClick = async (
+    item: Exclude<MenuItemOptions, 'divider'>,
+    index: number
+  ) => {
+    const { icon, label: title, items } = item;
+
+    if (!items?.length) {
+      const res = await onItemClick?.(title, index);
+
+      return res ? setSubProps(res) : onClose();
+    }
+
+    return setSubProps({ title, icon, items });
+  };
 
   return (
     <>
-      {!subProps?.items?.length ? null : (
+      {!subProps ? null : (
         <MenuDialog
-          indicator={subProps.indicator}
+          subMenu
           isLoading={isLoading}
           items={subProps.items}
-          open={Boolean(subProps.items.length)}
+          open={Boolean(subProps)}
+          subtitle={subProps.subtitle}
           title={subProps.title}
           onClose={() => setSubProps(undefined)}
           onItemClick={onItemClick}
+          indicator={
+            !subProps.icon ? undefined : <Core.Icon code={subProps.icon} />
+          }
           TransitionComponent={
             TransitionComponent === SlideUpTransition
               ? SlideDownTransition
@@ -56,8 +76,8 @@ export default function MenuDialog({
       <Dialog
         fullWidth
         maxWidth="xs"
-        open={Boolean(!subProps?.items?.length && open)}
-        onClose={subProps?.items?.length ? undefined : onClose}
+        open={Boolean(!subProps && open)}
+        onClose={subProps ? undefined : onClose}
         TransitionComponent={TransitionComponent}
       >
         {!indicator && !title ? null : (
@@ -97,44 +117,39 @@ export default function MenuDialog({
                 <CircularProgress className={classes.progress} />
               ) : (
                 <MenuList>
-                  {items.map((item, i) => {
-                    if (!item) {
-                      return null;
-                    } else if (item === 'divider') {
-                      return <Divider key="divider" />;
-                    }
+                  {!options.length ? (
+                    <MenuItem disabled className={classes.item}>
+                      <Typography variant="h6" color="text.secondary">
+                        <Trans i18nKey="msg-no-data" />
+                      </Typography>
+                    </MenuItem>
+                  ) : (
+                    options.map((item, i) => {
+                      if (!item) {
+                        return null;
+                      } else if (item === 'divider') {
+                        return <Divider key="divider" />;
+                      }
 
-                    const { href, icon, label, items: subItems } = item;
-                    const indicator = !icon ? undefined : (
-                      <Core.Icon code={icon} />
-                    );
-
-                    return (
-                      <MenuItem
-                        {...(href && { component: NextLink, href })}
-                        key={label}
-                        className={classes.item}
-                        disabled={isLoading}
-                        onClick={() => {
-                          if (subItems?.length) {
-                            setSubProps({
-                              indicator,
-                              title: label,
-                              items: subItems,
-                            });
-                          } else {
-                            onItemClick?.(label, i);
-                            onClose();
-                          }
-                        }}
-                      >
-                        <Typography variant="subtitle1" color="text.primary">
-                          {indicator}
-                          <Trans i18nKey={label} />
-                        </Typography>
-                      </MenuItem>
-                    );
-                  })}
+                      return (
+                        <MenuItem
+                          key={item.label}
+                          className={classes.item}
+                          disabled={isLoading}
+                          onClick={() => handleItemClick(item, i)}
+                          {...(item.href && {
+                            component: NextLink,
+                            href: item.href,
+                          })}
+                        >
+                          <Typography variant="subtitle1" color="text.primary">
+                            <Core.Icon code={item.icon} />
+                            <Trans i18nKey={item.label} />
+                          </Typography>
+                        </MenuItem>
+                      );
+                    })
+                  )}
                 </MenuList>
               )}
             </>
@@ -150,7 +165,7 @@ export default function MenuDialog({
             startIcon={<Core.Icon code="faClose" />}
             onClick={onClose}
           >
-            <Trans i18nKey="btn-close" />
+            <Trans i18nKey={subMenu ? 'btn-back' : 'btn-close'} />
           </Button>
         </DialogActions>
       </Dialog>

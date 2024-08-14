@@ -5,7 +5,7 @@ import ImageList from '@mui/material/ImageList';
 
 import ResponsiveItem from './ResponsiveGrid.Item';
 import { useBreakpointMatches } from '../../hooks';
-import { useDndHandles, useItemProps } from './ResponsiveGrid.hooks';
+import { useDndHandles } from './ResponsiveGrid.hooks';
 import { useMainStyles } from './ResponsiveGrid.styles';
 
 import type {
@@ -18,6 +18,10 @@ const DEFAULT_COLS = { xs: 2 };
 
 const DEFAULT_MAX__WIDTHS: ResponsiveMaxWidths = {
   xs: 'xs',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+  xl: 'xl',
 };
 
 export default function ResponsiveGrid<T extends DataType>({
@@ -26,25 +30,20 @@ export default function ResponsiveGrid<T extends DataType>({
   gap = 8,
   items,
   maxWidths = DEFAULT_MAX__WIDTHS,
-  rowHeight: defaultRowHeight,
+  rowHeight,
   sx,
   renderItem,
   onResize,
   onResort,
 }: ResponsiveGridProps<T>) {
+  const itemProps = items?.map((item) => renderItem(item).props) || [];
+
   const { matched: maxWidth } = useBreakpointMatches(maxWidths, breakpoint);
   const { matched: col } = useBreakpointMatches(cols, maxWidth);
 
   const { classes } = useMainStyles({
     cols: (onResort || onResize) && items?.length ? col : undefined,
-  });
-
-  const { itemProps, rowHeight } = useItemProps({
-    items,
-    rowHeight: defaultRowHeight,
-    onResize,
-    onResort,
-    renderItem,
+    gap,
   });
 
   const [gridRef, dndHandles] = useDndHandles(col, {
@@ -101,6 +100,14 @@ export default function ResponsiveGrid<T extends DataType>({
                       cols: col,
                       rowHeight,
                       gap,
+                      isToolbarShown: Boolean(
+                        onResize ||
+                          onResort ||
+                          itemProps.some(
+                            ({ actions, disableToolbar }) =>
+                              actions && !disableToolbar
+                          )
+                      ),
                     },
                   }}
                 />

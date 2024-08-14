@@ -11,32 +11,6 @@ import type {
 
 let temp: ResizeRecord = null;
 
-export function useItemProps<T extends DataType>({
-  items,
-  rowHeight: defaultRowHeight,
-  onResize,
-  onResort,
-  renderItem,
-}: Pick<
-  ResponsiveGridProps<T>,
-  'items' | 'rowHeight' | 'onResize' | 'onResort' | 'renderItem'
->) {
-  const theme = useTheme();
-  const itemProps = items?.map((item) => renderItem(item).props) || [];
-
-  return {
-    itemProps,
-
-    rowHeight:
-      defaultRowHeight +
-      Number.parseFloat(
-        itemProps.some((props) => props?.actions) || onResize || onResort
-          ? theme.spacing(6)
-          : '0'
-      ),
-  };
-}
-
 export function useDndHandles<T extends DataType>(
   cols: number,
   props: Pick<
@@ -45,7 +19,10 @@ export function useDndHandles<T extends DataType>(
   >
 ): [RefObject<HTMLUListElement>, DndHandles] {
   const { items = [], rowHeight, onResize, onResort } = props;
+
+  const theme = useTheme();
   const gridRef = useRef<HTMLUListElement>(null);
+  const toolbarHeight = Number.parseFloat(theme.spacing(6));
 
   return [
     gridRef,
@@ -56,12 +33,10 @@ export function useDndHandles<T extends DataType>(
         const el = document.getElementById(id.replace(/^resize-/, ''));
 
         if (id.startsWith('resize-') && rect && el) {
-          console.log(el.offsetHeight);
-
           temp = {
             el,
             columnWidth: rect.width / cols,
-            itemHeight: el.offsetHeight,
+            itemHeight: el.offsetHeight - toolbarHeight,
             itemWidth: el.offsetWidth,
             x: 0,
             y: 0,
@@ -81,7 +56,7 @@ export function useDndHandles<T extends DataType>(
           const grid = getColsAndRows(cols, rowHeight, temp);
 
           temp.el.style.cssText = `
-            height: ${temp.itemHeight}px !important;
+            height: ${temp.itemHeight + toolbarHeight}px !important;
             grid-column-end: span ${grid.cols};
             grid-row-end: span ${grid.rows};
           `;

@@ -51,9 +51,9 @@ export default function Breadcrumbs({
   return (
     <>
       <MenuDialog
+        items={breadcrumbs.slice(0, breadcrumbs.length - 1).reverse()}
         open={open}
         onClose={() => setOpen(false)}
-        items={breadcrumbs.slice(0, breadcrumbs.length - 1).reverse()}
       />
 
       <AppBar position="sticky" elevation={0} className={classes.root}>

@@ -1,6 +1,7 @@
 {
   "btn-add-group": "新增資料夾",
   "btn-add-item": "新增{{category}}",
+  "btn-back": "返回",
   "btn-cancel": "取消",
   "btn-clear": "清除",
   "btn-close": "關閉",

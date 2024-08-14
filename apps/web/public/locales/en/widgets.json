@@ -1,7 +1,7 @@
 {
   "btn-data-structure": "Data Structure",
   "btn-fixed-data": "View Fixed Data",
-  "btn-widget-preview": "Preview Widget",
+  "btn-widget-preview": "Widget Preview",
   "btn-widget-settings": "Widget Settings",
   "lbl-data-structure-root": "Root",
   "lbl-default-value": "Default Value: {{ value }}",

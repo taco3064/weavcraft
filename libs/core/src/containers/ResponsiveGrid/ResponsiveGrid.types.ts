@@ -15,6 +15,11 @@ export type DndHandles = Pick<
   'onDragEnd' | 'onDragMove' | 'onDragStart'
 >;
 
+export interface GridStyleParams {
+  cols?: number;
+  gap: number;
+}
+
 export interface GridItemStyleParams
   extends Pick<GridItemProps, 'GridProps' | 'id'>,
     Pick<ReturnType<typeof useSortable>, 'transition' | 'transform'> {
@@ -43,6 +48,7 @@ export interface ResponsiveMaxWidths {
 interface GridProps {
   breakpoint: Breakpoint;
   cols: number;
+  isToolbarShown: boolean;
   rowHeight: number;
   gap: number;
 }
@@ -66,6 +72,8 @@ export interface GridItemProps {
   id: string;
   actions?: ReactNode;
   children?: ReactNode;
+  className?: string;
+  disableToolbar?: boolean;
   enableResize?: boolean;
   enableResort?: boolean;
   spans: BreakpointValues<Span>;

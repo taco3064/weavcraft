@@ -179,7 +179,7 @@ export function useNodeCreateButton(
           path,
           config,
           variant: clickable ? 'action' : 'node',
-          onClick: (component) => {
+          onCreate: (component) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
             onAdd(config, path, component);

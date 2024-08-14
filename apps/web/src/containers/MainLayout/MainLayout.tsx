@@ -81,6 +81,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
                 <Toolbar disableGutters role="status" variant="dense">
                   <NotificationBell />
+
                   {pathname !== '/user-settings/[type]' && (
                     <UserAvatarMenu
                       {...props}

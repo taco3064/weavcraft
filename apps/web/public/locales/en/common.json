@@ -1,6 +1,7 @@
 {
   "btn-add-group": "Add Folder",
   "btn-add-item": "Create {{category}}",
+  "btn-back": "Back",
   "btn-cancel": "Cancel",
   "btn-clear": "Clear",
   "btn-close": "Close",

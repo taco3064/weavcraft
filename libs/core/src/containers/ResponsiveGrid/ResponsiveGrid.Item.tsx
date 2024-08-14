@@ -17,6 +17,8 @@ export default function GridItem({
   id,
   actions,
   children,
+  className,
+  disableToolbar = false,
   enableResize = false,
   enableResort = false,
   spans,
@@ -31,7 +33,7 @@ export default function GridItem({
 
   const { matched: span } = useBreakpointMatches(spans, GridProps.breakpoint);
 
-  const { classes } = useItemStyles({
+  const { classes, cx } = useItemStyles({
     ...sortable,
     GridProps,
     activeId: active?.id.toString().replace('resize-', ''),
@@ -46,11 +48,15 @@ export default function GridItem({
       className={classes.root}
       id={id}
     >
-      <Container disableGutters maxWidth={false} className={classes?.content}>
+      <Container
+        disableGutters
+        maxWidth={false}
+        className={cx(classes.content, className)}
+      >
         {children}
       </Container>
 
-      {(actions || enableResize || enableResort) && (
+      {!disableToolbar && (actions || enableResize || enableResort) && (
         <ImageListItemBar
           classes={{ root: classes.bar, titleWrap: classes.barTitle }}
           title={

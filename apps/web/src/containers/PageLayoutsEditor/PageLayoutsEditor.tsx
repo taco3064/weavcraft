@@ -11,9 +11,13 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
+import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper } from '~web/components';
+import { NEW_LAYOUT } from './PageLayoutsEditor.const';
 import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
+import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
+import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
@@ -29,9 +33,10 @@ export default function PageLayoutsEditor({
   const [, startTransition] = useTransition();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
   const [editing, setEditing] = useState<unknown>();
+  const [viewMode, setViewMode] = useState<ViewModeEnum>();
 
-  const [value, setValue] = useState<Partial<PageLayoutConfigs>>(() =>
-    !config ? {} : JSON.parse(JSON.stringify(config))
+  const [value, setValue] = useState<PageLayoutConfigs>(() =>
+    !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))
   );
 
   const { t } = useTranslation();
@@ -41,6 +46,13 @@ export default function PageLayoutsEditor({
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setEditing(undefined)
+  );
+
+  const { onCreate, onRemove, onResize, onResort } = useChangeEvents(
+    breakpoint,
+    viewMode,
+    value,
+    setValue
   );
 
   const { mutate: upsert } = useMutation({
@@ -54,52 +66,98 @@ export default function PageLayoutsEditor({
   });
 
   return (
-    <Slide in direction="up" timeout={1200}>
-      <Container disableGutters className={classes.root} maxWidth="xl">
-        <PortalWrapper
-          WrapperComponent={Toolbar}
-          containerEl={toolbarEl}
-          variant="dense"
-        >
-          <Tooltip title={t('btn-save')}>
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() =>
-                upsert({
-                  hierarchyId: query.id as string,
-                  input: value as PageLayoutConfigs,
-                  isTutorialMode,
-                })
+    <>
+      <Slide in direction="up" timeout={1200}>
+        <Container disableGutters className={classes.root} maxWidth="xl">
+          <PortalWrapper
+            WrapperComponent={Toolbar}
+            containerEl={toolbarEl}
+            variant="dense"
+          >
+            {viewMode !== ViewModeEnum.Preview && (
+              <WidgetCreateButton onCreate={onCreate} />
+            )}
+
+            <Tooltip
+              title={
+                viewMode === ViewModeEnum.Preview
+                  ? t('btn-undo')
+                  : t('pages:btn-layout-preview')
               }
             >
-              <Core.Icon code="faSave" />
-            </IconButton>
-          </Tooltip>
-        </PortalWrapper>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() =>
+                  setViewMode(
+                    viewMode === ViewModeEnum.Preview
+                      ? undefined
+                      : ViewModeEnum.Preview
+                  )
+                }
+              >
+                <Core.Icon
+                  code={viewMode === ViewModeEnum.Preview ? 'faUndo' : 'faEye'}
+                />
+              </IconButton>
+            </Tooltip>
 
-        <ResponsiveGrid
-          items={value.layouts}
-          rowHeight={64}
-          onResize={console.log}
-          onResort={console.log}
-          renderItem={({ id, spans }) => (
-            <ResponsiveItem {...{ id, spans }} actions={<>TEST</>}>
-              <div style={{ background: 'red' }}>TES</div>
-            </ResponsiveItem>
-          )}
-        />
+            <Tooltip title={t('btn-save')}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() =>
+                  upsert({
+                    hierarchyId: query.id as string,
+                    input: value as PageLayoutConfigs,
+                    isTutorialMode,
+                  })
+                }
+              >
+                <Core.Icon code="faSave" />
+              </IconButton>
+            </Tooltip>
+          </PortalWrapper>
 
+          <ResponsiveGrid
+            {...(viewMode !== ViewModeEnum.Preview && {
+              items: [...value.layouts, NEW_LAYOUT],
+              onResize,
+              onResort,
+            })}
+            breakpoint={breakpoint}
+            cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
+            items={value.layouts}
+            rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
+            renderItem={({ id, spans }) => (
+              <ResponsiveItem
+                {...{ id, spans }}
+                disableToolbar={viewMode === ViewModeEnum.Preview}
+                actions={<>Actions</>}
+              >
+                <div style={{ background: 'red', height: '100%' }}>TES</div>
+              </ResponsiveItem>
+            )}
+          />
+
+          <PortalWrapper containerEl={containerEl}>
+            Page Layouts Editor
+          </PortalWrapper>
+        </Container>
+      </Slide>
+
+      <Slide in direction="up" timeout={1200}>
         <BreakpointStepper
-          // disableNextButton={!value.layouts?.length}
+          disableNextButton={!value.layouts?.length}
           value={breakpoint}
           onChange={setBreakpoint}
+          AppBarProps={{
+            position: 'fixed',
+            variant: 'outlined',
+            className: classes.breakpointStepper,
+          }}
         />
-
-        <PortalWrapper containerEl={containerEl}>
-          Page Layouts Editor
-        </PortalWrapper>
-      </Container>
-    </Slide>
+      </Slide>
+    </>
   );
 }

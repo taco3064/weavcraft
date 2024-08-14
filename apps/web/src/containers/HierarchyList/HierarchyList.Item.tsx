@@ -38,6 +38,10 @@ export default function HierarchyListItem<P>({
   const isGroup = data.type === EnumHierarchyType.GROUP;
   const isCustomContent = !isDragging && renderContent instanceof Function;
 
+  const href = `${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
+    isGroup ? data.id : `detail/${data.id}`
+  }`;
+
   const editTitle = isGroup
     ? t('btn-edit-group')
     : t('btn-edit-item', {
@@ -52,6 +56,8 @@ export default function HierarchyListItem<P>({
           titleTypographyProps={{
             variant: 'subtitle1',
             color: 'text.primary',
+            component: Link,
+            href,
           }}
           avatar={
             <IconButton
@@ -65,12 +71,7 @@ export default function HierarchyListItem<P>({
           }
         />
 
-        <Link
-          className={classes.link}
-          href={`${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
-            isGroup ? data.id : `detail/${data.id}`
-          }`}
-        >
+        <Link className={classes.link} href={href}>
           <CardMedia
             className={classes.icon}
             sx={{

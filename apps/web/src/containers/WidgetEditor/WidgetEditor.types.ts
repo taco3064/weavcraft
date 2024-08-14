@@ -50,5 +50,5 @@ export interface NodeCreateButtonProps {
   config?: ComponentConfig;
   path?: string;
   variant: NodeCreateVariant;
-  onClick: (component: CoreComponent) => void;
+  onCreate: (component: CoreComponent) => void;
 }
