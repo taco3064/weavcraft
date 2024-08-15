@@ -5,7 +5,8 @@ export interface PageLayoutConfigs {
   id: string;
   layouts: {
     id: string;
-    size: SetRequired<
+    widgetId: string;
+    spans: SetRequired<
       { [K in Breakpoint]?: Record<'cols' | 'rows', number> },
       'xs'
     >;

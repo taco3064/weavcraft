@@ -107,9 +107,7 @@ export const useSuperiorMutation: SuperiorMutationHook = ({
         bodyScrollDeviation = null;
         setDragging(false);
 
-        console.log(data, target, over);
-
-        if (target && over) {
+        if (target && over && target.id !== over.id) {
           updateSuperior({
             isTutorialMode,
             input: {
@@ -123,13 +121,10 @@ export const useSuperiorMutation: SuperiorMutationHook = ({
   };
 };
 
-export function useDroppable<P>(
-  { id, type }: HierarchyData<P>,
-  disabled = false
-) {
+export function useDroppable<P>({ id, type }: HierarchyData<P>) {
   const drop = Dnd.useDroppable({
     id,
-    disabled: disabled || type !== EnumHierarchyType.GROUP,
+    disabled: type !== EnumHierarchyType.GROUP,
   });
 
   return {

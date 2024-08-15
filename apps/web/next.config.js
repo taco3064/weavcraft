@@ -46,6 +46,7 @@ const nextConfig = {
         'process.env.NEXT_PUBLIC_API_URL': JSON.stringify(API_URL),
         'process.env.NEXT_PUBLIC_AUTH_SECRET': JSON.stringify(AUTH_SECRET),
         'process.env.NEXT_PUBLIC_BASE_URL': JSON.stringify(siteUrl),
+        'process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT': JSON.stringify(48),
         'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
         'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
 
@@ -54,6 +55,13 @@ const nextConfig = {
         ),
         'process.env.NEXT_PUBLIC_TUTORIAL_TOKEN':
           JSON.stringify(TUTORIAL_TOKEN),
+        'process.env.NEXT_PUBLIC_DEFAULT_COLS': JSON.stringify({
+          xs: 2,
+          sm: 3,
+          md: 4,
+          lg: 6,
+          xl: 8,
+        }),
       }),
     ],
   }),

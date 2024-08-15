@@ -1,3 +1,4 @@
+export * from './useBreakpoints';
 export * from './useGenerateProps';
 export * from './usePropsGetter';
 export * from './useSelection';

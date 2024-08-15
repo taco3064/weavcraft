@@ -69,7 +69,7 @@ export default makePerPageLayout<InitializationConfig<WidgetConfigs>>(
             <LinearProgress sx={{ width: '100%' }} />
 
             <Typography variant="h6" color="text.disabled">
-              {t('widgets:msg-definitions-loading')}
+              {t('msg-definitions-loading')}
             </Typography>
           </>
         }

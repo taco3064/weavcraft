@@ -80,12 +80,9 @@ export default withCorePropsDefinition(function WidgetEditor({
     changeEvents
   );
 
-  const generate = useWidgetRender(
-    value.dataStructure || [],
-    (WidgetEl, { config, key, props }) => (
-      <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
-    )
-  );
+  const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
+    <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
+  ));
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertWidgetConfig,
@@ -181,11 +178,11 @@ export default withCorePropsDefinition(function WidgetEditor({
           onContextMenu={(e) => e.preventDefault()}
         >
           {value.component ? (
-            generate(value)
+            generate(value, { dataStructure: value.dataStructure })
           ) : (
             <NodeCreateButton
               variant="node"
-              onClick={(component) => setValue({ ...value, component })}
+              onCreate={(component) => setValue({ ...value, component })}
             />
           )}
 

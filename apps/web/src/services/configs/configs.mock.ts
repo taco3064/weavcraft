@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { Mock, getMockData } from '../common';
 import type { HierarchyData } from '../hierarchy/hierarchy.types';
+
 import type {
   PageLayoutConfigs,
   ThemePalette,

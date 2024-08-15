@@ -12,4 +12,11 @@ export const useMainStyles = makeStyles<MainStyleParams>({
         ? marginTop
         : 0,
   },
+  breakpointStepper: {
+    width: 'auto',
+    top: 'auto',
+    bottom: theme.spacing(1.5),
+    left: theme.spacing(1.5),
+    right: theme.spacing(1.5),
+  },
 }));

@@ -15,10 +15,14 @@ export default function NotificationBell() {
     items: [],
   });
 
-  return !notifications.total ? null : (
+  return (
     <>
       <Badge badgeContent={notifications.unread} color="error">
-        <IconButton size="large" onClick={() => setOpen(true)}>
+        <IconButton
+          disabled={!notifications.total}
+          size="large"
+          onClick={() => setOpen(true)}
+        >
           <Core.Icon code="faBell" />
         </IconButton>
       </Badge>
