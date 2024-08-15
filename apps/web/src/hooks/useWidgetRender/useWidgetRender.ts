@@ -6,7 +6,6 @@ import type { ComponentType, ReactNode } from 'react';
 import { useCorePropsGetter } from '~web/contexts';
 
 import type {
-  DataFields,
   GenerateOptions,
   ComponentConfig,
   RenderFn,

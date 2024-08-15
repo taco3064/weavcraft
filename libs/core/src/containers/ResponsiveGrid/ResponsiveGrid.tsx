@@ -77,6 +77,7 @@ export default function ResponsiveGrid<T extends DataType>({
 
           return (
             <path
+              key={i}
               d={`M ${x} 0 L ${x} 10`}
               stroke={theme.palette.divider}
               strokeDasharray={2}

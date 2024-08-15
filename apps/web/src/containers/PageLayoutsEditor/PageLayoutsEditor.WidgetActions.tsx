@@ -10,19 +10,17 @@ export default function WidgetActions({ name, onRemove }: WidgetActionsProps) {
   const { t } = useTranslation();
 
   return (
-    <>
-      <ConfirmToggle
-        subject={t('ttl-delete-confirm')}
-        onConfirm={onRemove}
-        message={t('msg-delete-confirm', { name })}
-        toggle={
-          <Tooltip title={t('btn-delete')}>
-            <IconButton color="primary">
-              <Core.Icon code="faTrash" />
-            </IconButton>
-          </Tooltip>
-        }
-      />
-    </>
+    <ConfirmToggle
+      subject={t('ttl-delete-confirm')}
+      onConfirm={onRemove}
+      message={t('msg-delete-confirm', { name })}
+      toggle={
+        <Tooltip title={t('btn-delete')}>
+          <IconButton color="primary">
+            <Core.Icon code="faTrash" />
+          </IconButton>
+        </Tooltip>
+      }
+    />
   );
 }

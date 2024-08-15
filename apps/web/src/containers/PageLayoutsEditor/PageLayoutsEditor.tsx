@@ -100,17 +100,15 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                 </Tooltip>
               </>
             ) : (
-              <>
-                <Tooltip title={t('btn-undo')}>
-                  <IconButton
-                    color="primary"
-                    size="large"
-                    onClick={() => setViewMode(undefined)}
-                  >
-                    <Core.Icon code="faUndo" />
-                  </IconButton>
-                </Tooltip>
-              </>
+              <Tooltip title={t('btn-undo')}>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => setViewMode(undefined)}
+                >
+                  <Core.Icon code="faUndo" />
+                </IconButton>
+              </Tooltip>
             )}
 
             <Tooltip title={t('btn-save')}>
