@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.70](https://github.com/taco3064/weavcraft/compare/v0.0.69...v0.0.70) (2024-08-15)
+
+
+### Features
+
+* **core/responsive-grid:** add new component: ResponsiveGrid ([6185a68](https://github.com/taco3064/weavcraft/commit/6185a684eaaca09f86446026f79f7dc33ef2686f))
+* **web/breakpoint-stepper:** add new component: BreakpointStepper ([6ae4bf9](https://github.com/taco3064/weavcraft/commit/6ae4bf97d05a8b8daf9e01ac578c26f20695af46))
+* **web/page-layouts-editor:** add widget render process ([f386bef](https://github.com/taco3064/weavcraft/commit/f386bef95e1cd0bfb2ad9c37df39807925627f0c))
+* **web/page-layouts-editor:** building PageLayoutsEditor ([2fa481d](https://github.com/taco3064/weavcraft/commit/2fa481d643c3ef707312e6bc48fc19465c761e53))
+
+
+### Bug Fixes
+
+* fixed the sonar qube issues ([9df0ecb](https://github.com/taco3064/weavcraft/commit/9df0ecbc50bed0e65ec04378ed63d25336e7861c))
+* **web/hierarchy-list:** fixed dnd bugs ([1b6dbfc](https://github.com/taco3064/weavcraft/commit/1b6dbfc643f4b34623ecfdade6ca43e849883b1a))
+
 ### [0.0.69](https://github.com/taco3064/weavcraft/compare/v0.0.68...v0.0.69) (2024-08-12)
 
 
