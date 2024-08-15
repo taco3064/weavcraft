@@ -14,7 +14,7 @@ export type ButtonGroupProps<D extends JsonObject> = PropsWithMappedStore<
   D,
   MuiButtonGroupProps & {
     borderRadiusVariant?: 'top' | 'bottom' | 'none';
-    itemProps?: Pick<ButtonProps<D>, 'iconPosition' | 'propMapping'>;
+    itemProps?: Omit<ButtonProps<D>, 'data'>;
     onItemClick?: (item: D) => void;
   },
   'disabled'

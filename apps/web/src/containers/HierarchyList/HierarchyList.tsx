@@ -17,7 +17,7 @@ import HierarchySkeleton from './HierarchyList.Skeleton';
 import HierarchyToolbar from './HierarchyList.Toolbar';
 import MoveToParentFolderFab from './HierarchyList.MoveToParentFolderFab';
 import UpsertDialog from './HierarchyList.UpsertDialog';
-import { deleteHierarchyData, getHierarchyData } from '~web/services';
+import { deleteHierarchyData, searchHierarchies } from '~web/services';
 import { useHierarchyStyles } from './HierarchyList.styles';
 import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
@@ -62,7 +62,7 @@ export default function HierarchyList<P>({
   } = useQuery({
     enabled: Boolean(params.keyword?.trim()) || isTutorialMode,
     queryKey: [params, isTutorialMode],
-    queryFn: getHierarchyData,
+    queryFn: searchHierarchies,
   });
 
   const { ids, isDragging, contextProps } = useSuperiorMutation({

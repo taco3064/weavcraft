@@ -7,21 +7,29 @@ import Tooltip from '@mui/material/Tooltip';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
+import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper } from '~web/components';
-import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
+import { useWidgetRender } from '~web/hooks';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
-export default function PageLayoutsEditor({
+import {
+  PortalWrapper,
+  useTogglePortal,
+  useTutorialMode,
+  withCorePropsDefinition,
+} from '~web/contexts';
+
+export default withCorePropsDefinition(function PageLayoutsEditor({
   config,
   marginTop,
   title,
@@ -29,7 +37,6 @@ export default function PageLayoutsEditor({
 }: PageLayoutsEditorProps) {
   const isTutorialMode = useTutorialMode();
 
-  const [, startTransition] = useTransition();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
   const [editing, setEditing] = useState<unknown>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
@@ -47,12 +54,17 @@ export default function PageLayoutsEditor({
     setEditing(undefined)
   );
 
-  const { onCreate, onRemove, onResize, onResort } = useChangeEvents(
+  const [widgets, { onCreate, onRemove, onResize, onResort }] = useChangeEvents(
     breakpoint,
     viewMode,
+    config,
     value,
     setValue
   );
+
+  const generate = useWidgetRender((WidgetEl, { key, props }) => (
+    <WidgetEl key={key} {...props} />
+  ));
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertPageLayouts,
@@ -73,33 +85,33 @@ export default function PageLayoutsEditor({
             containerEl={toolbarEl}
             variant="dense"
           >
-            {viewMode !== ViewModeEnum.Preview && (
-              <WidgetCreateButton onCreate={onCreate} />
-            )}
+            {viewMode !== ViewModeEnum.Preview ? (
+              <>
+                <WidgetCreateButton onCreate={onCreate} />
 
-            <Tooltip
-              title={
-                viewMode === ViewModeEnum.Preview
-                  ? t('btn-undo')
-                  : t('pages:btn-layout-preview')
-              }
-            >
-              <IconButton
-                color="primary"
-                size="large"
-                onClick={() =>
-                  setViewMode(
-                    viewMode === ViewModeEnum.Preview
-                      ? undefined
-                      : ViewModeEnum.Preview
-                  )
-                }
-              >
-                <Core.Icon
-                  code={viewMode === ViewModeEnum.Preview ? 'faUndo' : 'faEye'}
-                />
-              </IconButton>
-            </Tooltip>
+                <Tooltip title={t('pages:btn-layout-preview')}>
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => setViewMode(ViewModeEnum.Preview)}
+                  >
+                    <Core.Icon code="faEye" />
+                  </IconButton>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <Tooltip title={t('btn-undo')}>
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => setViewMode(undefined)}
+                  >
+                    <Core.Icon code="faUndo" />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
 
             <Tooltip title={t('btn-save')}>
               <IconButton
@@ -119,20 +131,41 @@ export default function PageLayoutsEditor({
           </PortalWrapper>
 
           <ResponsiveGrid
-            {...{ onResize, onResort }}
-            breakpoint={breakpoint}
-            cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
+            {...{ breakpoint, onResize, onResort }}
             items={value.layouts}
+            cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
             rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
-            renderItem={({ id, spans }) => (
-              <ResponsiveItem
-                {...{ id, spans }}
-                disableToolbar={viewMode === ViewModeEnum.Preview}
-                actions={<>Actions</>}
-              >
-                <div style={{ background: 'red', height: '100%' }}>TES</div>
-              </ResponsiveItem>
-            )}
+            sx={{
+              '& > ul': (theme) => ({
+                paddingTop: theme.spacing(3),
+                paddingBottom: theme.spacing(3),
+              }),
+            }}
+            renderItem={({ id, widgetId, spans }) => {
+              const { [widgetId]: hierarchy } = widgets;
+
+              console.log(hierarchy?.payload);
+
+              return (
+                <ResponsiveItem
+                  {...{ id, spans }}
+                  disableToolbar={viewMode === ViewModeEnum.Preview}
+                  actions={
+                    hierarchy && (
+                      <WidgetActions
+                        name={hierarchy.title}
+                        onRemove={() => onRemove(id)}
+                      />
+                    )
+                  }
+                >
+                  {hierarchy?.payload &&
+                    generate(hierarchy.payload, {
+                      dataStructure: hierarchy.payload.dataStructure,
+                    })}
+                </ResponsiveItem>
+              );
+            }}
           />
 
           <PortalWrapper containerEl={containerEl}>
@@ -155,4 +188,4 @@ export default function PageLayoutsEditor({
       </Slide>
     </>
   );
-}
+});

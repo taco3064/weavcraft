@@ -44,6 +44,8 @@ export default function MenuDialog({
     if (!items?.length) {
       const res = await onItemClick?.(title, index);
 
+      console.log(res);
+
       return res ? setSubProps(res) : onClose();
     }
 

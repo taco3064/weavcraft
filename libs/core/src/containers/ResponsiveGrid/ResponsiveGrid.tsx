@@ -70,14 +70,14 @@ export default function ResponsiveGrid<T extends DataType>({
     lines: !lineCols ? undefined : (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${lineCols * 100} 100`}
+        viewBox={`0 0 ${lineCols * 100} 10`}
       >
         {Array.from({ length: lineCols - 1 }).map((_, i) => {
           const x = (i + 1) * 100;
 
           return (
             <path
-              d={`M ${x} 0 L ${x} 100`}
+              d={`M ${x} 0 L ${x} 10`}
               stroke={theme.palette.divider}
               strokeDasharray={2}
               strokeWidth={1}

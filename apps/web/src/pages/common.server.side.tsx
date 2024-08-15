@@ -4,7 +4,7 @@ import { i18n } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
-import { getHierarchyData, getSuperiorHierarchies } from '~web/services';
+import { searchHierarchies, getSuperiorHierarchies } from '~web/services';
 import type { BaseHierarchyProps } from './imports.types';
 
 export async function isUserEnvStatus(
@@ -70,7 +70,7 @@ export function getBaseGroupServerSideProps<P>(category: string) {
 
         initialData: isTutorialMode
           ? []
-          : await getHierarchyData({
+          : await searchHierarchies({
               queryKey: [
                 {
                   category,

@@ -49,6 +49,7 @@ export function useFormFields({ component }: ComponentConfig) {
         const propPath = basePropName
           ? `${basePropName}.${propName}`
           : propName;
+
         const { [propPath]: definition } = mappableProps;
 
         if (definition.type !== 'node') {

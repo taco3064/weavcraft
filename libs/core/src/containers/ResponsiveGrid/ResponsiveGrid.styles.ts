@@ -75,13 +75,12 @@ export const useItemStyles = makeStyles<GridItemStyleParams>({
 
 export const useMainStyles = makeStyles<GridStyleParams>({
   name: 'ResponsiveGrid',
-})((theme, { gap, lines }) => ({
+})((_theme, { gap, lines }) => ({
   root: {
     width: '100%',
     height: 'max-content',
     margin: 0,
     alignContent: 'start',
-    padding: theme.spacing(2, 0),
     overflow: 'hidden',
   },
   container: {
@@ -90,13 +89,12 @@ export const useMainStyles = makeStyles<GridStyleParams>({
 
     ...(lines && {
       '& > ul': {
-        padding: theme.spacing(2, gap / 16),
+        paddingLeft: gap / 2,
+        paddingRight: gap / 2,
         backgroundRepeat: 'repeat-y',
-        backgroundPosition: 'center',
         backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
           renderToString(lines)
-        )}")
-        `,
+        )}")`,
       },
     }),
   },

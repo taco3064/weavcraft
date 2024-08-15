@@ -1,11 +1,10 @@
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import _get from 'lodash/get';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { AddIconButton, MenuDialog } from '~web/components';
+import { MenuDialog } from '~web/components';
 import { EnumHierarchyType } from '~web/services';
 import { NAV_ITEMS } from '~web/hooks';
 import { useWidgetCreate } from './PageLayoutsEditor.hooks';
@@ -20,9 +19,9 @@ export default function WidgetCreateButton({
   const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
-  const { hierarchies, onItemClick } = useWidgetCreate(title, (id, widget) =>
+  const { hierarchies, onItemClick } = useWidgetCreate(title, (e) =>
     startTransition(() => {
-      onCreate(_get(widget, ['id']) as string, widget);
+      onCreate(e);
       setOpen(false);
     })
   );
@@ -39,7 +38,7 @@ export default function WidgetCreateButton({
         {...{ open, title, onItemClick }}
         onClose={() => setOpen(false)}
         items={
-          hierarchies.map(({ type, title, payloadId }) => ({
+          hierarchies.map(({ type, title }) => ({
             label: title,
             icon:
               type === EnumHierarchyType.GROUP

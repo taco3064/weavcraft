@@ -7,7 +7,6 @@
   "lbl-default-value": "預設值: {{ value }}",
   "lbl-field-path": "資料欄位名稱或路徑",
   "lbl-row": "第 {{ row }} 筆",
-  "msg-definitions-loading": "載入設定中...",
   "msg-no-fixed-data": "無特定資料",
   "msg-no-structure": "尚未設置資料結構",
   "msg-prop-mapping-placeholder": "選擇資料欄位名稱或路徑",

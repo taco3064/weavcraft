@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { nanoid } from 'nanoid';
 
 import { Mock, getMockData } from '../common';
-import { getThemePalette } from '../configs/configs';
+import {
+  getPageLayouts,
+  getThemePalette,
+  getWidgetConfigs,
+} from '../configs/configs';
 
 import type {
   HierarchyData,
@@ -49,19 +54,53 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       return getMockData(hierarchyDb.data[id]);
     });
 
+    mock
+      .onPost(`${baseURL}/hierarchy/getByPayloadIds`)
+      .reply(async (config) => {
+        const result: HierarchyData<any>[] = [];
+        const hierarchyDb = getDb<HierarchyData>('hierarchy');
+
+        const params = JSON.parse(config.data);
+        const category: string = _get(params, ['category']);
+        const payloadIds: string[] = _get(params, ['payloadIds']);
+        const withPayload: boolean = _get(params, ['withPayload']);
+
+        hierarchyDb.read();
+
+        for (const data of Object.values(hierarchyDb.data)) {
+          const { payloadId } = data;
+
+          if (
+            data.category === category &&
+            payloadIds.includes(payloadId as string)
+          ) {
+            result.push({
+              ...data,
+              ...(withPayload && {
+                payload: await getPayload(
+                  category,
+                  data.id,
+                  baseURL === '/mocks'
+                ),
+              }),
+            });
+          }
+        }
+
+        return getMockData(result);
+      });
+
     mock.onPost(`${baseURL}/hierarchy/search`).reply(async (config) => {
-      const hierarchyDb = getDb<HierarchyData>('hierarchy');
-
-      hierarchyDb.read();
-
-      const store = Object.values(hierarchyDb.data);
       const result: HierarchyData<any>[] = [];
+      const hierarchyDb = getDb<HierarchyData>('hierarchy');
 
       const { keyword, ...params } = JSON.parse(
         config.data
       ) as SearchHierarchyParams;
 
-      for (const data of store) {
+      hierarchyDb.read();
+
+      for (const data of Object.values(hierarchyDb.data)) {
         const { category, superior, title, description } = data;
 
         if (
@@ -73,12 +112,13 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
         ) {
           result.push({
             ...data,
-            ...(params.withPayload &&
-              category === 'themes' && {
-                payload: await getThemePalette({
-                  queryKey: [data.id, baseURL === '/mocks'],
-                }),
-              }),
+            ...(params.withPayload && {
+              payload: await getPayload(
+                category,
+                data.id,
+                baseURL === '/mocks'
+              ),
+            }),
           });
         }
       }
@@ -136,3 +176,20 @@ Object.entries(setup).forEach(([baseURL, setupMock]) =>
       });
   })
 );
+
+async function getPayload(
+  category: string,
+  id: string,
+  isTutorialMode: boolean
+) {
+  switch (category) {
+    case 'themes':
+      return getThemePalette({ queryKey: [id, isTutorialMode] });
+    case 'widgets':
+      return getWidgetConfigs({ queryKey: [id, isTutorialMode] });
+    case 'pages':
+      return getPageLayouts({ queryKey: [id, isTutorialMode] });
+    default:
+      return undefined;
+  }
+}

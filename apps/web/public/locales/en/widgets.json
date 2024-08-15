@@ -7,7 +7,6 @@
   "lbl-default-value": "Default Value: {{ value }}",
   "lbl-field-path": "Data Field Name/Path",
   "lbl-row": "No. {{ row }}",
-  "msg-definitions-loading": "Loading settings...",
   "msg-no-fixed-data": "No Fixed Data Available",
   "msg-no-structure": "No Data Structure Available",
   "msg-prop-mapping-placeholder": "Select data field name or path.",
