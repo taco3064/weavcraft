@@ -19,7 +19,7 @@ export type SpeedDialProps<D extends JsonObject> = PropsWithMappedStore<
     ariaLabel?: string;
     containerId?: string;
     icon?: IconCode;
-    itemProps?: Pick<SpeedDialActionProps<D>, 'propMapping'>;
+    itemProps?: Omit<SpeedDialActionProps<D>, 'data'>;
     openIcon?: IconCode;
     position?: `${PositionOrigin<'vertical'>}-${PositionOrigin<'horizontal'>}`;
     onItemClick?: (item: D) => void;

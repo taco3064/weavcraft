@@ -17,8 +17,14 @@ declare namespace NodeJS {
     NEXT_PUBLIC_AUTH_SECRET: string;
     NEXT_PUBLIC_BASE_URL: string;
     NEXT_PUBLIC_DEFAULT_LANGUAGE: string;
+    NEXT_PUBLIC_DEFAULT_ROW_HEIGHT: number;
     NEXT_PUBLIC_TRANSITION_DURATION: number;
     NEXT_PUBLIC_TUTORIAL_TOKEN: string;
     NEXT_PUBLIC_VERSION: string;
+
+    NEXT_PUBLIC_DEFAULT_COLS: Record<
+      import('@mui/material/styles').Breakpoint,
+      number
+    >;
   }
 }

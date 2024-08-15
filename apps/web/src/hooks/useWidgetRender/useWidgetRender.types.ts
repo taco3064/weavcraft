@@ -8,6 +8,7 @@ export type ComponentConfig = Pick<WidgetConfigs, 'component' | 'props'>;
 export type GenerateOptions = {
   key?: number;
   paths?: ConfigPaths;
+  dataStructure?: DataFields;
 };
 
 export type RenderFn = <P extends object>(

@@ -72,6 +72,9 @@ export const useItemStyles = makeStyles<{
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  link: {
+    display: 'block',
+  },
 }));
 
 export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(

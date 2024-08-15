@@ -1,17 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import type { MainStyleParams } from './WidgetEditor.types';
 
-export const useNodeCreateButtonStyles = makeStyles({
-  name: 'NodeCreateButton',
-})((theme) => ({
-  toggle: {
-    background: theme.palette.secondary.main,
-    boxShadow: theme.shadows[3],
-    color: theme.palette.secondary.contrastText,
-    margin: theme.spacing(1),
-  },
-}));
-
 export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'WidgetEditor',
 })((theme, { marginTop }) => ({

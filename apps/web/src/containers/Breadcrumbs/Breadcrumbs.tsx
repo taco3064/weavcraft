@@ -1,5 +1,4 @@
 import AppBar from '@mui/material/AppBar';
-import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,13 +6,16 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
+import Core, {
+  useBreakpointMatches,
+  type BreakpointValues,
+} from '@weavcraft/core';
+
 import { MenuDialog, Link } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
-import { useBreakpointMatches } from '~web/hooks';
 import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
-import type { BreakpointValues } from '../imports.types';
 
 const MAX_ITEMS: BreakpointValues<number> = {
   xs: 3,
@@ -49,9 +51,9 @@ export default function Breadcrumbs({
   return (
     <>
       <MenuDialog
+        items={breadcrumbs.slice(0, breadcrumbs.length - 1).reverse()}
         open={open}
         onClose={() => setOpen(false)}
-        items={breadcrumbs.slice(0, breadcrumbs.length - 1).reverse()}
       />
 
       <AppBar position="sticky" elevation={0} className={classes.root}>

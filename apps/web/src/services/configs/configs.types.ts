@@ -1,16 +1,17 @@
 import Core from '@weavcraft/core';
 
 import type {
-  PageLayoutConfigs,
+  PageLayoutConfigs as BasePageLayoutConfigs,
   ThemePalette,
   WidgetConfigs as BaseWidgetConfigs,
 } from '@weavcraft/common';
 
 type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
-export type { PageLayoutConfigs, ThemePalette };
+export type { ThemePalette };
 export type CoreComponent = Exclude<keyof typeof Core, Lowercase<string>>;
-export type WidgetSize = WidgetLayout['size'];
+export type WidgetSpans = WidgetLayout['spans'];
+export type PageLayoutConfigs = Pick<BasePageLayoutConfigs, 'layouts'>;
 
 export type MutationtConfigInput<T> = {
   hierarchyId: string;

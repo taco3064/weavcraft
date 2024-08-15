@@ -1,7 +1,19 @@
 import * as Comp from './components';
 
+//* Default export all the components
 export default Comp;
 
+//* Export the containers & hooks
+export * from './containers';
+
+export {
+  getBreakpointMatches,
+  useBreakpoint,
+  useBreakpointMatches,
+  type BreakpointValues,
+} from './hooks';
+
+//* Export the components by group, and the group name must be in uppercase.
 export const Display = {
   Avatar: Comp.Avatar,
   AvatarGroup: Comp.AvatarGroup,

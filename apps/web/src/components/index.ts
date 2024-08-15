@@ -1,3 +1,5 @@
+export * from './AddIconButton';
+export * from './BreakpointStepper';
 export * from './ColorInput';
 export * from './ConfirmDialog';
 export * from './ConfirmToggle';

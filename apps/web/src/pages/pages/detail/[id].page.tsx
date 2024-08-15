@@ -1,6 +1,8 @@
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 import { NextSeo } from 'next-seo';
+import { Suspense, useState } from 'react';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
 
@@ -61,14 +63,26 @@ export default makePerPageLayout<InitializationConfig<PageLayoutConfigs>>(
         }}
       />
 
-      <TutorialModeAlert />
+      <Suspense
+        fallback={
+          <>
+            <LinearProgress sx={{ width: '100%' }} />
 
-      <PageLayoutsEditor
-        config={config}
-        marginTop={DETAIL_MARGIN_TOP}
-        title={hierarchy.title}
-        toolbarEl={toolbarEl}
-      />
+            <Typography variant="h6" color="text.disabled">
+              {t('msg-definitions-loading')}
+            </Typography>
+          </>
+        }
+      >
+        <TutorialModeAlert />
+
+        <PageLayoutsEditor
+          config={config}
+          marginTop={DETAIL_MARGIN_TOP}
+          title={hierarchy.title}
+          toolbarEl={toolbarEl}
+        />
+      </Suspense>
     </PageContainer>
   );
 });

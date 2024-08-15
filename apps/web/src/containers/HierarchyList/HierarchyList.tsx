@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { DndContext } from '@dnd-kit/core';
 import { Fragment, useMemo, useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useBreakpointMatches } from '@weavcraft/core';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
@@ -16,8 +17,7 @@ import HierarchySkeleton from './HierarchyList.Skeleton';
 import HierarchyToolbar from './HierarchyList.Toolbar';
 import MoveToParentFolderFab from './HierarchyList.MoveToParentFolderFab';
 import UpsertDialog from './HierarchyList.UpsertDialog';
-import { deleteHierarchyData, getHierarchyData } from '~web/services';
-import { useBreakpointMatches } from '~web/hooks';
+import { deleteHierarchyData, searchHierarchies } from '~web/services';
 import { useHierarchyStyles } from './HierarchyList.styles';
 import { useTutorialMode } from '~web/contexts';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
@@ -62,7 +62,7 @@ export default function HierarchyList<P>({
   } = useQuery({
     enabled: Boolean(params.keyword?.trim()) || isTutorialMode,
     queryKey: [params, isTutorialMode],
-    queryFn: getHierarchyData,
+    queryFn: searchHierarchies,
   });
 
   const { ids, isDragging, contextProps } = useSuperiorMutation({
@@ -164,7 +164,8 @@ export default function HierarchyList<P>({
                         key={item.id}
                         data={item}
                         disableDrag={
-                          collections.group.length < 1 && !superiors.length
+                          collections.group.length <
+                            (type === 'group' ? 2 : 1) && !superiors.length
                         }
                         onEditClick={(e) => setUpserted(e)}
                         onDeleteConfirm={(input) =>

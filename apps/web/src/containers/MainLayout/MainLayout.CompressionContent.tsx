@@ -1,8 +1,8 @@
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 import { ThemeProvider, type ThemeOptions } from '@mui/material/styles';
+import { useBreakpointMatches } from '@weavcraft/core';
 import { useCallback } from 'react';
 
-import { useBreakpointMatches } from '~web/hooks';
 import type { CompressionContentProps } from './MainLayout.types';
 
 export default function CompressionContent({

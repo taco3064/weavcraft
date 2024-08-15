@@ -1,5 +1,6 @@
 import * as Core from '@weavcraft/core';
 import _get from 'lodash/get';
+import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
 import { createElement, useMemo } from 'react';
@@ -20,7 +21,7 @@ import type {
   CoreComponent,
 } from '../imports.types';
 
-const { default: _Core, ...CATEGORIES } = Core;
+const CATEGORIES = _pick(Core, ['Display', 'Input', 'Interaction', 'Layout']);
 
 const ICON: Record<keyof typeof CATEGORIES, CoreType.IconCode> = {
   Display: 'faTableList',
@@ -178,7 +179,7 @@ export function useNodeCreateButton(
           path,
           config,
           variant: clickable ? 'action' : 'node',
-          onClick: (component) => {
+          onCreate: (component) => {
             const onAdd = multiple ? onAddLastChild : onAddChild;
 
             onAdd(config, path, component);

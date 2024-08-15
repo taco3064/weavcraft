@@ -33,7 +33,22 @@ export const getHierarchyDataById = withConnRefusedCatch<
   return data;
 });
 
-export const getHierarchyData = withConnRefusedCatch<
+export const getHierarchies = withConnRefusedCatch<
+  QueryFunctionParams<[string, boolean, string[]]>,
+  HierarchyData[]
+>(async function ({
+  queryKey: [category, withPayload, payloadIds, isTutorialMode],
+}) {
+  const { data } = await axios.post(
+    `/hierarchy/getByPayloadIds`,
+    { category, payloadIds, withPayload },
+    { baseURL: isTutorialMode ? '/mocks' : '/service' }
+  );
+
+  return data;
+});
+
+export const searchHierarchies = withConnRefusedCatch<
   QueryFunctionParams<[SearchHierarchyParams]>,
   HierarchyData[]
 >(async function ({ queryKey: [params, isTutorialMode] }) {

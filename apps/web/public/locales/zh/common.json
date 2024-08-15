@@ -1,6 +1,7 @@
 {
   "btn-add-group": "新增資料夾",
   "btn-add-item": "新增{{category}}",
+  "btn-back": "返回",
   "btn-cancel": "取消",
   "btn-clear": "清除",
   "btn-close": "關閉",
@@ -29,6 +30,7 @@
   "lbl-profile": "個人資訊",
   "lbl-settings": "設定",
   "lbl-theme": "主題樣式",
+  "msg-definitions-loading": "載入設定中...",
   "msg-delete-confirm": "確定要刪除{{name}}嗎？",
   "msg-delete-hierarchy-group-confirm": "確定要刪除資料夾{{name}}及其所有內容嗎？",
   "msg-filter-placeholder": "搜尋資料夾或項目...",
@@ -45,6 +47,13 @@
   "ttl-navigation-confirm": "即將離開當前頁面",
   "ttl-user-options": "用戶選項",
   "ttl-weavcraft": "Weavcraft",
+  "lbl-breakpoint": {
+    "lg": "大",
+    "md": "中等",
+    "sm": "小",
+    "xl": "極大",
+    "xs": "極小"
+  },
   "lbl-hierarchy-name": {
     "GROUP": "資料夾名稱",
     "ITEM": "{{category}}名稱"
