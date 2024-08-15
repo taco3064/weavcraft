@@ -70,7 +70,7 @@ export default function GridItem({
             )
           }
           title={
-            <Toolbar role="toolbar" variant="dense">
+            <Toolbar disableGutters role="toolbar" variant="dense">
               {enableResort && (
                 <IconButton
                   {...sortable.attributes}

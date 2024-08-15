@@ -56,8 +56,7 @@ export const useItemStyles = makeStyles<GridItemStyleParams>({
 
       '& div[role=toolbar]': {
         height: theme.spacing(6),
-        padding: theme.spacing(0, 2),
-        transform: 'scale(0.8) translateX(-12.5%)',
+        paddingLeft: theme.spacing(1),
       },
     },
     resizeToggle: {
