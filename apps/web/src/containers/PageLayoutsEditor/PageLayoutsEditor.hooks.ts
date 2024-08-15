@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import type { Breakpoint } from '@mui/material/styles';
 
 import { NAV_ITEMS } from '~web/hooks';
-import { NEW_LAYOUT } from './PageLayoutsEditor.const';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { useTutorialMode } from '~web/contexts';
 import type { HierarchyData, PageLayoutConfigs } from '~web/services';
@@ -67,11 +66,7 @@ export function useChangeEvents(
     onResort:
       viewMode === ViewModeEnum.Preview
         ? undefined
-        : (layouts) =>
-            onChange({
-              ...value,
-              layouts: layouts.filter(({ id }) => id !== NEW_LAYOUT.id),
-            }),
+        : (layouts) => onChange({ ...value, layouts }),
   };
 }
 

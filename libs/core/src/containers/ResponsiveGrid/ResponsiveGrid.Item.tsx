@@ -59,6 +59,16 @@ export default function GridItem({
       {!disableToolbar && (actions || enableResize || enableResort) && (
         <ImageListItemBar
           classes={{ root: classes.bar, titleWrap: classes.barTitle }}
+          actionIcon={
+            enableResize && (
+              <ArrowForwardIosIcon
+                ref={resizable.setNodeRef as never}
+                className={classes.resizeToggle}
+                {...resizable.attributes}
+                {...resizable.listeners}
+              />
+            )
+          }
           title={
             <Toolbar role="toolbar" variant="dense">
               {enableResort && (
@@ -73,16 +83,6 @@ export default function GridItem({
 
               {actions}
             </Toolbar>
-          }
-          actionIcon={
-            enableResize && (
-              <ArrowForwardIosIcon
-                ref={resizable.setNodeRef as never}
-                className={classes.resizeToggle}
-                {...resizable.attributes}
-                {...resizable.listeners}
-              />
-            )
           }
         />
       )}

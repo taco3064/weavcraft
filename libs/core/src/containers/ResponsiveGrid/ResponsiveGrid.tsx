@@ -2,6 +2,7 @@ import * as Dnd from '@dnd-kit/core';
 import * as Sortable from '@dnd-kit/sortable';
 import Container from '@mui/material/Container';
 import ImageList from '@mui/material/ImageList';
+import { useTheme } from '@mui/material/styles';
 
 import ResponsiveItem from './ResponsiveGrid.Item';
 import { useBreakpointMatches } from '../../hooks';
@@ -36,17 +37,14 @@ export default function ResponsiveGrid<T extends DataType>({
   onResize,
   onResort,
 }: ResponsiveGridProps<T>) {
-  const itemProps = items?.map((item) => renderItem(item).props) || [];
-
   const { matched: maxWidth } = useBreakpointMatches(maxWidths, breakpoint);
   const { matched: col } = useBreakpointMatches(cols, maxWidth);
 
-  const { classes } = useMainStyles({
-    cols: (onResort || onResize) && items?.length ? col : undefined,
-    gap,
-  });
+  const itemProps = items?.map((item) => renderItem(item).props) || [];
+  const lineCols = (onResort || onResize) && items?.length ? col : undefined;
+  const theme = useTheme();
 
-  const [gridRef, dndHandles] = useDndHandles(col, {
+  const { ref, ...dndHandles } = useDndHandles(col, {
     items,
     rowHeight,
     onResize,
@@ -67,6 +65,29 @@ export default function ResponsiveGrid<T extends DataType>({
     })
   );
 
+  const { classes } = useMainStyles({
+    gap,
+    lines: !lineCols ? undefined : (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox={`0 0 ${lineCols * 100} 100`}
+      >
+        {Array.from({ length: lineCols - 1 }).map((_, i) => {
+          const x = (i + 1) * 100;
+
+          return (
+            <path
+              d={`M ${x} 0 L ${x} 100`}
+              stroke={theme.palette.divider}
+              strokeDasharray={2}
+              strokeWidth={1}
+            />
+          );
+        })}
+      </svg>
+    ),
+  });
+
   return (
     <Dnd.DndContext {...dndHandles} sensors={sensors}>
       <Sortable.SortableContext
@@ -80,7 +101,7 @@ export default function ResponsiveGrid<T extends DataType>({
           className={classes.container}
         >
           <ImageList
-            ref={gridRef}
+            ref={ref}
             className={classes.root}
             cols={col}
             rowHeight={rowHeight}

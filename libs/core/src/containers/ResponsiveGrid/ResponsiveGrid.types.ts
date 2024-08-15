@@ -2,7 +2,7 @@ import { DndContext } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import type { Breakpoint } from '@mui/material/styles';
 import type { ContainerProps } from '@mui/material/Container';
-import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type { ComponentProps, ReactElement, ReactNode, RefObject } from 'react';
 
 import type { BreakpointValues } from '../../hooks';
 
@@ -10,14 +10,17 @@ type Span = Record<'cols' | 'rows', number>;
 
 export type DataType = { id: string };
 
-export type DndHandles = Pick<
-  ComponentProps<typeof DndContext>,
-  'onDragEnd' | 'onDragMove' | 'onDragStart'
->;
+export interface DndHandlesHookReturn
+  extends Pick<
+    ComponentProps<typeof DndContext>,
+    'onDragEnd' | 'onDragMove' | 'onDragStart'
+  > {
+  ref: RefObject<HTMLUListElement>;
+}
 
 export interface GridStyleParams {
-  cols?: number;
   gap: number;
+  lines?: ReactElement;
 }
 
 export interface GridItemStyleParams

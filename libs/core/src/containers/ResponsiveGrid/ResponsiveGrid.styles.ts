@@ -1,4 +1,6 @@
+import { renderToString } from 'react-dom/server';
 import { makeStyles } from 'tss-react/mui';
+
 import type {
   GridStyleParams,
   GridItemStyleParams,
@@ -47,12 +49,13 @@ export const useItemStyles = makeStyles<GridItemStyleParams>({
       position: 'sticky' as never,
       bottom: 0,
       marginTop: 'auto',
-      zIndex: theme.zIndex.drawer,
+      zIndex: theme.zIndex.fab,
     },
     barTitle: {
       padding: 0,
 
       '& div[role=toolbar]': {
+        height: theme.spacing(6),
         padding: theme.spacing(0, 2),
         transform: 'scale(0.8) translateX(-12.5%)',
       },
@@ -72,43 +75,29 @@ export const useItemStyles = makeStyles<GridItemStyleParams>({
 
 export const useMainStyles = makeStyles<GridStyleParams>({
   name: 'ResponsiveGrid',
-})((theme, { cols, gap }) => {
-  const gridLines =
-    typeof cols !== 'number'
-      ? null
-      : [
-          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${
-            cols * 100
-          } 100'>`,
-          ...Array.from({ length: cols - 1 }).map((_, i) => {
-            const x = (i + 1) * 100;
+})((theme, { gap, lines }) => ({
+  root: {
+    width: '100%',
+    height: 'max-content',
+    margin: 0,
+    alignContent: 'start',
+    padding: theme.spacing(2, 0),
+    overflow: 'hidden',
+  },
+  container: {
+    height: 'max-content',
+    overflow: 'hidden auto !important',
 
-            return `<path d='M ${x} 0 L ${x} 100' stroke='${theme.palette.divider}' stroke-dasharray='2' stroke-width='2px' />`;
-          }),
-          '</svg>',
-        ].join('');
-
-  return {
-    root: {
-      width: '100%',
-      minHeight: '100%',
-      height: 'max-content',
-      marginY: 0,
-      alignContent: 'start',
-    },
-    container: {
-      overflow: 'hidden auto !important',
-      ...(gridLines && {
-        '& > ul': {
-          padding: gap / 2,
-          backgroundRepeat: 'repeat-y',
-          backgroundPosition: 'center',
-          backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
-            gridLines
-          )}")
-          `,
-        },
-      }),
-    },
-  };
-});
+    ...(lines && {
+      '& > ul': {
+        padding: theme.spacing(2, gap / 16),
+        backgroundRepeat: 'repeat-y',
+        backgroundPosition: 'center',
+        backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(
+          renderToString(lines)
+        )}")
+        `,
+      },
+    }),
+  },
+}));

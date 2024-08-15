@@ -1,10 +1,10 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { useRef, type RefObject } from 'react';
+import { useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 import type {
   DataType,
-  DndHandles,
+  DndHandlesHookReturn,
   ResizeRecord,
   ResponsiveGridProps,
 } from './ResponsiveGrid.types';
@@ -17,68 +17,67 @@ export function useDndHandles<T extends DataType>(
     ResponsiveGridProps<T>,
     'items' | 'rowHeight' | 'onResize' | 'onResort'
   >
-): [RefObject<HTMLUListElement>, DndHandles] {
+): DndHandlesHookReturn {
   const { items = [], rowHeight, onResize, onResort } = props;
 
   const theme = useTheme();
-  const gridRef = useRef<HTMLUListElement>(null);
+  const ref = useRef<HTMLUListElement>(null);
   const toolbarHeight = Number.parseFloat(theme.spacing(6));
 
-  return [
-    gridRef,
-    {
-      onDragStart: ({ active }) => {
-        const { id } = active as { id: string };
-        const rect = gridRef.current?.getBoundingClientRect();
-        const el = document.getElementById(id.replace(/^resize-/, ''));
+  return {
+    ref,
 
-        if (id.startsWith('resize-') && rect && el) {
-          temp = {
-            el,
-            columnWidth: rect.width / cols,
-            itemHeight: el.offsetHeight - toolbarHeight,
-            itemWidth: el.offsetWidth,
-            x: 0,
-            y: 0,
-          };
-        }
-      },
-      onDragMove: ({ delta }) => {
-        if (temp) {
-          const diffx = delta.x - (temp.x || 0);
-          const diffy = delta.y - (temp.y || 0);
+    onDragStart: ({ active }) => {
+      const { id } = active as { id: string };
+      const rect = ref.current?.getBoundingClientRect();
+      const el = document.getElementById(id.replace(/^resize-/, ''));
 
-          temp.x = delta.x;
-          temp.y = delta.y;
-          temp.itemWidth = temp.itemWidth + diffx;
-          temp.itemHeight = temp.itemHeight + diffy;
+      if (id.startsWith('resize-') && rect && el) {
+        temp = {
+          el,
+          columnWidth: rect.width / cols,
+          itemHeight: el.offsetHeight - toolbarHeight,
+          itemWidth: el.offsetWidth,
+          x: 0,
+          y: 0,
+        };
+      }
+    },
+    onDragMove: ({ delta }) => {
+      if (temp) {
+        const diffx = delta.x - (temp.x || 0);
+        const diffy = delta.y - (temp.y || 0);
 
-          const grid = getColsAndRows(cols, rowHeight, temp);
+        temp.x = delta.x;
+        temp.y = delta.y;
+        temp.itemWidth = temp.itemWidth + diffx;
+        temp.itemHeight = temp.itemHeight + diffy;
 
-          temp.el.style.cssText = `
+        const grid = getColsAndRows(cols, rowHeight, temp);
+
+        temp.el.style.cssText = `
             height: ${temp.itemHeight + toolbarHeight}px !important;
             grid-column-end: span ${grid.cols};
             grid-row-end: span ${grid.rows};
           `;
-        }
-      },
-      onDragEnd: ({ active, over }) => {
-        if (temp) {
-          const item = items.find((item) => item.id === temp?.el.id);
-
-          onResize?.(item as T, getColsAndRows(cols, rowHeight, temp));
-
-          temp.el.style.removeProperty('height');
-          temp = null;
-        } else if (active.id !== over?.id) {
-          const activeIndex = items.findIndex(({ id }) => id === active.id);
-          const overIndex = items.findIndex(({ id }) => id === over?.id);
-
-          onResort?.(arrayMove(items, activeIndex, overIndex));
-        }
-      },
+      }
     },
-  ];
+    onDragEnd: ({ active, over }) => {
+      if (temp) {
+        const item = items.find((item) => item.id === temp?.el.id);
+
+        onResize?.(item as T, getColsAndRows(cols, rowHeight, temp));
+
+        temp.el.style.removeProperty('height');
+        temp = null;
+      } else if (active.id !== over?.id) {
+        const activeIndex = items.findIndex(({ id }) => id === active.id);
+        const overIndex = items.findIndex(({ id }) => id === over?.id);
+
+        onResort?.(arrayMove(items, activeIndex, overIndex));
+      }
+    },
+  };
 }
 
 function getColsAndRows(

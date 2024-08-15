@@ -13,7 +13,6 @@ import type { Breakpoint } from '@mui/material/styles';
 
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper } from '~web/components';
-import { NEW_LAYOUT } from './PageLayoutsEditor.const';
 import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
@@ -120,11 +119,7 @@ export default function PageLayoutsEditor({
           </PortalWrapper>
 
           <ResponsiveGrid
-            {...(viewMode !== ViewModeEnum.Preview && {
-              items: [...value.layouts, NEW_LAYOUT],
-              onResize,
-              onResort,
-            })}
+            {...{ onResize, onResort }}
             breakpoint={breakpoint}
             cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
             items={value.layouts}
