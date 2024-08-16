@@ -32,7 +32,6 @@ export default function HierarchyListItem<P>({
   const { t } = useTranslation();
   const { dragRef, isDragging, props } = useDraggable(data, disableDrag);
   const { dropRef, isDropOver } = useDroppable(data);
-  const { classes } = useItemStyles({ cols, isDragging, isDropOver });
 
   const isTutorialMode = useTutorialMode();
   const isGroup = data.type === EnumHierarchyType.GROUP;
@@ -41,6 +40,13 @@ export default function HierarchyListItem<P>({
   const href = `${isTutorialMode ? '/tutorial' : ''}/${data.category}/${
     isGroup ? data.id : `detail/${data.id}`
   }`;
+
+  const { classes } = useItemStyles({
+    cols,
+    isCustomContent,
+    isDragging,
+    isDropOver,
+  });
 
   const editTitle = isGroup
     ? t('btn-edit-group')
@@ -52,34 +58,37 @@ export default function HierarchyListItem<P>({
     <ImageListItem ref={dropRef}>
       <Card {...props.draggable} className={classes.card}>
         <CardHeader
+          className={classes.header}
           title={data.title}
+          subheader={
+            data.description ? data.description : t('msg-no-description')
+          }
           titleTypographyProps={{
             variant: 'subtitle1',
             color: 'text.primary',
-            component: Link,
-            href,
+          }}
+          subheaderTypographyProps={{
+            className: classes.description,
+            variant: 'caption',
+            color: 'text.secondary',
+            whiteSpace: 'pre-line',
           }}
           avatar={
-            <IconButton
-              ref={dragRef}
-              className={classes.dndToggle}
-              disabled={disableDrag}
-              {...props.toggle}
-            >
+            <IconButton ref={dragRef} disabled={disableDrag} {...props.toggle}>
               <DragIndicatorIcon />
             </IconButton>
           }
         />
 
-        <Link className={classes.link} href={href}>
-          <CardMedia
-            className={classes.icon}
-            sx={{
-              fontSize:
-                data.type !== EnumHierarchyType.ITEM || !isCustomContent
-                  ? '6rem'
-                  : null,
-            }}
+        <CardMedia className={classes.media}>
+          <Link
+            href={href}
+            width="100%"
+            fontSize={
+              data.type !== EnumHierarchyType.ITEM || !isCustomContent
+                ? '6rem'
+                : undefined
+            }
           >
             {data.type === EnumHierarchyType.GROUP && (
               <Core.Icon
@@ -93,22 +102,10 @@ export default function HierarchyListItem<P>({
               (isCustomContent ? (
                 renderContent(data.payload)
               ) : (
-                <Core.Icon code={icon} color="secondary" fontSize="inherit" />
+                <Core.Icon code={icon} color="primary" fontSize="inherit" />
               ))}
-          </CardMedia>
-
-          <CardContent>
-            <Typography
-              className={classes.description}
-              variant="body2"
-              align="center"
-              color="text.secondary"
-              whiteSpace="pre-line"
-            >
-              {data.description ? data.description : t('msg-no-description')}
-            </Typography>
-          </CardContent>
-        </Link>
+          </Link>
+        </CardMedia>
 
         {!isDragging && (
           <>

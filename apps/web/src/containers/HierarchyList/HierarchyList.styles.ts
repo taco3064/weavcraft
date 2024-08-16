@@ -33,11 +33,12 @@ export const useToolbarStyles = makeStyles({ name: 'HierarchyToolbar' })(
 
 export const useItemStyles = makeStyles<{
   cols: number;
+  isCustomContent: boolean;
   isDragging: boolean;
   isDropOver: boolean;
 }>({
   name: 'HierarchyListItem',
-})((theme, { cols, isDragging, isDropOver }) => ({
+})((theme, { cols, isCustomContent, isDragging, isDropOver }) => ({
   card: {
     borderRadius: theme.spacing(2),
 
@@ -52,13 +53,16 @@ export const useItemStyles = makeStyles<{
       zIndex: theme.zIndex.tooltip,
     }),
   },
-  dndToggle: {
-    cursor: 'grab',
+  header: {
+    padding: theme.spacing(2, 1.5),
+
+    '& button[aria-roledescription="draggable"]': {
+      cursor: 'grab',
+    },
   },
   description: {
     whiteSpace: 'pre-line',
     overflow: 'hidden',
-    minHeight: theme.spacing(5),
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
@@ -67,13 +71,11 @@ export const useItemStyles = makeStyles<{
       display: 'block',
     },
   },
-  icon: {
+  media: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  link: {
-    display: 'block',
+    paddingBottom: theme.spacing(isCustomContent ? 0 : 3),
   },
 }));
 

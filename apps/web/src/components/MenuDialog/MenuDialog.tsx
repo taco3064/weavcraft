@@ -44,8 +44,6 @@ export default function MenuDialog({
     if (!items?.length) {
       const res = await onItemClick?.(title, index);
 
-      console.log(res);
-
       return res ? setSubProps(res) : onClose();
     }
 
@@ -145,7 +143,7 @@ export default function MenuDialog({
                           })}
                         >
                           <Typography variant="subtitle1" color="text.primary">
-                            <Core.Icon code={item.icon} />
+                            {item.icon && <Core.Icon code={item.icon} />}
                             <Trans i18nKey={item.label} />
                           </Typography>
                         </MenuItem>

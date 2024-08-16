@@ -24,7 +24,6 @@ import { Trans } from 'next-i18next';
 import { useRouter } from 'next/router';
 
 import CompressionContent from './MainLayout.CompressionContent';
-import NotificationBell from './MainLayout.NotificationBell';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
@@ -80,8 +79,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </Fade>
 
                 <Toolbar disableGutters role="status" variant="dense">
-                  <NotificationBell />
-
                   {pathname !== '/user-settings/[type]' && (
                     <UserAvatarMenu
                       {...props}
