@@ -6,7 +6,9 @@ import type { Breakpoint } from '@mui/material/styles';
 import { NAV_ITEMS } from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { useTutorialMode } from '~web/contexts';
+import type { HierarchyData, PageLayoutConfigs } from '../imports.types';
 import type { MenuDialogProps } from '~web/components';
+import type { WidgetHierarchy, WidgetLayout } from '../EventList';
 
 import {
   EnumHierarchyType,
@@ -18,14 +20,7 @@ import {
 import type {
   ChangeEvents,
   WidgetCreateButtonProps,
-  WidgetLayout,
 } from './PageLayoutsEditor.types';
-
-import type {
-  HierarchyData,
-  PageLayoutConfigs,
-  WidgetConfigs,
-} from '../imports.types';
 
 export function useChangeEvents(
   breakpoint: Breakpoint,
@@ -33,13 +28,11 @@ export function useChangeEvents(
   config: PageLayoutConfigs | undefined,
   value: PageLayoutConfigs,
   onChange: (value: PageLayoutConfigs) => void
-): [Record<string, HierarchyData<WidgetConfigs>>, ChangeEvents] {
+): [Record<string, WidgetHierarchy>, ChangeEvents] {
   const isTutorialMode = useTutorialMode();
-  const [, startTransition] = useTransition();
 
-  const [widgets, setWidgets] = useState<
-    Record<string, HierarchyData<WidgetConfigs>>
-  >({});
+  const [, startTransition] = useTransition();
+  const [widgets, setWidgets] = useState<Record<string, WidgetHierarchy>>({});
 
   const { data: hierarchies } = useQuery({
     enabled: Boolean(config?.layouts.length),
@@ -81,8 +74,18 @@ export function useChangeEvents(
             ...widgets,
             [hierarchy.payloadId as string]: hierarchy,
           });
+
           onChange({ ...value, layouts: [...value.layouts, layout] });
         }),
+
+      onLayoutChange: (e) =>
+        onChange({
+          ...value,
+          layouts: value.layouts.map((layout) =>
+            layout.id === e.id ? e : layout
+          ),
+        }),
+
       onRemove: (layoutId) =>
         startTransition(() => {
           const layout = value.layouts.find(

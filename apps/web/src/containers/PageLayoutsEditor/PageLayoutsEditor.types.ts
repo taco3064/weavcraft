@@ -1,21 +1,16 @@
 import type { ResponsiveGridProps } from '@weavcraft/core';
 
-import type {
-  BaseEditorProps,
-  HierarchyData,
-  PageLayoutConfigs,
-  WidgetConfigs,
-} from '../imports.types';
+import type { BaseEditorProps, PageLayoutConfigs } from '../imports.types';
+import type { WidgetHierarchy, WidgetLayout } from '../EventList';
 
 export enum ViewModeEnum {
   Preview,
 }
 
-export type WidgetLayout = PageLayoutConfigs['layouts'][number];
-
 export interface ChangeEvents
   extends Pick<WidgetCreateButtonProps, 'onCreate'>,
     Pick<ResponsiveGridProps<WidgetLayout>, 'onResize' | 'onResort'> {
+  onLayoutChange: (layout: WidgetLayout) => void;
   onRemove: (layoutId: string) => void;
 }
 
@@ -26,10 +21,11 @@ export type MainStyleParams = Pick<PageLayoutsEditorProps, 'marginTop'>;
 export type PageLayoutsEditorProps = BaseEditorProps<PageLayoutConfigs>;
 
 export interface WidgetCreateButtonProps {
-  onCreate: (e: HierarchyData<WidgetConfigs>) => void;
+  onCreate: (e: WidgetHierarchy) => void;
 }
 
 export interface WidgetActionsProps {
   name: string;
+  onEventsEdit: () => void;
   onRemove: () => void;
 }

@@ -11,7 +11,6 @@ import type { ElementNodeProp } from '@weavcraft/common';
 
 import { useCorePropsGetter } from '~web/contexts';
 import { useNodePaths } from '~web/hooks';
-
 import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
 
 import type {

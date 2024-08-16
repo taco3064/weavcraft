@@ -5,6 +5,8 @@ export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'PageLayoutsEditor',
 })((theme, { marginTop }) => ({
   root: {
+    paddingBottom: theme.spacing(3),
+
     marginTop:
       typeof marginTop === 'number' &&
       Number.isFinite(marginTop) &&

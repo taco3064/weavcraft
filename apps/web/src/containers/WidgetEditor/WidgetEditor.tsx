@@ -203,14 +203,12 @@ export default withCorePropsDefinition(function WidgetEditor({
                     onClose={() => onToggle(false)}
                     onDelete={({ paths }) =>
                       startTransition(() => {
-                        const active = paths.slice(
-                          0,
-                          typeof paths[paths.length - 1] === 'string' ? -1 : -2
-                        );
+                        const last = paths[paths.length - 1];
+                        const index = typeof last === 'string' ? -1 : -2;
 
                         onDeleteNode(paths);
                         onToggle(paths.length > 0);
-                        setActiveNode(active);
+                        setActiveNode(paths.slice(0, index));
                       })
                     }
                     onEdit={({ target, paths }) =>

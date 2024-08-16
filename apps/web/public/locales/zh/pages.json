@@ -1,4 +1,6 @@
 {
   "btn-add-widget": "新增組件",
-  "btn-layout-preview": "預覽外觀"
+  "btn-edit-events": "編輯事件",
+  "btn-layout-preview": "預覽外觀",
+  "ttl-widget-events": "組件事件"
 }

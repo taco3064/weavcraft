@@ -21,7 +21,7 @@ export default function ElementNodeList({
   onDelete,
   onEdit,
 }: ElementNodeListProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('widgets');
   const { nodePaths, pathDescription } = useNodePaths(active);
 
   const node: ComponentConfig = !nodePaths.length
@@ -31,7 +31,7 @@ export default function ElementNodeList({
   return !node ? null : (
     <EditorList
       key={active.join('|')}
-      title={t('widgets:ttl-element-node')}
+      title={t('ttl-element-node')}
       description={pathDescription}
       onClose={onClose}
       render={(classes) => {
@@ -40,7 +40,7 @@ export default function ElementNodeList({
         const currentComponent = (
           <>
             <ListItemText
-              primary={t(`widgets:lbl-component.${node.component}`)}
+              primary={t(`lbl-component.${node.component}`)}
               primaryTypographyProps={{
                 color: 'text.primary',
                 fontWeight: 600,
