@@ -20,6 +20,7 @@ export default function HierarchySkeleton({
 
   const { classes: cls2 } = useItemStyles({
     cols,
+    isCustomContent: false,
     isDragging: false,
     isDropOver: false,
   });

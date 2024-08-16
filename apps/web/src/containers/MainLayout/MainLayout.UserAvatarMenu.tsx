@@ -1,8 +1,9 @@
 import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
 import Core from '@weavcraft/core';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 
@@ -10,7 +11,7 @@ import { MenuDialog } from '~web/components';
 import { useAuth } from '~web/contexts';
 import { useMenuStyles } from './MainLayout.styles';
 import { useUserSettings } from '~web/hooks';
-import type { SigninProvider } from '../imports.types';
+import type { Notifications, SigninProvider } from '../imports.types';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 
 export default function UserAvatarMenu({
@@ -26,6 +27,12 @@ export default function UserAvatarMenu({
   const { data: session } = useSession();
   const { isAuth, userinfo, onSignout } = useAuth();
   const { classes } = useMenuStyles({ isAuth });
+
+  const [notifications] = useState<Notifications>({
+    total: 0,
+    unread: 0,
+    items: [],
+  });
 
   const handleItemClick = (label: string) => {
     if (label === 'btn-signout') {
@@ -46,9 +53,15 @@ export default function UserAvatarMenu({
   return (
     <>
       <Tooltip title={t('ttl-user-options')}>
-        <IconButton size="large" sx={{ p: 0 }} onClick={() => onToggle(true)}>
-          <Avatar className={classes.thumb} src={userinfo?.avatarUrl} />
-        </IconButton>
+        <Badge
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={notifications.unread}
+          color="error"
+        >
+          <IconButton size="large" sx={{ p: 0 }} onClick={() => onToggle(true)}>
+            <Avatar className={classes.thumb} src={userinfo?.avatarUrl} />
+          </IconButton>
+        </Badge>
       </Tooltip>
 
       <MenuDialog
