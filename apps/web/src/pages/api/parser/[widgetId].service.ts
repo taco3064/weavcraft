@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getParser } from './parser.utils';
-import type { PropsDefinition } from '~web/services';
+import type { ComponentDefinition } from '../../imports.types';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET' || process.env.NODE_ENV === 'production') {
@@ -14,7 +14,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { getCoreGroup, getPropsDefinitions, getPropSymbol } = getParser();
   const { widgetId } = req.query as { widgetId: string };
 
-  const data: PropsDefinition = {
+  const data: ComponentDefinition = {
     componentName: widgetId,
     group: getCoreGroup(widgetId),
     ...getPropsDefinitions(getPropSymbol(widgetId)),

@@ -1,15 +1,15 @@
 import type { JsonObject } from 'type-fest';
 
-enum WidgetPropType {
+enum PropCategoryEnum {
   DataBinding,
   ElementNode,
   EventCallback,
   PrimitiveValue,
 }
 
-export type WidgetPropTypes = keyof typeof WidgetPropType;
+export type PropCategory = keyof typeof PropCategoryEnum;
 
-interface BaseWidgetProps<T extends WidgetPropTypes, V> {
+interface BaseWidgetProps<T extends PropCategory, V> {
   type: T;
   value: V;
 }
