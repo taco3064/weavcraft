@@ -113,11 +113,22 @@ export function useNodeFinder(): NodeFinderHookReturn {
         const { definition } = getCoreProps(component);
         const { elementNodeProps } = definition;
 
-        return Object.keys(elementNodeProps || {})
-          .map(
-            (path) => (_get(props, [path, 'value']) || []) as ComponentConfig[]
-          )
-          .flat();
+        return Object.keys(elementNodeProps || {}).reduce<
+          Record<string, ComponentConfig>
+        >((acc, path) => {
+          const children = (_get(props, [path, 'value']) ||
+            []) as ComponentConfig[];
+
+          if (!Array.isArray(children)) {
+            acc[path] = children;
+          } else {
+            children.forEach((child, i) => {
+              acc[`${path}.${i}`] = child;
+            });
+          }
+
+          return acc;
+        }, {});
       },
       [getCoreProps]
     ),

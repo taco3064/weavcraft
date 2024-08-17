@@ -163,7 +163,7 @@ function resetAllPropMapping(
   ) {
     mappingPaths.forEach((mappingPath) => _unset(props, [mappingPath]));
 
-    getChildNodes(config).forEach((node) =>
+    Object.values(getChildNodes(config)).forEach((node) =>
       resetAllPropMapping(node, { getChildNodes, getCoreProps })
     );
   }

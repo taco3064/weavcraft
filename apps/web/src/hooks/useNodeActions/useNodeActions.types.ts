@@ -2,7 +2,10 @@ import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
 import type { CoreComponent, WidgetConfigs } from '../imports.types';
 
 type NodeCreateVariant = 'action' | 'node';
-export type GetChildNodesFn = (node: ComponentConfig) => ComponentConfig[];
+
+export type GetChildNodesFn = (node: ComponentConfig) => {
+  [Path: string]: ComponentConfig;
+};
 
 export type GetNodeFn = (
   widget: WidgetConfigs,
