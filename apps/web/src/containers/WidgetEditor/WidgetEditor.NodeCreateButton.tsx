@@ -4,15 +4,14 @@ import { useTranslation } from 'next-i18next';
 
 import { AddIconButton, MenuDialog } from '~web/components';
 import { useWidgetOptions } from './WidgetEditor.hooks';
-import type { NodeCreateButtonProps } from './WidgetEditor.types';
-import type { CoreComponent } from '../imports.types';
+import type { CoreComponent, CreateNodeButtonProps } from '../imports.types';
 
 export default function NodeCreateButton({
   config,
   path,
   variant,
   onCreate,
-}: NodeCreateButtonProps) {
+}: CreateNodeButtonProps) {
   const options = useWidgetOptions(variant);
 
   const [, startTransition] = useTransition();

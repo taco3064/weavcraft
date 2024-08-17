@@ -4,7 +4,7 @@ import _set from 'lodash/set';
 import * as Tsm from 'ts-morph';
 import { WidgetPropTypes } from '@weavcraft/common';
 
-import type { PropTypeDefinitions } from '~web/services';
+import type { PropTypeDefinitions } from '../../imports.types';
 
 import type {
   CoreParser,

@@ -6,6 +6,7 @@ import type {
   ComponentConfig,
   ConfigPaths,
   CoreComponent,
+  CreateNodeEvents,
   PropsSettingChangeHandler,
   WidgetConfigs,
 } from '../imports.types';
@@ -20,23 +21,10 @@ export enum ViewModeEnum {
   Preview,
 }
 
-export type NodeCreateVariant = 'action' | 'node';
-
-export interface ChangeEvents {
-  onAddChild: (
-    config: ComponentConfig,
-    path: string,
-    component: CoreComponent
-  ) => void;
+export interface ChangeEvents extends CreateNodeEvents {
   onConfigChange: PropsSettingChangeHandler;
   onDeleteNode: (paths: ConfigPaths) => void;
   onStructureChange: NonNullable<DataStructureListProps['onChange']>;
-
-  onAddLastChild: (
-    config: ComponentConfig,
-    path: string,
-    component: CoreComponent
-  ) => void;
 }
 
 //* Style Params Types
@@ -45,10 +33,3 @@ export type MainStyleParams = Pick<WidgetEditorProps, 'marginTop'>;
 //* Component Props Type
 export type WidgetEditorProps = Pick<ContainerProps, 'maxWidth'> &
   BaseEditorProps<WidgetConfigs>;
-
-export interface NodeCreateButtonProps {
-  config?: ComponentConfig;
-  path?: string;
-  variant: NodeCreateVariant;
-  onCreate: (component: CoreComponent) => void;
-}

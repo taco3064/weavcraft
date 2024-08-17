@@ -7,7 +7,7 @@ import type { JsonObject } from 'type-fest';
 
 import { DataPropEnum, NodeCaseEnum } from './usePropsInjection.types';
 import { useCorePropsGetter } from '~web/contexts';
-import { useNodeFinder } from '../useNodeFinder';
+import { useNodeFinder } from '../useNodeActions';
 import type { ComponentConfig } from '../useWidgetRender';
 import type { MappingPath } from '../imports.types';
 

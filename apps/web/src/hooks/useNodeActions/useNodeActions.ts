@@ -1,15 +1,87 @@
 import _get from 'lodash/get';
-import { useCallback, useMemo } from 'react';
+import _set from 'lodash/set';
+import { createElement, useCallback, useMemo } from 'react';
+import { nanoid } from 'nanoid';
+import type { ComponentType, ReactNode } from 'react';
 
 import { useCorePropsGetter } from '~web/contexts';
 import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
 import type { WidgetConfigs } from '../imports.types';
 
 import type {
+  CreateNodeButtonProps,
+  CreateNodeEvents,
   GetterOptions,
   NodeFinderHookReturn,
   ParentNode,
-} from './useNodeFinder.types';
+} from './useNodeActions.types';
+
+export function useNodeCreate(
+  AppendNode: ComponentType<CreateNodeButtonProps>,
+  dataStructure: WidgetConfigs['dataStructure'],
+  disabled: boolean,
+  { onAddChild, onAddLastChild }: CreateNodeEvents
+) {
+  const getCoreProps = useCorePropsGetter();
+
+  return <P extends object>(props: P, config: ComponentConfig): P => {
+    if (disabled) {
+      return props;
+    }
+
+    const { definition } = getCoreProps(config.component);
+    const { dataBindingProps, elementNodeProps } = definition;
+
+    if (
+      dataBindingProps &&
+      'records' in dataBindingProps &&
+      !_get(config, ['props', 'records', 'value'])
+    ) {
+      const mappingPath = Object.keys(dataBindingProps).find((key) =>
+        key.endsWith('.propMapping')
+      );
+
+      const idIndexes = _get(config, [
+        'props',
+        mappingPath as string,
+        'value',
+        'id',
+      ]);
+
+      const idField = _get(dataStructure, idIndexes) as string;
+
+      _set(props, 'records', [!idField ? {} : _set({}, idField, nanoid())]);
+    }
+
+    return Object.entries(elementNodeProps || {}).reduce(
+      (result, [path, { definition }]) => {
+        const { clickable, multiple } = definition || {};
+        const target = _get(props, path);
+
+        const appendNode = createElement(AppendNode, {
+          key: 'append',
+          path,
+          config,
+          variant: clickable ? 'action' : 'node',
+          onCreate: (component) => {
+            const onAdd = multiple ? onAddLastChild : onAddChild;
+
+            onAdd(config, path, component);
+          },
+        });
+
+        if (multiple) {
+          _set(result, path, [...((target || []) as ReactNode[]), appendNode]);
+        } else if (!target) {
+          _set(result, path, appendNode);
+        }
+
+        return result;
+      },
+      props
+    );
+  };
+}
 
 export function useNodeFinder(): NodeFinderHookReturn {
   const getCoreProps = useCorePropsGetter();

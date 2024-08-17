@@ -15,9 +15,9 @@ import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingList from '../PropsSettingList';
 import { upsertWidgetConfig } from '~web/services';
-import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
+import { useChangeEvents } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
-import { useWidgetRender } from '~web/hooks';
+import { useNodeCreate, useWidgetRender } from '~web/hooks';
 
 import {
   EditModeEnum,
@@ -73,7 +73,7 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { onDeleteNode, onConfigChange, onStructureChange, ...changeEvents } =
     useChangeEvents(value, setValue);
 
-  const withNodeCreateButton = useNodeCreateButton(
+  const withNodeCreateButton = useNodeCreate(
     NodeCreateButton,
     value.dataStructure,
     viewMode === ViewModeEnum.Preview,
