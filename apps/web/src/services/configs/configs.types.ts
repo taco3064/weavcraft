@@ -20,6 +20,6 @@ export type MutationtConfigInput<T> = {
 };
 
 export interface WidgetConfigs
-  extends Pick<BaseWidgetConfigs, 'dataStructure' | 'props'> {
+  extends Pick<BaseWidgetConfigs, 'dataStructure' | 'id' | 'props'> {
   component: CoreComponent;
 }

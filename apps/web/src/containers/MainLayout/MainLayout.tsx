@@ -39,7 +39,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { pathname } = useRouter();
   const { isAuth } = useAuth();
   const { isPending, ...props } = useSigninProviders(!open);
-  const { classes } = useMainStyles({ menuMode });
+  const { classes, cx } = useMainStyles({ menuMode });
 
   const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
   const navItems = useAppNavItems();
@@ -56,8 +56,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <>
           <Container
             disableGutters
-            className={classes.content}
+            className={cx(classes.content, menuMode)}
             maxWidth={false}
+            role="main"
           >
             <AppBar position="sticky" className={classes.header} elevation={1}>
               <Toolbar role="toolbar">

@@ -109,6 +109,17 @@ export const Mock = (() => {
   };
 })();
 
+export function getMockData<T>(data: T): [number, ResponseData<T>] {
+  return [
+    200,
+    {
+      success: true,
+      status: 200,
+      data,
+    },
+  ];
+}
+
 //* - Catches ECONNREFUSED and 404 errors
 export function withConnRefusedCatch<P, R = void>(
   serviceFn: (params: P) => Promise<ResponseData<R>>,
@@ -135,15 +146,4 @@ export function withConnRefusedCatch<P, R = void>(
       throw e;
     }
   };
-}
-
-export function getMockData<T>(data: T): [number, ResponseData<T>] {
-  return [
-    200,
-    {
-      success: true,
-      status: 200,
-      data,
-    },
-  ];
 }

@@ -1,5 +1,11 @@
 import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
-import type { WidgetConfigs } from '../imports.types';
+import type { CoreComponent, WidgetConfigs } from '../imports.types';
+
+type NodeCreateVariant = 'action' | 'node';
+
+export type GetChildNodesFn = (node: ComponentConfig) => {
+  [Path: string]: ComponentConfig;
+};
 
 export type GetNodeFn = (
   widget: WidgetConfigs,
@@ -12,7 +18,19 @@ export type GetParentNodeFn = (
   filter?: GetterOptions['filter']
 ) => ComponentConfig | null;
 
-export type GetChildNodesFn = (node: ComponentConfig) => ComponentConfig[];
+export interface CreateNodeEvents {
+  onAddChild: (
+    config: ComponentConfig,
+    path: string,
+    component: CoreComponent
+  ) => void;
+
+  onAddLastChild: (
+    config: ComponentConfig,
+    path: string,
+    component: CoreComponent
+  ) => void;
+}
 
 export interface GetterOptions {
   filter?: (node: ComponentConfig) => boolean;
@@ -30,3 +48,10 @@ export type NodeFinderHookReturn = {
   getParentStoreNode: GetParentNodeFn;
   getChildNodes: GetChildNodesFn;
 };
+
+export interface CreateNodeButtonProps {
+  config?: ComponentConfig;
+  path?: string;
+  variant: NodeCreateVariant;
+  onCreate: (component: CoreComponent) => void;
+}

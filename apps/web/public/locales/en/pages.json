@@ -1,4 +1,7 @@
 {
   "btn-add-widget": "Add Widget",
-  "btn-layout-preview": "Layout Preview"
+  "btn-edit-events": "Edit Events",
+  "btn-layout-preview": "Layout Preview",
+  "lbl-root-node": "Root Node",
+  "ttl-widget-events": "Widget Events"
 }

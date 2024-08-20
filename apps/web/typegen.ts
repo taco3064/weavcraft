@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { getParser } from './src/pages/api/parser/parser.utils';
-import type { PropsDefinition } from './src/services';
+import type { ComponentDefinition } from './src/services';
 
 const outputDir = path.resolve(process.cwd(), './public/definitions');
 const { propSymbols, getCoreGroup, getPropsDefinitions } = getParser();
@@ -16,7 +16,7 @@ fs.mkdirSync(outputDir);
 propSymbols?.forEach((symbol) => {
   const componentName = symbol.getName().replace(/Props$/, '');
 
-  const json: PropsDefinition = {
+  const json: ComponentDefinition = {
     componentName,
     group: getCoreGroup(componentName),
     ...getPropsDefinitions(symbol),

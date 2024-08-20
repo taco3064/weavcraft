@@ -2,9 +2,9 @@ import path from 'path';
 import _camelcase from 'lodash/camelCase';
 import _set from 'lodash/set';
 import * as Tsm from 'ts-morph';
-import { WidgetPropTypes } from '@weavcraft/common';
+import { PropCategory } from '@weavcraft/common';
 
-import type { PropTypeDefinitions } from '~web/services';
+import type { TypeDefinition } from '../../imports.types';
 
 import type {
   CoreParser,
@@ -14,7 +14,7 @@ import type {
   GetPropsDefinitionsReturn,
 } from './parser.types';
 
-const WIDGET_PROP_TYPES: WidgetPropTypes[] = [
+const PROP_CATEGORY: PropCategory[] = [
   'DataBinding',
   'ElementNode',
   'EventCallback',
@@ -28,11 +28,23 @@ const source = new Tsm.Project().addSourceFileAtPath(
 const trimImportText = (text?: string) =>
   text?.replace(/import\s*\(.*?\)\s*;?\./g, '');
 
-const getPropsDefinition: GetPropsDefinitionFn = (propsType, type, options) => {
-  const { [propsType]: generators } = Generator;
+const getPropsDefinition: GetPropsDefinitionFn = (
+  propCategory,
+  type,
+  options
+) => {
+  const { [propCategory]: generators } = Generator;
 
   return generators.reduce<ReturnType<(typeof generators)[number]>>(
-    (result, generator) => result || generator(type, options),
+    (result, generator) => {
+      if (!result) {
+        return (
+          generator(type, options) || generator(type.getApparentType(), options)
+        );
+      }
+
+      return result;
+    },
     false
   );
 };
@@ -41,19 +53,19 @@ const getPropertyWithAllTypes: GetPropertyWithAllTypesFn = (
   property,
   prefixPath = ''
 ) => {
-  for (const propsType of WIDGET_PROP_TYPES) {
+  for (const propCategory of PROP_CATEGORY) {
     const propPath = [prefixPath, property.getName()].filter(Boolean).join('.');
     const type = property.getTypeAtLocation(source);
 
     const definition = /(^|\.)(className|component)$/.test(propPath)
       ? false
-      : getPropsDefinition(propsType, type, {
+      : getPropsDefinition(propCategory, type, {
           path: propPath,
           required: !property.isOptional(),
         });
 
     if (definition) {
-      return [{ propsType, propPath, definition }];
+      return [{ propCategory, propPath, definition }];
     }
   }
 
@@ -114,10 +126,10 @@ export function getParser(): CoreParser {
 
       return properties.reduce<GetPropsDefinitionsReturn>((acc, property) => {
         getPropertyWithAllTypes(property).forEach(
-          ({ propsType, propPath, definition }) => {
+          ({ propCategory, propPath, definition }) => {
             if (definition) {
               const key = `${
-                _camelcase(propsType) as Uncapitalize<WidgetPropTypes>
+                _camelcase(propCategory) as Uncapitalize<PropCategory>
               }Props` as const;
 
               _set(acc, [key, propPath], definition);
@@ -265,7 +277,7 @@ const Generator: GetDefinitionFns = {
       if (type.isUnion()) {
         const definition = type
           .getUnionTypes()
-          .reduce<NonNullable<PropTypeDefinitions.OneOf['definition']>>(
+          .reduce<NonNullable<TypeDefinition.OneOf['definition']>>(
             (result, union) => {
               const { type, definition } =
                 getPropsDefinition('PrimitiveValue', union, options) || {};

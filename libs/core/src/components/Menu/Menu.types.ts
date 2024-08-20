@@ -18,7 +18,7 @@ export type MenuProps<
 
     itemProps?: Omit<
       ListItemProps<D>,
-      'data' | 'action' | 'indicator' | 'variant'
+      'data' | 'action' | 'indicator' | 'variant' | 'onItemClick'
     >;
   }
 >;

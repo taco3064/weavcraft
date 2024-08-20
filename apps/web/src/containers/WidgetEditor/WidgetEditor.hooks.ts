@@ -3,22 +3,21 @@ import _get from 'lodash/get';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
-import { createElement, useMemo } from 'react';
 import { nanoid } from 'nanoid';
+import { useMemo } from 'react';
 import type CoreType from '@weavcraft/core';
-import type { ComponentType, ReactNode } from 'react';
 import type { ElementNodeProp } from '@weavcraft/common';
 
 import { useCorePropsGetter } from '~web/contexts';
 import { useNodePaths } from '~web/hooks';
-
-import type { ChangeEvents, NodeCreateButtonProps } from './WidgetEditor.types';
+import type { ChangeEvents } from './WidgetEditor.types';
 
 import type {
-  MenuItemOptions,
   ComponentConfig,
-  WidgetConfigs,
   CoreComponent,
+  CreateNodeButtonProps,
+  MenuItemOptions,
+  WidgetConfigs,
 } from '../imports.types';
 
 const CATEGORIES = _pick(Core, ['Display', 'Input', 'Interaction', 'Layout']);
@@ -40,7 +39,7 @@ export function useChangeEvents(
     onAddChild: (config, path, component) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: { component },
+        value: { component, id: nanoid(6) },
       };
 
       _set(config, ['props', path], propConfig);
@@ -53,7 +52,7 @@ export function useChangeEvents(
 
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: [...nodes, { component }],
+        value: [...nodes, { component, id: nanoid(6) }],
       };
 
       _set(config, ['props', path], propConfig);
@@ -129,77 +128,7 @@ export function useChangeEvents(
   };
 }
 
-export function useNodeCreateButton(
-  AppendNode: ComponentType<NodeCreateButtonProps>,
-  dataStructure: WidgetConfigs['dataStructure'],
-  disabled: boolean,
-  {
-    onAddChild,
-    onAddLastChild,
-  }: Pick<ChangeEvents, 'onAddChild' | 'onAddLastChild'>
-) {
-  const getCoreProps = useCorePropsGetter();
-
-  return <P extends object>(props: P, config: ComponentConfig): P => {
-    if (disabled) {
-      return props;
-    }
-
-    const { definition } = getCoreProps(config.component);
-    const { dataBindingProps, elementNodeProps } = definition;
-
-    if (
-      dataBindingProps &&
-      'records' in dataBindingProps &&
-      !_get(config, ['props', 'records', 'value'])
-    ) {
-      const mappingPath = Object.keys(dataBindingProps).find((key) =>
-        key.endsWith('.propMapping')
-      );
-
-      const idIndexes = _get(config, [
-        'props',
-        mappingPath as string,
-        'value',
-        'id',
-      ]);
-
-      const idField = _get(dataStructure, idIndexes) as string;
-
-      _set(props, 'records', [!idField ? {} : _set({}, idField, nanoid())]);
-    }
-
-    return Object.entries(elementNodeProps || {}).reduce(
-      (result, [path, { definition }]) => {
-        const { clickable, multiple } = definition || {};
-        const target = _get(props, path);
-
-        const appendNode = createElement(AppendNode, {
-          key: 'append',
-          path,
-          config,
-          variant: clickable ? 'action' : 'node',
-          onCreate: (component) => {
-            const onAdd = multiple ? onAddLastChild : onAddChild;
-
-            onAdd(config, path, component);
-          },
-        });
-
-        if (multiple) {
-          _set(result, path, [...((target || []) as ReactNode[]), appendNode]);
-        } else if (!target) {
-          _set(result, path, appendNode);
-        }
-
-        return result;
-      },
-      props
-    );
-  };
-}
-
-export function useWidgetOptions(variant: NodeCreateButtonProps['variant']) {
+export function useWidgetOptions(variant: CreateNodeButtonProps['variant']) {
   const getCoreProps = useCorePropsGetter();
 
   return useMemo(
