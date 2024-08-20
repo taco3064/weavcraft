@@ -3,6 +3,7 @@ import _get from 'lodash/get';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _unset from 'lodash/unset';
+import { nanoid } from 'nanoid';
 import { useMemo } from 'react';
 import type CoreType from '@weavcraft/core';
 import type { ElementNodeProp } from '@weavcraft/common';
@@ -38,7 +39,7 @@ export function useChangeEvents(
     onAddChild: (config, path, component) => {
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: { component },
+        value: { component, id: nanoid(6) },
       };
 
       _set(config, ['props', path], propConfig);
@@ -51,7 +52,7 @@ export function useChangeEvents(
 
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',
-        value: [...nodes, { component }],
+        value: [...nodes, { component, id: nanoid(6) }],
       };
 
       _set(config, ['props', path], propConfig);

@@ -1,12 +1,14 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Core from '@weavcraft/core';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
 import Typography from '@mui/material/Typography';
+import { Fragment } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { EditorList } from '~web/components';
-import { useNodePaths } from '~web/hooks';
 import { useEventItems } from './EventList.hooks';
 import type { EventListProps } from './EventList.types';
 
@@ -17,11 +19,7 @@ export default function EventList({
   onClose,
 }: EventListProps) {
   const { t } = useTranslation();
-  const { getNodePaths } = useNodePaths();
-
   const items = useEventItems(widget.payload);
-
-  console.log(items);
 
   return (
     <EditorList
@@ -29,33 +27,51 @@ export default function EventList({
       description={widget.title}
       onClose={onClose}
       render={(classes) =>
-        items.map(({ component, eventPath, nodePath, nodePaths }) => (
-          <ListItemButton key={nodePath} className={classes.subitem}>
-            <ListItemText
-              secondary={nodePath || t('pages:lbl-root-node')}
-              secondaryTypographyProps={{
-                color: 'text.secondary',
-                variant: 'caption',
+        items.map(([nodePath, items], i) => (
+          <Fragment key={nodePath}>
+            <ListSubheader
+              disableSticky
+              className={classes.subitem}
+              sx={{
+                lineHeight: 1.2,
+                marginTop: (theme) => theme.spacing(i === 0 ? 3 : 0),
               }}
-              primaryTypographyProps={{
-                color: 'secondary',
-                display: 'flex',
-                fontWeight: 500,
-              }}
-              primary={
-                <>
-                  {eventPath}
-                  <Typography variant="inherit" color="text.primary">
-                    ({t(`widgets:lbl-component.${component}`)})
-                  </Typography>
-                </>
-              }
-            />
+            >
+              <ListItemIcon className={classes.icon} />
+              <Typography variant="subtitle2" color="secondary">
+                {nodePath || t('pages:lbl-root-node')}
+              </Typography>
+            </ListSubheader>
 
-            <ListItemIcon className={classes.icon}>
-              <ChevronRightIcon />
-            </ListItemIcon>
-          </ListItemButton>
+            {items.map(({ config, eventPath }) => (
+              <ListItemButton
+                key={`${config.id}.${eventPath}`}
+                className={classes.subitem}
+                onClick={() => onActive({ config, eventPath })}
+              >
+                <ListItemIcon className={classes.icon}>
+                  <Core.Icon color="warning" code="faClipboard" />
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={eventPath}
+                  secondary={t(`widgets:lbl-component.${config.component}`)}
+                  primaryTypographyProps={{
+                    display: 'flex',
+                    fontWeight: 550,
+                  }}
+                  secondaryTypographyProps={{
+                    color: 'text.secondary',
+                    variant: 'caption',
+                  }}
+                />
+
+                <ListItemIcon className={classes.icon}>
+                  <ChevronRightIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            ))}
+          </Fragment>
         ))
       }
     />

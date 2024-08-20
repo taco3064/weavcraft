@@ -3,7 +3,7 @@ import type { WidgetConfigs } from '../imports.types';
 
 export type ConfigPaths = (string | number)[];
 export type DataFields = NonNullable<WidgetConfigs['dataStructure']>;
-export type ComponentConfig = Pick<WidgetConfigs, 'component' | 'props'>;
+export type ComponentConfig = Pick<WidgetConfigs, 'component' | 'id' | 'props'>;
 
 export type GenerateOptions = {
   key?: number;

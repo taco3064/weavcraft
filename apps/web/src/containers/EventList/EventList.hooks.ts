@@ -2,7 +2,8 @@ import _toPath from 'lodash/toPath';
 import { useMemo } from 'react';
 
 import { useCorePropsGetter } from '~web/contexts';
-import { useNodeFinder, useNodePaths } from '~web/hooks';
+import { useNodeFinder } from '~web/hooks';
+
 import type { EventGetterOptions, EventItem } from './EventList.types';
 
 import type {
@@ -15,25 +16,38 @@ export function useEventItems(widget: WidgetConfigs) {
   const getCoreProps = useCorePropsGetter();
   const { getChildNodes } = useNodeFinder();
 
-  return useMemo(
-    () =>
-      getEventCallbacks(widget, [], { getChildNodes, getCoreProps }).sort(
-        (
-          { component: c1, nodePaths: n1, eventPath: e1 },
-          { component: c2, nodePaths: n2, eventPath: e2 }
-        ) => {
-          const sn1 = JSON.stringify(n1);
-          const sn2 = JSON.stringify(n2);
+  return useMemo(() => {
+    const entries = Object.entries(
+      getEventCallbacks(widget, [], { getChildNodes, getCoreProps }).reduce<
+        Record<string, EventItem[]>
+      >((acc, item) => {
+        const { nodePath } = item;
+        const { [nodePath]: items = [] } = acc;
 
-          return (
-            sn1.localeCompare(sn2) ||
-            c1.localeCompare(c2) ||
-            e1.localeCompare(e2)
-          );
-        }
-      ),
-    [widget, getCoreProps, getChildNodes]
-  );
+        items.push(item);
+
+        return {
+          ...acc,
+          [nodePath]: items,
+        };
+      }, {})
+    );
+
+    return entries
+      .map<[string, EventItem[]]>(([nodePath, items]) => [
+        nodePath,
+        items.sort(
+          ({ config: c1, eventPath: e1 }, { config: c2, eventPath: e2 }) =>
+            c1.component.localeCompare(c2.component) || e1.localeCompare(e2)
+        ),
+      ])
+      .sort(([n1], [n2]) => {
+        const p1 = _toPath(n1);
+        const p2 = _toPath(n2);
+
+        return p1.length - p2.length || n1.localeCompare(n2);
+      });
+  }, [widget, getCoreProps, getChildNodes]);
 }
 
 function getEventCallbacks(
@@ -43,16 +57,6 @@ function getEventCallbacks(
 ) {
   const { definition } = getCoreProps(config.component);
   const { eventCallbackProps } = definition;
-
-  const nodePath = nodePaths.reduce<string>((acc, path) => {
-    if (typeof path === 'string') {
-      acc = `${acc}.${path}`;
-    } else {
-      acc = `${acc}[${path}]`;
-    }
-
-    return acc;
-  }, '');
 
   return Object.entries(getChildNodes(config)).reduce(
     (acc, [childPath, child]) => {
@@ -66,10 +70,17 @@ function getEventCallbacks(
       return acc;
     },
     Object.keys(eventCallbackProps || {}).map<EventItem>((eventPath) => ({
-      component: config.component,
+      config,
       eventPath,
-      nodePath,
-      nodePaths,
+      nodePath: nodePaths.reduce<string>((acc, path, i) => {
+        if (typeof path === 'string') {
+          acc = `${acc}.${path}`;
+        } else if (i < nodePaths.length - 1) {
+          acc = `${acc}[${path}]`;
+        }
+
+        return acc;
+      }, ''),
     }))
   );
 }

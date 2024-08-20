@@ -20,9 +20,9 @@ import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
 import { useWidgetRender } from '~web/hooks';
-import type { ConfigPaths, PageLayoutConfigs } from '../imports.types';
+import type { EventItem, WidgetLayout } from '../EventList';
+import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
-import type { WidgetLayout } from '../EventList';
 
 import {
   PortalWrapper,
@@ -40,10 +40,12 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const isTutorialMode = useTutorialMode();
 
   const [, startTransition] = useTransition();
-  const [activeEvent, setActiveEvent] = useState<ConfigPaths>();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
   const [editing, setEditing] = useState<WidgetLayout>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
+
+  const [activeEvent, setActiveEvent] =
+    useState<Pick<EventItem, 'config' | 'eventPath'>>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
     !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))

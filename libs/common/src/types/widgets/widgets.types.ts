@@ -32,6 +32,7 @@ export type PrimitiveValueProp = BaseWidgetProps<
 
 //* - Element Node
 interface ElementNodeConfig {
+  id: string;
   component: string;
   props?: {
     [propPath: string]: DataBindingProp | ElementNodeProp | PrimitiveValueProp;
@@ -47,6 +48,5 @@ export type ElementNodeProp = BaseWidgetProps<
 type DataFields = (string | [string, DataFields])[];
 
 export interface WidgetConfigs extends ElementNodeConfig {
-  id: string;
   dataStructure?: DataFields;
 }

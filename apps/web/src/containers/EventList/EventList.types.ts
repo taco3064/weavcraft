@@ -1,8 +1,7 @@
 import type { SetRequired } from 'type-fest';
 
 import type {
-  ConfigPaths,
-  CoreComponent,
+  ComponentConfig,
   EditorListProps,
   GetChildNodesFn,
   GetCorePropsFn,
@@ -24,9 +23,8 @@ export type EventGetterOptions = {
 };
 
 export interface EventItem {
-  component: CoreComponent;
+  config: ComponentConfig;
   nodePath: string;
-  nodePaths: ConfigPaths;
   eventPath: string;
 }
 
@@ -34,5 +32,5 @@ export interface EventItem {
 export interface EventListProps extends Pick<EditorListProps, 'onClose'> {
   config: WidgetLayout;
   widget: WidgetHierarchy;
-  onActive: (e: ConfigPaths) => void;
+  onActive: (e: Pick<EventItem, 'config' | 'eventPath'>) => void;
 }
