@@ -36,7 +36,15 @@ const getPropsDefinition: GetPropsDefinitionFn = (
   const { [propCategory]: generators } = Generator;
 
   return generators.reduce<ReturnType<(typeof generators)[number]>>(
-    (result, generator) => result || generator(type, options),
+    (result, generator) => {
+      if (!result) {
+        return (
+          generator(type, options) || generator(type.getApparentType(), options)
+        );
+      }
+
+      return result;
+    },
     false
   );
 };

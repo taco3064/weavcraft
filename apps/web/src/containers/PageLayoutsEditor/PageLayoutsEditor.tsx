@@ -18,8 +18,8 @@ import { BreakpointStepper } from '~web/components';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
+import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
-import { useWidgetRender } from '~web/hooks';
 import type { EventItem, WidgetLayout } from '../EventList';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
@@ -38,6 +38,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   toolbarEl,
 }: PageLayoutsEditorProps) {
   const isTutorialMode = useTutorialMode();
+  const margin = useMainMargin();
 
   const [, startTransition] = useTransition();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
@@ -54,7 +55,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { classes } = useMainStyles({ marginTop });
+  const { classes } = useMainStyles({ margin, marginTop });
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setEditing(undefined)

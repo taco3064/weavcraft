@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import _isEmpty from 'lodash/isEmpty';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -65,6 +66,7 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
+  const isValueEmpty = _isEmpty(value);
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setViewMode(undefined)
@@ -102,17 +104,29 @@ export default withCorePropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          {viewMode !== ViewModeEnum.Preview && (
+          {viewMode === ViewModeEnum.Preview ? (
+            <Tooltip title={t('btn-undo')}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() => setViewMode(undefined)}
+              >
+                <Core.Icon code="faUndo" />
+              </IconButton>
+            </Tooltip>
+          ) : (
             <>
-              <Tooltip title={t('widgets:btn-widget-settings')}>
-                <IconButton
-                  color="primary"
-                  size="large"
-                  onClick={() => onToggle(true)}
-                >
-                  <Core.Icon code="faCode" />
-                </IconButton>
-              </Tooltip>
+              {!isValueEmpty && (
+                <Tooltip title={t('widgets:btn-widget-settings')}>
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => onToggle(true)}
+                  >
+                    <Core.Icon code="faCode" />
+                  </IconButton>
+                </Tooltip>
+              )}
 
               <Tooltip title={t('widgets:btn-data-structure')}>
                 <IconButton
@@ -128,48 +142,36 @@ export default withCorePropsDefinition(function WidgetEditor({
                   <Core.Icon code="faDatabase" />
                 </IconButton>
               </Tooltip>
+
+              <Tooltip title={t('widgets:btn-widget-preview')}>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => setViewMode(ViewModeEnum.Preview)}
+                >
+                  <Core.Icon code="faEye" />
+                </IconButton>
+              </Tooltip>
             </>
           )}
 
-          <Tooltip
-            title={
-              viewMode === ViewModeEnum.Preview
-                ? t('btn-undo')
-                : t('widgets:btn-widget-preview')
-            }
-          >
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() =>
-                setViewMode(
-                  viewMode === ViewModeEnum.Preview
-                    ? undefined
-                    : ViewModeEnum.Preview
-                )
-              }
-            >
-              <Core.Icon
-                code={viewMode === ViewModeEnum.Preview ? 'faUndo' : 'faEye'}
-              />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title={t('btn-save')}>
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() =>
-                upsert({
-                  hierarchyId: query.id as string,
-                  input: value as WidgetConfigs,
-                  isTutorialMode,
-                })
-              }
-            >
-              <Core.Icon code="faSave" />
-            </IconButton>
-          </Tooltip>
+          {!isValueEmpty && (
+            <Tooltip title={t('btn-save')}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() =>
+                  upsert({
+                    hierarchyId: query.id as string,
+                    input: value as WidgetConfigs,
+                    isTutorialMode,
+                  })
+                }
+              >
+                <Core.Icon code="faSave" />
+              </IconButton>
+            </Tooltip>
+          )}
         </PortalWrapper>
 
         <Container

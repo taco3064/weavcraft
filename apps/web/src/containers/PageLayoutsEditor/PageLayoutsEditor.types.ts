@@ -1,7 +1,11 @@
 import type { ResponsiveGridProps } from '@weavcraft/core';
-
-import type { BaseEditorProps, PageLayoutConfigs } from '../imports.types';
 import type { WidgetHierarchy, WidgetLayout } from '../EventList';
+
+import type {
+  BaseEditorProps,
+  Margin,
+  PageLayoutConfigs,
+} from '../imports.types';
 
 export enum ViewModeEnum {
   Preview,
@@ -15,7 +19,10 @@ export interface ChangeEvents
 }
 
 //* Style Params Types
-export type MainStyleParams = Pick<PageLayoutsEditorProps, 'marginTop'>;
+export interface MainStyleParams
+  extends Pick<PageLayoutsEditorProps, 'marginTop'> {
+  margin: Margin;
+}
 
 //* Component Props Type
 export type PageLayoutsEditorProps = BaseEditorProps<PageLayoutConfigs>;

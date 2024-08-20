@@ -3,7 +3,7 @@ import type { MainStyleParams } from './PageLayoutsEditor.types';
 
 export const useMainStyles = makeStyles<MainStyleParams>({
   name: 'PageLayoutsEditor',
-})((theme, { marginTop }) => ({
+})((theme, { margin, marginTop }) => ({
   root: {
     paddingBottom: theme.spacing(3),
 
@@ -18,7 +18,7 @@ export const useMainStyles = makeStyles<MainStyleParams>({
     width: 'auto',
     top: 'auto',
     bottom: theme.spacing(1.5),
-    left: theme.spacing(1.5),
-    right: theme.spacing(1.5),
+    left: `calc(${theme.spacing(1.5)} + ${margin.left}px)`,
+    right: `calc(${theme.spacing(1.5)} + ${margin.right}px)`,
   },
 }));
