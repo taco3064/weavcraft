@@ -3,9 +3,7 @@ import type { DataStructureListProps } from '../DataStructureList';
 
 import type {
   BaseEditorProps,
-  ComponentConfig,
   ConfigPaths,
-  CoreComponent,
   CreateNodeEvents,
   PropsSettingChangeHandler,
   WidgetConfigs,
