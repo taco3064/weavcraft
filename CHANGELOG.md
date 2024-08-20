@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.72](https://github.com/taco3064/weavcraft/compare/v0.0.71...v0.0.72) (2024-08-20)
+
+
+### Features
+
+* **web/*:** add custom hook to generate event items ([fb4f482](https://github.com/taco3064/weavcraft/commit/fb4f482821510fe2450c2d86dcf37f00388d7f86))
+* **web/event-list:** add new component: EventList ([b13ae5c](https://github.com/taco3064/weavcraft/commit/b13ae5c1a343fdb50da47bf7e6ad1c640905f7c3))
+
+
+### Bug Fixes
+
+* add dnd vibrate settings ([635f26f](https://github.com/taco3064/weavcraft/commit/635f26f5db19c1be3e58a6290cd6bff230bfc2b0))
+* fixed the sonar qube issues ([929e7d6](https://github.com/taco3064/weavcraft/commit/929e7d61846104fe9df58217053d312025096f4b))
+* **web/use-main-container:** make sure the margin getter could work on the correct time ([ecbff55](https://github.com/taco3064/weavcraft/commit/ecbff55a0573d521010fbf89fe8e63f10afc2a14))
+
 ### [0.0.71](https://github.com/taco3064/weavcraft/compare/v0.0.70...v0.0.71) (2024-08-16)
 
 
