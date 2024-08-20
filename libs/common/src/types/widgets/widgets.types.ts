@@ -1,15 +1,15 @@
 import type { JsonObject } from 'type-fest';
 
-enum WidgetPropType {
+enum PropCategoryEnum {
   DataBinding,
   ElementNode,
   EventCallback,
   PrimitiveValue,
 }
 
-export type WidgetPropTypes = keyof typeof WidgetPropType;
+export type PropCategory = keyof typeof PropCategoryEnum;
 
-interface BaseWidgetProps<T extends WidgetPropTypes, V> {
+interface BaseWidgetProps<T extends PropCategory, V> {
   type: T;
   value: V;
 }
@@ -32,6 +32,7 @@ export type PrimitiveValueProp = BaseWidgetProps<
 
 //* - Element Node
 interface ElementNodeConfig {
+  id: string;
   component: string;
   props?: {
     [propPath: string]: DataBindingProp | ElementNodeProp | PrimitiveValueProp;
@@ -47,6 +48,5 @@ export type ElementNodeProp = BaseWidgetProps<
 type DataFields = (string | [string, DataFields])[];
 
 export interface WidgetConfigs extends ElementNodeConfig {
-  id: string;
   dataStructure?: DataFields;
 }

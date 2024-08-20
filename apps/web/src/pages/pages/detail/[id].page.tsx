@@ -120,7 +120,7 @@ export const getServerSideProps: GetServerSideProps<
       superiors,
       ...(hierarchy && { hierarchy }),
       ...(config && { config }),
-      ...(await getTranslations(ctx, 'pages')),
+      ...(await getTranslations(ctx, 'widgets', 'pages')),
     },
   };
 };

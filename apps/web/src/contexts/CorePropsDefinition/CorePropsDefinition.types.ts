@@ -2,24 +2,23 @@ import type { Get } from 'type-fest';
 import type { ReactNode } from 'react';
 
 import type {
-  ElementNodePropDefinitions,
-  PrimitivePropDefinitions,
-  PropsDefinition,
+  ComponentDefinition,
   CoreComponent,
+  PropDefinition,
 } from '../imports.types';
 
 type ElementNodeDefinition = NonNullable<
-  Get<ElementNodePropDefinitions, ['elementNodeProps', string]>
+  Get<PropDefinition.ElementNode, ['elementNodeProps', string]>
 >;
 
 type PrimitiveValueDefinition = NonNullable<
-  Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
+  Get<PropDefinition.PrimitiveValue, ['primitiveValueProps', string]>
 >;
 
 export type MappingPath = 'propMapping' | `${string}.propMapping`;
 
 export type GetCorePropsFn = (component: CoreComponent) => {
-  definition: PropsDefinition;
+  definition: ComponentDefinition;
   isStoreWidget: boolean;
   mappingPaths: MappingPath[];
 
@@ -30,7 +29,7 @@ export type GetCorePropsFn = (component: CoreComponent) => {
 
 export type CorePropsDefinitionContextValue = Record<
   CoreComponent,
-  PropsDefinition
+  ComponentDefinition
 >;
 
 export interface CorePropsDefinitionProviderProps {

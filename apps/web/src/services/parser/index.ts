@@ -1,9 +1,7 @@
 export * from './parser';
 
 export type {
-  DataBindingPropDefinition,
-  ElementNodePropDefinitions,
-  EventCallbackPropDefinitions,
-  PrimitivePropDefinitions,
-  PropsDefinition,
+  ComponentDefinition,
+  PropDefinition,
+  TypeDefinition,
 } from './parser.types';

@@ -1,52 +1,49 @@
-import { WidgetPropTypes } from '@weavcraft/common';
+import { PropCategory } from '@weavcraft/common';
 import type * as Tsm from 'ts-morph';
 import type { Get } from 'type-fest';
 
 import type {
-  DataBindingPropDefinition,
-  ElementNodePropDefinitions,
-  EventCallbackPropDefinitions,
-  PrimitivePropDefinitions,
-  PropTypeDefinitions,
-  PropsDefinition,
+  ComponentDefinition,
+  PropDefinition,
+  TypeDefinition,
 } from '../../imports.types';
 
 type WidgetPropDefinitions = {
-  ElementNode: Get<ElementNodePropDefinitions, ['elementNodeProps', string]>;
+  ElementNode: Get<PropDefinition.ElementNode, ['elementNodeProps', string]>;
 
   DataBinding: Get<
-    DataBindingPropDefinition,
+    PropDefinition.DataBinding,
     [
       'dataBindingProps',
       'data' | 'records' | 'propMapping' | `${string}.propMapping`
     ]
   >;
   EventCallback: Get<
-    EventCallbackPropDefinitions,
+    PropDefinition.EventCallback,
     ['eventCallbackProps', string]
   >;
   PrimitiveValue: Get<
-    PrimitivePropDefinitions,
+    PropDefinition.PrimitiveValue,
     ['primitiveValueProps', string]
   >;
 };
 
 type GetDefinitionArgs = [
   Tsm.Type,
-  Pick<PropTypeDefinitions.PropTypes, 'path' | 'aliasName' | 'required'>
+  Pick<TypeDefinition.Types, 'path' | 'aliasName' | 'required'>
 ];
 
 export type GetPropsDefinitionsReturn = Pick<
-  PropsDefinition,
+  ComponentDefinition,
   'elementNodeProps' | 'eventCallbackProps' | 'primitiveValueProps'
 >;
 
 export type GetPropsDefinitionFn = (
-  propsType: WidgetPropTypes,
+  propCategory: PropCategory,
   ...[type, options]: GetDefinitionArgs
-) => WidgetPropDefinitions[typeof propsType] | false;
+) => WidgetPropDefinitions[typeof propCategory] | false;
 
-export type GetDefinitionFns<T extends WidgetPropTypes = WidgetPropTypes> = {
+export type GetDefinitionFns<T extends PropCategory = PropCategory> = {
   [K in T]: ((
     ...[type, options]: GetDefinitionArgs
   ) => WidgetPropDefinitions[K] | false)[];
@@ -56,9 +53,9 @@ export type GetPropertyWithAllTypesFn = (
   property: Tsm.Symbol,
   prefixPath?: string
 ) => {
-  propsType: WidgetPropTypes;
+  propCategory: PropCategory;
   propPath: string;
-  definition: PropTypeDefinitions.PropTypes;
+  definition: TypeDefinition.Types;
 }[];
 
 export type CoreParser = {

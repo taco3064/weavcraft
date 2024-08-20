@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import _isEmpty from 'lodash/isEmpty';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -15,9 +16,9 @@ import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingList from '../PropsSettingList';
 import { upsertWidgetConfig } from '~web/services';
-import { useChangeEvents, useNodeCreateButton } from './WidgetEditor.hooks';
+import { useChangeEvents } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
-import { useWidgetRender } from '~web/hooks';
+import { useNodeCreate, useWidgetRender } from '~web/hooks';
 
 import {
   EditModeEnum,
@@ -65,6 +66,7 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ marginTop });
+  const isValueEmpty = _isEmpty(value);
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setViewMode(undefined)
@@ -73,7 +75,7 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { onDeleteNode, onConfigChange, onStructureChange, ...changeEvents } =
     useChangeEvents(value, setValue);
 
-  const withNodeCreateButton = useNodeCreateButton(
+  const withNodeCreateButton = useNodeCreate(
     NodeCreateButton,
     value.dataStructure,
     viewMode === ViewModeEnum.Preview,
@@ -102,17 +104,29 @@ export default withCorePropsDefinition(function WidgetEditor({
           containerEl={toolbarEl}
           variant="dense"
         >
-          {viewMode !== ViewModeEnum.Preview && (
+          {viewMode === ViewModeEnum.Preview ? (
+            <Tooltip title={t('btn-undo')}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() => setViewMode(undefined)}
+              >
+                <Core.Icon code="faUndo" />
+              </IconButton>
+            </Tooltip>
+          ) : (
             <>
-              <Tooltip title={t('widgets:btn-widget-settings')}>
-                <IconButton
-                  color="primary"
-                  size="large"
-                  onClick={() => onToggle(true)}
-                >
-                  <Core.Icon code="faCode" />
-                </IconButton>
-              </Tooltip>
+              {!isValueEmpty && (
+                <Tooltip title={t('widgets:btn-widget-settings')}>
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={() => onToggle(true)}
+                  >
+                    <Core.Icon code="faCode" />
+                  </IconButton>
+                </Tooltip>
+              )}
 
               <Tooltip title={t('widgets:btn-data-structure')}>
                 <IconButton
@@ -128,48 +142,36 @@ export default withCorePropsDefinition(function WidgetEditor({
                   <Core.Icon code="faDatabase" />
                 </IconButton>
               </Tooltip>
+
+              <Tooltip title={t('widgets:btn-widget-preview')}>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => setViewMode(ViewModeEnum.Preview)}
+                >
+                  <Core.Icon code="faEye" />
+                </IconButton>
+              </Tooltip>
             </>
           )}
 
-          <Tooltip
-            title={
-              viewMode === ViewModeEnum.Preview
-                ? t('btn-undo')
-                : t('widgets:btn-widget-preview')
-            }
-          >
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() =>
-                setViewMode(
-                  viewMode === ViewModeEnum.Preview
-                    ? undefined
-                    : ViewModeEnum.Preview
-                )
-              }
-            >
-              <Core.Icon
-                code={viewMode === ViewModeEnum.Preview ? 'faUndo' : 'faEye'}
-              />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title={t('btn-save')}>
-            <IconButton
-              color="primary"
-              size="large"
-              onClick={() =>
-                upsert({
-                  hierarchyId: query.id as string,
-                  input: value as WidgetConfigs,
-                  isTutorialMode,
-                })
-              }
-            >
-              <Core.Icon code="faSave" />
-            </IconButton>
-          </Tooltip>
+          {!isValueEmpty && (
+            <Tooltip title={t('btn-save')}>
+              <IconButton
+                color="primary"
+                size="large"
+                onClick={() =>
+                  upsert({
+                    hierarchyId: query.id as string,
+                    input: value as WidgetConfigs,
+                    isTutorialMode,
+                  })
+                }
+              >
+                <Core.Icon code="faSave" />
+              </IconButton>
+            </Tooltip>
+          )}
         </PortalWrapper>
 
         <Container
@@ -203,14 +205,12 @@ export default withCorePropsDefinition(function WidgetEditor({
                     onClose={() => onToggle(false)}
                     onDelete={({ paths }) =>
                       startTransition(() => {
-                        const active = paths.slice(
-                          0,
-                          typeof paths[paths.length - 1] === 'string' ? -1 : -2
-                        );
+                        const last = paths[paths.length - 1];
+                        const index = typeof last === 'string' ? -1 : -2;
 
                         onDeleteNode(paths);
                         onToggle(paths.length > 0);
-                        setActiveNode(active);
+                        setActiveNode(paths.slice(0, index));
                       })
                     }
                     onEdit={({ target, paths }) =>

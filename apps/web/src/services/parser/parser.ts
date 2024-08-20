@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 import { Idb, withConnRefusedCatch } from '../common';
-import type { DefinitionIDB, PropsDefinition } from './parser.types';
+import type { ComponentDefinition, DefinitionIDB } from './parser.types';
 import type { CoreComponent } from '../configs';
 
 export const getPropsDefinition = withConnRefusedCatch<
   CoreComponent,
-  PropsDefinition
+  ComponentDefinition
 >(async function (widgetId) {
   const idb = await Idb.get<DefinitionIDB>('definitions', 'core');
   const definition = await idb?.get('core', widgetId);

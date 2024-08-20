@@ -11,9 +11,10 @@ export interface PageLayoutConfigs {
       'xs'
     >;
     events?: {
-      // TODO - 尚未定案
-      nodePath: string;
-      propPath: string;
+      [NodePath: string]: {
+        // TODO - 尚未定案
+        [PropPath: string]: unknown;
+      };
     }[];
   }[];
 }

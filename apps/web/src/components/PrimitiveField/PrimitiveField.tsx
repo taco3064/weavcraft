@@ -11,8 +11,7 @@ import SwipeIcon from '@mui/icons-material/Swipe';
 import TextField from '@mui/material/TextField';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import type { PrimitiveValueProp } from '@weavcraft/common';
-
-import type { PropTypeDefinitions } from '../imports.types';
+import type { TypeDefinition } from '../imports.types';
 
 import type {
   AdornmentIcons,
@@ -77,7 +76,7 @@ export default function PrimitiveField<T extends PrimitiveType>({
     }
     case 'string': {
       const { multiple } =
-        (definition as PropTypeDefinitions.String['definition']) || {};
+        (definition as TypeDefinition.String['definition']) || {};
 
       return !multiple ? (
         <Core.TextField

@@ -7,18 +7,20 @@ import Tooltip from '@mui/material/Tooltip';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
+import EventFlowList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper } from '~web/components';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
+import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
-import { useWidgetRender } from '~web/hooks';
+import type { EventItem, WidgetLayout } from '../EventList';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
@@ -36,10 +38,15 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   toolbarEl,
 }: PageLayoutsEditorProps) {
   const isTutorialMode = useTutorialMode();
+  const margin = useMainMargin();
 
+  const [, startTransition] = useTransition();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
-  const [editing, setEditing] = useState<unknown>();
+  const [editing, setEditing] = useState<WidgetLayout>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
+
+  const [activeEvent, setActiveEvent] =
+    useState<Pick<EventItem, 'config' | 'eventPath'>>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
     !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))
@@ -48,19 +55,14 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { classes } = useMainStyles({ marginTop });
+  const { classes } = useMainStyles({ margin, marginTop });
 
   const { containerEl, onToggle } = useTogglePortal(() =>
     setEditing(undefined)
   );
 
-  const [widgets, { onCreate, onRemove, onResize, onResort }] = useChangeEvents(
-    breakpoint,
-    viewMode,
-    config,
-    value,
-    setValue
-  );
+  const [widgets, { onCreate, onLayoutChange, onRemove, onResize, onResort }] =
+    useChangeEvents(breakpoint, viewMode, config, value, setValue);
 
   const generate = useWidgetRender((WidgetEl, { key, props }) => (
     <WidgetEl key={key} {...props} />
@@ -133,16 +135,15 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
             items={value.layouts}
             cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
             rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
-            sx={{
-              '& > ul': (theme) => ({
+            sx={(theme) => ({
+              '& > ul': {
                 paddingTop: theme.spacing(3),
                 paddingBottom: theme.spacing(3),
-              }),
-            }}
-            renderItem={({ id, widgetId, spans }) => {
+              },
+            })}
+            renderItem={(layout) => {
+              const { id, spans, widgetId } = layout;
               const { [widgetId]: hierarchy } = widgets;
-
-              console.log(hierarchy?.payload);
 
               return (
                 <ResponsiveItem
@@ -153,6 +154,12 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                       <WidgetActions
                         name={hierarchy.title}
                         onRemove={() => onRemove(id)}
+                        onEventsEdit={() =>
+                          startTransition(() => {
+                            onToggle(true);
+                            setEditing(layout);
+                          })
+                        }
                       />
                     )
                   }
@@ -167,7 +174,18 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
           />
 
           <PortalWrapper containerEl={containerEl}>
-            Page Layouts Editor
+            {editing?.widgetId &&
+              widgets[editing?.widgetId] &&
+              (!activeEvent ? (
+                <EventFlowList
+                  config={editing}
+                  widget={widgets[editing?.widgetId as string]}
+                  onActive={setActiveEvent}
+                  onClose={() => onToggle(false)}
+                />
+              ) : (
+                <>WorkflowList</>
+              ))}
           </PortalWrapper>
         </Container>
       </Slide>

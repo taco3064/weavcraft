@@ -7,7 +7,7 @@ import type {
   DataPropEnum,
   DataSource,
   EditorListProps,
-  PrimitivePropDefinitions,
+  PropDefinition,
   PropsSettingChangeHandler,
   WidgetConfigs,
 } from '../imports.types';
@@ -34,7 +34,7 @@ export interface PropItem {
   mappable: boolean;
   path: string;
   definition: NonNullable<
-    Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
+    Get<PropDefinition.PrimitiveValue, ['primitiveValueProps', string]>
   >;
 }
 
@@ -58,7 +58,7 @@ export interface PropItemProps
   onFieldBinding: (propName: string, value?: DataFieldIndexes) => void;
 
   definition: NonNullable<
-    Get<PrimitivePropDefinitions, ['primitiveValueProps', string]>
+    Get<PropDefinition.PrimitiveValue, ['primitiveValueProps', string]>
   >;
 }
 
