@@ -21,6 +21,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_TRANSITION_DURATION: number;
     NEXT_PUBLIC_TUTORIAL_TOKEN: string;
     NEXT_PUBLIC_VERSION: string;
+    NEXT_PUBLIC_XS_WIDTH: number;
 
     NEXT_PUBLIC_DEFAULT_COLS: Record<
       import('@mui/material/styles').Breakpoint,

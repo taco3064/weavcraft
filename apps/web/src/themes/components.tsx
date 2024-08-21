@@ -175,6 +175,13 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
+  MuiContainer: {
+    styleOverrides: {
+      maxWidthXs: {
+        maxWidth: `${process.env.NEXT_PUBLIC_XS_WIDTH}px !important`,
+      },
+    },
+  },
   MuiDialog: {
     defaultProps: {
       TransitionComponent: SlideUpTransition,

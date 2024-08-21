@@ -16,7 +16,7 @@ export default function CompressionContent({
 
   const getCompressionTheme = useCallback(
     ({ breakpoints: { values }, ...outer }: Required<ThemeOptions>) => {
-      const compression = isCompressed ? 444 : 0;
+      const compression = isCompressed ? process.env.NEXT_PUBLIC_XS_WIDTH : 0;
 
       return {
         ...outer,
