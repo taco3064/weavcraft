@@ -49,6 +49,7 @@ const nextConfig = {
         'process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT': JSON.stringify(48),
         'process.env.NEXT_PUBLIC_TRANSITION_DURATION': JSON.stringify(400),
         'process.env.NEXT_PUBLIC_VERSION': JSON.stringify(version),
+        'process.env.NEXT_PUBLIC_XS_WIDTH': JSON.stringify(444),
 
         'process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE': JSON.stringify(
           i18n.defaultLocale
