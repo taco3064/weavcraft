@@ -19,7 +19,10 @@ export const useMenuStyles = makeStyles<{ isAuth: boolean }>({
 
 export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
   (theme, { maxWidth = 'xs', menuMode }) => {
-    const drawerWidth = Math.max(444, theme.breakpoints.values[maxWidth]);
+    const drawerWidth = Math.max(
+      process.env.NEXT_PUBLIC_XS_WIDTH,
+      theme.breakpoints.values[maxWidth]
+    );
 
     const nextWidth =
       theme.breakpoints.keys[theme.breakpoints.keys.indexOf(maxWidth) + 1] ||

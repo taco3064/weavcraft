@@ -37,9 +37,9 @@ export function useMainMargin() {
 
 function getMargin(el: HTMLDivElement, notSmall: boolean): Margin {
   if (notSmall && el.classList.contains('nav')) {
-    return { left: 444, right: 0 };
+    return { left: process.env.NEXT_PUBLIC_XS_WIDTH, right: 0 };
   } else if (notSmall && el.classList.contains('custom')) {
-    return { left: 0, right: 444 };
+    return { left: 0, right: process.env.NEXT_PUBLIC_XS_WIDTH };
   }
 
   return { left: 0, right: 0 };
