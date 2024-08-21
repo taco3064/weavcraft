@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.73](https://github.com/taco3064/weavcraft/compare/v0.0.72...v0.0.73) (2024-08-21)
+
+
+### Bug Fixes
+
+* **cd-production.yml:** add git pull before deploy in vercel, make sure the version is latest ([719daa6](https://github.com/taco3064/weavcraft/commit/719daa62784ad9d3bb8a9c8f643e73b73212c408))
+* **web/*:** fixed sonar qube issues: remove the unused import ([a8505ef](https://github.com/taco3064/weavcraft/commit/a8505efc88ca5c41b2b84bcb667767258a786133))
+
 ### [0.0.72](https://github.com/taco3064/weavcraft/compare/v0.0.71...v0.0.72) (2024-08-20)
 
 
