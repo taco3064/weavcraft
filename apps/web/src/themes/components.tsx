@@ -4,7 +4,6 @@ import { forwardRef } from 'react';
 import type { ThemeOptions } from '@mui/material/styles';
 
 import type { TransitionProps } from './themes.types';
-import { max } from 'lodash';
 
 const NONE_IMPORTANT = '0 !important';
 const BRIGHTNESS_HIGHLIGHT = 'brightness(1.2)';
