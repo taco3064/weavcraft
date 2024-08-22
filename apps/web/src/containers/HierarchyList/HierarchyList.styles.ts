@@ -54,21 +54,35 @@ export const useItemStyles = makeStyles<{
     }),
   },
   header: {
-    padding: theme.spacing(2, 1.5),
+    padding: theme.spacing(2, 1),
 
+    '& > *': {
+      display: 'grid',
+    },
     '& button[aria-roledescription="draggable"]': {
       cursor: 'grab',
     },
-  },
-  description: {
-    whiteSpace: 'pre-line',
-    overflow: 'hidden',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2,
+    '& [role="heading"]': {
+      width: '100%',
+      overflow: 'hidden',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 1,
 
-    '&:hover': {
-      display: 'block',
+      '&:hover': {
+        display: 'block',
+      },
+      '& + *': {
+        whiteSpace: 'pre-line',
+        overflow: 'hidden',
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 2,
+
+        '&:hover': {
+          display: 'block',
+        },
+      },
     },
   },
   media: {
@@ -89,6 +103,10 @@ export const useHierarchyStyles = makeStyles({ name: 'HierarchyList' })(
     list: {
       height: 'max-content',
       marginBottom: theme.spacing(6),
+
+      '& > li': {
+        overflow: 'hidden',
+      },
     },
     toParentFab: {
       position: 'fixed',
