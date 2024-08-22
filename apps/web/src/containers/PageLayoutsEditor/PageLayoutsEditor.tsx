@@ -14,7 +14,7 @@ import type { Breakpoint } from '@mui/material/styles';
 import EventFlowList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
-import { BreakpointStepper } from '~web/components';
+import { BreakpointStepper, ViewportFrame } from '~web/components';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
@@ -78,6 +78,8 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
       ),
   });
 
+  console.log(onLayoutChange);
+
   return (
     <>
       <Slide in direction="up" timeout={1200}>
@@ -130,48 +132,55 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
             </Tooltip>
           </PortalWrapper>
 
-          <ResponsiveGrid
-            {...{ breakpoint, onResize, onResort }}
-            items={value.layouts}
-            cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
-            rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
-            sx={(theme) => ({
-              '& > ul': {
-                paddingTop: theme.spacing(3),
-                paddingBottom: theme.spacing(3),
-              },
-            })}
-            renderItem={(layout) => {
-              const { id, spans, widgetId } = layout;
-              const { [widgetId]: hierarchy } = widgets;
+          {viewMode === ViewModeEnum.Preview ? (
+            <ViewportFrame
+              variant="pages"
+              breakpoint={breakpoint}
+              config={value}
+            />
+          ) : (
+            <ResponsiveGrid
+              {...{ breakpoint, onResize, onResort }}
+              items={value.layouts}
+              cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
+              rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
+              sx={(theme) => ({
+                '& > ul': {
+                  paddingTop: theme.spacing(3),
+                  paddingBottom: theme.spacing(3),
+                },
+              })}
+              renderItem={(layout) => {
+                const { id, spans, widgetId } = layout;
+                const { [widgetId]: hierarchy } = widgets;
 
-              return (
-                <ResponsiveItem
-                  {...{ id, spans }}
-                  disableToolbar={viewMode === ViewModeEnum.Preview}
-                  actions={
-                    hierarchy && (
-                      <WidgetActions
-                        name={hierarchy.title}
-                        onRemove={() => onRemove(id)}
-                        onEventsEdit={() =>
-                          startTransition(() => {
-                            onToggle(true);
-                            setEditing(layout);
-                          })
-                        }
-                      />
-                    )
-                  }
-                >
-                  {hierarchy?.payload &&
-                    generate(hierarchy.payload, {
-                      dataStructure: hierarchy.payload.dataStructure,
-                    })}
-                </ResponsiveItem>
-              );
-            }}
-          />
+                return (
+                  <ResponsiveItem
+                    {...{ id, spans }}
+                    actions={
+                      hierarchy && (
+                        <WidgetActions
+                          name={hierarchy.title}
+                          onRemove={() => onRemove(id)}
+                          onEventsEdit={() =>
+                            startTransition(() => {
+                              onToggle(true);
+                              setEditing(layout);
+                            })
+                          }
+                        />
+                      )
+                    }
+                  >
+                    {hierarchy?.payload &&
+                      generate(hierarchy.payload, {
+                        dataStructure: hierarchy.payload.dataStructure,
+                      })}
+                  </ResponsiveItem>
+                );
+              }}
+            />
+          )}
 
           <PortalWrapper containerEl={containerEl}>
             {editing?.widgetId &&

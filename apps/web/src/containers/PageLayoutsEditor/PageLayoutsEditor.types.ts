@@ -1,8 +1,9 @@
 import type { ResponsiveGridProps } from '@weavcraft/core';
-import type { WidgetHierarchy, WidgetLayout } from '../EventList';
+import type { WidgetLayout } from '../EventList';
 
 import type {
   BaseEditorProps,
+  HierarchyWidget,
   Margin,
   PageLayoutConfigs,
 } from '../imports.types';
@@ -28,7 +29,7 @@ export interface MainStyleParams
 export type PageLayoutsEditorProps = BaseEditorProps<PageLayoutConfigs>;
 
 export interface WidgetCreateButtonProps {
-  onCreate: (e: WidgetHierarchy) => void;
+  onCreate: (e: HierarchyWidget) => void;
 }
 
 export interface WidgetActionsProps {

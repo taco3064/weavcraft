@@ -1,18 +1,16 @@
 import { nanoid } from 'nanoid';
-import { useEffect, useId, useMemo, useState, useTransition } from 'react';
+import { useId, useMemo, useState, useTransition } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { Breakpoint } from '@mui/material/styles';
 
-import { NAV_ITEMS } from '~web/hooks';
+import { NAV_ITEMS, useHierarchyWidgets } from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { useTutorialMode } from '~web/contexts';
-import type { HierarchyData, PageLayoutConfigs } from '../imports.types';
 import type { MenuDialogProps } from '~web/components';
-import type { WidgetHierarchy, WidgetLayout } from '../EventList';
+import type { WidgetLayout } from '../EventList';
 
 import {
   EnumHierarchyType,
-  getHierarchies,
   getWidgetConfigs,
   searchHierarchies,
 } from '~web/services';
@@ -22,41 +20,26 @@ import type {
   WidgetCreateButtonProps,
 } from './PageLayoutsEditor.types';
 
+import type {
+  HierarchyData,
+  HierarchyWidget,
+  PageLayoutConfigs,
+} from '../imports.types';
+
 export function useChangeEvents(
   breakpoint: Breakpoint,
   viewMode: ViewModeEnum | undefined,
   config: PageLayoutConfigs | undefined,
   value: PageLayoutConfigs,
   onChange: (value: PageLayoutConfigs) => void
-): [Record<string, WidgetHierarchy>, ChangeEvents] {
+): [Record<string, HierarchyWidget>, ChangeEvents] {
   const isTutorialMode = useTutorialMode();
-
   const [, startTransition] = useTransition();
-  const [widgets, setWidgets] = useState<Record<string, WidgetHierarchy>>({});
 
-  const { data: hierarchies } = useQuery({
-    enabled: Boolean(config?.layouts.length),
-    queryHash: 'pages-hierarchies',
-    queryFn: getHierarchies,
-    queryKey: [
-      'widgets',
-      true,
-      config?.layouts.map(({ widgetId }) => widgetId) || [],
-      isTutorialMode,
-    ],
-  });
-
-  useEffect(() => {
-    setWidgets(
-      (hierarchies || []).reduce(
-        (acc, hierarchy) => ({
-          ...acc,
-          [hierarchy.payloadId as string]: hierarchy,
-        }),
-        {}
-      )
-    );
-  }, [hierarchies]);
+  const [widgets, setWidgets] = useHierarchyWidgets(
+    config?.layouts || [],
+    isTutorialMode
+  );
 
   return [
     widgets,

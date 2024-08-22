@@ -1,5 +1,6 @@
 import ReactDomServer from 'react-dom/server';
 import _get from 'lodash/get';
+import { cloneElement } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import type { IconSwitchProps } from './IconSwitch.types';
@@ -14,10 +15,8 @@ export const useMainStyles = makeStyles<
 
   const docs = opts.reduce<Record<string, HTMLElement>>(
     (result, [key, { color, icon }]) => {
-      const { type: Icon, props } = icon;
-
       const doc = parser.parseFromString(
-        ReactDomServer.renderToString(<Icon {...props} />),
+        ReactDomServer.renderToString(cloneElement(icon)),
         'image/svg+xml'
       );
 
