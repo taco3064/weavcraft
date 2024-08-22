@@ -97,9 +97,10 @@ export default function ResponsiveGrid<T extends DataType>({
         strategy={Sortable.rectSortingStrategy}
       >
         <Container
-          {...{ maxWidth, sx }}
+          {...{ sx }}
           disableGutters
           className={classes.container}
+          maxWidth={breakpoint ? maxWidth : false}
         >
           <ImageList
             ref={ref}

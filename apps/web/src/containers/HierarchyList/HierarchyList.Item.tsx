@@ -62,11 +62,11 @@ export default function HierarchyListItem<P>({
             data.description ? data.description : t('msg-no-description')
           }
           titleTypographyProps={{
+            role: 'heading',
             variant: 'subtitle1',
             color: 'text.primary',
           }}
           subheaderTypographyProps={{
-            className: classes.description,
             variant: 'caption',
             color: 'text.secondary',
             whiteSpace: 'pre-line',

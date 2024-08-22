@@ -56,6 +56,7 @@ const nextConfig = {
         ),
         'process.env.NEXT_PUBLIC_TUTORIAL_TOKEN':
           JSON.stringify(TUTORIAL_TOKEN),
+
         'process.env.NEXT_PUBLIC_DEFAULT_COLS': JSON.stringify({
           xs: 2,
           sm: 3,
