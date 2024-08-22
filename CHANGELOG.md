@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.74](https://github.com/taco3064/weavcraft/compare/v0.0.73...v0.0.74) (2024-08-22)
+
+
+### Features
+
+* **web/*:** add new feature: preview page layout with the scalable viewport frame ([925e9e6](https://github.com/taco3064/weavcraft/commit/925e9e6eff8587727cc635437acf48771914dee1))
+
+
+### Bug Fixes
+
+* **web/config.mock:** fixed the error of undefined response data ([e8091c4](https://github.com/taco3064/weavcraft/commit/e8091c42b682f00f9a13194dec54a3f3176291b7))
+
 ### [0.0.73](https://github.com/taco3064/weavcraft/compare/v0.0.72...v0.0.73) (2024-08-21)
 
 
