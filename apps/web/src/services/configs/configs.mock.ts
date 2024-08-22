@@ -26,8 +26,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
       themesDb.read();
 
       return getMockData(
-        themesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string] ||
-          null
+        themesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string] || {}
       );
     });
 
@@ -69,7 +68,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
 
         return getMockData(
           widgetsDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string] ||
-            null
+            {}
         );
       });
 
@@ -108,7 +107,7 @@ Object.entries(setup).forEach(([baseURL, setupMock]) => {
       pagesDb.read();
 
       return getMockData(
-        pagesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string] || null
+        pagesDb.data[hierarchyDb.data[hierarchyId]?.payloadId as string] || {}
       );
     });
 
