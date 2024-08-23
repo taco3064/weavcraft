@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.76](https://github.com/taco3064/weavcraft/compare/v0.0.75...v0.0.76) (2024-08-23)
+
+
+### Bug Fixes
+
+* **core/responsive-grid:** support to specify the gridlines's was visibled or not ([0a9f794](https://github.com/taco3064/weavcraft/commit/0a9f7945169c80edc079bcc084bc4f1875cecf7d))
+* remove navigator.vibrate, because it couldn't work ([4d3085c](https://github.com/taco3064/weavcraft/commit/4d3085c5a0474911e58858ea48a8459b537e8d63))
+* **web/viewport-frame:** fixed the invalid center calculation ([dd9a559](https://github.com/taco3064/weavcraft/commit/dd9a559cb053485141fdf1d125e9005d536b13c3))
+
 ### [0.0.75](https://github.com/taco3064/weavcraft/compare/v0.0.74...v0.0.75) (2024-08-22)
 
 
