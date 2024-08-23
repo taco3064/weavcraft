@@ -38,6 +38,7 @@ export default function EventList({
               }}
             >
               <ListItemIcon className={classes.icon} />
+
               <Typography variant="subtitle2" color="secondary">
                 {nodePath || t('pages:lbl-root-node')}
               </Typography>

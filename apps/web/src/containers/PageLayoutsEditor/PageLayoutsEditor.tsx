@@ -11,7 +11,8 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
-import EventFlowList from '../EventList';
+import EventFlowEditor, { type ActiveEvent } from '../EventFlowEditor';
+import EventList, { type WidgetLayout } from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper, ViewportFrame } from '~web/components';
@@ -20,7 +21,6 @@ import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
-import type { EventItem, WidgetLayout } from '../EventList';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
@@ -41,12 +41,10 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const margin = useMainMargin();
 
   const [, startTransition] = useTransition();
+  const [activeEvent, setActiveEvent] = useState<ActiveEvent>();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
   const [editing, setEditing] = useState<WidgetLayout>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
-
-  const [activeEvent, setActiveEvent] =
-    useState<Pick<EventItem, 'config' | 'eventPath'>>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
     !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))
@@ -77,8 +75,6 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
         { variant: 'success' }
       ),
   });
-
-  console.log(onLayoutChange);
 
   return (
     <>
@@ -182,21 +178,6 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               }}
             />
           )}
-
-          <PortalWrapper containerEl={containerEl}>
-            {editing?.widgetId &&
-              widgets[editing?.widgetId] &&
-              (!activeEvent ? (
-                <EventFlowList
-                  config={editing}
-                  widget={widgets[editing?.widgetId as string]}
-                  onActive={setActiveEvent}
-                  onClose={() => onToggle(false)}
-                />
-              ) : (
-                <>WorkflowList</>
-              ))}
-          </PortalWrapper>
         </Container>
       </Slide>
 
@@ -212,6 +193,27 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
           }}
         />
       </Slide>
+
+      {editing?.widgetId && widgets[editing?.widgetId] && (
+        <PortalWrapper containerEl={containerEl}>
+          {!activeEvent ? (
+            <EventList
+              config={editing}
+              widget={widgets[editing?.widgetId as string]}
+              onActive={setActiveEvent}
+              onClose={() => onToggle(false)}
+            />
+          ) : (
+            <EventFlowEditor
+              active={activeEvent}
+              config={editing}
+              widget={widgets[editing?.widgetId as string]}
+              onChange={onLayoutChange}
+              onClose={() => setActiveEvent(undefined)}
+            />
+          )}
+        </PortalWrapper>
+      )}
     </>
   );
 });
