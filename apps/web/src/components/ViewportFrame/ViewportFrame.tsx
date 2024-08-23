@@ -37,25 +37,22 @@ export default function ViewportFrame<T>({
     translateY: 0,
   });
 
-  console.log(styleParams);
-
   const { matched: style } = useBreakpointMatches(FRAME_STYLE, breakpoint);
   const { classes, theme, cx } = useMainStyles(styleParams);
 
   const observer = useMemo(
     () =>
       new ResizeObserver(([{ target }]) => {
-        const {
-          width: frameWidth,
-          height: frameHeight,
-          top: frameTop,
-        } = target.getBoundingClientRect();
+        const { height: containerHeight = 0, top: containerTop = 0 } =
+          target.parentElement?.getBoundingClientRect() || {};
 
-        const elementCenterY = frameTop + frameHeight / 2;
-        const screenCenterY = window.innerHeight / 2;
+        const { width: frameWidth } = target.getBoundingClientRect();
+        const elementCenterY = Math.max(0, containerTop) + containerHeight / 2;
+        const screenCenterY = (global.window?.innerHeight || 0) / 2;
 
         setStyleParams({
           breakpoint,
+          translateY: Math.max(0, screenCenterY - elementCenterY),
           scale: Math.min(
             1,
             frameWidth /
@@ -65,7 +62,6 @@ export default function ViewportFrame<T>({
                   theme.breakpoints.values[breakpoint]
                 ))
           ),
-          translateY: Math.max(0, screenCenterY - elementCenterY),
         });
       }),
     [breakpoint, theme]

@@ -59,6 +59,7 @@ interface GridProps {
 export interface ResponsiveGridProps<T extends DataType> {
   breakpoint?: Breakpoint;
   cols?: BreakpointValues<number>;
+  enableGridlines?: boolean;
   gap?: number;
   items?: T[];
   maxWidths?: ResponsiveMaxWidths;

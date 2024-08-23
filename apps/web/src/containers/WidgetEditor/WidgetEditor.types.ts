@@ -9,11 +9,6 @@ import type {
   WidgetConfigs,
 } from '../imports.types';
 
-export enum EditModeEnum {
-  ElementNode,
-  PropsSetting,
-}
-
 export enum ViewModeEnum {
   DataStructure,
   Preview,
