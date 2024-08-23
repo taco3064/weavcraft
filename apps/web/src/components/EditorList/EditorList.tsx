@@ -10,18 +10,19 @@ import { useMainStyles } from './EditorList.styles';
 import type { EditorListProps } from './EditorList.types';
 
 export default function EditorList({
+  className,
   description,
   icon,
   title,
   render,
   onClose,
 }: EditorListProps) {
-  const { classes } = useMainStyles();
+  const { classes, cx } = useMainStyles();
 
   return (
     <Fade in timeout={1200}>
       <List
-        className={classes.root}
+        className={cx(classes.root, className)}
         subheader={
           <ListSubheader className={classes.subheader}>
             {(icon || onClose) && (

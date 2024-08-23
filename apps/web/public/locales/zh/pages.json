@@ -1,7 +1,16 @@
 {
   "btn-add-widget": "新增組件",
   "btn-edit-events": "編輯事件",
+  "btn-fit-view": "自動調整視圖",
   "btn-layout-preview": "預覽外觀",
+  "btn-zoom-in": "放大",
+  "btn-zoom-out": "縮小",
   "lbl-root-node": "最頂層",
-  "ttl-widget-events": "組件事件"
+  "ttl-widget-events": "組件事件",
+  "lbl-todo-types": {
+    "Decision": "條件判斷",
+    "FetchData": "資料請求 / 發送",
+    "Iterate": "迭代處理",
+    "Update": "更新數據"
+  }
 }

@@ -1,7 +1,16 @@
 {
   "btn-add-widget": "Add Widget",
   "btn-edit-events": "Edit Events",
+  "btn-fit-view": "Fit View",
   "btn-layout-preview": "Layout Preview",
+  "btn-zoom-in": "Zoom In",
+  "btn-zoom-out": "Zoom Out",
   "lbl-root-node": "Root Node",
-  "ttl-widget-events": "Widget Events"
+  "ttl-widget-events": "Widget Events",
+  "lbl-todo-types": {
+    "Decision": "Condition / Decition",
+    "FetchData": "Fetch Data",
+    "Iterate": "Iterate Process",
+    "Update": "Update Value"
+  }
 }
