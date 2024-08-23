@@ -76,7 +76,6 @@ export const useSuperiorMutation: SuperiorMutationHook = ({
 
         const scrollTop = global.document?.body.scrollTop || 0;
 
-        global.navigator?.vibrate?.(100);
         setDragging(true);
 
         bodyScrollDeviation = {

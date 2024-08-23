@@ -32,8 +32,6 @@ export function useDndHandles<T extends DataType>(
       const rect = ref.current?.getBoundingClientRect();
       const el = document.getElementById(id.replace(/^resize-/, ''));
 
-      global.navigator?.vibrate?.(100);
-
       if (id.startsWith('resize-') && rect && el) {
         temp = {
           el,
