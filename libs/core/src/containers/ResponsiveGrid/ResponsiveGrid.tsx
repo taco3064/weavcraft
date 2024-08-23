@@ -28,6 +28,7 @@ const DEFAULT_MAX__WIDTHS: ResponsiveMaxWidths = {
 export default function ResponsiveGrid<T extends DataType>({
   breakpoint,
   cols = DEFAULT_COLS,
+  enableGridlines = false,
   gap = 8,
   items,
   maxWidths = DEFAULT_MAX__WIDTHS,
@@ -41,7 +42,7 @@ export default function ResponsiveGrid<T extends DataType>({
   const { matched: col } = useBreakpointMatches(cols, maxWidth);
 
   const itemProps = items?.map((item) => renderItem(item).props) || [];
-  const lineCols = (onResort || onResize) && items?.length ? col : undefined;
+  const lineCols = enableGridlines && items?.length ? col : undefined;
   const theme = useTheme();
 
   const { ref, ...dndHandles } = useDndHandles(col, {

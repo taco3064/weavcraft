@@ -41,6 +41,7 @@ export default withCorePropsDefinition(function PreviewPage() {
     <>
       {type === 'pages' && config && (
         <ResponsiveGrid
+          enableGridlines
           items={config.layouts}
           cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
           rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
