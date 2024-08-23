@@ -141,6 +141,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
           ) : (
             <ResponsiveGrid
               {...{ breakpoint, onResize, onResort }}
+              enableGridlines
               items={value.layouts}
               cols={process.env.NEXT_PUBLIC_DEFAULT_COLS}
               rowHeight={process.env.NEXT_PUBLIC_DEFAULT_ROW_HEIGHT}
