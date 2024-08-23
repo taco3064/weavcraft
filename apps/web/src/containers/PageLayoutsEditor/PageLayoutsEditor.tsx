@@ -11,8 +11,8 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
-import EventFlowEditor, { type ActiveEvent } from '../EventFlowEditor';
-import EventList, { type WidgetLayout } from '../EventList';
+import EventFlowEditor from '../EventFlowEditor';
+import EventList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
 import { BreakpointStepper, ViewportFrame } from '~web/components';
@@ -21,6 +21,7 @@ import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
+import type { ActiveEvent, WidgetLayout } from '../EventFlowEditor';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
@@ -198,7 +199,6 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
         <PortalWrapper containerEl={containerEl}>
           {!activeEvent ? (
             <EventList
-              config={editing}
               widget={widgets[editing?.widgetId as string]}
               onActive={setActiveEvent}
               onClose={() => onToggle(false)}

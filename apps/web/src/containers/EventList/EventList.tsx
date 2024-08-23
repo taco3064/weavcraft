@@ -13,7 +13,6 @@ import { useEventItems } from './EventList.hooks';
 import type { EventListProps } from './EventList.types';
 
 export default function EventList({
-  config,
   widget,
   onActive,
   onClose,
