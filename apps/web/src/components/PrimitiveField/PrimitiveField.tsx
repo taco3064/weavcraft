@@ -7,6 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import MneuItem from '@mui/material/MenuItem';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import SwipeIcon from '@mui/icons-material/Swipe';
 import TextField from '@mui/material/TextField';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
@@ -25,6 +26,7 @@ const filterOptions = createFilterOptions<Core.IconCode>({
 
 export const PrimitiveIcons: AdornmentIcons = {
   boolean: <SwipeIcon color="disabled" />,
+  date: <ScheduleIcon color="disabled" />,
   icon: <EmojiSymbolsIcon color="disabled" />,
   number: <DialpadIcon color="disabled" />,
   oneof: <MenuOpenIcon color="disabled" />,
@@ -32,6 +34,7 @@ export const PrimitiveIcons: AdornmentIcons = {
 };
 
 export default function PrimitiveField<T extends PrimitiveType>({
+  disableAdornment = false,
   definition: { type, required: defaultRequired, definition },
   required = defaultRequired,
   ...props
@@ -46,12 +49,22 @@ export default function PrimitiveField<T extends PrimitiveType>({
         />
       );
 
+    case 'date':
+      return (
+        <Core.DateTimePickerField
+          {...(props as PrimitiveFieldProps<'date'>)}
+          adornmentPosition="start"
+          adornment={!disableAdornment && PrimitiveIcons.string}
+          required={required}
+        />
+      );
+
     case 'number':
       return (
         <Core.NumericField
           {...(props as PrimitiveFieldProps<'number'>)}
           adornmentPosition="start"
-          adornment={PrimitiveIcons.number}
+          adornment={!disableAdornment && PrimitiveIcons.number}
           required={required}
         />
       );
@@ -62,7 +75,7 @@ export default function PrimitiveField<T extends PrimitiveType>({
       return !Array.isArray(options) ? null : (
         <Core.SingleSelectField
           {...(props as PrimitiveFieldProps<'oneof'>)}
-          adornment={PrimitiveIcons.oneof}
+          adornment={!disableAdornment && PrimitiveIcons.oneof}
           records={options.map((value) => ({ value }))}
           required={required}
           optionProps={{
@@ -82,7 +95,7 @@ export default function PrimitiveField<T extends PrimitiveType>({
         <Core.TextField
           {...(props as PrimitiveFieldProps<'string'>)}
           adornmentPosition="start"
-          adornment={PrimitiveIcons.string}
+          adornment={!disableAdornment && PrimitiveIcons.string}
           required={required}
         />
       ) : (
@@ -91,7 +104,7 @@ export default function PrimitiveField<T extends PrimitiveType>({
           maxRows={3}
           minRows={3}
           adornmentPosition="start"
-          adornment={PrimitiveIcons.string}
+          adornment={!disableAdornment && PrimitiveIcons.string}
           required={required}
         />
       );
@@ -126,7 +139,7 @@ export default function PrimitiveField<T extends PrimitiveType>({
               required={required}
               InputProps={{
                 ...params.InputProps,
-                startAdornment: (
+                startAdornment: !disableAdornment && (
                   <InputAdornment
                     position="start"
                     sx={{ marginRight: 0, marginLeft: 1 }}

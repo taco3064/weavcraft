@@ -1,16 +1,67 @@
 {
   "btn-add-widget": "Add Widget",
   "btn-edit-events": "Edit Events",
+  "btn-fetch-add-header": "Add Header",
   "btn-fit-view": "Fit View",
+  "btn-iterate-add-source": "Add Source",
   "btn-layout-preview": "Layout Preview",
   "btn-zoom-in": "Zoom In",
   "btn-zoom-out": "Zoom Out",
+  "lbl-decision-operator": "Operator",
+  "lbl-decision-source": "Source Operand",
+  "lbl-decision-target": "Target Value",
+  "lbl-fetch-header-key": "Header Key",
+  "lbl-fetch-header-value": "Header Value",
+  "lbl-fetch-method": "Method",
+  "lbl-fetch-payload": "Payload Data",
+  "lbl-fetch-url": "URL",
+  "lbl-iterate-source": "Source",
+  "lbl-iterate-source-type": "Source Mode",
   "lbl-root-node": "Root Node",
+  "lbl-todo-description": "Description",
+  "lbl-update-paths": "Override Data Paths",
+  "lbl-update-source": "Source Value",
+  "lbl-update-widget": "Target Widget",
+  "lbl-variable-dspaths": "Data Source Paths",
+  "lbl-variable-initial-value": "Initial Value",
+  "lbl-variable-mode": "Variable Mode",
+  "lbl-variable-name": "Field Name",
+  "lbl-variable-output": "Output Result",
+  "lbl-variable-type": "Definition Type",
+  "msg-fetch-no-headers": "No Headers",
+  "msg-iterate-no-sources": "No Iterate Sources",
+  "msg-variable-no-fields": "No Variable Fields",
+  "ttl-fetch-headers": "Headers",
+  "ttl-iterate-sources": "Iterate Sources",
+  "ttl-variables": "Variables",
   "ttl-widget-events": "Widget Events",
   "lbl-todo-types": {
     "Decision": "Condition / Decition",
     "FetchData": "Fetch Data",
     "Iterate": "Iterate Process",
-    "Update": "Update Value"
+    "UpdateWidget": "Update Widget",
+    "Variables": "Define Variables"
+  },
+  "msg-todo-types": {
+    "Decision": "The event of the decision type is used to make decisions based on specific conditions. When a condition is met, the system will execute the corresponding operation.",
+    "FetchData": "The event of the fetch data type can send requests to the specified server to perform specific tasks or retrieve data through the server.",
+    "Iterate": "The event of the iterate type is used to traverse a set of data and process each data item. It is usually used to handle lists or arrays.",
+    "UpdateWidget": "The event of the update widget type is used to change the data of the widget, thereby dynamically changing the content presented by the widget to achieve interactive effects.",
+    "Variables": "The event of the variables type is used to define a set of variables, which can be provided to subsequent events for extended applications."
+  },
+  "opt-iterate-source-types": {
+    "Multiple": "Multiple",
+    "Single": "Single"
+  },
+  "opt-variable-types": {
+    "boolean": "Boolean",
+    "date": "Date Time",
+    "number": "Number",
+    "string": "String"
+  },
+  "opt-variables": {
+    "Definition": "Definition",
+    "TodoOutput": "Output",
+    "Widget": "Widget"
   }
 }

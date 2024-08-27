@@ -1,30 +1,28 @@
 import AddIcon from '@mui/icons-material/Add';
-import CallSplitIcon from '@mui/icons-material/CallSplit';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import CloseIcon from '@mui/icons-material/Close';
+import Core from '@weavcraft/core';
 import CropFreeIcon from '@mui/icons-material/CropFree';
-import LoopIcon from '@mui/icons-material/Loop';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import { TodoEnum } from '@weavcraft/common';
 import { useReactFlow } from '@xyflow/react';
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { ViewModeEnum, type FlowToolbarProps } from './EventFlowEditor.types';
 import { useToolbarStyles } from './EventFlowEditor.styles';
 
-const TODO_ICONS: Record<TodoEnum, ReactNode> = {
-  Decision: <CallSplitIcon fontSize="large" />,
-  FetchData: <SyncAltIcon fontSize="large" />,
-  Iterate: <LoopIcon fontSize="large" />,
-  Update: <SaveAltIcon fontSize="large" />,
+export const TODO_ICONS: Record<TodoEnum, Core.IconCode> = {
+  UpdateWidget: 'faPenToSquare',
+  Iterate: 'faArrowsRotate',
+  FetchData: 'faRightLeft',
+  Decision: 'faArrowsSplitUpAndLeft',
+  Variables: 'faTags',
 };
 
 export default function FlowToolbar({ onTodoAdd }: FlowToolbarProps) {
@@ -98,17 +96,20 @@ export default function FlowToolbar({ onTodoAdd }: FlowToolbarProps) {
             />
           }
         >
-          {Object.entries(TODO_ICONS)
-            .reverse()
-            .map(([type, icon]) => (
-              <SpeedDialAction
-                FabProps={{ size: 'medium' }}
-                key={type}
-                tooltipTitle={t(`lbl-todo-types.${type}`)}
-                tooltipPlacement="left"
-                icon={icon}
-              />
-            ))}
+          {Object.entries(TODO_ICONS).map(([type, icon]) => (
+            <SpeedDialAction
+              FabProps={{ size: 'medium' }}
+              key={type}
+              tooltipTitle={t(`lbl-todo-types.${type}`)}
+              tooltipPlacement="left"
+              icon={<Core.Icon code={icon} />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTodoAdd(type as TodoEnum);
+                setViewMode(undefined);
+              }}
+            />
+          ))}
         </SpeedDial>
       </ClickAwayListener>
     </>

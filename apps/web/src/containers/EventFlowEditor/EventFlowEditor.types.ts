@@ -1,3 +1,4 @@
+import type { TodoEnum } from '@weavcraft/common';
 import type { EventItem } from '../EventList';
 
 import type {
@@ -23,5 +24,5 @@ export interface EventFlowEditorProps extends Pick<EditorListProps, 'onClose'> {
 }
 
 export interface FlowToolbarProps {
-  onTodoAdd: () => void;
+  onTodoAdd: (type: TodoEnum) => void;
 }
