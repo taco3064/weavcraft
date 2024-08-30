@@ -50,6 +50,10 @@
     "UpdateWidget": "更新組件數據類型的事件用於變更組件的數據，進而動態改變組件呈現之內容，達到互動之效果。",
     "Variables": "參數類型的事件用於定義一組變數，這些變數可以提供給後續執行的事件項目進行延伸應用。"
   },
+  "opt-decision": {
+    "false": "否",
+    "true": "是"
+  },
   "opt-iterate-source-types": {
     "Multiple": "多個",
     "Single": "單一"

@@ -50,6 +50,10 @@
     "UpdateWidget": "The event of the update widget type is used to change the data of the widget, thereby dynamically changing the content presented by the widget to achieve interactive effects.",
     "Variables": "The event of the variables type is used to define a set of variables, which can be provided to subsequent events for extended applications."
   },
+  "opt-decision": {
+    "false": "False",
+    "true": "True"
+  },
   "opt-iterate-source-types": {
     "Multiple": "Multiple",
     "Single": "Single"
