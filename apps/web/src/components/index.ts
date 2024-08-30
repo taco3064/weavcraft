@@ -6,6 +6,8 @@ export * from './ConfirmToggle';
 export * from './EditorDialog';
 export * from './EditorList';
 export * from './FallbackTrans';
+export * from './FlowEdge';
+export * from './FlowNode';
 export * from './IconSwitch';
 export * from './Link';
 export * from './MenuDialog';

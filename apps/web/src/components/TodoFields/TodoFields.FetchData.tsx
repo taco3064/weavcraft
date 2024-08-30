@@ -65,7 +65,6 @@ export default function FetchDataFields({
 
       <TextField
         {...DEFAULT_PROPS}
-        required
         select
         label={t('lbl-fetch-payload')}
         value={value?.payload ? JSON.stringify(value.payload) : ''}

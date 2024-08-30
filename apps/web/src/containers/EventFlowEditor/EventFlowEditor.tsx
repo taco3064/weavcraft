@@ -1,18 +1,18 @@
 import * as Flow from '@xyflow/react';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ListItem from '@mui/material/ListItem';
-import _set from 'lodash/set';
-import { nanoid } from 'nanoid';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import '@xyflow/react/dist/style.css';
 
-import FlowToolbar, { TODO_ICONS } from './EventFlowEditor.FlowToolbar';
-import { EditorDialog, EditorList, TodoFields } from '~web/components';
-import { useFlowNodes } from './EventFlowEditor.hooks';
+import * as Comp from '~web/components';
+import FlowToolbar from './EventFlowEditor.FlowToolbar';
+import { useEventTodos, useFlowLayout } from './EventFlowEditor.hooks';
 import { useMainStyles } from './EventFlowEditor.styles';
 import type { EventFlowEditorProps } from './EventFlowEditor.types';
 import type { TodoValue } from '../imports.types';
+
+const FIT_VIEW_DURATION = 400;
 
 export default function EventFlowEditor({
   active,
@@ -27,13 +27,18 @@ export default function EventFlowEditor({
   const { t } = useTranslation();
   const { classes, theme } = useMainStyles();
 
-  const nodes = useFlowNodes(config, active);
+  const { todos, onConnect, onEdgesDelete, onNodesDelete, onTodoCreate } =
+    useEventTodos({
+      active,
+      config,
+      onChange,
+    });
 
-  console.log(nodes);
+  const { edges, nodes } = useFlowLayout(todos);
 
   return (
     <>
-      <EditorList
+      <Comp.EditorList
         className={classes.root}
         title={active.eventPath}
         description={t(`widgets:lbl-component.${widget.payload.component}`)}
@@ -43,11 +48,13 @@ export default function EventFlowEditor({
           <ListItem disablePadding disableGutters className={classes.flow}>
             <Flow.ReactFlowProvider>
               <Flow.ReactFlow
-                {...{ nodes }}
+                {...{ edges, nodes, onConnect, onEdgesDelete, onNodesDelete }}
                 fitView
+                fitViewOptions={{ duration: FIT_VIEW_DURATION }}
                 connectionLineType={Flow.ConnectionLineType.SmoothStep}
+                edgeTypes={Comp.FlowEdges}
+                nodeTypes={Comp.FlowNodes}
                 defaultEdgeOptions={{
-                  type: Flow.ConnectionLineType.SmoothStep,
                   markerEnd: { type: Flow.MarkerType.ArrowClosed },
                   style: { strokeWidth: 2 },
                 }}
@@ -55,33 +62,29 @@ export default function EventFlowEditor({
                 <Flow.Background color={theme.palette.text.primary} gap={16} />
               </Flow.ReactFlow>
 
-              <FlowToolbar onTodoAdd={(type) => setEditing({ type })} />
+              <FlowToolbar
+                fitViewDuration={FIT_VIEW_DURATION}
+                onTodoAdd={(type) => setEditing({ type })}
+              />
             </Flow.ReactFlowProvider>
           </ListItem>
         )}
       />
 
-      <EditorDialog
-        icon={editing && TODO_ICONS[editing.type]}
+      <Comp.EditorDialog
+        icon={editing && Comp.TODO_ICONS[editing.type]}
         open={Boolean(editing)}
         title={t(`pages:lbl-todo-types.${editing?.type}`)}
         onClose={() => setEditing(undefined)}
         onSubmit={() =>
           startTransition(() => {
+            onTodoCreate(editing as TodoValue);
             setEditing(undefined);
-
-            onChange({
-              ..._set(
-                config,
-                ['events', active.config.id, active.eventPath, nanoid(6)],
-                editing
-              ),
-            });
           })
         }
       >
-        {editing && <TodoFields value={editing} onChange={setEditing} />}
-      </EditorDialog>
+        {editing && <Comp.TodoFields value={editing} onChange={setEditing} />}
+      </Comp.EditorDialog>
     </>
   );
 }

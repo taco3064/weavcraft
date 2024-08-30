@@ -3,92 +3,61 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import CloseIcon from '@mui/icons-material/Close';
 import Core from '@weavcraft/core';
 import CropFreeIcon from '@mui/icons-material/CropFree';
+import Fab from '@mui/material/Fab';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import TuneIcon from '@mui/icons-material/Tune';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import _debounce from 'lodash/debounce';
 import { TodoEnum } from '@weavcraft/common';
-import { useReactFlow } from '@xyflow/react';
-import { useState } from 'react';
+import { useNodes, useReactFlow } from '@xyflow/react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { ViewModeEnum, type FlowToolbarProps } from './EventFlowEditor.types';
+import { TODO_ICONS } from '~web/components';
 import { useToolbarStyles } from './EventFlowEditor.styles';
+import type { FlowToolbarProps } from './EventFlowEditor.types';
 
-export const TODO_ICONS: Record<TodoEnum, Core.IconCode> = {
-  UpdateWidget: 'faPenToSquare',
-  Iterate: 'faArrowsRotate',
-  FetchData: 'faRightLeft',
-  Decision: 'faArrowsSplitUpAndLeft',
-  Variables: 'faTags',
-};
-
-export default function FlowToolbar({ onTodoAdd }: FlowToolbarProps) {
-  const [viewMode, setViewMode] = useState<ViewModeEnum>();
+export default function FlowToolbar({
+  fitViewDuration,
+  onTodoAdd,
+}: FlowToolbarProps) {
+  const [open, setOpen] = useState(false);
 
   const { t } = useTranslation('pages');
-  const { fitView, zoomIn, zoomOut } = useReactFlow();
+  const { fitView } = useReactFlow();
   const { classes, cx } = useToolbarStyles();
+
+  const nodes = useNodes();
+  const debounceFitView = useMemo(() => _debounce(fitView, 200), [fitView]);
+
+  useEffect(() => {
+    const handleResize = () =>
+      debounceFitView({ duration: fitViewDuration, nodes });
+
+    handleResize();
+    global.window?.addEventListener('resize', handleResize);
+
+    return () => global.window?.removeEventListener('resize', handleResize);
+  }, [debounceFitView, fitViewDuration, nodes]);
 
   return (
     <>
-      <ClickAwayListener
-        mouseEvent={viewMode === ViewModeEnum.Viewport ? 'onClick' : false}
-        touchEvent={viewMode === ViewModeEnum.Viewport ? 'onTouchStart' : false}
-        onClickAway={() => setViewMode(undefined)}
+      <Fab
+        className={cx(classes.root, classes.viewport)}
+        color="default"
+        size="large"
+        onClick={() => fitView({ duration: 400 })}
       >
-        <SpeedDial
-          FabProps={{ color: 'default', size: 'large' }}
-          ariaLabel="Viewport Controls"
-          className={cx(classes.root, classes.viewport)}
-          open={viewMode === ViewModeEnum.Viewport}
-          onClick={() => setViewMode(ViewModeEnum.Viewport)}
-          icon={
-            <SpeedDialIcon
-              icon={<TuneIcon fontSize="large" />}
-              openIcon={<CloseIcon fontSize="large" />}
-            />
-          }
-        >
-          <SpeedDialAction
-            FabProps={{ size: 'medium' }}
-            tooltipTitle={t('btn-fit-view')}
-            tooltipPlacement="right"
-            icon={<CropFreeIcon fontSize="large" />}
-            onClick={() => fitView({ duration: 400 })}
-          />
+        <CropFreeIcon fontSize="large" />
+      </Fab>
 
-          <SpeedDialAction
-            FabProps={{ size: 'medium' }}
-            tooltipTitle={t('btn-zoom-out')}
-            tooltipPlacement="right"
-            icon={<ZoomOutIcon fontSize="large" />}
-            onClick={() => zoomOut({ duration: 400 })}
-          />
-
-          <SpeedDialAction
-            FabProps={{ size: 'medium' }}
-            tooltipTitle={t('btn-zoom-in')}
-            tooltipPlacement="right"
-            icon={<ZoomInIcon fontSize="large" />}
-            onClick={() => zoomIn({ duration: 400 })}
-          />
-        </SpeedDial>
-      </ClickAwayListener>
-
-      <ClickAwayListener
-        mouseEvent={viewMode === ViewModeEnum.Toolbar ? 'onClick' : false}
-        touchEvent={viewMode === ViewModeEnum.Toolbar ? 'onTouchStart' : false}
-        onClickAway={() => setViewMode(undefined)}
-      >
+      <ClickAwayListener onClickAway={() => setOpen(false)}>
         <SpeedDial
           FabProps={{ color: 'secondary', size: 'large' }}
           ariaLabel="Toolbar"
           className={cx(classes.root, classes.toolbar)}
-          open={viewMode === ViewModeEnum.Toolbar}
-          onClick={() => setViewMode(ViewModeEnum.Toolbar)}
+          open={open}
+          onClick={() => setOpen(!open)}
           icon={
             <SpeedDialIcon
               icon={<AddIcon fontSize="large" />}
@@ -103,11 +72,7 @@ export default function FlowToolbar({ onTodoAdd }: FlowToolbarProps) {
               tooltipTitle={t(`lbl-todo-types.${type}`)}
               tooltipPlacement="left"
               icon={<Core.Icon code={icon} />}
-              onClick={(e) => {
-                e.stopPropagation();
-                onTodoAdd(type as TodoEnum);
-                setViewMode(undefined);
-              }}
+              onClick={() => onTodoAdd(type as TodoEnum)}
             />
           ))}
         </SpeedDial>

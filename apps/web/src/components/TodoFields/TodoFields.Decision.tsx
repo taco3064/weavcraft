@@ -16,7 +16,7 @@ export default function DecisionFields({
     <>
       <TextField
         {...DEFAULT_PROPS}
-        required
+        // required
         select
         label={t('lbl-decision-source')}
         value={value?.source ? JSON.stringify(value.source) : ''}
@@ -27,7 +27,7 @@ export default function DecisionFields({
 
       <TextField
         {...DEFAULT_PROPS}
-        required
+        // required
         select
         label={t('lbl-decision-operator')}
         value={value?.operator || ''}

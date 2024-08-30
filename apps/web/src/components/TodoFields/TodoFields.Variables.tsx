@@ -58,10 +58,16 @@ export default function VariableFields({
           <ListItem>
             <ListItemText
               primary={t('msg-variable-no-fields')}
+              secondary={<input required name="no-fields" />}
               primaryTypographyProps={{
                 variant: 'h6',
                 align: 'center',
                 color: 'text.disabled',
+              }}
+              secondaryTypographyProps={{
+                align: 'center',
+                height: 0,
+                overflow: 'hidden',
               }}
             />
           </ListItem>
@@ -205,7 +211,7 @@ export default function VariableFields({
           color="secondary"
           onClick={() => setFields([...fields, ['', {}]])}
         >
-          {t('btn-fetch-add-header')}
+          {t('btn-variable-add-field')}
         </Button>
       </AccordionActions>
     </Accordion>
