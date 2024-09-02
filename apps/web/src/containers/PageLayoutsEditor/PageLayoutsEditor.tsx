@@ -11,7 +11,7 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
-import EventFlowEditor from '../EventFlowEditor';
+import EventFlowEditor, { type ActiveEvent } from '../EventFlowEditor';
 import EventList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
@@ -21,7 +21,6 @@ import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
-import type { ActiveEvent } from '../EventFlowEditor.legacy';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
