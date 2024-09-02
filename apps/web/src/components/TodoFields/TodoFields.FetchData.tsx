@@ -16,6 +16,7 @@ import { RequestMethodEnum, type FetchDataTodo } from '@weavcraft/common';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import NoDataAvailable from './TodoFields.NoDataAvailable';
 import { DEFAULT_PROPS, useFieldsStyles } from './TodoFields.styles';
 import type { FieldsProps } from './TodoFields.types';
 
@@ -82,16 +83,7 @@ export default function FetchDataFields({
 
         <List component={AccordionDetails}>
           {headers.length === 0 && (
-            <ListItem>
-              <ListItemText
-                primary={t('msg-fetch-no-headers')}
-                primaryTypographyProps={{
-                  variant: 'h6',
-                  align: 'center',
-                  color: 'text.disabled',
-                }}
-              />
-            </ListItem>
+            <NoDataAvailable message={t('msg-fetch-no-headers')} />
           )}
 
           {headers.map(([key, val], index) => (

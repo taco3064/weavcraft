@@ -7,7 +7,7 @@ import { NAV_ITEMS, useHierarchyWidgets } from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { useTutorialMode } from '~web/contexts';
 import type { MenuDialogProps } from '~web/components';
-import type { WidgetLayout } from '../EventFlowEditor';
+import type { WidgetLayout } from '../EventFlowEditor.legacy';
 
 import {
   EnumHierarchyType,

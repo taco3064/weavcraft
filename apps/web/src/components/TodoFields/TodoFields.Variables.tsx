@@ -20,9 +20,10 @@ import {
   type VariableTodo,
 } from '@weavcraft/common';
 
+import NoDataAvailable from './TodoFields.NoDataAvailable';
 import PrimitiveField, { type PrimitiveType } from '../PrimitiveField';
 import { DEFAULT_PROPS, useFieldsStyles } from './TodoFields.styles';
-import type { FieldsProps } from './TodoFields.types';
+import type { FieldState, FieldsProps } from './TodoFields.types';
 
 export default function VariableFields({
   value,
@@ -31,14 +32,14 @@ export default function VariableFields({
   const { t } = useTranslation('pages');
   const { classes } = useFieldsStyles();
 
-  const [fields, setFields] = useState<
-    [string, Partial<NonNullable<typeof value>[string]>][]
-  >(Object.entries(value || {}));
+  const [fields, setFields] = useState<FieldState[]>(
+    Object.entries(value || {})
+  );
 
   const handleFieldChange = (
     index: number,
     name: string,
-    val: Partial<NonNullable<typeof value>[string]>
+    val: FieldState[1]
   ) => {
     const newFields = [...fields];
 
@@ -55,22 +56,7 @@ export default function VariableFields({
 
       <List component={AccordionDetails}>
         {fields.length === 0 && (
-          <ListItem>
-            <ListItemText
-              primary={t('msg-variable-no-fields')}
-              secondary={<input required name="no-fields" />}
-              primaryTypographyProps={{
-                variant: 'h6',
-                align: 'center',
-                color: 'text.disabled',
-              }}
-              secondaryTypographyProps={{
-                align: 'center',
-                height: 0,
-                overflow: 'hidden',
-              }}
-            />
-          </ListItem>
+          <NoDataAvailable required message={t('msg-variable-no-fields')} />
         )}
 
         {fields.map(([name, val], index) => (

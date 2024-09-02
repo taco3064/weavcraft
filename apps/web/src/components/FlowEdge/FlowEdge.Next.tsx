@@ -16,7 +16,9 @@ export default function NextEdge({
   targetY,
   ...props
 }: FlowEdgeProps) {
-  const [edgePath, labelX, labelY] = Flow.getSmoothStepPath({
+  const { deleteElements } = Flow.useReactFlow();
+
+  const [edgePath, labelX, labelY] = Flow.getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -25,15 +27,18 @@ export default function NextEdge({
     targetPosition,
   });
 
-  const { deleteElements } = Flow.useReactFlow();
-  const { classes } = useMainStyles({ labelX, labelY });
+  const { classes } = useMainStyles({
+    hasLabelText: Boolean(label),
+    labelX,
+    labelY,
+  });
 
   return (
     <>
-      <Flow.BaseEdge {...props} path={edgePath} />
+      <Flow.BaseEdge {...props} className={classes.root} path={edgePath} />
 
       <Flow.EdgeLabelRenderer>
-        <Paper className={classes.root}>
+        <Paper className={classes.label} elevation={0}>
           <Fab
             variant="extended"
             color="error"

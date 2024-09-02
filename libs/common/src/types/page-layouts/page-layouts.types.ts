@@ -8,6 +8,11 @@ export enum DefinitionTypeEnum {
   string = 'string',
 }
 
+export enum DecisionLogicEnum {
+  and = 'and',
+  or = 'or',
+}
+
 export enum DecisionOperatorEnum {
   between = 'between',
   contains = 'contains',
@@ -61,9 +66,12 @@ interface BaseTodo<T extends TodoEnum, Config, NextTodo extends string = 'next'>
 export type DecisionTodo = BaseTodo<
   TodoEnum.Decision,
   {
-    source: VariableSource;
-    target?: VariableSource;
-    operator: DecisionOperatorEnum;
+    logic: DecisionLogicEnum;
+    conditions: {
+      source: VariableSource;
+      target?: VariableSource;
+      operator: DecisionOperatorEnum;
+    }[];
   },
   'true' | 'false'
 >;
@@ -129,7 +137,8 @@ export interface PageLayoutConfigs {
     events?: {
       [componentId: string]: {
         [eventPath: string]: {
-          [todoId: string]: Todos;
+          dot: string;
+          todos: { [todoId: string]: Todos };
         };
       };
     };

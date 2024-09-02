@@ -15,11 +15,11 @@ export const NODE_BACKGROUND: Record<TodoEnum, Background> = {
 };
 
 export const TODO_ICONS: Record<TodoEnum, Core.IconCode> = {
-  [TodoEnum.UpdateWidget]: 'faPenToSquare',
-  [TodoEnum.FetchData]: 'faRightLeft',
-  [TodoEnum.Iterate]: 'faArrowsRotate',
-  [TodoEnum.Decision]: 'faArrowsSplitUpAndLeft',
   [TodoEnum.Variables]: 'faTags',
+  [TodoEnum.Decision]: 'faArrowsSplitUpAndLeft',
+  [TodoEnum.Iterate]: 'faArrowsRotate',
+  [TodoEnum.FetchData]: 'faRightLeft',
+  [TodoEnum.UpdateWidget]: 'faPenToSquare',
 };
 
 export const TODO_SOURCE: Partial<Record<TodoEnum, Record<string, Position>>> =

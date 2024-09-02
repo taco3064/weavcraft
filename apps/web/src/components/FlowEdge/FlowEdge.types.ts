@@ -3,6 +3,7 @@ import type { Todos } from '@weavcraft/common';
 import type { RequiredDeep, KeysOfUnion } from 'type-fest';
 
 export interface MainStyleParams {
+  hasLabelText: boolean;
   labelX: number;
   labelY: number;
 }

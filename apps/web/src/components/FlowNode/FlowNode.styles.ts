@@ -27,16 +27,5 @@ export const useMainStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(
       justifyContent: 'center',
       color: 'inherit',
     },
-    handle: {
-      background: theme.palette.text.secondary,
-      width: theme.spacing(1),
-      height: theme.spacing(1),
-      zIndex: theme.zIndex.fab,
-
-      '&:hover': {
-        borderColor: theme.palette.text.secondary,
-        background: theme.palette.secondary.main,
-      },
-    },
   })
 );

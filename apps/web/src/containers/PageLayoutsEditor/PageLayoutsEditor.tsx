@@ -21,7 +21,7 @@ import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
 import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
-import type { ActiveEvent, WidgetLayout } from '../EventFlowEditor';
+import type { ActiveEvent } from '../EventFlowEditor.legacy';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
@@ -38,27 +38,29 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   title,
   toolbarEl,
 }: PageLayoutsEditorProps) {
-  const isTutorialMode = useTutorialMode();
-  const margin = useMainMargin();
-
   const [, startTransition] = useTransition();
   const [activeEvent, setActiveEvent] = useState<ActiveEvent>();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
-  const [editing, setEditing] = useState<WidgetLayout>();
+  const [editing, setEditing] = useState<string>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
     !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))
   );
 
+  const isTutorialMode = useTutorialMode();
+  const margin = useMainMargin();
+  const layout = value.layouts?.find(({ id }) => id === editing);
+
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ margin, marginTop });
 
-  const { containerEl, onToggle } = useTogglePortal(() =>
-    setEditing(undefined)
-  );
+  const { containerEl, onToggle } = useTogglePortal(() => {
+    setActiveEvent(undefined);
+    setEditing(undefined);
+  });
 
   const [widgets, { onCreate, onLayoutChange, onRemove, onResize, onResort }] =
     useChangeEvents(breakpoint, viewMode, config, value, setValue);
@@ -163,7 +165,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                           onEventsEdit={() =>
                             startTransition(() => {
                               onToggle(true);
-                              setEditing(layout);
+                              setEditing(layout.id);
                             })
                           }
                         />
@@ -195,21 +197,25 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
         />
       </Slide>
 
-      {editing?.widgetId && widgets[editing?.widgetId] && (
+      {layout?.widgetId && widgets[layout.widgetId] && (
         <PortalWrapper containerEl={containerEl}>
           {!activeEvent ? (
             <EventList
-              widget={widgets[editing?.widgetId as string]}
+              widget={widgets[layout.widgetId]}
               onActive={setActiveEvent}
               onClose={() => onToggle(false)}
             />
           ) : (
             <EventFlowEditor
               active={activeEvent}
-              config={editing}
-              widget={widgets[editing?.widgetId as string]}
-              onChange={onLayoutChange}
-              onClose={() => setActiveEvent(undefined)}
+              config={layout}
+              widget={widgets[layout.widgetId]}
+              onClose={(config) =>
+                startTransition(() => {
+                  onLayoutChange(config);
+                  setActiveEvent(undefined);
+                })
+              }
             />
           )}
         </PortalWrapper>

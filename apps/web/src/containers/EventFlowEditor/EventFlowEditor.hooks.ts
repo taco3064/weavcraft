@@ -1,163 +1,156 @@
+import * as Flow from '@xyflow/react';
+import _cloneDeep from 'lodash/cloneDeep';
+import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
-import _set from 'lodash/set';
-import _unset from 'lodash/unset';
-import dagre from '@dagrejs/dagre';
-import { nanoid } from 'nanoid';
-import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import type { Connection } from '@xyflow/react';
-import type { Todos } from '@weavcraft/common';
+import { fromDot } from 'ts-graphviz';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { TodoEnum, Todos } from '@weavcraft/common';
 
-import { NODE_SIZE } from '~web/components';
+import type { EdgeType, TodoEdge, TodoNode, TodoValue } from '../imports.types';
 
 import type {
-  EventFlowEditorProps,
+  EventConfig,
   FlowElements,
+  TodoSource,
 } from './EventFlowEditor.types';
 
-import type {
-  EdgeType,
-  QueryFunctionParams,
-  TodoEdge,
-  TodoNode,
-  TodoValue,
-} from '../imports.types';
+const START_NODE: FlowElements.StartNode = {
+  id: 'start',
+  type: 'start',
+  data: {},
+  position: { x: 0, y: 0 },
+};
 
-export function useEventTodos({
-  active,
-  config,
-  onChange,
-}: Pick<EventFlowEditorProps, 'active' | 'config' | 'onChange'>) {
-  const paths = ['events', active.config.id, active.eventPath];
-  const todos: Record<string, Todos> = _get(config, paths);
+export function useAutoFitView(
+  fitViewDuration: number,
+  nodes: (FlowElements.StartNode | TodoNode)[]
+) {
+  const { fitView } = Flow.useReactFlow();
+  const disableFitViewRef = useRef(false);
+  const debounceFitView = useMemo(() => _debounce(fitView, 200), [fitView]);
 
-  return {
-    todos,
+  useEffect(() => {
+    console.log(disableFitViewRef.current);
 
-    onConnect: ({ source, sourceHandle, target }: Connection) => {
-      const { [source]: srcTodo } = todos;
+    if (!disableFitViewRef.current) {
+      const handleResize = () =>
+        debounceFitView({ duration: fitViewDuration, nodes });
 
-      if (
-        srcTodo &&
-        source !== target &&
-        !isCircularConnection(target, source, todos)
-      ) {
-        onChange({
-          ..._set(config, paths, {
-            ...todos,
-            [source]: {
-              ...srcTodo,
-              nextTodo: {
-                ...srcTodo.nextTodo,
-                [sourceHandle as string]: target,
-              },
-            },
-          }),
-        });
-      }
-    },
-    onEdgesDelete: (edges: TodoEdge[]) => {
-      edges.forEach(({ source, sourceHandle }) =>
-        _unset(todos, [source, 'nextTodo', sourceHandle as string])
-      );
+      handleResize();
+      global.window?.addEventListener('resize', handleResize);
 
-      onChange({ ..._set(config, paths, { ...todos }) });
-    },
-    onNodesDelete: (nodes: TodoNode[]) => {
-      nodes.forEach(({ id }) => _unset(todos, [id]));
-      onChange({ ..._set(config, paths, { ...todos }) });
-    },
-    onTodoCreate: (todo: TodoValue) =>
-      onChange({
-        ..._set(config, paths, { ...todos, [nanoid(6)]: todo }),
-      }),
-  };
+      return () => global.window?.removeEventListener('resize', handleResize);
+    }
+  }, [debounceFitView, fitViewDuration, nodes]);
+
+  return (disable: boolean) => (disableFitViewRef.current = disable);
 }
 
-export function useFlowLayout(todos: Record<string, Todos>) {
-  const elements = useMemo(
-    () =>
-      Object.entries(todos || {}).reduce<FlowElements>(
-        ({ edges, nodes }, [id, todo]) => {
-          nodes.push({
+export function useFlowElements(config: EventConfig) {
+  const [defaultElements] = useState<FlowElements.Value>(() => {
+    const todos: [string, Todos][] = Object.entries(config?.todos || {});
+    const graph = !config?.dot ? undefined : fromDot(config.dot);
+
+    return {
+      edges:
+        graph?.edges.map<TodoEdge>((edge) => {
+          const type = edge.attributes.get('layer') as EdgeType;
+
+          const [from, to] = edge.targets.map<string>((target) =>
+            _get(target, ['id'])
+          );
+
+          return {
+            id: `${from}-${to}`,
+            type: type,
+            source: from,
+            sourceHandle: type,
+            target: to,
+          };
+        }) || [],
+
+      nodes: todos.reduce<TodoNode[]>((acc, [id, todo]) => {
+        const pos = graph
+          ?.getNode(id)
+          ?.attributes.get('pos')
+          ?.split(',')
+          .map(Number);
+
+        if (Array.isArray(pos)) {
+          acc.push({
             id,
             type: todo.type,
             data: todo,
-            position: { x: 0, y: 0 },
+            position: { x: pos[0], y: pos[1] },
           });
+        }
 
-          Object.entries(todo.nextTodo || {}).forEach(
-            ([sourceHandle, target]) => {
-              if (!target || !todos[target]) {
-                return;
-              }
-
-              edges.push({
-                id: `${id}-${target}`,
-                type: sourceHandle as EdgeType,
-                source: id,
-                sourceHandle,
-                target,
-              });
-            }
-          );
-
-          return { edges, nodes };
-        },
-        { edges: [], nodes: [] }
-      ),
-    [todos]
-  );
-
-  const { data } = useQuery({
-    queryKey: [elements],
-    queryFn: getLayoutedElements,
+        return acc;
+      }, []),
+    };
   });
 
-  return {
-    nodes: data?.nodes || [],
-    edges: data?.edges || [],
-  };
-}
-
-function isCircularConnection(
-  next: string,
-  start: string,
-  todos: Record<string, Todos>
-): boolean {
-  const { [next]: todo } = todos;
-
-  return (
-    start === next ||
-    Object.values(todo?.nextTodo || {}).some((next) =>
-      isCircularConnection(next, start, todos)
-    )
+  const [edges, setEdges, onEdgesChange] = Flow.useEdgesState(
+    defaultElements.edges
   );
+
+  const [nodes, setNodes, onNodesChange] = Flow.useNodesState([
+    START_NODE,
+    ...defaultElements.nodes,
+  ]);
+
+  return [
+    { edges, nodes },
+
+    (...[type, values]: FlowElements.SetterArgs) =>
+      type === 'edges' ? setEdges(values) : setNodes(values),
+
+    (...[type, values]: FlowElements.ChangeEventArgs) =>
+      type === 'edges' ? onEdgesChange(values) : onNodesChange(values),
+  ] as const;
 }
 
-//* Auto Layout Algorithm
-async function getLayoutedElements({
-  queryKey: [{ edges, nodes }],
-}: QueryFunctionParams<[FlowElements]>): Promise<FlowElements> {
-  const graph = new dagre.graphlib.Graph();
+export function useTodoEditing() {
+  const [selectionOpen, setSelectionOpen] = useState(false);
+  const [source, setSource] = useState<TodoSource>();
 
-  graph.setGraph({ rankdir: 'TB', ranksep: 80, nodesep: 160 });
-  graph.setDefaultEdgeLabel(() => ({}));
-
-  nodes.forEach((node) => graph.setNode(node.id, { ...NODE_SIZE }));
-  edges.forEach(({ source, target }) => graph.setEdge(source, target));
-
-  dagre.layout(graph);
+  const [editing, setEditing] = useState<{
+    id?: string;
+    todo: TodoValue;
+  }>();
 
   return {
-    edges,
-    nodes: nodes.map((node) => {
-      const { x, y } = graph.node(node.id);
+    isSelectionOpen: selectionOpen,
+    editing,
+    source,
 
-      return {
-        ...node,
-        position: { x, y },
-      };
-    }),
+    onEditorChange: (todo: TodoValue) => setEditing({ ...editing, todo }),
+    onSelectionClose: () => setSelectionOpen(false),
+
+    onEditorClose: () => {
+      setEditing(undefined);
+      setSource(undefined);
+    },
+    onTypeSelect: (label: string) =>
+      setEditing({
+        todo: {
+          type: label.replace(/^pages:lbl-todo-types\./, '') as TodoEnum,
+        },
+      }),
+
+    flowHandlers: {
+      onCreateNode: (source: TodoSource) => {
+        setSource(source);
+        setSelectionOpen(true);
+      },
+      onNodeClick: (
+        _e: unknown,
+        { type, id, data }: FlowElements.StartNode | TodoNode
+      ) => {
+        if (type !== 'start') {
+          setEditing({ id, todo: _cloneDeep(data as TodoValue) });
+        }
+      },
+    },
   };
 }
