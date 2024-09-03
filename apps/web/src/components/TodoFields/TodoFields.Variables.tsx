@@ -137,39 +137,35 @@ export default function VariableFields({
               )}
 
               {val?.mode === VariableEnum.TodoOutput && (
-                <>
-                  <TextField
-                    {...DEFAULT_PROPS}
-                    required
-                    select
-                    label={t('lbl-variable-output')}
-                    value={val?.outputId || ''}
-                    onChange={(e) =>
-                      handleFieldChange(index, name, {
-                        ...val,
-                        outputId: e.target.value,
-                      })
-                    }
-                  />
-                </>
+                <TextField
+                  {...DEFAULT_PROPS}
+                  required
+                  select
+                  label={t('lbl-variable-output')}
+                  value={val?.outputId || ''}
+                  onChange={(e) =>
+                    handleFieldChange(index, name, {
+                      ...val,
+                      outputId: e.target.value,
+                    })
+                  }
+                />
               )}
 
               {val?.mode === VariableEnum.Widget && (
-                <>
-                  <TextField
-                    {...DEFAULT_PROPS}
-                    required
-                    select
-                    label={t('lbl-variable-dspaths')}
-                    value={value?.paths ? JSON.stringify(value.paths) : ''}
-                    onChange={(e) =>
-                      handleFieldChange(index, name, {
-                        ...val,
-                        paths: JSON.parse(e.target.value),
-                      })
-                    }
-                  />
-                </>
+                <TextField
+                  {...DEFAULT_PROPS}
+                  required
+                  select
+                  label={t('lbl-variable-dspaths')}
+                  value={value?.paths ? JSON.stringify(value.paths) : ''}
+                  onChange={(e) =>
+                    handleFieldChange(index, name, {
+                      ...val,
+                      paths: JSON.parse(e.target.value),
+                    })
+                  }
+                />
               )}
             </ListItemText>
 

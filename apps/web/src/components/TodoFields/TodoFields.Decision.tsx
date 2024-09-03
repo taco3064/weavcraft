@@ -19,8 +19,7 @@ import {
 } from '@weavcraft/common';
 
 import NoDataAvailable from './TodoFields.NoDataAvailable';
-import { DEFAULT_PROPS } from './TodoFields.styles';
-import { useFieldsStyles } from './TodoFields.styles';
+import { DEFAULT_PROPS, useFieldsStyles } from './TodoFields.styles';
 import type { ConditionState, FieldsProps } from './TodoFields.types';
 
 export default function DecisionFields({
