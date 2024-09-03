@@ -1,11 +1,13 @@
 {
   "btn-add-widget": "Add Widget",
+  "btn-decision-add-condition": "Add Condition",
   "btn-edit-events": "Edit Events",
   "btn-fetch-add-header": "Add Header",
   "btn-fit-view": "Fit View",
   "btn-iterate-add-source": "Add Source",
   "btn-layout-preview": "Layout Preview",
   "btn-variable-add-field": "Add Field",
+  "lbl-decision-logic": "Decision Logic",
   "lbl-decision-operator": "Operator",
   "lbl-decision-source": "Source Operand",
   "lbl-decision-target": "Target Value",
@@ -30,10 +32,13 @@
   "lbl-variable-type": "Definition Type",
   "msg-fetch-no-headers": "No Headers",
   "msg-iterate-no-sources": "No Iterate Sources",
+  "msg-orphan-confirm": "There are currently {{count}} orphaned event nodes. Do you want to automatically remove these event nodes upon closing?",
   "msg-variable-no-fields": "No Variable Fields",
   "ttl-add-todo": "Add Event Todo",
+  "ttl-conditions": "Conditions",
   "ttl-fetch-headers": "Headers",
   "ttl-iterate-sources": "Iterate Sources",
+  "ttl-orphan-confirm": "Confirm Orphaned Event Nodes",
   "ttl-variables": "Variables",
   "ttl-widget-events": "Widget Events",
   "lbl-todo-types": {
@@ -54,9 +59,30 @@
     "false": "False",
     "true": "True"
   },
+  "opt-decision-logics": {
+    "and": "All conditions met",
+    "or": "Any condition met"
+  },
+  "opt-decision-operators": {
+    "between": "Between",
+    "contains": "Contains",
+    "endsWith": "Ends With",
+    "equals": "Equals",
+    "gt": "Greater Than",
+    "gte": "Greater Than or Equal To",
+    "isEmpty": "Is Empty",
+    "lt": "Less Than",
+    "lte": "Less Than or Equal To",
+    "startsWith": "Starts With"
+  },
   "opt-iterate-source-types": {
     "Multiple": "Multiple",
     "Single": "Single"
+  },
+  "opt-source-types": {
+    "next": "Bind or add subsequent event nodes",
+    "false": "Subsequent event nodes when the binding or addition condition is not met",
+    "true": "Subsequent event nodes when the binding or addition condition is met"
   },
   "opt-variable-types": {
     "boolean": "Boolean",

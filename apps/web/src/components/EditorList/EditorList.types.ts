@@ -8,5 +8,6 @@ export interface EditorListProps {
   icon?: ReactNode;
   title: ReactNode;
   render: (classes: EditorListClasses) => ReactNode;
+  renderCloseButton?: (options: Pick<EditorListProps, 'onClose'>) => ReactNode;
   onClose?: () => void;
 }

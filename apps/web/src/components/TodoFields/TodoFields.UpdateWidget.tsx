@@ -1,4 +1,3 @@
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'next-i18next';
 import type { UpdateWidgetTodo } from '@weavcraft/common';

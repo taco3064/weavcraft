@@ -15,6 +15,7 @@ export default function EditorList({
   icon,
   title,
   render,
+  renderCloseButton,
   onClose,
 }: EditorListProps) {
   const { classes, cx } = useMainStyles();
@@ -51,10 +52,16 @@ export default function EditorList({
               }}
             />
 
-            {icon && onClose && (
-              <IconButton size="large" onClick={onClose}>
-                <Core.Icon code="faClose" />
-              </IconButton>
+            {icon && (
+              <>
+                {renderCloseButton?.({ onClose })}
+
+                {!renderCloseButton && onClose && (
+                  <IconButton size="large" onClick={onClose}>
+                    <Core.Icon code="faClose" />
+                  </IconButton>
+                )}
+              </>
             )}
           </ListSubheader>
         }

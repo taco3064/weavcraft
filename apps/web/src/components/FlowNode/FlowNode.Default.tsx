@@ -25,7 +25,9 @@ export default function FlowNode({ data, id, selected }: FlowNodeProps) {
 
       {Object.entries(TODO_SOURCE[type] || { next: Position.Bottom }).map(
         ([id, position]) => (
-          <FlowHandle key={id} id={id} position={position} type="source" />
+          <Tooltip key={id} title={t(`pages:opt-source-types.${id}`)}>
+            <FlowHandle id={id} position={position} type="source" />
+          </Tooltip>
         )
       )}
 

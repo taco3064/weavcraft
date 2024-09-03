@@ -1,13 +1,19 @@
 import cx from 'clsx';
 import { Handle, Position } from '@xyflow/react';
+import { forwardRef } from 'react';
 import { withStyles } from 'tss-react/mui';
 
 import type { FlowHandleProps } from './ReactFlow.types';
 
 export const FlowHandle = withStyles(
-  ({ className, classes, ...props }: FlowHandleProps) => (
-    <Handle {...props} className={cx(classes?.root, className)} />
-  ),
+  forwardRef<HTMLDivElement, FlowHandleProps>(function FlowHandle(
+    { className, classes, ...props },
+    ref
+  ) {
+    return (
+      <Handle {...props} ref={ref} className={cx(classes?.root, className)} />
+    );
+  }),
   (theme, { position }) => {
     const isVertical = [Position.Left, Position.Right].includes(position);
 

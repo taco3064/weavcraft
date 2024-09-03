@@ -1,11 +1,13 @@
 {
   "btn-add-widget": "新增組件",
+  "btn-decision-add-condition": "新增條件",
   "btn-edit-events": "編輯事件",
   "btn-fetch-add-header": "新增 Header",
   "btn-fit-view": "自動調整視圖",
   "btn-iterate-add-source": "新增來源",
   "btn-layout-preview": "預覽外觀",
   "btn-variable-add-field": "新增參數",
+  "lbl-decision-logic": "判斷邏輯",
   "lbl-decision-operator": "判斷條件",
   "lbl-decision-source": "判斷來源",
   "lbl-decision-target": "目標值",
@@ -30,10 +32,13 @@
   "lbl-variable-type": "參數型態",
   "msg-fetch-no-headers": "尚未設置相關 Headers",
   "msg-iterate-no-sources": "尚未設置相關來源",
+  "msg-orphan-confirm": "目前有 {{count}} 個未連結的事件節點。確認關閉後自動移除這些事件節點嗎？",
   "msg-variable-no-fields": "尚未設置相關參數",
   "ttl-add-todo": "新增執行事項",
+  "ttl-conditions": "條件",
   "ttl-fetch-headers": "Headers",
   "ttl-iterate-sources": "迭代處理來源",
+  "ttl-orphan-confirm": "確認未連結事件節點",
   "ttl-variables": "參數一覽",
   "ttl-widget-events": "組件事件",
   "lbl-todo-types": {
@@ -54,9 +59,30 @@
     "false": "否",
     "true": "是"
   },
+  "opt-decision-logics": {
+    "and": "所有條件達成",
+    "or": "任一條件達成"
+  },
+  "opt-decision-operators": {
+    "between": "介於",
+    "contains": "包含",
+    "endsWith": "結尾是",
+    "equals": "等於",
+    "gt": "大於",
+    "gte": "大於或等於",
+    "isEmpty": "為空",
+    "lt": "小於",
+    "lte": "小於或等於",
+    "startsWith": "開頭是"
+  },
   "opt-iterate-source-types": {
     "Multiple": "多個",
     "Single": "單一"
+  },
+  "opt-source-types": {
+    "next": "綁定或新增後續事件節點",
+    "false": "綁定或新增條件未達成時的後續事件節點",
+    "true": "綁定或新增條件達成時的後續事件節點"
   },
   "opt-variable-types": {
     "boolean": "布林值",

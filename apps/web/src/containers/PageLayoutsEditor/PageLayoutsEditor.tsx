@@ -11,7 +11,7 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
-import EventFlowEditor, { type ActiveEvent } from '../EventFlowEditor';
+import EventFlowManager, { type ActiveEvent } from '../EventFlowManager';
 import EventList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
@@ -205,7 +205,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               onClose={() => onToggle(false)}
             />
           ) : (
-            <EventFlowEditor
+            <EventFlowManager
               active={activeEvent}
               config={layout}
               widget={widgets[layout.widgetId]}
