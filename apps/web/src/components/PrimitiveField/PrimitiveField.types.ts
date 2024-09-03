@@ -14,17 +14,24 @@ export type PrimitiveDefinition = NonNullable<
   Get<PropDefinition.PrimitiveValue, ['primitiveValueProps', string]>
 >;
 
-export type PrimitiveType = Get<PrimitiveDefinition, ['type']>;
+export type PrimitiveType = Get<PrimitiveDefinition, ['type']> | 'date';
 
 //* Component Props
 type DefaultPrimitiveFieldProps = Pick<
   Core.BaseFieldProps<PrimitiveValueProp['value']>,
-  'label' | 'name' | 'required' | 'size' | 'variant'
+  'color' | 'disabled' | 'label' | 'name' | 'required' | 'size' | 'variant'
 >;
 
 export type PrimitiveFieldProps<T extends PrimitiveType> =
   DefaultPrimitiveFieldProps & {
-    definition: Extract<PrimitiveDefinition, { type: T }>;
+    disableAdornment?: boolean;
+    definition:
+      | Extract<PrimitiveDefinition, { type: T }>
+      | {
+          required: boolean;
+          type: 'date';
+          definition?: undefined;
+        };
     onChange?: (value?: PrimitiveValueProp['value'], name?: string) => void;
   } & Pick<
       Exclude<
@@ -35,6 +42,8 @@ export type PrimitiveFieldProps<T extends PrimitiveType> =
           : T extends 'number'
           ? Core.NumericFieldProps
           : T extends 'string'
+          ? Core.BaseFieldProps<string>
+          : T extends 'date'
           ? Core.BaseFieldProps<string>
           : T extends 'oneof'
           ? Core.SingleSelectFieldProps<

@@ -119,7 +119,7 @@ export default function MenuDialog({
                 <MenuList>
                   {!options.length ? (
                     <MenuItem disabled className={classes.item}>
-                      <Typography variant="h6" color="text.secondary">
+                      <Typography variant="h6" color="text.disabled">
                         <Trans i18nKey="msg-no-data" />
                       </Typography>
                     </MenuItem>

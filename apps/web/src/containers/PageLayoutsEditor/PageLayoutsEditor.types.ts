@@ -1,5 +1,5 @@
 import type { ResponsiveGridProps } from '@weavcraft/core';
-import type { WidgetLayout } from '../EventList';
+import type { WidgetLayout } from '../EventFlowManager';
 
 import type {
   BaseEditorProps,

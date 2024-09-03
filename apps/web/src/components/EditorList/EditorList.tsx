@@ -10,18 +10,20 @@ import { useMainStyles } from './EditorList.styles';
 import type { EditorListProps } from './EditorList.types';
 
 export default function EditorList({
+  className,
   description,
   icon,
   title,
   render,
+  renderCloseButton,
   onClose,
 }: EditorListProps) {
-  const { classes } = useMainStyles();
+  const { classes, cx } = useMainStyles();
 
   return (
     <Fade in timeout={1200}>
       <List
-        className={classes.root}
+        className={cx(classes.root, className)}
         subheader={
           <ListSubheader className={classes.subheader}>
             {(icon || onClose) && (
@@ -50,10 +52,16 @@ export default function EditorList({
               }}
             />
 
-            {icon && onClose && (
-              <IconButton size="large" onClick={onClose}>
-                <Core.Icon code="faClose" />
-              </IconButton>
+            {icon && (
+              <>
+                {renderCloseButton?.({ onClose })}
+
+                {!renderCloseButton && onClose && (
+                  <IconButton size="large" onClick={onClose}>
+                    <Core.Icon code="faClose" />
+                  </IconButton>
+                )}
+              </>
             )}
           </ListSubheader>
         }

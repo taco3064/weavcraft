@@ -13,7 +13,7 @@ import Core, {
 
 import { MenuDialog, Link } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
-import { useBreadcrumbsStyles } from './Breadcrumbs.styles';
+import { useMainStyles } from './Breadcrumbs.styles';
 import { useTutorialMode } from '~web/contexts';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
 
@@ -36,7 +36,7 @@ export default function Breadcrumbs({
 
   const { back } = useRouter();
   const { matched: maxItems } = useBreakpointMatches(MAX_ITEMS);
-  const { classes } = useBreadcrumbsStyles({ stickyTop });
+  const { classes } = useMainStyles({ stickyTop });
 
   const isTutorialMode = useTutorialMode();
 

@@ -4,10 +4,7 @@ import type {
   GetChildNodesFn,
   GetCorePropsFn,
   HierarchyWidget,
-  PageLayoutConfigs,
 } from '../imports.types';
-
-export type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
 export type EventGetterOptions = {
   getChildNodes: GetChildNodesFn;
@@ -22,7 +19,6 @@ export interface EventItem {
 
 //* Component Props
 export interface EventListProps extends Pick<EditorListProps, 'onClose'> {
-  config: WidgetLayout;
   widget: HierarchyWidget;
   onActive: (e: Pick<EventItem, 'config' | 'eventPath'>) => void;
 }
