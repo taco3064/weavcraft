@@ -81,7 +81,7 @@ export default function DecisionFields({
               <ListItemText disableTypography>
                 <TextField
                   {...DEFAULT_PROPS}
-                  // required
+                  //! required
                   select
                   label={t('lbl-decision-source')}
                   value={
@@ -97,7 +97,7 @@ export default function DecisionFields({
 
                 <TextField
                   {...DEFAULT_PROPS}
-                  // required
+                  //! required
                   select
                   label={t('lbl-decision-operator')}
                   value={condition?.operator || ''}

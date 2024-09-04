@@ -4,7 +4,7 @@ import type Core from '@weavcraft/core';
 
 import type { Background } from './FlowNode.types';
 
-export const NODE_SIZE = { width: 240, height: 60 };
+export const NODE_SIZE = { width: 240, height: 78 };
 
 export const NODE_BACKGROUND: Record<TodoEnum, Background> = {
   [TodoEnum.Decision]: 'warning',

@@ -50,7 +50,7 @@ export default function IterateFields({
               primary={
                 <TextField
                   {...DEFAULT_PROPS}
-                  required
+                  //! required
                   select
                   label={t('lbl-iterate-source')}
                   value={source ? JSON.stringify(source) : ''}
