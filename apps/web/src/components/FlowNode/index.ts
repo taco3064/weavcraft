@@ -1,11 +1,14 @@
 import { TodoEnum } from '@weavcraft/common';
 import type { ComponentType } from 'react';
 
-import FlowNode from './FlowNode.Default';
+import FlowNode from './FlowNode.Node';
 import SubFlow from './FlowNode.Sub';
-import type { FlowNodeProps, TodoNode } from './FlowNode.types';
+import type { FlowNodeProps, SubFlowProps, TodoNode } from './FlowNode.types';
 
-export const FlowNodes: Record<TodoEnum, ComponentType<FlowNodeProps>> = {
+export const FlowNodes: Record<
+  TodoEnum,
+  ComponentType<FlowNodeProps> | ComponentType<SubFlowProps>
+> = {
   [TodoEnum.Decision]: FlowNode,
   [TodoEnum.FetchData]: FlowNode,
   [TodoEnum.Iterate]: SubFlow,
@@ -15,4 +18,4 @@ export const FlowNodes: Record<TodoEnum, ComponentType<FlowNodeProps>> = {
 
 export default FlowNodes;
 export { NODE_SIZE, TODO_ICONS } from './FlowNode.const';
-export type { FlowNodeProps, TodoNode };
+export type { FlowNodeProps, SubFlowProps, TodoNode };
