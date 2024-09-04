@@ -1,31 +1,50 @@
 import _get from 'lodash/get';
 import { makeStyles } from 'tss-react/mui';
 
-import * as CONST from './FlowNode.const';
+import { NODE_BACKGROUND } from './FlowNode.const';
 import type { MainStyleParams } from './FlowNode.types';
 
-export const useMainStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(
-  (theme, { type }) => ({
-    root: {
-      borderRadius: theme.spacing(2),
-      color: theme.palette.primary.main,
-      padding: theme.spacing(1),
-      ...CONST.NODE_SIZE,
+export const useSubFlowStyles = makeStyles({ name: 'SubFlow' })((theme) => ({
+  divider: {
+    borderColor: _get(theme.palette, [NODE_BACKGROUND.Iterate, 'main']),
+    borderWidth: 1,
+    borderStyle: 'dashed',
+  },
+  line: {
+    display: 'none !important',
+  },
+  resizer: {
+    background: `${theme.palette.divider} !important`,
+    width: `${theme.spacing(2)} !important`,
+    height: `${theme.spacing(2)} !important`,
 
-      background: `${_get(theme.palette, [
-        CONST.NODE_BACKGROUND[type],
-        'main',
-      ])} !important`,
+    '&.top': {
+      display: 'none !important',
+    },
+  },
+}));
 
-      '&:hover': {
-        opacity: 0.8,
-        transform: 'scale(1.02)',
+export const useLabelStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(
+  (theme, { borderStyle, size, type }) => {
+    const color = _get(theme.palette, [NODE_BACKGROUND[type], 'main']);
+
+    return {
+      root: {
+        borderRadius: theme.spacing(2),
+        border: `2px ${borderStyle} ${color}`,
+        color,
+        minWidth: size.width,
+        minHeight: size.height,
+        height: '100%',
       },
-    },
-    icon: {
-      minWidth: theme.spacing(5),
-      justifyContent: 'center',
-      color: 'inherit',
-    },
-  })
+      action: {
+        marginTop: '0 !important',
+        marginBottom: '0 !important',
+      },
+      avatar: {
+        background: color,
+        color: _get(theme.palette, [NODE_BACKGROUND[type], 'contrastText']),
+      },
+    };
+  }
 );

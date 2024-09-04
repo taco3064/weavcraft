@@ -6,13 +6,15 @@ import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import Tooltip from '@mui/material/Tooltip';
+import { forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import * as Comp from '~web/components';
 import StartNode from './EventFlowManager.StartNode';
-import { EditorModeEnum, type EditorProps } from './EventFlowManager.types';
+import { EditorModeEnum } from './EventFlowManager.types';
 import { SlideDownTransition } from '~web/themes';
 import { useEditorStyles } from './EventFlowManager.styles';
+import type { DoneRef, EditorProps } from './EventFlowManager.types';
 
 import {
   useFlowProps,
@@ -23,12 +25,10 @@ import {
 const FIT_VIEW_DURATION = 400;
 const NODE_TYPES = { ...Comp.FlowNodes, start: StartNode };
 
-export default function Editor({
-  title,
-  description,
-  onClose,
-  ...props
-}: EditorProps) {
+export default forwardRef<DoneRef, EditorProps>(function Editor(
+  { title, description, onClose, ...props },
+  ref
+) {
   const { fitView } = Flow.useReactFlow();
   const { t } = useTranslation('pages');
   const { classes, theme } = useEditorStyles();
@@ -40,6 +40,8 @@ export default function Editor({
 
   const [{ mode, editing }, editingHandlers] = useTodoEdit(setFlowState);
   const [orphanCount, onDone] = useValidation({ edges, nodes, onClose });
+
+  useImperativeHandle(ref, () => onDone, [onDone]);
 
   return (
     <>
@@ -75,6 +77,7 @@ export default function Editor({
               edgeTypes={Comp.FlowEdges}
               nodeTypes={NODE_TYPES}
               onConnectEnd={editingHandlers.onNodeCreate}
+              onConnectStart={editingHandlers.onClientPosition}
               onNodeClick={editingHandlers.onNodeEdit}
               defaultEdgeOptions={{
                 style: {
@@ -147,4 +150,4 @@ export default function Editor({
       </Comp.EditorDialog>
     </>
   );
-}
+});

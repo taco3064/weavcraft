@@ -5,11 +5,11 @@ import type { EventItem } from '../EventList';
 
 import type {
   EdgeType,
-  HierarchyWidget,
   PageLayoutConfigs,
   TodoEdge,
   TodoNode,
   TodoValue,
+  WidgetConfigs,
 } from '../imports.types';
 
 export enum EditorModeEnum {
@@ -19,10 +19,16 @@ export enum EditorModeEnum {
 }
 
 export type ActiveEvent = Pick<EventItem, 'config' | 'eventPath'>;
+export type DoneRef = () => void;
 export type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
 export type EventConfig = Partial<
   Get<WidgetLayout, ['events', string, string]>
+>;
+
+export type NodeAttrs = Record<
+  'pos' | 'group' | 'width' | 'height',
+  string | undefined
 >;
 
 export type SetFlowStateArgs =
@@ -37,6 +43,7 @@ export interface EditingTodo {
     | string
     | {
         source: string;
+        parentId?: string;
         position: { x: number; y: number };
         type: EdgeType;
       };
@@ -46,7 +53,7 @@ export interface EditingTodo {
 export interface EventFlowManagerProps {
   active: ActiveEvent;
   config: WidgetLayout;
-  widget: HierarchyWidget;
+  widgets: WidgetConfigs[];
   onClose: (e: WidgetLayout) => void;
 }
 

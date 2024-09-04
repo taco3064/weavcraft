@@ -1,6 +1,7 @@
 {
   "btn-add-widget": "Add Widget",
   "btn-decision-add-condition": "Add Condition",
+  "btn-delete-todo": "Delete Event Todo",
   "btn-edit-events": "Edit Events",
   "btn-fetch-add-header": "Add Header",
   "btn-fit-view": "Fit View",
@@ -30,6 +31,7 @@
   "lbl-variable-name": "Field Name",
   "lbl-variable-output": "Output Result",
   "lbl-variable-type": "Definition Type",
+  "msg-delete-todo-confirm": "Are you sure you want to delete \"{{name}}\"?",
   "msg-fetch-no-headers": "No Headers",
   "msg-iterate-no-sources": "No Iterate Sources",
   "msg-orphan-confirm": "There are currently {{count}} orphaned event nodes. Do you want to automatically remove these event nodes upon closing?",

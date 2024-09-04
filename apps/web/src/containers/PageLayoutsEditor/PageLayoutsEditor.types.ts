@@ -16,6 +16,7 @@ export interface ChangeEvents
   extends Pick<WidgetCreateButtonProps, 'onCreate'>,
     Pick<ResponsiveGridProps<WidgetLayout>, 'onResize' | 'onResort'> {
   onLayoutChange: (layout: WidgetLayout) => void;
+  onManagerDone: () => void;
   onRemove: (layoutId: string) => void;
 }
 

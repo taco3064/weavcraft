@@ -9,7 +9,9 @@ export function useHierarchyWidgets(
   layouts: PageLayoutConfigs['layouts'],
   isTutorialMode = false
 ) {
-  const [widgets, setWidgets] = useState<Record<string, HierarchyWidget>>({});
+  const [hierarchyWidgets, setHierarchyWidgets] = useState<
+    Record<string, HierarchyWidget>
+  >({});
 
   const { data: hierarchies } = useQuery({
     enabled: Boolean(layouts.length),
@@ -23,7 +25,7 @@ export function useHierarchyWidgets(
   });
 
   useEffect(() => {
-    setWidgets(
+    setHierarchyWidgets(
       (hierarchies || []).reduce(
         (acc, hierarchy) => ({
           ...acc,
@@ -34,5 +36,5 @@ export function useHierarchyWidgets(
     );
   }, [hierarchies]);
 
-  return [widgets, setWidgets] as const;
+  return [hierarchyWidgets, setHierarchyWidgets] as const;
 }

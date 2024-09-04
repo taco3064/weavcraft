@@ -1,4 +1,5 @@
 export * from './useAppMenuItems';
+export * from './useEventFlow';
 export * from './useHierarchyWidgets';
 export * from './useInitializationConfig';
 export * from './useMainContainer';

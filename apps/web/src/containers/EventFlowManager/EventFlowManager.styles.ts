@@ -27,6 +27,9 @@ export const useEditorStyles = makeStyles({ name: 'Editor' })((theme) => ({
     '& div:has(> a[aria-label="React Flow attribution"])': {
       display: 'none !important',
     },
+    '& div.react-flow__edges': {
+      zIndex: theme.zIndex.tooltip,
+    },
   },
   fitView: {
     position: 'absolute',

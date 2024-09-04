@@ -40,7 +40,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const [, startTransition] = useTransition();
   const [activeEvent, setActiveEvent] = useState<ActiveEvent>();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
-  const [editing, setEditing] = useState<string>();
+  const [editingLayoutId, setEditingLayoutId] = useState<string>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
@@ -49,20 +49,23 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
 
   const isTutorialMode = useTutorialMode();
   const margin = useMainMargin();
-  const layout = value.layouts?.find(({ id }) => id === editing);
+  const layout = value.layouts?.find(({ id }) => id === editingLayoutId);
 
   const { t } = useTranslation();
   const { query } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ margin, marginTop });
 
-  const { containerEl, onToggle } = useTogglePortal(() => {
-    setActiveEvent(undefined);
-    setEditing(undefined);
-  });
+  const [
+    managerRef,
+    hierarchyWidgets,
+    { onCreate, onLayoutChange, onManagerDone, onRemove, onResize, onResort },
+  ] = useChangeEvents(breakpoint, viewMode, config, value, setValue);
 
-  const [widgets, { onCreate, onLayoutChange, onRemove, onResize, onResort }] =
-    useChangeEvents(breakpoint, viewMode, config, value, setValue);
+  const { containerEl, onToggle } = useTogglePortal(() => {
+    setEditingLayoutId(undefined);
+    onManagerDone();
+  });
 
   const generate = useWidgetRender((WidgetEl, { key, props }) => (
     <WidgetEl key={key} {...props} />
@@ -151,7 +154,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               })}
               renderItem={(layout) => {
                 const { id, spans, widgetId } = layout;
-                const { [widgetId]: hierarchy } = widgets;
+                const { [widgetId]: hierarchy } = hierarchyWidgets;
 
                 return (
                   <ResponsiveItem
@@ -164,7 +167,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                           onEventsEdit={() =>
                             startTransition(() => {
                               onToggle(true);
-                              setEditing(layout.id);
+                              setEditingLayoutId(layout.id);
                             })
                           }
                         />
@@ -196,19 +199,22 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
         />
       </Slide>
 
-      {layout?.widgetId && widgets[layout.widgetId] && (
+      {layout?.widgetId && hierarchyWidgets[layout.widgetId] && (
         <PortalWrapper containerEl={containerEl}>
           {!activeEvent ? (
             <EventList
-              widget={widgets[layout.widgetId]}
+              hierarchyWidget={hierarchyWidgets[layout.widgetId]}
               onActive={setActiveEvent}
               onClose={() => onToggle(false)}
             />
           ) : (
             <EventFlowManager
+              ref={managerRef}
               active={activeEvent}
               config={layout}
-              widget={widgets[layout.widgetId]}
+              widgets={Object.values(hierarchyWidgets).map(
+                ({ payload }) => payload
+              )}
               onClose={(config) =>
                 startTransition(() => {
                   onLayoutChange(config);

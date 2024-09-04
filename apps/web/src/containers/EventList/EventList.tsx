@@ -13,17 +13,17 @@ import { useEventItems } from './EventList.hooks';
 import type { EventListProps } from './EventList.types';
 
 export default function EventList({
-  widget,
+  hierarchyWidget: { title, payload: widget },
   onActive,
   onClose,
 }: EventListProps) {
   const { t } = useTranslation();
-  const items = useEventItems(widget.payload);
+  const items = useEventItems(widget);
 
   return (
     <EditorList
       title={t('pages:ttl-widget-events')}
-      description={widget.title}
+      description={title}
       onClose={onClose}
       render={(classes) =>
         items.map(([nodePath, items], i) => (

@@ -2,12 +2,12 @@ import * as Flow from '@xyflow/react';
 import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import { TodoEnum, type Todos } from '@weavcraft/common';
 import { digraph, fromDot, toDot } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { TodoEnum, Todos } from '@weavcraft/common';
 
-import { NODE_SIZE } from '~web/components';
+import { NODE_SIZE, START_NODE, SUB_FLOW_SIZE } from '~web/components';
 import { EditorModeEnum } from './EventFlowManager.types';
 import type { EdgeType, TodoEdge, TodoNode, TodoValue } from '../imports.types';
 
@@ -15,15 +15,9 @@ import type {
   EditingTodo,
   EditorProps,
   EventFlowManagerProps,
+  NodeAttrs,
   SetFlowStateArgs,
 } from './EventFlowManager.types';
-
-const START_NODE: TodoNode = {
-  id: 'start',
-  type: 'start',
-  data: {} as Todos,
-  position: { x: 0, y: 0 },
-};
 
 export function useInitialization({
   active,
@@ -57,18 +51,37 @@ export function useInitialization({
 
         nodes: todos.reduce<TodoNode[]>(
           (acc, [id, todo]) => {
-            const pos = graph
-              ?.getNode(id)
-              ?.attributes.get('pos')
-              ?.split(',')
-              .map(Number);
+            const attrs = Object.fromEntries(
+              graph?.getNode(id)?.attributes.values || []
+            ) as NodeAttrs;
 
-            if (Array.isArray(pos)) {
+            if (attrs.pos) {
+              const [x, y] = attrs.pos.split(',').map(Number);
+
               acc.push({
                 id,
                 type: todo.type,
                 data: todo,
-                position: { x: pos[0], y: pos[1] },
+                width: Number(attrs.width),
+                height: Number(attrs.height),
+                position: { x, y },
+                ...(attrs.group && {
+                  parentId: attrs.group,
+                  extent: 'parent',
+                }),
+              });
+            }
+
+            if (todo.type === TodoEnum.Iterate) {
+              acc.push({
+                ...START_NODE,
+                id: `${START_NODE.id}-${id}`,
+                parentId: id,
+                extent: 'parent',
+                position: {
+                  x: (Number(attrs.width) - NODE_SIZE.width) / 2,
+                  y: NODE_SIZE.height,
+                },
               });
             }
 
@@ -81,11 +94,14 @@ export function useInitialization({
 
     ({ edges, nodes }: Pick<EditorProps, 'edges' | 'nodes'>) => {
       const graph = digraph('G', (g) => {
-        nodes.forEach(({ id, position }) =>
-          g
-            .node(id, { ...NODE_SIZE })
-            .attributes.set('pos', `${position.x},${position.y}`)
-        );
+        nodes.forEach(({ id, position, parentId, width, height }) => {
+          const node = g.node(id, { width, height });
+
+          node.attributes.set('group', parentId || '');
+          node.attributes.set('pos', `${position.x},${position.y}`);
+          node.attributes.set('width', width as number);
+          node.attributes.set('height', height as number);
+        });
 
         edges.forEach(({ source, sourceHandle, target }) =>
           g
@@ -95,10 +111,10 @@ export function useInitialization({
       });
 
       const todos = nodes.reduce<Record<string, Todos>>((acc, { id, data }) => {
-        if (id !== 'start') {
+        if (!id.startsWith(START_NODE.id)) {
           const todo: Todos = {
             ...(data as Todos),
-            nextTodos: edges
+            nextTodo: edges
               .filter(({ source }) => source === id)
               .reduce<Record<string, string>>(
                 (acc, { sourceHandle, target }) => ({
@@ -167,8 +183,7 @@ export function useFlowProps(
         onNodesChange(
           e.filter(
             (change) =>
-              _get(change, ['id']) !== START_NODE.id ||
-              change.type !== 'position'
+              change.type !== 'position' || !change.id.startsWith(START_NODE.id)
           )
         ),
       onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
@@ -191,6 +206,7 @@ export function useFlowProps(
 export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
   const { screenToFlowPosition } = Flow.useReactFlow();
   const [editing, setEditing] = useState<EditingTodo>();
+  const clientRef = useRef<Flow.XYPosition>();
 
   return [
     { mode: editing?.mode, editing },
@@ -201,6 +217,9 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
       onEditingChange: (todo: TodoValue) =>
         setEditing({ ...editing, todo } as EditingTodo),
 
+      onClientPosition: (e: MouseEvent | TouchEvent) => {
+        clientRef.current = getClientPosition(e);
+      },
       onTypeSelect: (label: string) =>
         setEditing({
           ...editing,
@@ -216,33 +235,46 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
       ) => {
         if (
           toNode ||
+          !clientRef.current ||
           !fromHandle ||
           !fromNode ||
           fromHandle.type === 'target' ||
-          _get(fromNode, ['data', 'nextTodos', fromHandle.id as string])
+          _get(fromNode, ['data', 'nextTodo', fromHandle.id as string])
         ) {
           return;
         }
 
-        const { x, y } = screenToFlowPosition({
-          x: _get(e, ['clientX']) as number,
-          y: _get(e, ['clientY']) as number,
-        });
+        const start = clientRef.current;
+        const end = getClientPosition(e);
+
+        clientRef.current = undefined;
 
         setEditing({
           mode: EditorModeEnum.TypeSelection,
           payload: {
-            source: fromNode.id,
             type: fromHandle.id as EdgeType,
-            position: {
-              y,
-              x: x - NODE_SIZE.width / 2,
-            },
+            source: fromNode.id,
+            ...(!fromNode.parentId
+              ? { position: screenToFlowPosition(end) }
+              : {
+                  parentId: fromNode.parentId,
+                  position: {
+                    x:
+                      end.x -
+                      start.x +
+                      fromNode.position.x +
+                      (fromNode.width as number) / 2,
+                    y:
+                      Math.max(NODE_SIZE.height, end.y - start.y) +
+                      fromNode.position.y +
+                      (fromNode.height as number),
+                  },
+                }),
           },
         });
       },
       onNodeEdit: (_e: unknown, { id, data }: TodoNode) => {
-        if (id !== START_NODE.id) {
+        if (!id.startsWith(START_NODE.id)) {
           setEditing({
             mode: EditorModeEnum.EditTodo,
             payload: id,
@@ -263,25 +295,52 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
 
         const id = nanoid(6);
         const { payload, todo } = editing;
+        const { position, source } = payload;
+
+        const { width, height } =
+          todo.type === TodoEnum.Iterate ? SUB_FLOW_SIZE : NODE_SIZE;
+
+        const newNodes: TodoNode[] = [
+          {
+            id,
+            type: todo.type,
+            data: todo,
+            width,
+            height,
+            ...(payload.parentId && {
+              parentId: payload.parentId,
+              extent: 'parent',
+            }),
+            position: {
+              y: position.y,
+              x: position.x - width / 2 - 2,
+            },
+          },
+        ];
+
+        if (todo.type === TodoEnum.Iterate) {
+          newNodes.push({
+            ...START_NODE,
+            id: `${START_NODE.id}-${id}`,
+            parentId: id,
+            extent: 'parent',
+            position: {
+              x: (SUB_FLOW_SIZE.width - NODE_SIZE.width) / 2,
+              y: NODE_SIZE.height,
+            },
+          });
+        }
+
+        setFlowState('nodes', (nodes: TodoNode[]) => [...nodes, ...newNodes]);
 
         setFlowState('edges', (edges: TodoEdge[]) => [
           ...edges,
           {
             id: `${payload.source}-${id}`,
             type: payload.type,
-            source: payload.source,
+            source: source,
             sourceHandle: payload.type,
             target: id,
-          },
-        ]);
-
-        setFlowState('nodes', (nodes: TodoNode[]) => [
-          ...nodes,
-          {
-            id,
-            type: todo.type,
-            data: todo,
-            position: payload.position,
           },
         ]);
       },
@@ -313,7 +372,13 @@ export function useValidation({
   nodes,
   onClose,
 }: Pick<EditorProps, 'edges' | 'nodes' | 'onClose'>) {
-  const connectedIds = getConnectedIds(edges, START_NODE.id);
+  const connectedIds = nodes.reduce(
+    (acc, { id }) =>
+      !id.startsWith(START_NODE.id)
+        ? acc
+        : new Set([...acc, ...getConnectedIds(edges, id)]),
+    new Set<string>()
+  );
 
   return [
     nodes.length - connectedIds.size,
@@ -343,4 +408,11 @@ function getConnectedIds(
 
     return acc;
   }, exisiting);
+}
+
+function getClientPosition(e: MouseEvent | TouchEvent): Flow.XYPosition {
+  return {
+    x: _get(e, ['clientX']) as number,
+    y: _get(e, ['clientY']) as number,
+  };
 }
