@@ -323,6 +323,15 @@ export const components: ThemeOptions['components'] = {
       },
     },
   },
+  MuiSpeedDialIcon: {
+    styleOverrides: {
+      root: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    },
+  },
   MuiSvgIcon: {
     styleOverrides: {
       fontSizeLarge: {

@@ -1,5 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CacheProvider } from '@emotion/react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider } from '@mui/material/styles';
 
 import NotistackProvider from '../Notistack';
@@ -29,11 +31,13 @@ export default withBaseProvider<AppProviderManagerProps>(
         <ThemeProvider theme={palette.theme}>
           <CssBaseline />
 
-          <NotistackProvider>
-            <AppSettingsContext.Provider value={value}>
-              {isPending ? null : children}
-            </AppSettingsContext.Provider>
-          </NotistackProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <NotistackProvider>
+              <AppSettingsContext.Provider value={value}>
+                {isPending ? null : children}
+              </AppSettingsContext.Provider>
+            </NotistackProvider>
+          </LocalizationProvider>
         </ThemeProvider>
       </CacheProvider>
     );

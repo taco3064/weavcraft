@@ -1,5 +1,5 @@
 import type { ResponsiveGridProps } from '@weavcraft/core';
-import type { WidgetLayout } from '../EventList';
+import type { WidgetLayout } from '../EventFlowManager';
 
 import type {
   BaseEditorProps,
@@ -16,6 +16,7 @@ export interface ChangeEvents
   extends Pick<WidgetCreateButtonProps, 'onCreate'>,
     Pick<ResponsiveGridProps<WidgetLayout>, 'onResize' | 'onResort'> {
   onLayoutChange: (layout: WidgetLayout) => void;
+  onManagerDone: () => void;
   onRemove: (layoutId: string) => void;
 }
 

@@ -1,7 +1,100 @@
 {
   "btn-add-widget": "新增組件",
+  "btn-decision-add-condition": "新增條件",
+  "btn-delete-todo": "刪除事件節點",
   "btn-edit-events": "編輯事件",
+  "btn-fetch-add-header": "新增 Header",
+  "btn-fit-view": "自動調整視圖",
+  "btn-iterate-add-source": "新增來源",
   "btn-layout-preview": "預覽外觀",
+  "btn-variable-add-field": "新增參數",
+  "lbl-decision-logic": "判斷邏輯",
+  "lbl-decision-operator": "判斷條件",
+  "lbl-decision-source": "判斷來源",
+  "lbl-decision-target": "目標值",
+  "lbl-fetch-header-key": "Header 名稱",
+  "lbl-fetch-header-value": "Header 值",
+  "lbl-fetch-method": "Method",
+  "lbl-fetch-payload": "請求數據",
+  "lbl-fetch-url": "URL",
+  "lbl-iterate-source": "來源",
+  "lbl-iterate-source-type": "來源類型",
   "lbl-root-node": "最頂層",
-  "ttl-widget-events": "組件事件"
+  "lbl-start-node": "開始",
+  "lbl-todo-description": "說明",
+  "lbl-update-paths": "覆寫路徑",
+  "lbl-update-source": "數據來源",
+  "lbl-update-widget": "目標組件",
+  "lbl-variable-dspaths": "組件數據路徑",
+  "lbl-variable-initial-value": "初始值",
+  "lbl-variable-mode": "參數模式",
+  "lbl-variable-name": "名稱",
+  "lbl-variable-output": "輸出來源",
+  "lbl-variable-type": "參數型態",
+  "msg-delete-todo-confirm": "確定要刪除此事件節點嗎？",
+  "msg-fetch-no-headers": "尚未設置相關 Headers",
+  "msg-iterate-no-sources": "尚未設置相關來源",
+  "msg-orphan-confirm": "目前有 {{count}} 個未連結的事件節點。確認關閉後自動移除 \"{{name}}\" 嗎？",
+  "msg-variable-no-fields": "尚未設置相關參數",
+  "ttl-add-todo": "新增執行事項",
+  "ttl-conditions": "條件",
+  "ttl-fetch-headers": "Headers",
+  "ttl-iterate-sources": "迭代處理來源",
+  "ttl-orphan-confirm": "確認未連結事件節點",
+  "ttl-variables": "參數一覽",
+  "ttl-widget-events": "組件事件",
+  "lbl-todo-types": {
+    "Decision": "條件判斷",
+    "FetchData": "資料請求 / 發送",
+    "Iterate": "迭代處理",
+    "UpdateWidget": "更新組件數據",
+    "Variables": "建立參數"
+  },
+  "msg-todo-types": {
+    "Decision": "條件判斷類型的事件用於根據特定條件來做出決策。當滿足某個條件時，系統會執行相應的操作。",
+    "FetchData": "請求類型的事件可以發送請求至你指定的伺服器，透過伺服器執行特定事項或獲取數據。",
+    "Iterate": "迭代處理類型的事件用於遍歷一組數據並對每個數據項進行處理。通常用於處理列表或數組。",
+    "UpdateWidget": "更新組件數據類型的事件用於變更組件的數據，進而動態改變組件呈現之內容，達到互動之效果。",
+    "Variables": "參數類型的事件用於定義一組變數，這些變數可以提供給後續執行的事件項目進行延伸應用。"
+  },
+  "opt-decision": {
+    "false": "否",
+    "true": "是"
+  },
+  "opt-decision-logics": {
+    "and": "所有條件達成",
+    "or": "任一條件達成"
+  },
+  "opt-decision-operators": {
+    "between": "介於",
+    "contains": "包含",
+    "endsWith": "結尾是",
+    "equals": "等於",
+    "gt": "大於",
+    "gte": "大於或等於",
+    "isEmpty": "為空",
+    "lt": "小於",
+    "lte": "小於或等於",
+    "startsWith": "開頭是"
+  },
+  "opt-iterate-source-types": {
+    "Multiple": "多個",
+    "Single": "單一"
+  },
+  "opt-source-types": {
+    "next": "綁定或新增後續事件節點",
+    "false": "綁定或新增條件未達成時的後續事件節點",
+    "true": "綁定或新增條件達成時的後續事件節點"
+  },
+  "opt-variable-types": {
+    "boolean": "布林值",
+    "date": "日期時間",
+    "number": "數字",
+    "string": "字串"
+  },
+  "opt-variables": {
+    "Definition": "參數定義",
+    "TodoOutput": "輸出結果",
+    "Widget": "組件"
+  }
 }

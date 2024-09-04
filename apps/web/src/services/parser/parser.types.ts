@@ -32,7 +32,7 @@ export namespace TypeDefinition {
   export type Mapping = BaseType<'mapping', string[]>;
   export type Number = BaseType<'number'>;
   export type OneOf = BaseType<'oneof', Exclude<JsonPrimitive, null>[]>;
-  export type String = BaseType<'string', { multiple: boolean }>;
+  export type String = BaseType<'string', { multiple?: boolean }>;
 
   export type Function = BaseType<
     'function',

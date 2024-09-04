@@ -1,7 +1,2 @@
 export { default, default as EventList } from './EventList';
-
-export type {
-  EventItem,
-  EventListProps,
-  WidgetLayout,
-} from './EventList.types';
+export type { EventItem, EventListProps } from './EventList.types';

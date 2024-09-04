@@ -28,6 +28,7 @@ export default function ConfirmDialog({
     >
       <Alert
         severity={severity}
+        onClick={(e) => e.stopPropagation()}
         action={
           <Button
             variant="text"
