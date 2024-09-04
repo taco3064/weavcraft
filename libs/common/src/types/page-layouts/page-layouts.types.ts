@@ -89,7 +89,7 @@ export type FetchDataTodo = BaseTodo<
 export type IterateTodo = BaseTodo<
   TodoEnum.Iterate,
   {
-    source: VariableSource | VariableSource[];
+    source: VariableSource[];
     subTodos: {
       [TodoId: string]: Todos;
     };

@@ -40,7 +40,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const [, startTransition] = useTransition();
   const [activeEvent, setActiveEvent] = useState<ActiveEvent>();
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('xs');
-  const [editing, setEditing] = useState<string>();
+  const [editingLayoutId, setEditingLayoutId] = useState<string>();
   const [viewMode, setViewMode] = useState<ViewModeEnum>();
 
   const [value, setValue] = useState<PageLayoutConfigs>(() =>
@@ -49,7 +49,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
 
   const isTutorialMode = useTutorialMode();
   const margin = useMainMargin();
-  const layout = value.layouts?.find(({ id }) => id === editing);
+  const layout = value.layouts?.find(({ id }) => id === editingLayoutId);
 
   const { t } = useTranslation();
   const { query } = useRouter();
@@ -58,7 +58,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
 
   const { containerEl, onToggle } = useTogglePortal(() => {
     setActiveEvent(undefined);
-    setEditing(undefined);
+    setEditingLayoutId(undefined);
   });
 
   const [widgets, { onCreate, onLayoutChange, onRemove, onResize, onResort }] =
@@ -164,7 +164,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                           onEventsEdit={() =>
                             startTransition(() => {
                               onToggle(true);
-                              setEditing(layout.id);
+                              setEditingLayoutId(layout.id);
                             })
                           }
                         />

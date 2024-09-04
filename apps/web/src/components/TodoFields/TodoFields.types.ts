@@ -1,11 +1,6 @@
 import type { Get, SetRequired } from 'type-fest';
 import type { DecisionTodo, Todos, VariableTodo } from '@weavcraft/common';
 
-export enum IterateSourceTypeEnum {
-  Single = 'Single',
-  Multiple = 'Multiple',
-}
-
 export type ConditionState = Partial<
   NonNullable<DecisionTodo['config']>['conditions'][number]
 >;
