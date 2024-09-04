@@ -20,11 +20,15 @@ export enum EditorModeEnum {
 
 export type ActiveEvent = Pick<EventItem, 'config' | 'eventPath'>;
 export type DoneRef = () => void;
-export type NodeAttrs = Record<'pos' | 'width' | 'height', string | undefined>;
 export type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
 export type EventConfig = Partial<
   Get<WidgetLayout, ['events', string, string]>
+>;
+
+export type NodeAttrs = Record<
+  'pos' | 'group' | 'width' | 'height',
+  string | undefined
 >;
 
 export type SetFlowStateArgs =
@@ -39,6 +43,7 @@ export interface EditingTodo {
     | string
     | {
         source: string;
+        parentId?: string;
         position: { x: number; y: number };
         type: EdgeType;
       };

@@ -77,6 +77,7 @@ export default forwardRef<DoneRef, EditorProps>(function Editor(
               edgeTypes={Comp.FlowEdges}
               nodeTypes={NODE_TYPES}
               onConnectEnd={editingHandlers.onNodeCreate}
+              onConnectStart={editingHandlers.onClientPosition}
               onNodeClick={editingHandlers.onNodeEdit}
               defaultEdgeOptions={{
                 style: {

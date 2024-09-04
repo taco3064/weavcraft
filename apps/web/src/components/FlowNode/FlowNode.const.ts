@@ -1,13 +1,21 @@
 import { Position } from '@xyflow/react';
-import { TodoEnum } from '@weavcraft/common';
+import { TodoEnum, Todos } from '@weavcraft/common';
 import type Core from '@weavcraft/core';
 
-import type { Background } from './FlowNode.types';
+import type { Background, TodoNode } from './FlowNode.types';
 
 export const NODE_SIZE = { width: 240, height: 78 };
 
+export const START_NODE: TodoNode = {
+  ...NODE_SIZE,
+  id: 'start',
+  type: 'start',
+  data: {} as Todos,
+  position: { x: NODE_SIZE.width / -2, y: 0 },
+};
+
 export const SUB_FLOW_SIZE = {
-  width: NODE_SIZE.width * 3,
+  width: NODE_SIZE.width * 2,
   height: NODE_SIZE.height * 6,
 };
 

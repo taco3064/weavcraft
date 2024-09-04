@@ -10,6 +10,18 @@ export const useSubFlowStyles = makeStyles({ name: 'SubFlow' })((theme) => ({
     borderWidth: 1,
     borderStyle: 'dashed',
   },
+  line: {
+    display: 'none !important',
+  },
+  resizer: {
+    background: `${theme.palette.divider} !important`,
+    width: `${theme.spacing(2)} !important`,
+    height: `${theme.spacing(2)} !important`,
+
+    '&.top': {
+      display: 'none !important',
+    },
+  },
 }));
 
 export const useLabelStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(

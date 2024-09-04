@@ -22,11 +22,12 @@ export const useMainStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(
       flexDirection: 'column',
       alignItems: 'center',
       background: 'transparent',
+      padding: theme.spacing(1),
+      fontSize: theme.typography.caption.fontSize,
+      zIndex: theme.zIndex.tooltip + 1,
       transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px) ${
         !hasLabelText ? '' : `translateY(${theme.typography.caption.fontSize})`
       }`,
-      padding: theme.spacing(1),
-      fontSize: theme.typography.caption.fontSize,
 
       '& > button': {
         pointerEvents: 'all',

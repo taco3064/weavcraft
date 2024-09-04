@@ -1,14 +1,11 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const START_WIDTH = 160;
-
 export const useStartNodeStyles = makeStyles({ name: 'StartNode' })(
   (theme) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      width: START_WIDTH,
     },
     node: {
       padding: 2,
@@ -29,6 +26,9 @@ export const useEditorStyles = makeStyles({ name: 'Editor' })((theme) => ({
 
     '& div:has(> a[aria-label="React Flow attribution"])': {
       display: 'none !important',
+    },
+    '& div.react-flow__edges': {
+      zIndex: theme.zIndex.tooltip,
     },
   },
   fitView: {

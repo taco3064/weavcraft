@@ -7,9 +7,8 @@ import { digraph, fromDot, toDot } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { NODE_SIZE, SUB_FLOW_SIZE } from '~web/components';
+import { NODE_SIZE, START_NODE, SUB_FLOW_SIZE } from '~web/components';
 import { EditorModeEnum } from './EventFlowManager.types';
-import { START_WIDTH } from './EventFlowManager.styles';
 import type { EdgeType, TodoEdge, TodoNode, TodoValue } from '../imports.types';
 
 import type {
@@ -19,13 +18,6 @@ import type {
   NodeAttrs,
   SetFlowStateArgs,
 } from './EventFlowManager.types';
-
-const START_NODE: TodoNode = {
-  id: 'start',
-  type: 'start',
-  data: {} as Todos,
-  position: { x: START_WIDTH / -2, y: 0 },
-};
 
 export function useInitialization({
   active,
@@ -73,6 +65,23 @@ export function useInitialization({
                 width: Number(attrs.width),
                 height: Number(attrs.height),
                 position: { x, y },
+                ...(attrs.group && {
+                  parentId: attrs.group,
+                  extent: 'parent',
+                }),
+              });
+            }
+
+            if (todo.type === TodoEnum.Iterate) {
+              acc.push({
+                ...START_NODE,
+                id: `${START_NODE.id}-${id}`,
+                parentId: id,
+                extent: 'parent',
+                position: {
+                  x: (Number(attrs.width) - NODE_SIZE.width) / 2,
+                  y: NODE_SIZE.height,
+                },
               });
             }
 
@@ -85,9 +94,10 @@ export function useInitialization({
 
     ({ edges, nodes }: Pick<EditorProps, 'edges' | 'nodes'>) => {
       const graph = digraph('G', (g) => {
-        nodes.forEach(({ id, position, width, height }) => {
+        nodes.forEach(({ id, position, parentId, width, height }) => {
           const node = g.node(id, { width, height });
 
+          node.attributes.set('group', parentId || '');
           node.attributes.set('pos', `${position.x},${position.y}`);
           node.attributes.set('width', width as number);
           node.attributes.set('height', height as number);
@@ -101,7 +111,7 @@ export function useInitialization({
       });
 
       const todos = nodes.reduce<Record<string, Todos>>((acc, { id, data }) => {
-        if (id !== 'start') {
+        if (!id.startsWith(START_NODE.id)) {
           const todo: Todos = {
             ...(data as Todos),
             nextTodo: edges
@@ -173,8 +183,7 @@ export function useFlowProps(
         onNodesChange(
           e.filter(
             (change) =>
-              _get(change, ['id']) !== START_NODE.id ||
-              change.type !== 'position'
+              change.type !== 'position' || !change.id.startsWith(START_NODE.id)
           )
         ),
       onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
@@ -197,6 +206,7 @@ export function useFlowProps(
 export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
   const { screenToFlowPosition } = Flow.useReactFlow();
   const [editing, setEditing] = useState<EditingTodo>();
+  const clientRef = useRef<Flow.XYPosition>();
 
   return [
     { mode: editing?.mode, editing },
@@ -207,6 +217,9 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
       onEditingChange: (todo: TodoValue) =>
         setEditing({ ...editing, todo } as EditingTodo),
 
+      onClientPosition: (e: MouseEvent | TouchEvent) => {
+        clientRef.current = getClientPosition(e);
+      },
       onTypeSelect: (label: string) =>
         setEditing({
           ...editing,
@@ -222,6 +235,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
       ) => {
         if (
           toNode ||
+          !clientRef.current ||
           !fromHandle ||
           !fromNode ||
           fromHandle.type === 'target' ||
@@ -230,22 +244,37 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
           return;
         }
 
-        const { x, y } = screenToFlowPosition({
-          x: _get(e, ['clientX']) as number,
-          y: _get(e, ['clientY']) as number,
-        });
+        const start = clientRef.current;
+        const end = getClientPosition(e);
+
+        clientRef.current = undefined;
 
         setEditing({
           mode: EditorModeEnum.TypeSelection,
           payload: {
-            source: fromNode.id,
             type: fromHandle.id as EdgeType,
-            position: { x, y },
+            source: fromNode.id,
+            ...(!fromNode.parentId
+              ? { position: screenToFlowPosition(end) }
+              : {
+                  parentId: fromNode.parentId,
+                  position: {
+                    x:
+                      end.x -
+                      start.x +
+                      fromNode.position.x +
+                      (fromNode.width as number) / 2,
+                    y:
+                      Math.max(NODE_SIZE.height, end.y - start.y) +
+                      fromNode.position.y +
+                      (fromNode.height as number),
+                  },
+                }),
           },
         });
       },
       onNodeEdit: (_e: unknown, { id, data }: TodoNode) => {
-        if (id !== START_NODE.id) {
+        if (!id.startsWith(START_NODE.id)) {
           setEditing({
             mode: EditorModeEnum.EditTodo,
             payload: id,
@@ -278,6 +307,10 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
             data: todo,
             width,
             height,
+            ...(payload.parentId && {
+              parentId: payload.parentId,
+              extent: 'parent',
+            }),
             position: {
               y: position.y,
               x: position.x - width / 2 - 2,
@@ -292,7 +325,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
             parentId: id,
             extent: 'parent',
             position: {
-              x: (SUB_FLOW_SIZE.width - START_WIDTH) / 2,
+              x: (SUB_FLOW_SIZE.width - NODE_SIZE.width) / 2,
               y: NODE_SIZE.height,
             },
           });
@@ -339,7 +372,13 @@ export function useValidation({
   nodes,
   onClose,
 }: Pick<EditorProps, 'edges' | 'nodes' | 'onClose'>) {
-  const connectedIds = getConnectedIds(edges, START_NODE.id);
+  const connectedIds = nodes.reduce(
+    (acc, { id }) =>
+      !id.startsWith(START_NODE.id)
+        ? acc
+        : new Set([...acc, ...getConnectedIds(edges, id)]),
+    new Set<string>()
+  );
 
   return [
     nodes.length - connectedIds.size,
@@ -369,4 +408,11 @@ function getConnectedIds(
 
     return acc;
   }, exisiting);
+}
+
+function getClientPosition(e: MouseEvent | TouchEvent): Flow.XYPosition {
+  return {
+    x: _get(e, ['clientX']) as number,
+    y: _get(e, ['clientY']) as number,
+  };
 }
