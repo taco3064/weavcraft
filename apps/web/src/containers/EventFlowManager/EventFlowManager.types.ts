@@ -5,11 +5,11 @@ import type { EventItem } from '../EventList';
 
 import type {
   EdgeType,
-  HierarchyWidget,
   PageLayoutConfigs,
   TodoEdge,
   TodoNode,
   TodoValue,
+  WidgetConfigs,
 } from '../imports.types';
 
 export enum EditorModeEnum {
@@ -46,7 +46,7 @@ export interface EditingTodo {
 export interface EventFlowManagerProps {
   active: ActiveEvent;
   config: WidgetLayout;
-  widget: HierarchyWidget;
+  widgets: WidgetConfigs[];
   onClose: (e: WidgetLayout) => void;
 }
 

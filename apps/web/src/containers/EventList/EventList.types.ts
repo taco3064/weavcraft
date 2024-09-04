@@ -19,6 +19,6 @@ export interface EventItem {
 
 //* Component Props
 export interface EventListProps extends Pick<EditorListProps, 'onClose'> {
-  widget: HierarchyWidget;
+  hierarchyWidget: HierarchyWidget;
   onActive: (e: Pick<EventItem, 'config' | 'eventPath'>) => void;
 }

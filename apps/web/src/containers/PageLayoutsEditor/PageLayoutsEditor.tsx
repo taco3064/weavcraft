@@ -61,8 +61,10 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
     setEditingLayoutId(undefined);
   });
 
-  const [widgets, { onCreate, onLayoutChange, onRemove, onResize, onResort }] =
-    useChangeEvents(breakpoint, viewMode, config, value, setValue);
+  const [
+    hierarchyWidgets,
+    { onCreate, onLayoutChange, onRemove, onResize, onResort },
+  ] = useChangeEvents(breakpoint, viewMode, config, value, setValue);
 
   const generate = useWidgetRender((WidgetEl, { key, props }) => (
     <WidgetEl key={key} {...props} />
@@ -151,7 +153,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               })}
               renderItem={(layout) => {
                 const { id, spans, widgetId } = layout;
-                const { [widgetId]: hierarchy } = widgets;
+                const { [widgetId]: hierarchy } = hierarchyWidgets;
 
                 return (
                   <ResponsiveItem
@@ -196,11 +198,11 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
         />
       </Slide>
 
-      {layout?.widgetId && widgets[layout.widgetId] && (
+      {layout?.widgetId && hierarchyWidgets[layout.widgetId] && (
         <PortalWrapper containerEl={containerEl}>
           {!activeEvent ? (
             <EventList
-              widget={widgets[layout.widgetId]}
+              hierarchyWidget={hierarchyWidgets[layout.widgetId]}
               onActive={setActiveEvent}
               onClose={() => onToggle(false)}
             />
@@ -208,7 +210,9 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
             <EventFlowManager
               active={activeEvent}
               config={layout}
-              widget={widgets[layout.widgetId]}
+              widgets={Object.values(hierarchyWidgets).map(
+                ({ payload }) => payload
+              )}
               onClose={(config) =>
                 startTransition(() => {
                   onLayoutChange(config);

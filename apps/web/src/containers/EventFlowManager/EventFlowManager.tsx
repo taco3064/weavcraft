@@ -3,15 +3,17 @@ import { useTranslation } from 'next-i18next';
 import '@xyflow/react/dist/style.css';
 
 import Editor from './EventFlowManager.Editor';
+import { TodoVariableSourcesProvider } from '~web/contexts';
 import { useInitialization } from './EventFlowManager.hooks';
 import type { EventFlowManagerProps } from './EventFlowManager.types';
 
 export default function EventFlowManager({
   active,
   config,
-  widget,
+  widgets,
   onClose,
 }: EventFlowManagerProps) {
+  const widget = widgets.find(({ id }) => id === config.widgetId);
   const { t } = useTranslation();
 
   const [{ edges, nodes }, onManagerClose] = useInitialization({
@@ -20,14 +22,16 @@ export default function EventFlowManager({
     onClose,
   });
 
-  return (
-    <ReactFlowProvider>
-      <Editor
-        {...{ edges, nodes }}
-        title={active.eventPath}
-        description={t(`widgets:lbl-component.${widget.payload.component}`)}
-        onClose={onManagerClose}
-      />
-    </ReactFlowProvider>
+  return !widget ? null : (
+    <TodoVariableSourcesProvider widgets={widgets}>
+      <ReactFlowProvider>
+        <Editor
+          {...{ edges, nodes }}
+          title={active.eventPath}
+          description={t(`widgets:lbl-component.${widget.component}`)}
+          onClose={onManagerClose}
+        />
+      </ReactFlowProvider>
+    </TodoVariableSourcesProvider>
   );
 }

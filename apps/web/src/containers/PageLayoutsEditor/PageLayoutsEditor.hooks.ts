@@ -36,13 +36,13 @@ export function useChangeEvents(
   const isTutorialMode = useTutorialMode();
   const [, startTransition] = useTransition();
 
-  const [widgets, setWidgets] = useHierarchyWidgets(
+  const [hierarchyWidgets, setHierarchyWidgets] = useHierarchyWidgets(
     config?.layouts || [],
     isTutorialMode
   );
 
   return [
-    widgets,
+    hierarchyWidgets,
 
     {
       onCreate: (hierarchy) =>
@@ -53,8 +53,8 @@ export function useChangeEvents(
             spans: { xs: { cols: 1, rows: 1 } },
           };
 
-          setWidgets({
-            ...widgets,
+          setHierarchyWidgets({
+            ...hierarchyWidgets,
             [hierarchy.payloadId as string]: hierarchy,
           });
 
@@ -81,8 +81,8 @@ export function useChangeEvents(
           if (
             !value.layouts.some(({ widgetId }) => widgetId === layout.widgetId)
           ) {
-            delete widgets[layout.widgetId];
-            setWidgets({ ...widgets });
+            delete hierarchyWidgets[layout.widgetId];
+            setHierarchyWidgets({ ...hierarchyWidgets });
           }
         }),
       onResize:
