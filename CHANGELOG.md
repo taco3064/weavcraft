@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.77](https://github.com/taco3064/weavcraft/compare/v0.0.76...v0.0.77) (2024-09-04)
+
+
+### Features
+
+* **web/*:** add reactflow ([4350a29](https://github.com/taco3064/weavcraft/commit/4350a291db68179f77e3c9088b8ab50308f6a78f))
+* **web/event-flow-editor:** add ReactFlow to display/edit widget events ([87e45bb](https://github.com/taco3064/weavcraft/commit/87e45bbafa22293c79c2016cab9d63568fe2edc8))
+* **web/event-flow-editor:** use dot(ts-graphviz) to save the event flow layout ([1563e02](https://github.com/taco3064/weavcraft/commit/1563e02e9230bd6943642661d4c21295367df310))
+* **web/event-flow-manager:** complete the development of the EventFlowManager component ([b8dea8f](https://github.com/taco3064/weavcraft/commit/b8dea8fa10a47ab0cece5d38d96189ae60ce722d))
+* **web/todo-fields:** add new components: TodoFields ([33d9bca](https://github.com/taco3064/weavcraft/commit/33d9bca64f9ebcff810aac04027e28e15c394eba))
+
+
+### Bug Fixes
+
+* **web/*:** fixed the close bug of EventFlowManager ([3a26e89](https://github.com/taco3064/weavcraft/commit/3a26e89c6cb0874174b5af7da4381dabd762e9e4))
+* **web/*:** fixed the error types ([1789c6c](https://github.com/taco3064/weavcraft/commit/1789c6c417929289d63c43700dd9bef138a544d9))
+* **web/*:** fixed the sonar qube issues ([4064e05](https://github.com/taco3064/weavcraft/commit/4064e05e9ab333af73568a4a32aafe3b0ae68875))
+* **web/event-flow-manager:** fixed the invalid subnode layout ([9475e2f](https://github.com/taco3064/weavcraft/commit/9475e2f35317cd970a7685ef4a49c69001cdec1d))
+* **web/flow-edge:** fixed the label text with translation ([0f37886](https://github.com/taco3064/weavcraft/commit/0f378863b8d07be0ce567db876392f181a9937f8))
+* **web/react-flow:** fixed the error about the nextTodo doesn't sync when delete node/edge ([2a73532](https://github.com/taco3064/weavcraft/commit/2a735324156bd2a3e43247c7b2c6546875b6630a))
+
 ### [0.0.76](https://github.com/taco3064/weavcraft/compare/v0.0.75...v0.0.76) (2024-08-23)
 
 
