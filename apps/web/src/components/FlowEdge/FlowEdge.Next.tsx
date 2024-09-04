@@ -4,6 +4,7 @@ import Core from '@weavcraft/core';
 import Fab from '@mui/material/Fab';
 
 import { useMainStyles } from './FlowEdge.styles';
+import { useNextTodoUpdate } from '~web/hooks';
 import type { FlowEdgeProps } from './FlowEdge.types';
 
 export default function NextEdge({
@@ -16,6 +17,7 @@ export default function NextEdge({
   targetY,
   ...props
 }: FlowEdgeProps) {
+  const updateNextTodo = useNextTodoUpdate(props.target);
   const { deleteElements } = Flow.useReactFlow();
 
   const [edgePath, labelX, labelY] = Flow.getBezierPath({
@@ -43,7 +45,10 @@ export default function NextEdge({
             variant="extended"
             color="error"
             size="small"
-            onClick={() => deleteElements({ edges: [{ id: props.id }] })}
+            onClick={() => {
+              updateNextTodo();
+              deleteElements({ edges: [{ id: props.id }] });
+            }}
           >
             <Core.Icon code="faClose" />
           </Fab>

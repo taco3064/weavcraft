@@ -104,7 +104,7 @@ export function useInitialization({
         if (id !== 'start') {
           const todo: Todos = {
             ...(data as Todos),
-            nextTodos: edges
+            nextTodo: edges
               .filter(({ source }) => source === id)
               .reduce<Record<string, string>>(
                 (acc, { sourceHandle, target }) => ({
@@ -225,7 +225,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
           !fromHandle ||
           !fromNode ||
           fromHandle.type === 'target' ||
-          _get(fromNode, ['data', 'nextTodos', fromHandle.id as string])
+          _get(fromNode, ['data', 'nextTodo', fromHandle.id as string])
         ) {
           return;
         }
