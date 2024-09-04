@@ -2,19 +2,21 @@ import * as Flow from '@xyflow/react';
 import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
+import { TodoEnum, type Todos } from '@weavcraft/common';
 import { digraph, fromDot, toDot } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { TodoEnum, Todos } from '@weavcraft/common';
 
-import { NODE_SIZE } from '~web/components';
+import { NODE_SIZE, SUB_FLOW_SIZE } from '~web/components';
 import { EditorModeEnum } from './EventFlowManager.types';
+import { START_WIDTH } from './EventFlowManager.styles';
 import type { EdgeType, TodoEdge, TodoNode, TodoValue } from '../imports.types';
 
 import type {
   EditingTodo,
   EditorProps,
   EventFlowManagerProps,
+  NodeAttrs,
   SetFlowStateArgs,
 } from './EventFlowManager.types';
 
@@ -22,7 +24,7 @@ const START_NODE: TodoNode = {
   id: 'start',
   type: 'start',
   data: {} as Todos,
-  position: { x: 0, y: 0 },
+  position: { x: START_WIDTH / -2, y: 0 },
 };
 
 export function useInitialization({
@@ -57,18 +59,20 @@ export function useInitialization({
 
         nodes: todos.reduce<TodoNode[]>(
           (acc, [id, todo]) => {
-            const pos = graph
-              ?.getNode(id)
-              ?.attributes.get('pos')
-              ?.split(',')
-              .map(Number);
+            const attrs = Object.fromEntries(
+              graph?.getNode(id)?.attributes.values || []
+            ) as NodeAttrs;
 
-            if (Array.isArray(pos)) {
+            if (attrs.pos) {
+              const [x, y] = attrs.pos.split(',').map(Number);
+
               acc.push({
                 id,
                 type: todo.type,
                 data: todo,
-                position: { x: pos[0], y: pos[1] },
+                width: Number(attrs.width),
+                height: Number(attrs.height),
+                position: { x, y },
               });
             }
 
@@ -81,11 +85,13 @@ export function useInitialization({
 
     ({ edges, nodes }: Pick<EditorProps, 'edges' | 'nodes'>) => {
       const graph = digraph('G', (g) => {
-        nodes.forEach(({ id, position }) =>
-          g
-            .node(id, { ...NODE_SIZE })
-            .attributes.set('pos', `${position.x},${position.y}`)
-        );
+        nodes.forEach(({ id, position, width, height }) => {
+          const node = g.node(id, { width, height });
+
+          node.attributes.set('pos', `${position.x},${position.y}`);
+          node.attributes.set('width', width as number);
+          node.attributes.set('height', height as number);
+        });
 
         edges.forEach(({ source, sourceHandle, target }) =>
           g
@@ -234,10 +240,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
           payload: {
             source: fromNode.id,
             type: fromHandle.id as EdgeType,
-            position: {
-              y,
-              x: x - NODE_SIZE.width / 2,
-            },
+            position: { x, y },
           },
         });
       },
@@ -263,25 +266,48 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
 
         const id = nanoid(6);
         const { payload, todo } = editing;
+        const { position, source } = payload;
+
+        const { width, height } =
+          todo.type === TodoEnum.Iterate ? SUB_FLOW_SIZE : NODE_SIZE;
+
+        const newNodes: TodoNode[] = [
+          {
+            id,
+            type: todo.type,
+            data: todo,
+            width,
+            height,
+            position: {
+              y: position.y,
+              x: position.x - width / 2 - 2,
+            },
+          },
+        ];
+
+        if (todo.type === TodoEnum.Iterate) {
+          newNodes.push({
+            ...START_NODE,
+            id: `${START_NODE.id}-${id}`,
+            parentId: id,
+            extent: 'parent',
+            position: {
+              x: (SUB_FLOW_SIZE.width - START_WIDTH) / 2,
+              y: NODE_SIZE.height,
+            },
+          });
+        }
+
+        setFlowState('nodes', (nodes: TodoNode[]) => [...nodes, ...newNodes]);
 
         setFlowState('edges', (edges: TodoEdge[]) => [
           ...edges,
           {
             id: `${payload.source}-${id}`,
             type: payload.type,
-            source: payload.source,
+            source: source,
             sourceHandle: payload.type,
             target: id,
-          },
-        ]);
-
-        setFlowState('nodes', (nodes: TodoNode[]) => [
-          ...nodes,
-          {
-            id,
-            type: todo.type,
-            data: todo,
-            position: payload.position,
           },
         ]);
       },

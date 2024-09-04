@@ -6,6 +6,11 @@ import type { Background } from './FlowNode.types';
 
 export const NODE_SIZE = { width: 240, height: 78 };
 
+export const SUB_FLOW_SIZE = {
+  width: NODE_SIZE.width * 3,
+  height: NODE_SIZE.height * 6,
+};
+
 export const NODE_BACKGROUND: Record<TodoEnum, Background> = {
   [TodoEnum.Decision]: 'warning',
   [TodoEnum.FetchData]: 'success',

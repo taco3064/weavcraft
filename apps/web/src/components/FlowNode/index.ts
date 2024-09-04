@@ -17,5 +17,5 @@ export const FlowNodes: Record<
 };
 
 export default FlowNodes;
-export { NODE_SIZE, TODO_ICONS } from './FlowNode.const';
+export { NODE_SIZE, SUB_FLOW_SIZE, TODO_ICONS } from './FlowNode.const';
 export type { FlowNodeProps, SubFlowProps, TodoNode };

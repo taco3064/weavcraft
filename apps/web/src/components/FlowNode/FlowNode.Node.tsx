@@ -28,7 +28,11 @@ export default function FlowNode({ data, id }: FlowNodeProps) {
         {...{ type, id }}
         title={description || id}
         description={t(`pages:lbl-todo-types.${type}`)}
-        onDelete={() => deleteElements({ nodes: [{ id }] })}
+        onDelete={() =>
+          deleteElements({
+            nodes: [{ id }],
+          })
+        }
       />
     </>
   );

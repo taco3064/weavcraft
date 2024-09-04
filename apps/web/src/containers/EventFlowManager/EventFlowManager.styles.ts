@@ -1,11 +1,14 @@
 import { makeStyles } from 'tss-react/mui';
 
+export const START_WIDTH = 160;
+
 export const useStartNodeStyles = makeStyles({ name: 'StartNode' })(
   (theme) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      width: START_WIDTH,
     },
     node: {
       padding: 2,

@@ -56,15 +56,16 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
   const { enqueueSnackbar } = useSnackbar();
   const { classes } = useMainStyles({ margin, marginTop });
 
-  const { containerEl, onToggle } = useTogglePortal(() => {
-    setActiveEvent(undefined);
-    setEditingLayoutId(undefined);
-  });
-
   const [
+    managerRef,
     hierarchyWidgets,
-    { onCreate, onLayoutChange, onRemove, onResize, onResort },
+    { onCreate, onLayoutChange, onManagerDone, onRemove, onResize, onResort },
   ] = useChangeEvents(breakpoint, viewMode, config, value, setValue);
+
+  const { containerEl, onToggle } = useTogglePortal(() => {
+    setEditingLayoutId(undefined);
+    onManagerDone();
+  });
 
   const generate = useWidgetRender((WidgetEl, { key, props }) => (
     <WidgetEl key={key} {...props} />
@@ -208,6 +209,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
             />
           ) : (
             <EventFlowManager
+              ref={managerRef}
               active={activeEvent}
               config={layout}
               widgets={Object.values(hierarchyWidgets).map(

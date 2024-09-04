@@ -19,6 +19,8 @@ export enum EditorModeEnum {
 }
 
 export type ActiveEvent = Pick<EventItem, 'config' | 'eventPath'>;
+export type DoneRef = () => void;
+export type NodeAttrs = Record<'pos' | 'width' | 'height', string | undefined>;
 export type WidgetLayout = PageLayoutConfigs['layouts'][number];
 
 export type EventConfig = Partial<

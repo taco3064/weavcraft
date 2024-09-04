@@ -5,14 +5,9 @@ import { useTranslation } from 'next-i18next';
 
 import NodeLabel from './FlowNode.Label';
 import { FlowHandle } from '~web/styles';
-import { NODE_SIZE } from './FlowNode.const';
+import { SUB_FLOW_SIZE } from './FlowNode.const';
 import { useSubFlowStyles } from './FlowNode.styles';
 import type { SubFlowProps } from './FlowNode.types';
-
-const SUB_FLOW_SIZE = {
-  width: NODE_SIZE.width * 2,
-  height: NODE_SIZE.height * 4,
-};
 
 export default function SubFlow({ data, id }: SubFlowProps) {
   const { type, description } = data;

@@ -1,11 +1,12 @@
+import React from 'react';
 import { nanoid } from 'nanoid';
-import { useId, useMemo, useState, useTransition } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { Breakpoint } from '@mui/material/styles';
 
 import { NAV_ITEMS, useHierarchyWidgets } from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { useTutorialMode } from '~web/contexts';
+import type * as Types from '../imports.types';
 import type { MenuDialogProps } from '~web/components';
 import type { WidgetLayout } from '../EventFlowManager';
 
@@ -20,21 +21,20 @@ import type {
   WidgetCreateButtonProps,
 } from './PageLayoutsEditor.types';
 
-import type {
-  HierarchyData,
-  HierarchyWidget,
-  PageLayoutConfigs,
-} from '../imports.types';
-
 export function useChangeEvents(
   breakpoint: Breakpoint,
   viewMode: ViewModeEnum | undefined,
-  config: PageLayoutConfigs | undefined,
-  value: PageLayoutConfigs,
-  onChange: (value: PageLayoutConfigs) => void
-): [Record<string, HierarchyWidget>, ChangeEvents] {
+  config: Types.PageLayoutConfigs | undefined,
+  value: Types.PageLayoutConfigs,
+  onChange: (value: Types.PageLayoutConfigs) => void
+): [
+  React.Ref<() => void>,
+  Record<string, Types.HierarchyWidget>,
+  ChangeEvents
+] {
   const isTutorialMode = useTutorialMode();
-  const [, startTransition] = useTransition();
+  const managerRef = React.useRef<() => void>();
+  const [, startTransition] = React.useTransition();
 
   const [hierarchyWidgets, setHierarchyWidgets] = useHierarchyWidgets(
     config?.layouts || [],
@@ -42,9 +42,17 @@ export function useChangeEvents(
   );
 
   return [
+    React.useCallback((fn: (() => void) | null) => {
+      if (fn) {
+        managerRef.current = fn;
+      }
+    }, []),
+
     hierarchyWidgets,
 
     {
+      onManagerDone: () => managerRef.current?.(),
+
       onCreate: (hierarchy) =>
         startTransition(() => {
           const layout: WidgetLayout = {
@@ -116,13 +124,13 @@ export function useWidgetCreate(
   title: string,
   onCreate: WidgetCreateButtonProps['onCreate']
 ): {
-  hierarchies: HierarchyData[];
+  hierarchies: Types.HierarchyData[];
   onItemClick: MenuDialogProps['onItemClick'];
 } {
-  const [hierarchies, setHierarchies] = useState<HierarchyData[]>();
+  const [hierarchies, setHierarchies] = React.useState<Types.HierarchyData[]>();
 
   const isTutorialMode = useTutorialMode();
-  const queryHash = useId();
+  const queryHash = React.useId();
 
   const { data: root } = useQuery({
     queryHash,
@@ -130,7 +138,7 @@ export function useWidgetCreate(
     queryFn: searchHierarchies,
   });
 
-  const getValidHierarchies = (data?: HierarchyData[]) =>
+  const getValidHierarchies = (data?: Types.HierarchyData[]) =>
     data
       ?.sort(({ type: t1 }, { type: t2 }) => t1.localeCompare(t2))
       .filter(
@@ -138,7 +146,7 @@ export function useWidgetCreate(
       ) || [];
 
   return {
-    hierarchies: useMemo(() => getValidHierarchies(root), [root]),
+    hierarchies: React.useMemo(() => getValidHierarchies(root), [root]),
 
     onItemClick: async (_e: string, index: number) => {
       const hierarchy = (hierarchies || root)?.[index];
