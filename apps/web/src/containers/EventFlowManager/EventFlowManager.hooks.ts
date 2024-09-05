@@ -218,7 +218,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
         setEditing({ ...editing, todo } as EditingTodo),
 
       onClientPosition: (e: MouseEvent | TouchEvent) => {
-        clientRef.current = getClientPosition(e);
+        clientRef.current = getClientXY(e);
       },
       onTypeSelect: (label: string) =>
         setEditing({
@@ -245,7 +245,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
         }
 
         const start = clientRef.current;
-        const end = getClientPosition(e);
+        const end = getClientXY(e);
 
         clientRef.current = undefined;
 
@@ -410,9 +410,14 @@ function getConnectedIds(
   }, exisiting);
 }
 
-function getClientPosition(e: MouseEvent | TouchEvent): Flow.XYPosition {
-  return {
-    x: _get(e, ['clientX']) as number,
-    y: _get(e, ['clientY']) as number,
-  };
+function getClientXY(e: MouseEvent | TouchEvent): Flow.XYPosition {
+  return e instanceof MouseEvent
+    ? {
+        x: e.clientX,
+        y: e.clientY,
+      }
+    : {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
 }
