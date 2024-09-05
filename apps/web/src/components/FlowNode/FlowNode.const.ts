@@ -16,7 +16,7 @@ export const START_NODE: TodoNode = {
 
 export const SUB_FLOW_SIZE = {
   width: NODE_SIZE.width * 2,
-  height: NODE_SIZE.height * 6,
+  height: NODE_SIZE.height * 5,
 };
 
 export const NODE_BACKGROUND: Record<TodoEnum, Background> = {
