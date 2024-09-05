@@ -23,7 +23,7 @@ export default function StartNode() {
         {t('lbl-start-node')}
       </Typography>
 
-      <Fab className={classes.node}>
+      <Fab size="medium" className={classes.node}>
         <CircleOutlinedIcon fontSize="inherit" />
       </Fab>
     </Box>
