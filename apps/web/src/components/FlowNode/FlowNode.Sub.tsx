@@ -1,50 +1,62 @@
+import * as Flow from '@xyflow/react';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-import { NodeResizer, Position, useReactFlow } from '@xyflow/react';
+import { useCallback, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import NodeLabel from './FlowNode.Label';
 import { FlowHandle } from '~web/styles';
-import { START_NODE, SUB_FLOW_SIZE } from './FlowNode.const';
+import { SUB_FLOW_SIZE } from './FlowNode.const';
 import { useNextTodoUpdate } from '~web/hooks';
 import { useSubFlowStyles } from './FlowNode.styles';
 import type { SubFlowProps } from './FlowNode.types';
 
-export default function SubFlow({ data, id, width }: SubFlowProps) {
-  const updateNextTodo = useNextTodoUpdate(id);
-
+export default function SubFlow({ data, id }: SubFlowProps) {
   const { type, description } = data;
   const { t } = useTranslation();
-  const { deleteElements, updateNode } = useReactFlow();
+  const { deleteElements, getNodes, updateNode } = Flow.useReactFlow();
   const { classes } = useSubFlowStyles();
+
+  const updateNextTodo = useNextTodoUpdate(id);
+  const oriWidthRef = useRef<number>();
+  const getNodesRef = useRef(getNodes);
+
+  const handleResizeStart = useCallback<Flow.OnResizeStart>((_e, { width }) => {
+    oriWidthRef.current = width;
+  }, []);
+
+  const handleResizeEnd = useCallback<Flow.OnResizeEnd>(
+    (_e, { width }) => {
+      const x = (width - (oriWidthRef.current || 0)) / 2;
+
+      getNodes().forEach(({ id: subId, parentId, position }) => {
+        if (parentId === id) {
+          updateNode(subId, {
+            position: { ...position, x: position.x + x },
+          });
+        }
+      });
+    },
+    [id, getNodes, updateNode]
+  );
+
+  useImperativeHandle(getNodesRef, () => getNodes, [getNodes]);
 
   return (
     <>
-      <FlowHandle type="target" position={Position.Top} />
+      <FlowHandle type="target" position={Flow.Position.Top} />
 
       <Tooltip title={t('pages:opt-source-types.next')}>
-        <FlowHandle id="next" position={Position.Bottom} type="source" />
+        <FlowHandle id="next" position={Flow.Position.Bottom} type="source" />
       </Tooltip>
 
-      <NodeResizer
-        isVisible
-        nodeId={id}
+      <Flow.NodeResizer
         minWidth={SUB_FLOW_SIZE.width}
         minHeight={SUB_FLOW_SIZE.height}
         handleClassName={classes.resizer}
         lineClassName={classes.line}
-        onResizeEnd={(_e, { width: w, height: h }) => {
-          const subIds = Object.keys(data.config?.subTodos || {});
-          const x = (w - (width || 0)) / 2;
-
-          subIds.push(`${START_NODE.id}-${id}`);
-
-          subIds.forEach((id) =>
-            updateNode(id, ({ position }) => ({
-              position: { ...position, x: position.x + x },
-            }))
-          );
-        }}
+        onResizeStart={handleResizeStart}
+        onResizeEnd={handleResizeEnd}
       />
 
       <NodeLabel
