@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import { useTranslation } from 'next-i18next';
 import type { IterateTodo, VariableSource } from '@weavcraft/common';
 
+import NoDataAvailable from './TodoFields.NoDataAvailable';
 import { DEFAULT_PROPS, useFieldsStyles } from './TodoFields.styles';
 import type { FieldsProps } from './TodoFields.types';
 
@@ -31,16 +32,7 @@ export default function IterateFields({
 
       <List component={AccordionDetails}>
         {!value?.source?.length && (
-          <ListItem>
-            <ListItemText
-              primary={t('msg-iterate-no-sources')}
-              primaryTypographyProps={{
-                variant: 'h6',
-                align: 'center',
-                color: 'text.disabled',
-              }}
-            />
-          </ListItem>
+          <NoDataAvailable required message={t('msg-iterate-no-sources')} />
         )}
 
         {value?.source?.map((source, index) => (

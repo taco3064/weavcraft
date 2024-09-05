@@ -4,13 +4,15 @@ import { useTranslation } from 'next-i18next';
 import '@xyflow/react/dist/style.css';
 
 import Editor from './EventFlowManager.Editor';
-import { TodoVariableSourcesProvider } from '~web/contexts';
+import { LayoutSourcesProvider } from '~web/contexts';
 import { useInitialization } from './EventFlowManager.hooks';
 import type { DoneRef, EventFlowManagerProps } from './EventFlowManager.types';
 
 export default forwardRef<DoneRef, EventFlowManagerProps>(
-  function EventFlowManager({ active, config, widgets, onClose }, ref) {
-    const widget = widgets.find(({ id }) => id === config.widgetId);
+  function EventFlowManager({ active, config, layouts, onClose }, ref) {
+    const widget = Object.values(layouts).find(
+      ({ id }) => id === config.widgetId
+    );
     const { t } = useTranslation();
 
     const [{ edges, nodes }, onManagerClose] = useInitialization({
@@ -20,16 +22,16 @@ export default forwardRef<DoneRef, EventFlowManagerProps>(
     });
 
     return !widget ? null : (
-      <TodoVariableSourcesProvider widgets={widgets}>
-        <ReactFlowProvider>
+      <ReactFlowProvider>
+        <LayoutSourcesProvider {...{ layouts }}>
           <Editor
             {...{ ref, edges, nodes }}
             title={active.eventPath}
             description={t(`widgets:lbl-component.${widget.component}`)}
             onClose={onManagerClose}
           />
-        </ReactFlowProvider>
-      </TodoVariableSourcesProvider>
+        </LayoutSourcesProvider>
+      </ReactFlowProvider>
     );
   }
 );

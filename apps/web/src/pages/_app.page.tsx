@@ -18,8 +18,11 @@ export default appWithTranslation(function App({
   const isTutorialMode = asPath.startsWith('/tutorial');
 
   useEffect(() => {
-    if (Cookies.get('language') !== locale) {
-      replace({ pathname, query }, asPath, { locale: Cookies.get('language') });
+    const language = Cookies.get('language');
+
+    if (language !== locale) {
+      alert(`cookie:${language}, locale:${locale}`);
+      replace({ pathname, query }, asPath, { locale: language });
     }
   }, [locale, asPath, pathname, query, replace]);
 

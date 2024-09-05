@@ -32,7 +32,7 @@ export default function SubFlow({ data, id }: SubFlowProps) {
       getNodes().forEach(({ id: subId, parentId, position }) => {
         if (parentId === id) {
           updateNode(subId, {
-            position: { ...position, x: position.x + x },
+            position: { ...position, x: Math.max(0, position.x + x) },
           });
         }
       });
