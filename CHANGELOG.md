@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.79](https://github.com/taco3064/weavcraft/compare/v0.0.78...v0.0.79) (2024-09-05)
+
+
+### Bug Fixes
+
+* **web/*:** fixed the error folder name ([8ba27fa](https://github.com/taco3064/weavcraft/commit/8ba27fabfff33cd782f73f67a3b05d9759c05bd6))
+* **web/event-flow-manager:** fixed the flow layout styles ([22c5a6c](https://github.com/taco3064/weavcraft/commit/22c5a6c638b31237722ddb59aaa2488e19f86b46))
+* **web/sub-flow:** make the position.x must be lte 0 when sub flow resize ([be2b218](https://github.com/taco3064/weavcraft/commit/be2b2182421a711736f71966042aa6e00d859bad))
+
 ### [0.0.78](https://github.com/taco3064/weavcraft/compare/v0.0.77...v0.0.78) (2024-09-05)
 
 
