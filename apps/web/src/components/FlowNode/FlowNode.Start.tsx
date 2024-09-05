@@ -7,7 +7,7 @@ import { Position } from '@xyflow/react';
 import { useTranslation } from 'next-i18next';
 
 import { FlowHandle } from '~web/styles';
-import { useStartNodeStyles } from './EventFlowManager.styles';
+import { useStartNodeStyles } from './FlowNode.styles';
 
 export default function StartNode() {
   const { t } = useTranslation('pages');
@@ -23,7 +23,7 @@ export default function StartNode() {
         {t('lbl-start-node')}
       </Typography>
 
-      <Fab className={classes.node}>
+      <Fab size="medium" className={classes.node}>
         <CircleOutlinedIcon fontSize="inherit" />
       </Fab>
     </Box>

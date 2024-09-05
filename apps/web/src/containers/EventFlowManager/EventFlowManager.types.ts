@@ -5,11 +5,11 @@ import type { EventItem } from '../EventList';
 
 import type {
   EdgeType,
+  LayoutSourcesProviderProps,
   PageLayoutConfigs,
   TodoEdge,
   TodoNode,
   TodoValue,
-  WidgetConfigs,
 } from '../imports.types';
 
 export enum EditorModeEnum {
@@ -50,10 +50,10 @@ export interface EditingTodo {
 }
 
 //* Component Props
-export interface EventFlowManagerProps {
+export interface EventFlowManagerProps
+  extends Pick<LayoutSourcesProviderProps, 'layouts'> {
   active: ActiveEvent;
   config: WidgetLayout;
-  widgets: WidgetConfigs[];
   onClose: (e: WidgetLayout) => void;
 }
 

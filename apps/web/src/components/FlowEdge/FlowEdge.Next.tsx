@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Core from '@weavcraft/core';
 import Fab from '@mui/material/Fab';
 
-import { useMainStyles } from './FlowEdge.styles';
+import { getEdgePath, useMainStyles } from './FlowEdge.styles';
 import { useNextTodoUpdate } from '~web/hooks';
 import type { FlowEdgeProps } from './FlowEdge.types';
 
@@ -20,7 +20,7 @@ export default function NextEdge({
   const updateNextTodo = useNextTodoUpdate(props.target);
   const { deleteElements } = Flow.useReactFlow();
 
-  const [edgePath, labelX, labelY] = Flow.getBezierPath({
+  const [edgePath, labelX, labelY] = getEdgePath({
     sourceX,
     sourceY,
     sourcePosition,

@@ -12,4 +12,5 @@ export const FlowEdges: Record<EdgeType, ComponentType<FlowEdgeProps>> = {
 };
 
 export default FlowEdges;
+export { LINE_TYPE } from './FlowEdge.styles';
 export type { EdgeType, FlowEdgeProps, TodoEdge };
