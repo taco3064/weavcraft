@@ -3,7 +3,7 @@ import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { TodoEnum, type Todos } from '@weavcraft/common';
-import { digraph, fromDot, toDot } from 'ts-graphviz';
+import { digraph, fromDot, toDot, type RootGraphModel } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -32,6 +32,8 @@ export function useInitialization({
       const graph = !options?.dot ? undefined : fromDot(options.dot);
 
       return {
+        nodes: getNodesWithGraphviz(todos, graph, [START_NODE]),
+
         edges:
           graph?.edges.map<TodoEdge>((edge) => {
             const type = edge.attributes.get('layer') as EdgeType;
@@ -48,47 +50,6 @@ export function useInitialization({
               target: to,
             };
           }) || [],
-
-        nodes: todos.reduce<TodoNode[]>(
-          (acc, [id, todo]) => {
-            const attrs = Object.fromEntries(
-              graph?.getNode(id)?.attributes.values || []
-            ) as NodeAttrs;
-
-            if (attrs.pos) {
-              const [x, y] = attrs.pos.split(',').map(Number);
-
-              acc.push({
-                id,
-                type: todo.type,
-                data: todo,
-                width: Number(attrs.width),
-                height: Number(attrs.height),
-                position: { x, y },
-                ...(attrs.group && {
-                  parentId: attrs.group,
-                  extent: 'parent',
-                }),
-              });
-            }
-
-            if (todo.type === TodoEnum.Iterate) {
-              acc.push({
-                ...START_NODE,
-                id: `${START_NODE.id}-${id}`,
-                parentId: id,
-                extent: 'parent',
-                position: {
-                  x: (Number(attrs.width) - NODE_SIZE.width) / 2,
-                  y: NODE_SIZE.height,
-                },
-              });
-            }
-
-            return acc;
-          },
-          [START_NODE]
-        ),
       };
     }, [options]),
 
@@ -110,10 +71,15 @@ export function useInitialization({
         );
       });
 
-      const todos = nodes.reduce<Record<string, Todos>>((acc, { id, data }) => {
-        if (!id.startsWith(START_NODE.id)) {
-          const todo: Todos = {
-            ...(data as Todos),
+      const todoMap = nodes.reduce<Map<string, Todos & { parentId?: string }>>(
+        (acc, { id, data, parentId }) => {
+          if (id.startsWith(START_NODE.id)) {
+            return acc;
+          }
+
+          return acc.set(id, {
+            ...data,
+            parentId,
             nextTodo: edges
               .filter(({ source }) => source === id)
               .reduce<Record<string, string>>(
@@ -123,20 +89,27 @@ export function useInitialization({
                 }),
                 {}
               ),
-          };
+          });
+        },
+        new Map()
+      );
 
-          return _set(acc, [id], todo);
+      todoMap.forEach(({ parentId, ...todo }, id) => {
+        const parent = todoMap.get(parentId as string);
+
+        if (parent && parent.type === TodoEnum.Iterate) {
+          _set(parent, ['config', 'subTodos', id], todo);
         }
-
-        return acc;
-      }, {});
+      });
 
       onClose({
         ...config,
         events: {
           ..._set(config.events || {}, [active.config.id, active.eventPath], {
             dot: toDot(graph),
-            todos,
+            todos: Object.fromEntries(
+              [...todoMap.entries()].filter(([, { parentId }]) => !parentId)
+            ),
           }),
         },
       });
@@ -181,11 +154,30 @@ export function useFlowProps(
 
       onNodesChange: (e: Flow.NodeChange<TodoNode>[]) =>
         onNodesChange(
-          e.filter(
-            (change) =>
-              change.type !== 'position' || !change.id.startsWith(START_NODE.id)
-          )
+          e.reduce<typeof e>((acc, change) => {
+            if (change.type !== 'position') {
+              acc.push(change);
+            } else if (!change.id.startsWith(START_NODE.id)) {
+              const { position } = change;
+              const node = nodes.find(({ id }) => id === change.id);
+
+              acc.push(
+                !node?.parentId
+                  ? change
+                  : {
+                      ...change,
+                      position: {
+                        x: position?.x as number,
+                        y: Math.max(NODE_SIZE.height, position?.y as number),
+                      },
+                    }
+              );
+            }
+
+            return acc;
+          }, [])
         ),
+
       onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
         if (sourceHandle && source !== target) {
           const edge: TodoEdge = {
@@ -218,7 +210,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
         setEditing({ ...editing, todo } as EditingTodo),
 
       onClientPosition: (e: MouseEvent | TouchEvent) => {
-        clientRef.current = getClientPosition(e);
+        clientRef.current = getClientXY(e);
       },
       onTypeSelect: (label: string) =>
         setEditing({
@@ -245,7 +237,7 @@ export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
         }
 
         const start = clientRef.current;
-        const end = getClientPosition(e);
+        const end = getClientXY(e);
 
         clientRef.current = undefined;
 
@@ -410,9 +402,61 @@ function getConnectedIds(
   }, exisiting);
 }
 
-function getClientPosition(e: MouseEvent | TouchEvent): Flow.XYPosition {
-  return {
-    x: _get(e, ['clientX']) as number,
-    y: _get(e, ['clientY']) as number,
-  };
+function getClientXY(e: MouseEvent | TouchEvent): Flow.XYPosition {
+  const { clientX, clientY } =
+    e instanceof MouseEvent ? e : e.changedTouches[0];
+
+  return { x: clientX, y: clientY };
+}
+
+function getNodesWithGraphviz(
+  todos: [string, Todos][],
+  graph: RootGraphModel | undefined,
+  init: TodoNode[]
+) {
+  return todos.reduce<TodoNode[]>((acc, [id, todo]) => {
+    const attrs = Object.fromEntries(
+      graph?.getNode(id)?.attributes.values || []
+    ) as NodeAttrs;
+
+    if (attrs.pos) {
+      const [x, y] = attrs.pos.split(',').map(Number);
+
+      acc.push({
+        id,
+        type: todo.type,
+        data: todo,
+        width: Number(attrs.width),
+        height: Number(attrs.height),
+        position: { x, y },
+        ...(attrs.group && {
+          parentId: attrs.group,
+          extent: 'parent',
+        }),
+      });
+    }
+
+    if (attrs && todo.type === TodoEnum.Iterate) {
+      acc.push(
+        ...getNodesWithGraphviz(
+          Object.entries(todo.config?.subTodos || {}),
+          graph,
+          [
+            {
+              ...START_NODE,
+              id: `${START_NODE.id}-${id}`,
+              parentId: id,
+              extent: 'parent',
+              position: {
+                x: (Number(attrs.width) - NODE_SIZE.width) / 2,
+                y: NODE_SIZE.height,
+              },
+            },
+          ]
+        )
+      );
+    }
+
+    return acc;
+  }, init);
 }
