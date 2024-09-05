@@ -4,6 +4,20 @@ import { makeStyles } from 'tss-react/mui';
 import { NODE_BACKGROUND } from './FlowNode.const';
 import type { MainStyleParams } from './FlowNode.types';
 
+export const useStartNodeStyles = makeStyles({ name: 'StartNode' })(
+  (theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    node: {
+      padding: 2,
+      fontSize: theme.typography.h3.fontSize,
+    },
+  })
+);
+
 export const useSubFlowStyles = makeStyles({ name: 'SubFlow' })((theme) => ({
   divider: {
     borderColor: _get(theme.palette, [NODE_BACKGROUND.Iterate, 'main']),

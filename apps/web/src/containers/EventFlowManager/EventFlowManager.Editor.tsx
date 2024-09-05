@@ -10,7 +10,6 @@ import { forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import * as Comp from '~web/components';
-import StartNode from './EventFlowManager.StartNode';
 import { EditorModeEnum } from './EventFlowManager.types';
 import { SlideDownTransition } from '~web/themes';
 import { useEditorStyles } from './EventFlowManager.styles';
@@ -23,7 +22,6 @@ import {
 } from './EventFlowManager.hooks';
 
 const FIT_VIEW_DURATION = 400;
-const NODE_TYPES = { ...Comp.FlowNodes, start: StartNode };
 
 export default forwardRef<DoneRef, EditorProps>(function Editor(
   { title, description, onClose, ...props },
@@ -75,7 +73,7 @@ export default forwardRef<DoneRef, EditorProps>(function Editor(
               fitViewOptions={{ duration: FIT_VIEW_DURATION }}
               connectionLineType={Comp.LINE_TYPE}
               edgeTypes={Comp.FlowEdges}
-              nodeTypes={NODE_TYPES}
+              nodeTypes={Comp.FlowNodes}
               onConnectEnd={editingHandlers.onNodeCreate}
               onConnectStart={editingHandlers.onClientPosition}
               onNodeClick={editingHandlers.onNodeEdit}

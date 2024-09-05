@@ -1,19 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStartNodeStyles = makeStyles({ name: 'StartNode' })(
-  (theme) => ({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    node: {
-      padding: 2,
-      fontSize: theme.typography.h3.fontSize,
-    },
-  })
-);
-
 export const useEditorStyles = makeStyles({ name: 'Editor' })((theme) => ({
   root: {
     display: 'flex',
