@@ -212,8 +212,11 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               ref={managerRef}
               active={activeEvent}
               config={layout}
-              widgets={Object.values(hierarchyWidgets).map(
-                ({ payload }) => payload
+              layouts={Object.fromEntries(
+                value.layouts.map(({ id, widgetId }) => [
+                  id,
+                  hierarchyWidgets[widgetId].payload,
+                ])
               )}
               onClose={(config) =>
                 startTransition(() => {

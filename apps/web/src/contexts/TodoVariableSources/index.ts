@@ -1,6 +1,6 @@
 export {
   default,
-  default as TodoVariableSourcesProvider,
-} from './TodoVariableSources.Provider';
+  default as LayoutSourcesProvider,
+} from './LayoutSources.Provider';
 
-export type { TodoVariableSourcesProviderProps } from './TodoVariableSources.types';
+export type { LayoutSourcesProviderProps } from './LayoutSources.types';
