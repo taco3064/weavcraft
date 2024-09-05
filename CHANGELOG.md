@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.78](https://github.com/taco3064/weavcraft/compare/v0.0.77...v0.0.78) (2024-09-05)
+
+
+### Bug Fixes
+
+* **web/event-flow-manager.hooks:** fixed getClientXY couldn't get result from touch event ([17c5a02](https://github.com/taco3064/weavcraft/commit/17c5a02de95ad784cff57191a43b674d0d7f0dd7))
+* **web/event-flow-manager:** fixed the resize and get client position bugs in mobile ([d98075d](https://github.com/taco3064/weavcraft/commit/d98075d8dc1f23449d93dcea09c32265cd76cff3))
+* **web/event-flow-manager:** update the initial translation ([84fa37f](https://github.com/taco3064/weavcraft/commit/84fa37f87ef3811324df4fe5ac5919415b82d708))
+
 ### [0.0.77](https://github.com/taco3064/weavcraft/compare/v0.0.76...v0.0.77) (2024-09-04)
 
 
