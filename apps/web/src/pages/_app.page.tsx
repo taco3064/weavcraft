@@ -20,8 +20,7 @@ export default appWithTranslation(function App({
   useEffect(() => {
     const language = Cookies.get('language');
 
-    if (language !== locale) {
-      alert(`cookie:${language}, locale:${locale}`);
+    if (language && language !== locale) {
       replace({ pathname, query }, asPath, { locale: language });
     }
   }, [locale, asPath, pathname, query, replace]);
