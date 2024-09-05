@@ -1,11 +1,11 @@
 import * as Flow from '@xyflow/react';
+import * as React from 'react';
 import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { TodoEnum, type Todos } from '@weavcraft/common';
 import { digraph, fromDot, toDot, type RootGraphModel } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
-import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { NODE_SIZE, START_NODE, SUB_FLOW_SIZE } from '~web/components';
 import { EditorModeEnum } from './EventFlowManager.types';
@@ -27,7 +27,7 @@ export function useInitialization({
   const options = _get(config, ['events', active.config.id, active.eventPath]);
 
   return [
-    useMemo(() => {
+    React.useMemo(() => {
       const todos: [string, Todos][] = Object.entries(options?.todos || {});
       const graph = !options?.dot ? undefined : fromDot(options.dot);
 
@@ -123,13 +123,23 @@ export function useFlowProps(
 ) {
   const { fitView } = Flow.useReactFlow();
 
-  const disableFitViewRef = useRef(false);
-  const debounceFitView = useMemo(() => _debounce(fitView, 200), [fitView]);
-
   const [edges, setEdges, onEdgesChange] = Flow.useEdgesState(els.edges);
   const [nodes, setNodes, onNodesChange] = Flow.useNodesState(els.nodes);
 
-  useEffect(() => {
+  const nodesRef = React.useRef<Map<string, TodoNode>>(new Map());
+  const disableFitViewRef = React.useRef(false);
+  const debounceFitView = React.useMemo(
+    () => _debounce(fitView, 200),
+    [fitView]
+  );
+
+  React.useImperativeHandle(
+    nodesRef,
+    () => new Map(nodes.map((node) => [node.id, node])),
+    [nodes]
+  );
+
+  React.useEffect(() => {
     if (!disableFitViewRef.current) {
       const handleResize = () =>
         debounceFitView({ duration: fitViewDuration, nodes });
@@ -152,14 +162,34 @@ export function useFlowProps(
       onNodeDragStart: () => (disableFitViewRef.current = true),
       onNodeDragStop: () => (disableFitViewRef.current = false),
 
+      onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
+        const sNode = nodesRef.current.get(source);
+        const tNode = nodesRef.current.get(target);
+
+        if (
+          sourceHandle &&
+          source !== target &&
+          sNode?.parentId === tNode?.parentId
+        ) {
+          const edge: TodoEdge = {
+            id: `${source}-${target}`,
+            type: sourceHandle as EdgeType,
+            source,
+            sourceHandle,
+            target,
+          };
+
+          setEdges([...edges.filter((edge) => edge.source !== source), edge]);
+        }
+      },
       onNodesChange: (e: Flow.NodeChange<TodoNode>[]) =>
         onNodesChange(
           e.reduce<typeof e>((acc, change) => {
             if (change.type !== 'position') {
               acc.push(change);
             } else if (!change.id.startsWith(START_NODE.id)) {
+              const node = nodesRef.current.get(change.id);
               const { position } = change;
-              const node = nodes.find(({ id }) => id === change.id);
 
               acc.push(
                 !node?.parentId
@@ -177,28 +207,14 @@ export function useFlowProps(
             return acc;
           }, [])
         ),
-
-      onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
-        if (sourceHandle && source !== target) {
-          const edge: TodoEdge = {
-            id: `${source}-${target}`,
-            type: sourceHandle as EdgeType,
-            source,
-            sourceHandle,
-            target,
-          };
-
-          setEdges([...edges.filter((edge) => edge.source !== source), edge]);
-        }
-      },
     },
   ] as const;
 }
 
 export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
   const { screenToFlowPosition } = Flow.useReactFlow();
-  const [editing, setEditing] = useState<EditingTodo>();
-  const clientRef = useRef<Flow.XYPosition>();
+  const [editing, setEditing] = React.useState<EditingTodo>();
+  const clientRef = React.useRef<Flow.XYPosition>();
 
   return [
     { mode: editing?.mode, editing },

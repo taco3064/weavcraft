@@ -73,7 +73,7 @@ export default forwardRef<DoneRef, EditorProps>(function Editor(
               {...{ edges, nodes }}
               fitView
               fitViewOptions={{ duration: FIT_VIEW_DURATION }}
-              connectionLineType={Flow.ConnectionLineType.Bezier}
+              connectionLineType={Comp.LINE_TYPE}
               edgeTypes={Comp.FlowEdges}
               nodeTypes={NODE_TYPES}
               onConnectEnd={editingHandlers.onNodeCreate}

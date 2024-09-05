@@ -31,6 +31,7 @@
   "lbl-variable-name": "名稱",
   "lbl-variable-output": "輸出來源",
   "lbl-variable-type": "參數型態",
+  "msg-decision-no-conditions": "尚未設置相關條件",
   "msg-delete-todo-confirm": "確定要刪除此事件節點嗎？",
   "msg-fetch-no-headers": "尚未設置相關 Headers",
   "msg-iterate-no-sources": "尚未設置相關來源",

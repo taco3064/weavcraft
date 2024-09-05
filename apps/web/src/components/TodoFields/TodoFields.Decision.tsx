@@ -3,7 +3,9 @@ import AccordionActions from '@mui/material/AccordionActions';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
+import Core from '@weavcraft/core';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -72,7 +74,7 @@ export default function DecisionFields({
           {conditions.length === 0 && (
             <NoDataAvailable
               required
-              message={t('msg-variable-no-conditions')}
+              message={t('msg-decision-no-conditions')}
             />
           )}
 
@@ -130,6 +132,22 @@ export default function DecisionFields({
                   }
                 />
               </ListItemText>
+
+              <IconButton
+                onClick={() => {
+                  const newConditions = [...conditions];
+
+                  newConditions.splice(index, 1);
+                  setConditions(newConditions);
+
+                  onChange({
+                    ...value,
+                    conditions: newConditions,
+                  } as NonNullable<typeof value>);
+                }}
+              >
+                <Core.Icon code="faClose" color="disabled" />
+              </IconButton>
             </ListItem>
           ))}
         </List>

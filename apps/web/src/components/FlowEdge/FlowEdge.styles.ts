@@ -1,5 +1,11 @@
+import * as Flow from '@xyflow/react';
 import { makeStyles } from 'tss-react/mui';
 import type { MainStyleParams } from './FlowEdge.types';
+
+const LINE_TYPE_ID: keyof typeof Flow.ConnectionLineType = 'SmoothStep';
+
+export const LINE_TYPE = Flow.ConnectionLineType[LINE_TYPE_ID];
+export const getEdgePath = Flow[`get${LINE_TYPE_ID}Path`];
 
 export const useMainStyles = makeStyles<MainStyleParams>({ name: 'FlowNode' })(
   (theme, { hasLabelText, labelX, labelY }) => ({
