@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { LayoutSourcesContext } from './LayoutSources.hooks';
 import type { LayoutSourcesProviderProps } from './LayoutSources.types';
 
