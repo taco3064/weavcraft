@@ -100,7 +100,7 @@ export type UpdateWidgetTodo = BaseTodo<
   TodoEnum.UpdateWidget,
   {
     source: VariableSource;
-    widgetId: string;
+    layoutId: string;
     dataPath: number;
   }
 >;
