@@ -181,11 +181,30 @@ export function useFlowProps(
 
       onNodesChange: (e: Flow.NodeChange<TodoNode>[]) =>
         onNodesChange(
-          e.filter(
-            (change) =>
-              change.type !== 'position' || !change.id.startsWith(START_NODE.id)
-          )
+          e.reduce<typeof e>((acc, change) => {
+            if (change.type !== 'position') {
+              acc.push(change);
+            } else if (!change.id.startsWith(START_NODE.id)) {
+              const { position } = change;
+              const node = nodes.find(({ id }) => id === change.id);
+
+              acc.push(
+                !node?.parentId
+                  ? change
+                  : {
+                      ...change,
+                      position: {
+                        x: position?.x as number,
+                        y: Math.max(NODE_SIZE.height, position?.y as number),
+                      },
+                    }
+              );
+            }
+
+            return acc;
+          }, [])
         ),
+
       onConnect: ({ source, sourceHandle, target }: Flow.Connection) => {
         if (sourceHandle && source !== target) {
           const edge: TodoEdge = {
@@ -411,13 +430,8 @@ function getConnectedIds(
 }
 
 function getClientXY(e: MouseEvent | TouchEvent): Flow.XYPosition {
-  return e instanceof MouseEvent
-    ? {
-        x: e.clientX,
-        y: e.clientY,
-      }
-    : {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
+  const { clientX, clientY } =
+    e instanceof MouseEvent ? e : e.changedTouches[0];
+
+  return { x: clientX, y: clientY };
 }
