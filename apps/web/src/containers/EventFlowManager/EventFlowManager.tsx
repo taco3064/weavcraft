@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import '@xyflow/react/dist/style.css';
 
 import Editor from './EventFlowManager.Editor';
-import { LayoutSourcesProvider } from '~web/contexts';
+import { Provider } from '~web/contexts';
 import { useInitialization } from './EventFlowManager.hooks';
 import type { DoneRef, EventFlowManagerProps } from './EventFlowManager.types';
 
@@ -23,14 +23,14 @@ export default forwardRef<DoneRef, EventFlowManagerProps>(
 
     return !widget ? null : (
       <ReactFlowProvider>
-        <LayoutSourcesProvider {...{ layouts }}>
+        <Provider.LayoutSources {...{ layouts }}>
           <Editor
             {...{ ref, edges, nodes }}
             title={active.eventPath}
             description={t(`widgets:lbl-component.${widget.component}`)}
             onClose={onManagerClose}
           />
-        </LayoutSourcesProvider>
+        </Provider.LayoutSources>
       </ReactFlowProvider>
     );
   }

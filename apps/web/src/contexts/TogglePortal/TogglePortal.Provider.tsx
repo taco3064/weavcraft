@@ -1,5 +1,4 @@
 import { useImperativeHandle, useMemo, useRef, useState } from 'react';
-
 import { TogglePortalContext } from './TogglePortal.hooks';
 
 import type {

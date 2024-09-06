@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import { SettingModeEnum, SourceModeEnum } from './PropsSettingList.types';
-import { useCorePropsGetter } from '~web/contexts';
 
 import {
   DataPropEnum,
   NodeCaseEnum,
+  useCorePropsGetter,
   useNodeCaseGetter,
   useNodeFinder,
 } from '~web/hooks';

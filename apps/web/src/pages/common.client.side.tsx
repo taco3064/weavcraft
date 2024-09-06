@@ -1,13 +1,13 @@
 import { NextSeo } from 'next-seo';
-import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 
 import { Breadcrumbs, HierarchyList } from '~web/containers';
 import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getSuperiorHierarchies } from '~web/services';
-import { useNavIcon, useNextSeoProps } from '~web/hooks';
-import { useTutorialMode } from '~web/contexts';
+import { useNavIcon, useNextSeoProps, useTutorialMode } from '~web/hooks';
 
 import type {
   BaseHierarchyProps,
@@ -39,6 +39,7 @@ export function getBaseGroupPage<P>(
     initialSuperiors,
   }: BaseHierarchyProps<P>) {
     const { t } = useTranslation();
+    const { pathname } = useRouter();
     const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
 
     const seoProps = useNextSeoProps();
@@ -79,7 +80,7 @@ export function getBaseGroupPage<P>(
           }}
         />
 
-        <TutorialModeAlert />
+        <TutorialModeAlert key={pathname} />
 
         <HierarchyList
           {...hierarchyListProps}

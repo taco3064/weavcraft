@@ -4,7 +4,7 @@ import { createElement, useCallback, useMemo } from 'react';
 import { nanoid } from 'nanoid';
 import type { ComponentType, ReactNode } from 'react';
 
-import { useCorePropsGetter } from '~web/contexts';
+import { useCorePropsGetter } from '../useCoreDefinitionContext';
 import type { ConfigPaths, ComponentConfig } from '../useWidgetRender';
 import type { WidgetConfigs } from '../imports.types';
 

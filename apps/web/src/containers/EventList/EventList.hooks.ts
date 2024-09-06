@@ -1,9 +1,7 @@
 import _toPath from 'lodash/toPath';
 import { useMemo } from 'react';
 
-import { useCorePropsGetter } from '~web/contexts';
-import { useNodeFinder } from '~web/hooks';
-
+import { useCorePropsGetter, useNodeFinder } from '~web/hooks';
 import type { EventGetterOptions, EventItem } from './EventList.types';
 
 import type {

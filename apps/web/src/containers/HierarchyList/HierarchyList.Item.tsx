@@ -14,7 +14,7 @@ import { ConfirmToggle, Link } from '~web/components';
 import { EnumHierarchyType } from '~web/services';
 import { useDraggable, useDroppable } from './HierarchyList.hooks';
 import { useItemStyles } from './HierarchyList.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 import type { HierarchyListItemProps } from './HierarchyList.types';
 
 export default function HierarchyListItem<P>({

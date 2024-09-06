@@ -11,22 +11,17 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
+import * as Hooks from '~web/hooks';
 import DataStructureList from '../DataStructureList';
 import ElementNodeList from '../ElementNodeList';
 import NodeCreateButton from './WidgetEditor.NodeCreateButton';
 import PropsSettingList from '../PropsSettingList';
+import { PortalWrapper } from '~web/components';
 import { ViewModeEnum, type WidgetEditorProps } from './WidgetEditor.types';
 import { upsertWidgetConfig } from '~web/services';
 import { useChangeEvents } from './WidgetEditor.hooks';
 import { useMainStyles } from './WidgetEditor.styles';
-import { useNodeCreate, useWidgetRender } from '~web/hooks';
-
-import {
-  PortalWrapper,
-  useTogglePortal,
-  useTutorialMode,
-  withCorePropsDefinition,
-} from '~web/contexts';
+import { withCoreDefinition } from '~web/contexts';
 
 import type {
   ConfigPaths,
@@ -34,14 +29,14 @@ import type {
   WidgetConfigs,
 } from '../imports.types';
 
-export default withCorePropsDefinition(function WidgetEditor({
+export default withCoreDefinition(function WidgetEditor({
   config,
   marginTop,
   maxWidth,
   title,
   toolbarEl,
 }: WidgetEditorProps) {
-  const isTutorialMode = useTutorialMode();
+  const isTutorialMode = Hooks.useTutorialMode();
 
   const [, startTransition] = useTransition();
   const [activeNode, setActiveNode] = useState<ConfigPaths>([]);
@@ -59,21 +54,21 @@ export default withCorePropsDefinition(function WidgetEditor({
   const { classes } = useMainStyles({ marginTop });
   const isValueEmpty = _isEmpty(value);
 
-  const { containerEl, onToggle } = useTogglePortal(() =>
+  const { containerEl, onToggle } = Hooks.useTogglePortal(() =>
     setViewMode(undefined)
   );
 
   const { onDeleteNode, onConfigChange, onStructureChange, ...changeEvents } =
     useChangeEvents(value, setValue);
 
-  const withNodeCreateButton = useNodeCreate(
+  const withNodeCreateButton = Hooks.useNodeCreate(
     NodeCreateButton,
     value.dataStructure,
     viewMode === ViewModeEnum.Preview,
     changeEvents
   );
 
-  const generate = useWidgetRender((WidgetEl, { config, key, props }) => (
+  const generate = Hooks.useWidgetRender((WidgetEl, { config, key, props }) => (
     <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
   ));
 

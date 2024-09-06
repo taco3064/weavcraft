@@ -11,19 +11,20 @@
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "@typescript-eslint/ban-types": "off",
-        "@next/next/no-html-link-for-pages": ["error", "apps/web/pages"],
+        "@next/next/no-html-link-for-pages": ["error", "src/pages"],
         "@nx/enforce-module-boundaries": "off",
-        "no-restricted-imports": [
+        "no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": ["src/components/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
           "error",
           {
-            "paths": [
+            "patterns": [
               {
-                "name": "react-i18next",
-                "message": "Please change to use 'next-i18next'."
-              },
-              {
-                "name": "i18next",
-                "message": "Please change to use 'next-i18next'."
+                "group": ["../*", "./*", "~web/components*", "~web/containers*"]
               }
             ]
           }
@@ -31,8 +32,253 @@
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "files": ["src/containers/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["../*", "./*", "~web/containers*"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/contexts/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../*",
+                  "./*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/hooks*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/hooks/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../*",
+                  "./*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/hooks*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/components/**/*.ts", "src/components/**/*.tsx"],
+      "excludedFiles": ["src/components/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": ["createContext", "useContext"]
+              }
+            ],
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "axios*",
+                  "i18next*",
+                  "react-i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/services*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/containers/**/*.ts", "src/containers/**/*.tsx"],
+      "excludedFiles": ["src/containers/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": ["createContext", "useContext"]
+              }
+            ],
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "axios*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/containers*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/contexts/**/*.ts", "src/contexts/**/*.tsx"],
+      "excludedFiles": ["src/contexts/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "axios*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/hooks*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/hooks/**/*.ts", "src/hooks/**/*.tsx"],
+      "excludedFiles": ["src/hooks/imports.types.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": ["createContext"]
+              }
+            ],
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "axios*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/hooks*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/services/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/hooks*",
+                  "~web/services*",
+                  "~web/styles*",
+                  "~web/themes*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/styles/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/hooks*",
+                  "~web/services*",
+                  "~web/styles*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/themes/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../../*",
+                  "react-i18next*",
+                  "i18next*",
+                  "~web/components*",
+                  "~web/containers*",
+                  "~web/contexts*",
+                  "~web/hooks*",
+                  "~web/services*",
+                  "~web/styles*",
+                  "~web/themes*"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

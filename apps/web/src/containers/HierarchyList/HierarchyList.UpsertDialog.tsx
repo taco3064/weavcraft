@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next';
 
 import { EditorDialog } from '~web/components';
 import { createHierarchyData, updateHierarchyData } from '~web/services';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 
 import type {
   MutationMode,

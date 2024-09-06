@@ -3,7 +3,7 @@ import _get from 'lodash/get';
 import _set from 'lodash/set';
 import type { ComponentType, ReactNode } from 'react';
 
-import { useCorePropsGetter } from '~web/contexts';
+import { useCorePropsGetter } from '../useCoreDefinitionContext';
 
 import type {
   GenerateOptions,

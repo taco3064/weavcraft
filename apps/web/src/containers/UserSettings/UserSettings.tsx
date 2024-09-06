@@ -14,9 +14,8 @@ import Analytics from './UserSettings.Analytics';
 import Profile from './UserSettings.Profile';
 import Settings from './UserSettings.Settings';
 import { MenuDialog } from '~web/components';
-import { useAuth } from '~web/contexts';
+import { useAuth, useSigninProviders, useUserSettings } from '~web/hooks';
 import { useMainStyles } from './UserSettings.styles';
-import { useSigninProviders, useUserSettings } from '~web/hooks';
 import type { BaseSettingProps, UserSettingsProps } from './UserSettings.types';
 import type { SigninProvider } from '../imports.types';
 

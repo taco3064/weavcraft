@@ -8,8 +8,7 @@ import { useMemo } from 'react';
 import type CoreType from '@weavcraft/core';
 import type { ElementNodeProp } from '@weavcraft/common';
 
-import { useCorePropsGetter } from '~web/contexts';
-import { useNodePaths } from '~web/hooks';
+import { useCorePropsGetter, useNodePaths } from '~web/hooks';
 import type { ChangeEvents } from './WidgetEditor.types';
 
 import type {

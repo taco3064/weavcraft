@@ -11,27 +11,21 @@ import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
+import * as Comp from '~web/components';
+import * as Hooks from '~web/hooks';
 import EventFlowManager, { type ActiveEvent } from '../EventFlowManager';
 import EventList from '../EventList';
 import WidgetActions from './PageLayoutsEditor.WidgetActions';
 import WidgetCreateButton from './PageLayoutsEditor.WidgetCreateButton';
-import { BreakpointStepper, ViewportFrame } from '~web/components';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
 import { upsertPageLayouts } from '~web/services';
 import { useChangeEvents } from './PageLayoutsEditor.hooks';
-import { useMainMargin, useWidgetRender } from '~web/hooks';
 import { useMainStyles } from './PageLayoutsEditor.styles';
+import { withCoreDefinition } from '~web/contexts';
 import type { PageLayoutConfigs } from '../imports.types';
 import type { PageLayoutsEditorProps } from './PageLayoutsEditor.types';
 
-import {
-  PortalWrapper,
-  useTogglePortal,
-  useTutorialMode,
-  withCorePropsDefinition,
-} from '~web/contexts';
-
-export default withCorePropsDefinition(function PageLayoutsEditor({
+export default withCoreDefinition(function PageLayoutsEditor({
   config,
   marginTop,
   title,
@@ -47,8 +41,8 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
     !config ? { layouts: [] } : JSON.parse(JSON.stringify(config))
   );
 
-  const isTutorialMode = useTutorialMode();
-  const margin = useMainMargin();
+  const isTutorialMode = Hooks.useTutorialMode();
+  const margin = Hooks.useMainMargin();
   const layout = value.layouts?.find(({ id }) => id === editingLayoutId);
 
   const { t } = useTranslation();
@@ -62,12 +56,12 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
     { onCreate, onLayoutChange, onManagerDone, onRemove, onResize, onResort },
   ] = useChangeEvents(breakpoint, viewMode, config, value, setValue);
 
-  const { containerEl, onToggle } = useTogglePortal(() => {
+  const { containerEl, onToggle } = Hooks.useTogglePortal(() => {
     setEditingLayoutId(undefined);
     onManagerDone();
   });
 
-  const generate = useWidgetRender((WidgetEl, { key, props }) => (
+  const generate = Hooks.useWidgetRender((WidgetEl, { key, props }) => (
     <WidgetEl key={key} {...props} />
   ));
 
@@ -85,7 +79,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
     <>
       <Slide in direction="up" timeout={1200}>
         <Container disableGutters className={classes.root} maxWidth="xl">
-          <PortalWrapper
+          <Comp.PortalWrapper
             WrapperComponent={Toolbar}
             containerEl={toolbarEl}
             variant="dense"
@@ -131,10 +125,10 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
                 <Core.Icon code="faSave" />
               </IconButton>
             </Tooltip>
-          </PortalWrapper>
+          </Comp.PortalWrapper>
 
           {viewMode === ViewModeEnum.Preview ? (
-            <ViewportFrame
+            <Comp.ViewportFrame
               variant="pages"
               breakpoint={breakpoint}
               config={value}
@@ -187,7 +181,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
       </Slide>
 
       <Slide in direction="up" timeout={1200}>
-        <BreakpointStepper
+        <Comp.BreakpointStepper
           disableNextButton={!value.layouts?.length}
           value={breakpoint}
           onChange={setBreakpoint}
@@ -200,7 +194,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
       </Slide>
 
       {layout?.widgetId && hierarchyWidgets[layout.widgetId] && (
-        <PortalWrapper containerEl={containerEl}>
+        <Comp.PortalWrapper containerEl={containerEl}>
           {!activeEvent ? (
             <EventList
               hierarchyWidget={hierarchyWidgets[layout.widgetId]}
@@ -226,7 +220,7 @@ export default withCorePropsDefinition(function PageLayoutsEditor({
               }
             />
           )}
-        </PortalWrapper>
+        </Comp.PortalWrapper>
       )}
     </>
   );

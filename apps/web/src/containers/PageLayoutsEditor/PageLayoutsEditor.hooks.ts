@@ -3,9 +3,8 @@ import { nanoid } from 'nanoid';
 import { useQuery } from '@tanstack/react-query';
 import type { Breakpoint } from '@mui/material/styles';
 
-import { NAV_ITEMS, useHierarchyWidgets } from '~web/hooks';
+import { NAV_ITEMS, useHierarchyWidgets, useTutorialMode } from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
-import { useTutorialMode } from '~web/contexts';
 import type * as Types from '../imports.types';
 import type { MenuDialogProps } from '~web/components';
 import type { WidgetLayout } from '../EventFlowManager';

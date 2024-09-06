@@ -1,4 +1,6 @@
 export * from './useAppMenuItems';
+export * from './useAppSettingsContext';
+export * from './useCoreDefinitionContext';
 export * from './useEventFlow';
 export * from './useHierarchyWidgets';
 export * from './useInitializationConfig';
@@ -6,4 +8,5 @@ export * from './useMainContainer';
 export * from './useNextSeoProps';
 export * from './useNodeActions';
 export * from './usePropsInjection';
+export * from './useTogglePortalContext';
 export * from './useWidgetRender';

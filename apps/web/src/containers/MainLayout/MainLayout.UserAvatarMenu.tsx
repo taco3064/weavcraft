@@ -8,9 +8,8 @@ import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 
 import { MenuDialog } from '~web/components';
-import { useAuth } from '~web/contexts';
+import { useAuth, useUserSettings } from '~web/hooks';
 import { useMenuStyles } from './MainLayout.styles';
-import { useUserSettings } from '~web/hooks';
 import type { Notifications, SigninProvider } from '../imports.types';
 import type { UserAvatarMenuProps } from './MainLayout.types';
 

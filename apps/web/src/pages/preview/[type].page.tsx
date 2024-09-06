@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { useHierarchyWidgets, useWidgetRender } from '~web/hooks';
-import { withCorePropsDefinition } from '~web/contexts';
+import { withCoreDefinition } from '~web/contexts';
 import type { PageLayoutConfigs } from '../imports.types';
 
-export default withCorePropsDefinition(function PreviewPage() {
+export default withCoreDefinition(function PreviewPage() {
   const { query } = useRouter();
   const { id, mode, type } = query as Record<string, string>;
 

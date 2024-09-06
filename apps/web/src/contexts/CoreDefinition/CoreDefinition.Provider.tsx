@@ -1,14 +1,14 @@
 import Core from '@weavcraft/core';
 import { lazy } from 'react';
 
-import { CorePropsDefinitionContext } from './CorePropsDefinition.hooks';
+import { CoreDefinitionContext } from './CoreDefinition.hooks';
 import { getPropsDefinition } from '~web/services';
 import type { CoreComponent } from '../imports.types';
 
 import type {
-  CorePropsDefinitionProviderProps,
-  CorePropsDefinitionContextValue,
-} from './CorePropsDefinition.types';
+  CoreDefinitionProviderProps,
+  CoreDefinitionContextValue,
+} from './CoreDefinition.types';
 
 export default lazy(async () => {
   const definitions = await Promise.all(
@@ -22,17 +22,17 @@ export default lazy(async () => {
       ...acc,
       [definition.componentName]: definition,
     }),
-    {} as CorePropsDefinitionContextValue
+    {} as CoreDefinitionContextValue
   );
 
   return {
     default: function CorePropsDefinitionProvider({
       children,
-    }: CorePropsDefinitionProviderProps) {
+    }: CoreDefinitionProviderProps) {
       return (
-        <CorePropsDefinitionContext.Provider value={value}>
+        <CoreDefinitionContext.Provider value={value}>
           {children}
-        </CorePropsDefinitionContext.Provider>
+        </CoreDefinitionContext.Provider>
       );
     },
   };

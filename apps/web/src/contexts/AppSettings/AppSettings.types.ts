@@ -19,12 +19,7 @@ export interface AppSettingsContextValue {
 }
 
 //* Component Props
-export interface AppProviderManagerProps {
-  children: ReactNode;
-  isTutorialMode: boolean;
-}
-
 export interface AppSettingsProviderProps {
   children: ReactNode;
-  value: AppSettingsContextValue;
+  isTutorialMode: boolean;
 }
