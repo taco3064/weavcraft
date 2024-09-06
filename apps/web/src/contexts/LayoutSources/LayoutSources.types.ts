@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react';
-import type { WidgetConfigs } from '../imports.types';
+import type { HierarchyData, WidgetConfigs } from '../imports.types';
 
-export type LayoutSourcesContextValue = Record<string, WidgetConfigs>;
+export type LayoutSourcesContextValue = Record<
+  string,
+  HierarchyData<WidgetConfigs>
+>;
 
 export interface LayoutSourcesProviderProps {
-  layouts: Record<string, WidgetConfigs>;
+  layouts: LayoutSourcesContextValue;
   children: ReactNode;
 }

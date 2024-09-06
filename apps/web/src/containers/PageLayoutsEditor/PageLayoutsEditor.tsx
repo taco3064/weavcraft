@@ -209,7 +209,7 @@ export default withCoreDefinition(function PageLayoutsEditor({
               layouts={Object.fromEntries(
                 value.layouts.map(({ id, widgetId }) => [
                   id,
-                  hierarchyWidgets[widgetId].payload,
+                  hierarchyWidgets[widgetId],
                 ])
               )}
               onClose={(config) =>

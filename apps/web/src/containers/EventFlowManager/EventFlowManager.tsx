@@ -10,10 +10,11 @@ import type { DoneRef, EventFlowManagerProps } from './EventFlowManager.types';
 
 export default forwardRef<DoneRef, EventFlowManagerProps>(
   function EventFlowManager({ active, config, layouts, onClose }, ref) {
+    const { t } = useTranslation();
+
     const widget = Object.values(layouts).find(
       ({ id }) => id === config.widgetId
-    );
-    const { t } = useTranslation();
+    )?.payload;
 
     const [{ edges, nodes }, onManagerClose] = useInitialization({
       active,
