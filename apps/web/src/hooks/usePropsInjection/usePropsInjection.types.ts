@@ -22,6 +22,11 @@ type ConfigProps = DataBindingProp | PrimitiveValueProp;
 export type DataSource = '[[root]]' | '[[extension]]' | number[];
 export type DataFieldIndexes = Exclude<DataSource, `[[${string}]]`>;
 
+export interface DataSourceOptions<T extends string | string[] = string> {
+  fieldPath: T;
+  indexes?: DataFieldIndexes;
+}
+
 export type PropsSettingChangeHandler = (
   config: ComponentConfig,
   propPath?: string,

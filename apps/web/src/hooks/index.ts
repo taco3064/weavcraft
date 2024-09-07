@@ -2,7 +2,7 @@ export * from './useAppMenuItems';
 export * from './useAppSettingsContext';
 export * from './useCoreDefinitionContext';
 export * from './useEventFlow';
-export * from './useHierarchyWidgets';
+export * from './useHierarchyDataContext';
 export * from './useInitializationConfig';
 export * from './useMainContainer';
 export * from './useNextSeoProps';

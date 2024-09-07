@@ -24,14 +24,14 @@ export default forwardRef<DoneRef, EventFlowManagerProps>(
 
     return !widget ? null : (
       <ReactFlowProvider>
-        <Provider.LayoutSources {...{ layouts }}>
+        <Provider.HierarchyData data={layouts}>
           <Editor
             {...{ ref, edges, nodes }}
             title={active.eventPath}
             description={t(`widgets:lbl-component.${widget.component}`)}
             onClose={onManagerClose}
           />
-        </Provider.LayoutSources>
+        </Provider.HierarchyData>
       </ReactFlowProvider>
     );
   }

@@ -24,11 +24,6 @@ export enum SourceModeEnum {
 }
 
 //* Variables
-export interface DataSourceOptions<T extends string | string[] = string> {
-  fieldPath: T;
-  indexes?: DataFieldIndexes;
-}
-
 export interface PropItem {
   fieldPath?: string;
   mappable: boolean;
