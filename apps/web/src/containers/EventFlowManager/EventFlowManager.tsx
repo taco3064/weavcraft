@@ -10,11 +10,8 @@ import type { DoneRef, EventFlowManagerProps } from './EventFlowManager.types';
 
 export default forwardRef<DoneRef, EventFlowManagerProps>(
   function EventFlowManager({ active, config, layouts, onClose }, ref) {
+    const { [config.id]: hierarchy } = layouts;
     const { t } = useTranslation();
-
-    const widget = Object.values(layouts).find(
-      ({ id }) => id === config.widgetId
-    )?.payload;
 
     const [{ edges, nodes }, onManagerClose] = useInitialization({
       active,
@@ -22,13 +19,15 @@ export default forwardRef<DoneRef, EventFlowManagerProps>(
       onClose,
     });
 
-    return !widget ? null : (
+    return !hierarchy?.payload ? null : (
       <ReactFlowProvider>
         <Provider.HierarchyData data={layouts}>
           <Editor
             {...{ ref, edges, nodes }}
             title={active.eventPath}
-            description={t(`widgets:lbl-component.${widget.component}`)}
+            description={t(
+              `widgets:lbl-component.${hierarchy.payload.component}`
+            )}
             onClose={onManagerClose}
           />
         </Provider.HierarchyData>
