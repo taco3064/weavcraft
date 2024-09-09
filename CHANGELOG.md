@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.81](https://github.com/taco3064/weavcraft/compare/v0.0.80...v0.0.81) (2024-09-09)
+
+
+### Bug Fixes
+
+* **web/event-flow-manager:** fixed bug of using the invalid way to get widget configs ([bdaee1a](https://github.com/taco3064/weavcraft/commit/bdaee1ad7aa4d718029035116191f25db9147fc8))
+* **web/layout-sources:** fixed the invalid types ([c56e445](https://github.com/taco3064/weavcraft/commit/c56e445f42c285351730c2bc822d39d719478672))
+* **web/todonode:** update node styles ([76ad256](https://github.com/taco3064/weavcraft/commit/76ad2561bc4c4693997872110ca878af8251fa67))
+
 ### [0.0.80](https://github.com/taco3064/weavcraft/compare/v0.0.79...v0.0.80) (2024-09-05)
 
 
