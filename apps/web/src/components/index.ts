@@ -13,6 +13,7 @@ export * from './Link';
 export * from './MenuDialog';
 export * from './PageContainer';
 export * from './PaletteViewer';
+export * from './PortalWrapper';
 export * from './PrimitiveField';
 export * from './SwitchIconButton';
 export * from './SwitchListItem';

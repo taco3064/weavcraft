@@ -1,5 +1,6 @@
 import { NextSeo } from 'next-seo';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { GetServerSideProps } from 'next';
@@ -8,8 +9,7 @@ import { Breadcrumbs, MainLayout, PaletteEditor } from '~web/containers';
 import { DETAIL_MARGIN_TOP, makePerPageLayout } from '../../common.client.side';
 import { PageContainer, TutorialModeAlert } from '~web/components';
 import { getTranslations, isUserEnvStatus } from '../../common.server.side';
-import { useInitializationConfig } from '~web/hooks';
-import { useTutorialMode } from '~web/contexts';
+import { useInitializationConfig, useTutorialMode } from '~web/hooks';
 
 import {
   getHierarchyDataById,
@@ -27,6 +27,7 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
   MainLayout
 )(function ThemeDetailPage(props) {
   const { t } = useTranslation();
+  const { pathname } = useRouter();
   const [toolbarEl, setToolbarEl] = useState<PortalContainerEl>(null);
   const isTutorialMode = useTutorialMode();
 
@@ -61,7 +62,7 @@ export default makePerPageLayout<InitializationConfig<ThemePalette>>(
         }}
       />
 
-      <TutorialModeAlert />
+      <TutorialModeAlert key={pathname} />
 
       <PaletteEditor
         config={config}

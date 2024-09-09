@@ -3,19 +3,11 @@ import _toPath from 'lodash/toPath';
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { JsonObject } from 'type-fest';
 
+import * as Hooks from '~web/hooks';
 import { SettingModeEnum, SourceModeEnum } from './PropsSettingList.types';
-import { useCorePropsGetter } from '~web/contexts';
-
-import {
-  DataPropEnum,
-  NodeCaseEnum,
-  useNodeCaseGetter,
-  useNodeFinder,
-} from '~web/hooks';
 
 import type {
   BindingSelectProps,
-  DataSourceOptions,
   PropItemProps,
   SourceSelectProps,
 } from './PropsSettingList.types';
@@ -24,6 +16,7 @@ import type {
   DataFieldIndexes,
   DataFields,
   DataSource,
+  DataSourceOptions,
   MappingPath,
 } from '../imports.types';
 
@@ -32,7 +25,8 @@ export function useDataSourceOptions({
   paths,
   widget,
 }: Pick<SourceSelectProps, 'dataPropName' | 'paths' | 'widget'>) {
-  const { getParentStoreNode } = useNodeFinder();
+  const { getParentStoreNode } = Hooks.useNodeFinder();
+  const { getSourceOptions } = Hooks.useDataSourceGenerator();
   const { dataStructure = [] } = widget;
   const parentNode = getParentStoreNode(widget, paths);
 
@@ -54,7 +48,7 @@ export function useDataSourceOptions({
     const extensionIndexes: DataFieldIndexes = JSON.parse(stringify);
     const isExtensionAllowed = Boolean(extensionIndexes.length);
 
-    if (dataPropName !== DataPropEnum.Records) {
+    if (dataPropName !== Hooks.DataPropEnum.Records) {
       return { isExtensionAllowed: isExtensionAllowed || hasFixedRecords };
     }
 
@@ -90,7 +84,13 @@ export function useDataSourceOptions({
         })),
       },
     };
-  }, [dataPropName, dataStructure, hasFixedRecords, stringify]);
+  }, [
+    dataPropName,
+    dataStructure,
+    hasFixedRecords,
+    stringify,
+    getSourceOptions,
+  ]);
 }
 
 export function useFieldBindingOptions({
@@ -99,11 +99,12 @@ export function useFieldBindingOptions({
   paths,
   propPath,
 }: Pick<BindingSelectProps, 'config' | 'paths' | 'propPath' | 'widget'>) {
-  const getCoreProps = useCorePropsGetter();
-  const getNodeCase = useNodeCaseGetter();
+  const getCoreProps = Hooks.useCorePropsGetter();
+  const getNodeCase = Hooks.useNodeCaseGetter();
   const [, baseName] = _toPath(propPath).reverse();
 
-  const { getParentNode } = useNodeFinder();
+  const { getParentNode } = Hooks.useNodeFinder();
+  const { getSourceOptions } = Hooks.useDataSourceGenerator();
   const { dataStructure = [] } = widget;
   const { isStoreWidget } = getCoreProps(config.component);
 
@@ -115,12 +116,12 @@ export function useFieldBindingOptions({
   ]);
 
   if (dataSource === '[[root]]') {
-    return getSourceOptions(DataPropEnum.Data, dataStructure);
+    return getSourceOptions(Hooks.DataPropEnum.Data, dataStructure);
   } else if (dataSource !== '[[extension]]') {
     const indexes = baseName ? dataSource : dataSource?.slice(0, -2);
 
     return getSourceOptions(
-      DataPropEnum.Data,
+      Hooks.DataPropEnum.Data,
       (!indexes?.length ? dataStructure : _get(dataStructure, indexes)) || [],
       indexes
     );
@@ -133,10 +134,10 @@ export function useFieldBindingOptions({
   );
 
   switch (getNodeCase(parentNode)) {
-    case NodeCaseEnum.BindingRoot:
-      return getSourceOptions(DataPropEnum.Data, dataStructure);
+    case Hooks.NodeCaseEnum.BindingRoot:
+      return getSourceOptions(Hooks.DataPropEnum.Data, dataStructure);
 
-    case NodeCaseEnum.FixedData: {
+    case Hooks.NodeCaseEnum.FixedData: {
       const fields = Object.keys(
         _get(parentNode, ['props', 'data', 'value']) || {}
       );
@@ -145,7 +146,7 @@ export function useFieldBindingOptions({
         fieldPath,
       }));
     }
-    case NodeCaseEnum.FixedRecords: {
+    case Hooks.NodeCaseEnum.FixedRecords: {
       const records: JsonObject[] =
         _get(parentNode, ['props', 'records', 'value']) || [];
 
@@ -157,12 +158,12 @@ export function useFieldBindingOptions({
         fieldPath,
       }));
     }
-    case NodeCaseEnum.StoreComponent: {
+    case Hooks.NodeCaseEnum.StoreComponent: {
       const dataFieldIndexes: DataFieldIndexes =
         _get(parentNode, ['props', 'propMapping', 'value', 'records']) || [];
 
       return getSourceOptions(
-        DataPropEnum.Data,
+        Hooks.DataPropEnum.Data,
         _get(dataStructure, dataFieldIndexes),
         dataFieldIndexes
       );
@@ -173,7 +174,7 @@ export function useFieldBindingOptions({
 }
 
 export function useIndexesValue<
-  N extends DataPropEnum | string,
+  N extends Hooks.DataPropEnum | string,
   V extends DataSource | DataFieldIndexes
 >(
   propName: N,
@@ -203,7 +204,7 @@ export function usePropItemStatus({
   propPath,
   sourceMode,
 }: Pick<PropItemProps, 'config' | 'propPath' | 'sourceMode'>) {
-  const getCoreProps = useCorePropsGetter();
+  const getCoreProps = Hooks.useCorePropsGetter();
   const { component } = config;
   const [mode, setMode] = useState(SettingModeEnum.DefaultValue);
 
@@ -247,31 +248,4 @@ export function usePropItemStatus({
     dataFieldIndexes,
     onModeChange: setMode,
   };
-}
-
-function getSourceOptions(
-  type: DataPropEnum,
-  dataStructure: DataFields,
-  baseIndexes: DataFieldIndexes = []
-) {
-  return dataStructure.reduce<Required<DataSourceOptions>[]>(
-    (acc, field, i) => {
-      const [fieldPath, structure] = Array.isArray(field) ? field : [field];
-
-      const fieldType = Array.isArray(structure)
-        ? DataPropEnum.Records
-        : DataPropEnum.Data;
-
-      if (type === fieldType) {
-        const indexes = Array.isArray(structure)
-          ? [...baseIndexes, i, 1]
-          : [...baseIndexes, i];
-
-        acc.push({ fieldPath, indexes });
-      }
-
-      return acc;
-    },
-    []
-  );
 }

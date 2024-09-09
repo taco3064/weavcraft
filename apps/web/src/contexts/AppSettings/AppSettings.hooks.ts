@@ -2,11 +2,9 @@ import * as React from 'react';
 import Cookies from 'js-cookie';
 import createEmotionCache from '@emotion/cache';
 import _camelCase from 'lodash/camelCase';
-import _get from 'lodash/get';
 import { createTheme, type Palette } from '@mui/material/styles';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import type { UserData } from '@weavcraft/common';
 
 import { PALETTES, components } from '~web/themes';
 import type { Credentials, PaletteCode } from '../imports.types';
@@ -15,7 +13,7 @@ import type {
   AppSettingsContextValue,
   CredentialKeys,
   LanguageCode,
-} from './AppProviderManager.types';
+} from './AppSettings.types';
 
 const DEFAULT_THEME: PaletteCode = 'WEAVCRAFT';
 const { NEXT_PUBLIC_DEFAULT_LANGUAGE } = process.env;
@@ -29,36 +27,6 @@ export const AppSettingsContext = React.createContext<AppSettingsContextValue>({
   setLanguage: () => null,
   setPalette: () => null,
 });
-
-export function useAuth() {
-  const { data: session, status } = useSession();
-
-  return {
-    isAuth: status === 'authenticated',
-    userinfo: _get(session, ['user']) as UserData | undefined,
-    onSignout: () => signOut({ callbackUrl: '/', redirect: true }),
-  };
-}
-
-export function useTutorialMode() {
-  const { isTutorialMode } = React.useContext(AppSettingsContext);
-
-  return isTutorialMode;
-}
-
-export function useAppSettings() {
-  const { language, languages, palette, palettes, setLanguage, setPalette } =
-    React.useContext(AppSettingsContext);
-
-  return {
-    language,
-    languages,
-    palette,
-    palettes,
-    setLanguage,
-    setPalette,
-  };
-}
 
 export function useLanguage() {
   const { locale, locales, pathname, asPath, query, replace } = useRouter();

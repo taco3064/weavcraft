@@ -2,17 +2,17 @@ import { ResponsiveGrid, ResponsiveItem } from '@weavcraft/core';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { useHierarchyWidgets, useWidgetRender } from '~web/hooks';
-import { withCorePropsDefinition } from '~web/contexts';
+import { useHierarchyWidgetsQuery, useWidgetRender } from '~web/hooks';
+import { withCoreDefinition } from '~web/contexts';
 import type { PageLayoutConfigs } from '../imports.types';
 
-export default withCorePropsDefinition(function PreviewPage() {
+export default withCoreDefinition(function PreviewPage() {
   const { query } = useRouter();
   const { id, mode, type } = query as Record<string, string>;
 
   const [config, setConfig] = useState<PageLayoutConfigs>();
 
-  const [widgets] = useHierarchyWidgets(
+  const [widgets] = useHierarchyWidgetsQuery(
     (type === 'pages' && config?.layouts) || [],
     mode === 'tutorial'
   );

@@ -3,9 +3,8 @@ import { nanoid } from 'nanoid';
 import { useQuery } from '@tanstack/react-query';
 import type { Breakpoint } from '@mui/material/styles';
 
-import { NAV_ITEMS, useHierarchyWidgets } from '~web/hooks';
+import * as Hooks from '~web/hooks';
 import { ViewModeEnum } from './PageLayoutsEditor.types';
-import { useTutorialMode } from '~web/contexts';
 import type * as Types from '../imports.types';
 import type { MenuDialogProps } from '~web/components';
 import type { WidgetLayout } from '../EventFlowManager';
@@ -32,14 +31,12 @@ export function useChangeEvents(
   Record<string, Types.HierarchyWidget>,
   ChangeEvents
 ] {
-  const isTutorialMode = useTutorialMode();
+  const isTutorialMode = Hooks.useTutorialMode();
   const managerRef = React.useRef<() => void>();
   const [, startTransition] = React.useTransition();
 
-  const [hierarchyWidgets, setHierarchyWidgets] = useHierarchyWidgets(
-    config?.layouts || [],
-    isTutorialMode
-  );
+  const [hierarchyWidgets, setHierarchyWidgets] =
+    Hooks.useHierarchyWidgetsQuery(config?.layouts || [], isTutorialMode);
 
   return [
     React.useCallback((fn: (() => void) | null) => {
@@ -129,7 +126,7 @@ export function useWidgetCreate(
 } {
   const [hierarchies, setHierarchies] = React.useState<Types.HierarchyData[]>();
 
-  const isTutorialMode = useTutorialMode();
+  const isTutorialMode = Hooks.useTutorialMode();
   const queryHash = React.useId();
 
   const { data: root } = useQuery({
@@ -176,7 +173,7 @@ export function useWidgetCreate(
             icon:
               type === EnumHierarchyType.GROUP
                 ? 'faFolder'
-                : NAV_ITEMS.widgets.icon,
+                : Hooks.NAV_ITEMS.widgets.icon,
           })),
         };
       }

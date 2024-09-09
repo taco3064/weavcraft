@@ -4,15 +4,13 @@ import { useTranslation } from 'next-i18next';
 import '@xyflow/react/dist/style.css';
 
 import Editor from './EventFlowManager.Editor';
-import { LayoutSourcesProvider } from '~web/contexts';
+import { Provider } from '~web/contexts';
 import { useInitialization } from './EventFlowManager.hooks';
 import type { DoneRef, EventFlowManagerProps } from './EventFlowManager.types';
 
 export default forwardRef<DoneRef, EventFlowManagerProps>(
   function EventFlowManager({ active, config, layouts, onClose }, ref) {
-    const widget = Object.values(layouts).find(
-      ({ id }) => id === config.widgetId
-    );
+    const { [config.id]: hierarchy } = layouts;
     const { t } = useTranslation();
 
     const [{ edges, nodes }, onManagerClose] = useInitialization({
@@ -21,16 +19,18 @@ export default forwardRef<DoneRef, EventFlowManagerProps>(
       onClose,
     });
 
-    return !widget ? null : (
+    return !hierarchy?.payload ? null : (
       <ReactFlowProvider>
-        <LayoutSourcesProvider {...{ layouts }}>
+        <Provider.HierarchyData data={layouts}>
           <Editor
             {...{ ref, edges, nodes }}
             title={active.eventPath}
-            description={t(`widgets:lbl-component.${widget.component}`)}
+            description={t(
+              `widgets:lbl-component.${hierarchy.payload.component}`
+            )}
             onClose={onManagerClose}
           />
-        </LayoutSourcesProvider>
+        </Provider.HierarchyData>
       </ReactFlowProvider>
     );
   }

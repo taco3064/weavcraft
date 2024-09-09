@@ -1,11 +1,18 @@
 import * as Flow from '@xyflow/react';
-import * as React from 'react';
 import _debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import _set from 'lodash/set';
 import { TodoEnum, type Todos } from '@weavcraft/common';
 import { digraph, fromDot, toDot, type RootGraphModel } from 'ts-graphviz';
 import { nanoid } from 'nanoid';
+
+import {
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { NODE_SIZE, START_NODE, SUB_FLOW_SIZE } from '~web/components';
 import { EditorModeEnum } from './EventFlowManager.types';
@@ -27,7 +34,7 @@ export function useInitialization({
   const options = _get(config, ['events', active.config.id, active.eventPath]);
 
   return [
-    React.useMemo(() => {
+    useMemo(() => {
       const todos: [string, Todos][] = Object.entries(options?.todos || {});
       const graph = !options?.dot ? undefined : fromDot(options.dot);
 
@@ -126,20 +133,17 @@ export function useFlowProps(
   const [edges, setEdges, onEdgesChange] = Flow.useEdgesState(els.edges);
   const [nodes, setNodes, onNodesChange] = Flow.useNodesState(els.nodes);
 
-  const nodesRef = React.useRef<Map<string, TodoNode>>(new Map());
-  const disableFitViewRef = React.useRef(false);
-  const debounceFitView = React.useMemo(
-    () => _debounce(fitView, 200),
-    [fitView]
-  );
+  const nodesRef = useRef<Map<string, TodoNode>>(new Map());
+  const disableFitViewRef = useRef(false);
+  const debounceFitView = useMemo(() => _debounce(fitView, 200), [fitView]);
 
-  React.useImperativeHandle(
+  useImperativeHandle(
     nodesRef,
     () => new Map(nodes.map((node) => [node.id, node])),
     [nodes]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!disableFitViewRef.current) {
       const handleResize = () =>
         debounceFitView({ duration: fitViewDuration, nodes });
@@ -213,8 +217,8 @@ export function useFlowProps(
 
 export function useTodoEdit(setFlowState: (...args: SetFlowStateArgs) => void) {
   const { screenToFlowPosition } = Flow.useReactFlow();
-  const [editing, setEditing] = React.useState<EditingTodo>();
-  const clientRef = React.useRef<Flow.XYPosition>();
+  const [editing, setEditing] = useState<EditingTodo>();
+  const clientRef = useRef<Flow.XYPosition>();
 
   return [
     { mode: editing?.mode, editing },

@@ -1,27 +1,20 @@
 import _get from 'lodash/get';
-import { createContext, useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
+import { Context } from '~web/contexts';
 
 import type {
   GetCorePropsFn,
   MappingPath,
-  CorePropsDefinitionContextValue,
-} from './CorePropsDefinition.types';
-
-export function getBasePropPath(path: string) {
-  return path.replace(/\.?propMapping$/, '');
-}
-
-export const CorePropsDefinitionContext =
-  createContext<CorePropsDefinitionContextValue | null>(null);
+} from './useCoreDefinitionContext.types';
 
 export function useCorePropsGetter() {
-  const definitions = useContext(
-    CorePropsDefinitionContext
-  ) as CorePropsDefinitionContextValue;
+  const definitions = useContext(Context.CoreDefinition);
 
   return useCallback<GetCorePropsFn>(
     (component) => {
-      const definition = definitions[component];
+      const { [component]: definition } = definitions as NonNullable<
+        typeof definitions
+      >;
 
       const { dataBindingProps, elementNodeProps, primitiveValueProps } =
         definition;

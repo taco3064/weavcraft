@@ -6,10 +6,10 @@ import { forwardRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
-import { ConfirmToggle, Link } from '~web/components';
+import { ConfirmToggle, Link, PortalWrapper } from '~web/components';
 import { EnumHierarchyType } from '~web/services';
 import { useToolbarStyles } from './HierarchyList.styles';
-import { PortalWrapper, useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 import type { HierarchyToolbarProps } from './HierarchyList.types';
 
 export default forwardRef<HTMLDivElement, HierarchyToolbarProps>(

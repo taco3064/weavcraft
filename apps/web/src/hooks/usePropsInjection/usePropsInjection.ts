@@ -6,13 +6,18 @@ import { useCallback, useMemo } from 'react';
 import type { JsonObject } from 'type-fest';
 
 import { DataPropEnum, NodeCaseEnum } from './usePropsInjection.types';
-import { useCorePropsGetter } from '~web/contexts';
 import { useNodeFinder } from '../useNodeActions';
-import type { ComponentConfig } from '../useWidgetRender';
-import type { MappingPath } from '../imports.types';
+import type { ComponentConfig, DataFields } from '../useWidgetRender';
+
+import {
+  useCorePropsGetter,
+  type MappingPath,
+} from '../useCoreDefinitionContext';
 
 import type {
+  DataFieldIndexes,
   DataSource,
+  DataSourceOptions,
   PropsSettingChangeHandler,
   ResetPropMappingOptions,
 } from './usePropsInjection.types';
@@ -30,6 +35,36 @@ export function useDataPropName({ component }: ComponentConfig) {
 
     return dataBindingProps?.[dataPropName] ? dataPropName : undefined;
   }, [component, getCoreProps]);
+}
+
+export function useDataSourceGenerator() {
+  const getSourceOptions = useCallback(
+    (
+      type: DataPropEnum,
+      dataStructure: DataFields,
+      baseIndexes: DataFieldIndexes = []
+    ) =>
+      dataStructure.reduce<Required<DataSourceOptions>[]>((acc, field, i) => {
+        const [fieldPath, structure] = Array.isArray(field) ? field : [field];
+
+        const fieldType = Array.isArray(structure)
+          ? DataPropEnum.Records
+          : DataPropEnum.Data;
+
+        if (type === fieldType) {
+          const indexes = Array.isArray(structure)
+            ? [...baseIndexes, i, 1]
+            : [...baseIndexes, i];
+
+          acc.push({ fieldPath, indexes });
+        }
+
+        return acc;
+      }, []),
+    []
+  );
+
+  return { getSourceOptions };
 }
 
 export function useInjectionHandler(

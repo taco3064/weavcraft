@@ -14,7 +14,7 @@ import Core, {
 import { MenuDialog, Link } from '~web/components';
 import { useBreadcrumbs } from './Breadcrumbs.hooks';
 import { useMainStyles } from './Breadcrumbs.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 import type { BreadcrumbsProps } from './Breadcrumbs.types';
 
 const MAX_ITEMS: BreakpointValues<number> = {

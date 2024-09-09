@@ -5,17 +5,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider } from '@mui/material/styles';
 
 import NotistackProvider from '../Notistack';
-import { withBaseProvider } from './AppProviderManager.hocs';
-import type { AppProviderManagerProps } from './AppProviderManager.types';
+import { withBaseProvider } from './AppSettings.hocs';
+import type { AppSettingsProviderProps } from './AppSettings.types';
 
 import {
   AppSettingsContext,
   useContextInit,
   useLanguage,
   usePalette,
-} from './AppProviderManager.hooks';
+} from './AppSettings.hooks';
 
-export default withBaseProvider<AppProviderManagerProps>(
+export default withBaseProvider<AppSettingsProviderProps>(
   function AppProviderManager({ children, isTutorialMode }) {
     const language = useLanguage();
     const palette = usePalette();

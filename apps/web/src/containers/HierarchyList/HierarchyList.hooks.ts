@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { useTranslation } from 'next-i18next';
 
 import { EnumHierarchyType, updateHierarchyData } from '~web/services';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 
 import type { HierarchyData, SearchHierarchyParams } from '../imports.types';
 

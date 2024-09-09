@@ -4,7 +4,7 @@ import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { AppProviderManager } from '~web/contexts';
+import { Provider } from '~web/contexts';
 import type { AppProps } from './imports.types';
 
 export default appWithTranslation(function App({
@@ -32,9 +32,9 @@ export default appWithTranslation(function App({
         <title>{t('ttl-weavcraft')}</title>
       </Head>
 
-      <AppProviderManager isTutorialMode={isTutorialMode}>
+      <Provider.AppSettings isTutorialMode={isTutorialMode}>
         {getLayout(<Component {...pageProps} />)}
-      </AppProviderManager>
+      </Provider.AppSettings>
     </>
   );
 });

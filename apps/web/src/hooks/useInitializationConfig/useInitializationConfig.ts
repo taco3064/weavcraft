@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 
 import { getHierarchyDataById, getSuperiorHierarchies } from '~web/services';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '../useAppSettingsContext';
 import type { InitializationConfig } from './useInitializationConfig.types';
 import type { QueryFunctionParams } from '../imports.types';
 

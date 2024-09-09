@@ -11,11 +11,16 @@ import PropItem from './PropsSettingList.PropItem';
 import SourceSelect from './PropsSettingList.SourceSelect';
 import { EditorList, SwitchListItem } from '~web/components';
 import { SourceModeEnum } from './PropsSettingList.types';
-import { useCorePropsGetter } from '~web/contexts';
-import { useDataPropName, useInjectionHandler, useNodePaths } from '~web/hooks';
 import { useMainStyles } from './PropsSettingList.styles';
 import { DataSource } from '../imports.types';
 import type { PropsSettingListProps } from './PropsSettingList.types';
+
+import {
+  useCorePropsGetter,
+  useDataPropName,
+  useInjectionHandler,
+  useNodePaths,
+} from '~web/hooks';
 
 export default function PropsSettingList({
   config,

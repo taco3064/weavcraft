@@ -18,11 +18,11 @@ import { useSnackbar } from 'notistack';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { ColorInput, EditorList, PaletteViewer } from '~web/components';
-import { PortalWrapper, useTogglePortal, useTutorialMode } from '~web/contexts';
+import * as Comp from '~web/components';
 import { upsertThemePalette } from '~web/services';
 import { useMainStyles } from './PaletteEditor.styles';
 import { usePalettePreview } from './PaletteEditor.hooks';
+import { useTogglePortal, useTutorialMode } from '~web/hooks';
 import type { PaletteEditorProps } from './PaletteEditor.types';
 import type { ColorName, PaletteColor, ThemePalette } from '../imports.types';
 
@@ -69,7 +69,7 @@ export default function PaletteEditor({
   return (
     <Slide in direction="up" timeout={1200}>
       <Container disableGutters className={classes.root} maxWidth={maxWidth}>
-        <PortalWrapper
+        <Comp.PortalWrapper
           WrapperComponent={Toolbar}
           containerEl={toolbarEl}
           variant="dense"
@@ -101,9 +101,9 @@ export default function PaletteEditor({
               <Core.Icon code="faSave" />
             </IconButton>
           </Tooltip>
-        </PortalWrapper>
+        </Comp.PortalWrapper>
 
-        <PaletteViewer
+        <Comp.PaletteViewer
           disableResponsiveText
           config={value}
           size={size}
@@ -115,8 +115,8 @@ export default function PaletteEditor({
           }
         />
 
-        <PortalWrapper containerEl={containerEl}>
-          <EditorList
+        <Comp.PortalWrapper containerEl={containerEl}>
+          <Comp.EditorList
             key={editing?.join('|')}
             title={t('themes:ttl-editor')}
             onClose={() => onToggle(false)}
@@ -161,7 +161,7 @@ export default function PaletteEditor({
                             }
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
-                              inputComponent: ColorInput as never,
+                              inputComponent: Comp.ColorInput as never,
                               inputProps: {
                                 prefixed: true,
                                 alpha: true,
@@ -177,7 +177,7 @@ export default function PaletteEditor({
               })
             }
           />
-        </PortalWrapper>
+        </Comp.PortalWrapper>
       </Container>
     </Slide>
   );

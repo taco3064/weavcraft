@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useCorePropsGetter } from '~web/contexts';
+import { useCorePropsGetter } from '~web/hooks';
 import type { ConfigPaths, ComponentConfig } from '~web/hooks';
 import type { ChildNodeGroup, NodePaths } from './ElementNodeList.types';
 
