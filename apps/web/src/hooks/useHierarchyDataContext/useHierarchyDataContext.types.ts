@@ -5,3 +5,9 @@ export type HierarchyWidget = SetRequired<
   HierarchyData<WidgetConfigs>,
   'payload'
 >;
+
+export interface MenuItemOptions {
+  primary: string;
+  secondary?: string;
+  value: string;
+}

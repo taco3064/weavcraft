@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Trans } from 'next-i18next';
 
 import { PALETTES } from '~web/themes';
-import { useAppSettings } from '~web/contexts';
+import { useAppSettings } from '~web/hooks';
 import { useSettingsStyles } from './UserSettings.styles';
 import type { BaseSettingProps } from './UserSettings.types';
 import type { LanguageCode, PaletteCode } from '../imports.types';

@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 
 import { NAV_ITEMS, USER_SETTINGS } from './useAppMenuItems.const';
 import { getSigninOptions } from '~web/services';
-import { useAuth } from '~web/contexts';
+import { useAuth } from '../useAppSettingsContext';
 import type { SigninOptions, SigninProvider } from '../imports.types';
 
 import type {

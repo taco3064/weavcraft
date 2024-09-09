@@ -5,7 +5,7 @@ import type { EventItem } from '../EventList';
 
 import type {
   EdgeType,
-  LayoutSourcesProviderProps,
+  HierarchyWidget,
   PageLayoutConfigs,
   TodoEdge,
   TodoNode,
@@ -50,9 +50,9 @@ export interface EditingTodo {
 }
 
 //* Component Props
-export interface EventFlowManagerProps
-  extends Pick<LayoutSourcesProviderProps, 'layouts'> {
+export interface EventFlowManagerProps {
   active: ActiveEvent;
+  layouts: Record<string, HierarchyWidget>;
   config: WidgetLayout;
   onClose: (e: WidgetLayout) => void;
 }

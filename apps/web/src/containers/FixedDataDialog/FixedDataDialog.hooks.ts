@@ -3,8 +3,7 @@ import _toPath from 'lodash/toPath';
 import { useCallback, useMemo, useState, useTransition } from 'react';
 import type { JsonObject } from 'type-fest';
 
-import { DataPropEnum, useDataPropName } from '~web/hooks';
-import { useCorePropsGetter } from '~web/contexts';
+import { DataPropEnum, useCorePropsGetter, useDataPropName } from '~web/hooks';
 
 import type {
   DataDetailProps,

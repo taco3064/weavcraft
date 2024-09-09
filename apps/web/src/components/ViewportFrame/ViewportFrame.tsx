@@ -6,7 +6,7 @@ import { useBreakpointMatches, type BreakpointValues } from '@weavcraft/core';
 import { useEffect, useId, useMemo, useState } from 'react';
 
 import { useMainStyles } from './ViewportFrame.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 
 import type {
   FrameStyle,

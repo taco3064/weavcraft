@@ -27,8 +27,8 @@ import CompressionContent from './MainLayout.CompressionContent';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
 import { Link, SwitchIconButton } from '~web/components';
-import { TogglePortalProvider, useAuth } from '~web/contexts';
-import { useAppNavItems, useSigninProviders } from '~web/hooks';
+import { Provider } from '~web/contexts';
+import { useAppNavItems, useAuth, useSigninProviders } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
 import type { MainLayoutProps, MenuMode } from './MainLayout.types';
 
@@ -49,7 +49,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, [pathname]);
 
   return (
-    <TogglePortalProvider
+    <Provider.TogglePortal
       open={menuMode === 'custom'}
       onToggle={(isOpen) => setMenuMode(isOpen ? 'custom' : undefined)}
       render={(containerRef) => (

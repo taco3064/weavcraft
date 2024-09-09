@@ -19,7 +19,7 @@ import MoveToParentFolderFab from './HierarchyList.MoveToParentFolderFab';
 import UpsertDialog from './HierarchyList.UpsertDialog';
 import { deleteHierarchyData, searchHierarchies } from '~web/services';
 import { useHierarchyStyles } from './HierarchyList.styles';
-import { useTutorialMode } from '~web/contexts';
+import { useTutorialMode } from '~web/hooks';
 import type { HierarchyListProps, UpsertedState } from './HierarchyList.types';
 import type { PortalContainerEl } from '../imports.types';
 

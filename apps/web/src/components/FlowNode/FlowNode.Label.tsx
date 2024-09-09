@@ -24,7 +24,7 @@ export default function NodeLabel({
   const { classes } = useLabelStyles({ borderStyle, size, type });
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} elevation={0}>
       <CardHeader
         classes={{ action: classes.action }}
         title={title}

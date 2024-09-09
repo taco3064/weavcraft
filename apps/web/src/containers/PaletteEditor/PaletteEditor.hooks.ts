@@ -2,7 +2,7 @@ import cl from 'color';
 import createPalette from '@mui/material/styles/createPalette';
 import { useEffect, useRef } from 'react';
 
-import { useAppSettings } from '~web/contexts';
+import { useAppSettings } from '~web/hooks';
 import type { PaletteCode, ThemePalette } from '../imports.types';
 
 export function usePalettePreview() {

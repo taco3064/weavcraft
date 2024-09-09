@@ -1,5 +1,4 @@
 import type { Get } from 'type-fest';
-import type { ReactNode } from 'react';
 
 import type {
   ComponentDefinition,
@@ -26,12 +25,3 @@ export type GetCorePropsFn = (component: CoreComponent) => {
     [Path: string]: ElementNodeDefinition | PrimitiveValueDefinition;
   };
 };
-
-export type CorePropsDefinitionContextValue = Record<
-  CoreComponent,
-  ComponentDefinition
->;
-
-export interface CorePropsDefinitionProviderProps {
-  children: ReactNode;
-}

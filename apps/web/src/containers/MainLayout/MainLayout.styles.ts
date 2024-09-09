@@ -38,6 +38,7 @@ export const useMainStyles = makeStyles<StyleParams>({ name: 'MainLayout' })(
         height: menuMode ? theme.spacing(4) : 'max-content',
         top: theme.spacing(menuMode ? 2 : 0),
         marginBottom: theme.spacing(menuMode ? 4 : 0),
+        zIndex: theme.zIndex.appBar + 1,
 
         borderRadius: !menuMode
           ? 0
