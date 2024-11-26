@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "commit": "git-cz",
+    "commit": "git add . && git-cz",
     "prepare": "husky",
     "typegen": "cd ./apps/web && ts-node --project ./tsconfig.json ./typegen.ts"
   },
