@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
-import type { ComponentType, ReactNode } from 'react';
+import { createElement, type ComponentType, type ReactNode } from 'react';
 
 export function withBaseProvider<P extends { children: ReactNode }>(
   TargetComponent: ComponentType<P>
@@ -11,7 +11,7 @@ export function withBaseProvider<P extends { children: ReactNode }>(
     return (
       <QueryClientProvider client={QUERY_CLIENT}>
         <SessionProvider>
-          <TargetComponent {...(props as P)}>{children}</TargetComponent>
+          {createElement(TargetComponent, { ...props, children } as P)}
         </SessionProvider>
       </QueryClientProvider>
     );

@@ -46,8 +46,8 @@ export function useChangeEvents(
     },
 
     onAddLastChild: (config, path, component) => {
-      const nodes: ComponentConfig[] =
-        _get(config, ['props', path, 'value']) || [];
+      const nodes = (_get(config, ['props', path, 'value']) ||
+        []) as ComponentConfig[];
 
       const propConfig: ElementNodeProp = {
         type: 'ElementNode',

@@ -17,6 +17,7 @@ import type {
   PaletteViewerProps,
   PrimaryColor,
   SecondaryColor,
+  TooltipStyleParams,
 } from './PaletteViewer.types';
 
 const primaries: PrimaryColor[] = ['primary', 'secondary'];
@@ -168,7 +169,8 @@ export default function PaletteViewer({
         ]}
         {...(onColorClick && {
           onItemClick: (e, _identifier, item) => {
-            const { id, color, contrastText } = item as Record<string, string>;
+            const { id, color, contrastText } =
+              item as unknown as TooltipStyleParams;
 
             e.stopPropagation();
 

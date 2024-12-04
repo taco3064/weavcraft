@@ -4,10 +4,10 @@ import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
+import { createElement, useState, useTransition } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 import type { Breakpoint } from '@mui/material/styles';
 
@@ -61,9 +61,9 @@ export default withCoreDefinition(function PageLayoutsEditor({
     onManagerDone();
   });
 
-  const generate = Hooks.useWidgetRender((WidgetEl, { key, props }) => (
-    <WidgetEl key={key} {...props} />
-  ));
+  const generate = Hooks.useWidgetRender((WidgetEl, { key, props }) =>
+    createElement(WidgetEl, { ...props, key })
+  );
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertPageLayouts,

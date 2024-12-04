@@ -147,8 +147,8 @@ export function useFieldBindingOptions({
       }));
     }
     case Hooks.NodeCaseEnum.FixedRecords: {
-      const records: JsonObject[] =
-        _get(parentNode, ['props', 'records', 'value']) || [];
+      const records = (_get(parentNode, ['props', 'records', 'value']) ||
+        []) as JsonObject[];
 
       const fixedFields = new Set(
         records.map((data) => Object.keys(data)).flat()

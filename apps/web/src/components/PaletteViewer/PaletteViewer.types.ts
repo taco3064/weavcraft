@@ -6,6 +6,11 @@ export type PaletteColor = { name: ColorName; color?: string };
 export type PrimaryColor = 'primary' | 'secondary';
 export type SecondaryColor = 'info' | 'success' | 'warning' | 'error';
 
+export type TooltipStyleParams = Record<
+  'id' | 'color' | 'contrastText',
+  string
+>;
+
 export type ColorName =
   | 'background.default'
   | 'background.paper'
