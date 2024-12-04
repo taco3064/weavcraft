@@ -21,9 +21,6 @@ const nextConfig = {
   i18n,
   pageExtensions: ['page.tsx', 'service.ts'],
   transpilePackages: ['@mui/x-charts', '@mui/material/styles'],
-  nx: {
-    svgr: true,
-  },
   compiler: {
     // For other options, see https://nextjs.org/docs/architecture/nextjs-compiler#emotion
     emotion: true,
