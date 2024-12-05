@@ -1,7 +1,8 @@
 /* eslint-disable */
 export default {
-  coverageDirectory: '../../coverage/libs/core',
-  coverageReporters: ['html', 'text', 'lcov'],
+  collectCoverage: true,
+  coverageReporters: ['text'],
+  coveragePathIgnorePatterns: ['./src/styles', 'index.ts'],
   displayName: 'core',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   preset: '../../jest.preset.js',

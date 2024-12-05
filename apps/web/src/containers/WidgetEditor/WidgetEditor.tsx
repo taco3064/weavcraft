@@ -5,10 +5,10 @@ import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import _isEmpty from 'lodash/isEmpty';
+import { createElement, useState, useTransition } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useState, useTransition } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import * as Hooks from '~web/hooks';
@@ -68,9 +68,9 @@ export default withCoreDefinition(function WidgetEditor({
     changeEvents
   );
 
-  const generate = Hooks.useWidgetRender((WidgetEl, { config, key, props }) => (
-    <WidgetEl key={key} {...withNodeCreateButton(props, config)} />
-  ));
+  const generate = Hooks.useWidgetRender((WidgetEl, { config, key, props }) =>
+    createElement(WidgetEl, { ...withNodeCreateButton(props, config), key })
+  );
 
   const { mutate: upsert } = useMutation({
     mutationFn: upsertWidgetConfig,

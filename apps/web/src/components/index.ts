@@ -10,6 +10,7 @@ export * from './FlowEdge';
 export * from './FlowNode';
 export * from './IconSwitch';
 export * from './Link';
+export * from './LogoIcon';
 export * from './MenuDialog';
 export * from './PageContainer';
 export * from './PaletteViewer';

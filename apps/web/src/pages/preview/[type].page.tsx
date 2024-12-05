@@ -1,5 +1,5 @@
 import { ResponsiveGrid, ResponsiveItem } from '@weavcraft/core';
-import { useEffect, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { useHierarchyWidgetsQuery, useWidgetRender } from '~web/hooks';
@@ -17,9 +17,9 @@ export default withCoreDefinition(function PreviewPage() {
     mode === 'tutorial'
   );
 
-  const generate = useWidgetRender((WidgetEl, { key, props }) => (
-    <WidgetEl key={key} {...props} />
-  ));
+  const generate = useWidgetRender((WidgetEl, { key, props }) =>
+    createElement(WidgetEl, { ...props, key })
+  );
 
   useEffect(() => {
     if (id && global.window?.parent) {

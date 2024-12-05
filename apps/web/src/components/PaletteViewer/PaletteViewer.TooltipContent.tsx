@@ -1,18 +1,19 @@
-import { useTooltipStyles } from './PaletteViewer.styles';
-
 import {
   ChartsItemTooltipContent,
   type ChartsItemContentProps,
 } from '@mui/x-charts';
 
+import { useTooltipStyles } from './PaletteViewer.styles';
+import type { TooltipStyleParams } from './PaletteViewer.types';
+
 export default function TooltipContent({
   classes: defaultClasses,
   ...props
-}: ChartsItemContentProps) {
+}: ChartsItemContentProps<'pie'>) {
   const { itemData, series } = props;
 
   const { classes, cx } = useTooltipStyles(
-    series.data[itemData.dataIndex as number] as Record<string, string>
+    series.data[itemData.dataIndex as number] as unknown as TooltipStyleParams
   );
 
   return (

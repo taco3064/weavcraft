@@ -1,7 +1,11 @@
 import { makeStyles } from 'tss-react/mui';
-import type { ViewerStyleParams } from './PaletteViewer.types';
 
-export const useTooltipStyles = makeStyles<Record<string, string>>({
+import type {
+  TooltipStyleParams,
+  ViewerStyleParams,
+} from './PaletteViewer.types';
+
+export const useTooltipStyles = makeStyles<TooltipStyleParams>({
   name: 'TooltipContent',
 })((theme, { color, contrastText }) => ({
   root: {
