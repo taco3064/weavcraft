@@ -16,13 +16,16 @@ import type {
   PrimitiveDefinition,
 } from '../imports.types';
 
-export function useFixedData(config: ComponentConfig) {
-  const dataPropName = useDataPropName(config) as DataPropEnum;
+export function useFixedData(
+  config: ComponentConfig
+): JsonObject | JsonObject[] {
+  const dataPropName = useDataPropName(config);
 
-  return (_get(config, ['props', dataPropName as string, 'value']) ||
-    (dataPropName === DataPropEnum.Data ? {} : [])) as
-    | JsonObject
-    | JsonObject[];
+  return (
+    (_get(config, ['props', dataPropName as DataPropEnum, 'value']) as
+      | JsonObject
+      | JsonObject[]) || (dataPropName === DataPropEnum.Data ? {} : [])
+  );
 }
 
 export function useFormFields({ component }: ComponentConfig) {
