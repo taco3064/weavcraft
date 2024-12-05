@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.82](https://github.com/taco3064/weavcraft/compare/v0.0.81...v0.0.82) (2024-12-05)
+
+
+### Bug Fixes
+
+* fixed the nx config ([3c212b7](https://github.com/taco3064/weavcraft/commit/3c212b7b950c272eae406609a61c517adacfc23a))
+* **libs/core:** update project.json ([7bbddb0](https://github.com/taco3064/weavcraft/commit/7bbddb0149e08732a5ff2e4e2a4ed5a2c7c6a4d3))
+* **web:** fixed the sonarqube issue ([713b550](https://github.com/taco3064/weavcraft/commit/713b55043043cf258b80d8ba8b5f77f676c3df67))
+* **web:** remove @svgr/webpack ([8a96802](https://github.com/taco3064/weavcraft/commit/8a96802b948e37521ea6fb748223ebeea0e92796))
+
 ### [0.0.81](https://github.com/taco3064/weavcraft/compare/v0.0.80...v0.0.81) (2024-09-09)
 
 
