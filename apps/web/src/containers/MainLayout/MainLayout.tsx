@@ -17,7 +17,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import NextLink from 'next/link';
 import Paper from '@mui/material/Paper';
-import SvgIcon from '@mui/material/SvgIcon';
 import Toolbar from '@mui/material/Toolbar';
 import { Suspense, useEffect, useState } from 'react';
 import { Trans } from 'next-i18next';
@@ -26,7 +25,7 @@ import { useRouter } from 'next/router';
 import CompressionContent from './MainLayout.CompressionContent';
 import UserAvatarMenu from './MainLayout.UserAvatarMenu';
 import { DEFAULT_PROPS } from './MainLayout.const';
-import { Link, SwitchIconButton } from '~web/components';
+import { Link, LogoIcon, SwitchIconButton } from '~web/components';
 import { Provider } from '~web/contexts';
 import { useAppNavItems, useAuth, useSigninProviders } from '~web/hooks';
 import { useMainStyles } from './MainLayout.styles';
@@ -41,7 +40,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { isPending, ...props } = useSigninProviders(!open);
   const { classes, cx } = useMainStyles({ menuMode });
 
-  const logo = <SvgIcon {...DEFAULT_PROPS.logo} className={classes.logo} />;
+  const logo = <LogoIcon className={classes.logo} />;
   const navItems = useAppNavItems();
 
   useEffect(() => {

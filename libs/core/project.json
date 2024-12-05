@@ -35,8 +35,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "tsc --noEmit -p libs/core/tsconfig.lib.json",
-          "tsc --noEmit -p libs/core/tsconfig.spec.json"
+          "tsc --noEmit --declaration false --composite false -p libs/core/tsconfig.lib.json",
+          "tsc --noEmit --declaration false --composite false -p libs/core/tsconfig.spec.json"
         ]
       }
     }

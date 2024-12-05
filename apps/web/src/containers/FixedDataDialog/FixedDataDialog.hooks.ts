@@ -19,11 +19,12 @@ import type {
 export function useFixedData(
   config: ComponentConfig
 ): JsonObject | JsonObject[] {
-  const dataPropName = useDataPropName(config) as DataPropEnum;
+  const dataPropName = useDataPropName(config);
 
   return (
-    _get(config, ['props', dataPropName as string, 'value']) ||
-    (dataPropName === DataPropEnum.Data ? {} : [])
+    (_get(config, ['props', dataPropName as DataPropEnum, 'value']) as
+      | JsonObject
+      | JsonObject[]) || (dataPropName === DataPropEnum.Data ? {} : [])
   );
 }
 

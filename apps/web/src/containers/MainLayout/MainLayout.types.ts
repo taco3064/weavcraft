@@ -1,6 +1,5 @@
 import type { Breakpoint } from '@mui/material/styles';
 import type { ReactNode } from 'react';
-import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { TypographyProps } from '@mui/material/Typography';
 
 import { useSigninProviders } from '~web/hooks';
@@ -13,7 +12,6 @@ export type StyleParams = {
 };
 
 export type DefaultProps = {
-  logo: SvgIconProps;
   title: Omit<TypographyProps, 'ref'>;
 };
 

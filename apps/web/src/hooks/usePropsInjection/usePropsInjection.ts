@@ -109,8 +109,8 @@ export function useInjectionHandler(
         resetPropMapping(config);
       }
 
-      const mapping: Record<string, string> =
-        _get(config, ['props', mappingPath, 'value']) || {};
+      const mapping = (_get(config, ['props', mappingPath, 'value']) ||
+        {}) as Record<string, string>;
 
       if (source) {
         _set(mapping, [propName], source);
