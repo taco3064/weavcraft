@@ -169,13 +169,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </>
                 }
               >
-                {navItems.map(({ icon, label, href, auth = false }) =>
+                {navItems.map(({ disabled, icon, label, href, auth = false }) =>
                   auth && !isAuth ? null : (
                     <ListItem key={label} disableGutters disablePadding>
                       <ListItemButton
-                        LinkComponent={NextLink}
-                        href={href}
+                        disabled={disabled}
                         selected={pathname.startsWith(href)}
+                        {...(!disabled && {
+                          LinkComponent: NextLink,
+                          href,
+                        })}
                       >
                         <ListItemAvatar className={classes.avatar}>
                           <Avatar>

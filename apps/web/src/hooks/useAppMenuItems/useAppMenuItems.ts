@@ -29,17 +29,21 @@ export function useAppNavItems() {
       'ttl-breadcrumbs'
     );
 
-    return Object.keys(resource).reduce<NavItem[]>((result, category) => {
-      if (category in NAV_ITEMS) {
-        result.push({
-          ...NAV_ITEMS[category],
-          label: `ttl-breadcrumbs.${category}`,
-          href: `/${category}`,
-        });
-      }
+    return Object.entries<{ disabled?: boolean }>(resource).reduce<NavItem[]>(
+      (result, [category, { disabled = false }]) => {
+        if (category in NAV_ITEMS) {
+          result.push({
+            ...NAV_ITEMS[category],
+            disabled,
+            label: `ttl-breadcrumbs.${category}`,
+            href: `/${category}`,
+          });
+        }
 
-      return result;
-    }, []);
+        return result;
+      },
+      []
+    );
   }, [i18n]);
 }
 

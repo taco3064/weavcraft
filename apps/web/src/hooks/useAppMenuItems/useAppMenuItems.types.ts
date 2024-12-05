@@ -20,6 +20,7 @@ export type MenuItemOptions<P = {}> = P &
   (
     | 'divider'
     | {
+        disabled?: boolean;
         href?: Href;
         icon?: Core.IconCode;
         label: string;
