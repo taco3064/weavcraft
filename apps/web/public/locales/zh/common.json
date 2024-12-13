@@ -72,22 +72,27 @@
       "description": "查看有關 Weavcraft 的教學指南，了解如何使用各種功能和工具"
     },
     "gallery": {
+      "disabled": true,
       "label": "展示迴廊",
       "description": "發現和分享其他使用者創建的主題、組件與網站，與 Weavcraft 社群互動"
     },
     "themes": {
+      "disabled": true,
       "label": "主題風格",
       "description": "使用各種預設的主題和風格來自訂你網站的外觀和獨特性"
     },
     "widgets": {
+      "disabled": true,
       "label": "組件管理",
       "description": "管理和組織你的自定義組件集合，輕鬆結合資料存取並在你的網頁中重複使用"
     },
     "pages": {
+      "disabled": true,
       "label": "網頁配置",
       "description": "輕鬆創建和編輯你的網頁，配置資料來源、將事件綁定到組件並添加互動元素的選項"
     },
     "websites": {
+      "disabled": true,
       "label": "個人網站",
       "description": "查看、管理和自訂你的個人網站，包括 URL 設置、頁面配置和主題選擇"
     }

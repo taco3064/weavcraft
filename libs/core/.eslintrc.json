@@ -3,10 +3,6 @@
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
-    },
-    {
       "files": ["*.ts", "*.tsx"],
       "rules": {
         "@typescript-eslint/ban-types": "off",
@@ -15,8 +11,16 @@
       }
     },
     {
-      "files": ["*.js", "*.jsx"],
-      "rules": {}
+      "files": ["src/**/*.js", "src/**/*.jsx"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Program",
+            "message": "JavaScript files are not allowed in the src directory. Please use TypeScript (.ts or .tsx) instead."
+          }
+        ]
+      }
     }
   ]
 }

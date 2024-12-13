@@ -72,22 +72,27 @@
       "description": "Learn how to use Weavcraft with step-by-step tutorials, covering a wide range of topics and features."
     },
     "gallery": {
+      "disabled": true,
       "label": "Craft Gallery",
       "description": "Discover themes, widgets and websites created by other users, and engage with the Weavcraft community."
     },
     "themes": {
+      "disabled": true,
       "label": "Theme Styles",
       "description": "Customize the look and feel of your website with a variety of pre-designed themes and styles."
     },
     "widgets": {
+      "disabled": true,
       "label": "Widget Storage",
       "description": "Manage and organize your collection of customized widgets for easy access and reuse in your web pages."
     },
     "pages": {
+      "disabled": true,
       "label": "Web Pages",
       "description": "Create and edit your web pages effortlessly, with options to configure data sources, and add interactive elements."
     },
     "websites": {
+      "disabled": true,
       "label": "Websites",
       "description": "View, manage, and customize your personal websites, including URL settings, and theme selection."
     }
