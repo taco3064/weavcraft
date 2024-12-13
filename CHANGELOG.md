@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.83](https://github.com/taco3064/weavcraft/compare/v0.0.82...v0.0.83) (2024-12-13)
+
+
+### Bug Fixes
+
+* **web:** disabled the uncompleted pages ([98c8ace](https://github.com/taco3064/weavcraft/commit/98c8ace4e6193bebceab91e31a85301582be7830))
+
 ### [0.0.82](https://github.com/taco3064/weavcraft/compare/v0.0.81...v0.0.82) (2024-12-05)
 
 
