@@ -63,7 +63,7 @@ export function useChangeEvents(
             [hierarchy.payloadId as string]: hierarchy,
           });
 
-          onChange({ ...value, layouts: [...value.layouts, layout] });
+          onChange({ ...value, layouts: [...value.layouts || [], layout] });
         }),
 
       onLayoutChange: (e) =>
