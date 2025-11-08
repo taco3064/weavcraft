@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.84](https://github.com/taco3064/weavcraft/compare/v0.0.83...v0.0.84) (2025-11-08)
+
+
+### Bug Fixes
+
+* **apps/web:** update locale texts ([a0d04a5](https://github.com/taco3064/weavcraft/commit/a0d04a5a12e6f7b5d13573c1bec6ff98b888e92b))
+* **web:** 修正 pages 新增組件的錯誤 ([5ea04d5](https://github.com/taco3064/weavcraft/commit/5ea04d53969bf59686f724c84ce8da15ae9cc0a4))
+
 ### [0.0.83](https://github.com/taco3064/weavcraft/compare/v0.0.82...v0.0.83) (2024-12-13)
 
 
