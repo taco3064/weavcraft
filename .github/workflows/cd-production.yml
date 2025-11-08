@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Initialization
         id: init
@@ -80,13 +80,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Authenticate to Google Cloud
-        id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+        id: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
       - name: Pull project
         run: |
@@ -102,72 +102,3 @@ jobs:
             -m "${{ needs.get-affected-projects.outputs.list }}"
 
           git push --tags origin HEAD:production
-
-  publish-libs:
-    name: Publish @weavcraft libs to NPM
-    if: needs.get-affected-projects.outputs.core == '1'
-    uses: ./.github/workflows/publish-libs.yml
-    with:
-      version: ${{ needs.get-version.outputs.latest }}
-    needs:
-      - get-version
-      - get-affected-projects
-    secrets:
-      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  deploy-api:
-    name: Deploy api with K8s
-    if: needs.get-affected-projects.outputs.api == '1'
-    uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
-    needs:
-      - get-version
-      - get-affected-projects
-    with:
-      appVersion: ${{ needs.get-version.outputs.latest }}
-      helmVersion: ${{ needs.get-version.outputs.latest }}
-      environment: k8s-weavcraft
-    secrets:
-      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
-      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
-      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
-      ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
-      ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
-      ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
-      ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
-      ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
-
-  deploy-web:
-    name: Deploy web to Vercel
-    if: needs.get-affected-projects.outputs.web == '1'
-    runs-on: ubuntu-latest
-    environment: actions
-    needs:
-      - get-version
-      - get-affected-projects
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GIT_TOKEN }}
-
-      - name: Pull project again
-        id: init
-        run: |
-          git config --global user.email "${{ secrets.USEWR_EMAIL }}"
-          git config --global user.name "Taco Chang"
-          git pull
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-project-name: web
-          vercel-args: '--prod'
-          scope: ${{ secrets.VERCEL_SCOPE }}

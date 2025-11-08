@@ -1,0 +1,33 @@
+name: Deploy Libs
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version to publish (e.g., 1.0.0)"
+                required: true
+                type: string
+    workflow_call:
+        inputs:
+            version:
+                description: "Version to publish"
+                required: true
+                type: string
+        secrets:
+            GIT_TOKEN:
+                required: true
+            NPM_TOKEN:
+                required: true
+
+jobs:
+    publish-libs:
+        name: Publish @weavcraft libs to NPM
+        uses: ./.github/workflows/publish-libs.yml
+        with:
+            version: ${{ inputs.version || github.ref_name }}
+        secrets:
+            GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
