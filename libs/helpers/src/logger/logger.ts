@@ -33,18 +33,20 @@ function colorize(logLevel: string, message: string) {
 export const loggerFormat = (isColor = true) =>
   format.combine(
     format.timestamp(),
-    format.printf(({ level, message, timestamp, service, pid, context }) => {
-      context = context ? ` [${context}] ` : ' ';
-      service = service ? `[${service.toUpperCase()}]` : '';
-      const levelStr = level.padStart(7).toUpperCase();
-      const contextFormat = isColor ? yellow(`${context}`) : context;
-      const serviceFormat = isColor ? colorize(level, `${service}`) : service;
-      const pidFormat = isColor ? colorize(level, `${pid}`) : pid;
-      const levelFormat = isColor ? colorize(level, `${levelStr}`) : levelStr;
-      const messageFormat = isColor ? colorize(level, `${message}`) : message;
+    format.printf(
+      ({ level, message, timestamp, service, pid, context }: any) => {
+        context = context ? ` [${context}] ` : ' ';
+        service = service ? `[${service.toUpperCase()}]` : '';
+        const levelStr = level.padStart(7).toUpperCase();
+        const contextFormat = isColor ? yellow(`${context}`) : context;
+        const serviceFormat = isColor ? colorize(level, `${service}`) : service;
+        const pidFormat = isColor ? colorize(level, `${pid}`) : pid;
+        const levelFormat = isColor ? colorize(level, `${levelStr}`) : levelStr;
+        const messageFormat = isColor ? colorize(level, `${message}`) : message;
 
-      return `${serviceFormat} ${pidFormat} - ${timestamp}${levelFormat}${contextFormat}${messageFormat}`;
-    })
+        return `${serviceFormat} ${pidFormat} - ${timestamp}${levelFormat}${contextFormat}${messageFormat}`;
+      }
+    )
   );
 
 interface LoggerHelperOptions {

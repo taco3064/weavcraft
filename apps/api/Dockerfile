@@ -1,4 +1,4 @@
-FROM node:20.11.1-alpine3.19 AS builder
+FROM node:22.12.0-alpine3.21 AS builder
 
 WORKDIR /build
 COPY apps/api apps/api
@@ -9,6 +9,10 @@ COPY nx.json nx.json
 COPY tsconfig.base.json tsconfig.base.json
 COPY jest.config.ts jest.config.ts
 COPY jest.preset.js jest.preset.js
+COPY .eslintrc.json .eslintrc.json
+COPY .eslintignore .eslintignore
+COPY .nvmrc .nvmrc
+COPY .prettierrc .prettierrc
 
 RUN npm install --ignore-scripts \
     && npx nx run api:build:production \
@@ -18,7 +22,7 @@ RUN npm install --ignore-scripts \
     && npm cache clean --force
 
 
-FROM node:20.11.1-alpine3.19
+FROM node:22.12.0-alpine3.21
 
 RUN addgroup -S nonroot \
     && adduser -S nonroot -G nonroot
