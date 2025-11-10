@@ -31,6 +31,9 @@ export class RefreshTokenRepository {
   ) {
     const duration = moment.duration(refreshTokenExpired, 'seconds');
     const expireAfterSeconds = duration.asSeconds();
+    if (!this.mongoClient.connection.db) {
+      throw new Error('Database connection not established');
+    }
     const collections = await this.mongoClient.connection.db
       .listCollections()
       .toArray();
@@ -56,7 +59,9 @@ export class RefreshTokenRepository {
     return data?.toJSON() ?? null;
   }
 
-  async deleteByToken(refreshToken: string) {
+  async deleteByToken(
+    refreshToken: string
+  ): Promise<{ acknowledged: boolean; deletedCount: number }> {
     return this.model.deleteOne({ refreshToken });
   }
 
