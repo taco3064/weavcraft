@@ -1,7 +1,18 @@
 FROM node:22.12.0-alpine3.21 AS builder
 
 WORKDIR /build
-COPY . .
+COPY apps/api apps/api
+COPY libs libs
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+COPY nx.json nx.json
+COPY tsconfig.base.json tsconfig.base.json
+COPY jest.config.ts jest.config.ts
+COPY jest.preset.js jest.preset.js
+COPY .eslintrc.json .eslintrc.json
+COPY .eslintignore .eslintignore
+COPY .nvmrc .nvmrc
+COPY .prettierrc .prettierrc
 
 RUN npm install --ignore-scripts \
     && npx nx run api:build:production \
