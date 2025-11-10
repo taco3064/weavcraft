@@ -10,7 +10,8 @@
     "@supabase/supabase-js": "^2.42.7",
     "@weavcraft/helpers": "0.0.1",
     "moment": "^2.30.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "mongodb": "^7.0.0"
   },
   "type": "commonjs",
   "main": "./src/index.js",
