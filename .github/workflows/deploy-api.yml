@@ -1,59 +1,72 @@
-name: Deploy API
+name: CD Release
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version to deploy (e.g., 1.0.0)"
-                required: true
-                type: string
-    workflow_call:
-        inputs:
-            version:
-                description: "Version to deploy"
-                required: true
-                type: string
-        secrets:
-            GIT_TOKEN:
-                required: true
-            KUBE_CONFIG:
-                required: true
-            HARBOR_HOST:
-                required: true
-            HARBOR_USERNAME:
-                required: true
-            HARBOR_TOKEN:
-                required: true
-            ENV_DB_MONGO_URI:
-                required: true
-            ENV_PUBLIC_SUPABASE_URL:
-                required: true
-            ENV_PUBLIC_SUPABASE_ANON_KEY:
-                required: true
-            ENV_JWT_SECRET:
-                required: true
-            ENV_JWT_EXPIRES_IN:
-                required: true
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (e.g., v1.0.0)"
+        required: true
+        type: string
 
 jobs:
-    deploy-api:
-        name: Deploy api with K8s
-        uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
+  get-tag-info:
+    name: Get tag information
+    runs-on: ubuntu-latest
+    environment: k8s-weavcraft
+    outputs:
+      version: ${{ steps.tag-info.outputs.version }}
+      deploy_api: ${{ steps.tag-info.outputs.deploy_api }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-            appVersion: ${{ inputs.version || github.ref_name }}
-            helmVersion: ${{ inputs.version || github.ref_name }}
-            environment: k8s-weavcraft
-        secrets:
-            GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-            KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-            HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
-            HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
-            HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
-            ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
-            ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
-            ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
-            ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
-            ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Get tag info
+        id: tag-info
+        run: |
+          # Get tag name
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG_NAME="${{ inputs.tag }}"
+          else
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+          fi
+
+          # Parse version from tag name (remove 'v' prefix)
+          VERSION="${TAG_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # Get tag annotation message
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' "$TAG_NAME")
+
+          # Parse affected projects (from tag message)
+          if echo "$TAG_MESSAGE" | grep -q "api"; then
+            echo "deploy_api=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_api=false" >> $GITHUB_OUTPUT
+          fi
+  deploy-api:
+    name: Deploy api with K8s
+    if: needs.get-tag-info.outputs.deploy_api == 'true'
+    uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
+    with:
+      appVersion: ${{ needs.get-tag-info.outputs.version || github.ref_name }}
+      helmVersion: ${{ needs.get-tag-info.outputs.version || github.ref_name }}
+      environment: k8s-weavcraft
+    needs:
+      - get-tag-info
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+      HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+      HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+      ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
+      ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
+      ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
+      ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
+      ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}
