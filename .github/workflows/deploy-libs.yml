@@ -1,33 +1,63 @@
-name: Deploy Libs
+name: CD Release
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version to publish (e.g., 1.0.0)"
-                required: true
-                type: string
-    workflow_call:
-        inputs:
-            version:
-                description: "Version to publish"
-                required: true
-                type: string
-        secrets:
-            GIT_TOKEN:
-                required: true
-            NPM_TOKEN:
-                required: true
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (e.g., v1.0.0)"
+        required: true
+        type: string
 
 jobs:
-    publish-libs:
-        name: Publish @weavcraft libs to NPM
-        uses: ./.github/workflows/publish-libs.yml
+  get-tag-info:
+    name: Get tag information
+    runs-on: ubuntu-latest
+    environment: actions
+    outputs:
+      version: ${{ steps.tag-info.outputs.version }}
+      publish_libs: ${{ steps.tag-info.outputs.publish_libs }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-            version: ${{ inputs.version || github.ref_name }}
-        secrets:
-            GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Get tag info
+        id: tag-info
+        run: |
+          # Get tag name
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG_NAME="${{ inputs.tag }}"
+          else
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+          fi
+
+          # Parse version from tag name (remove 'v' prefix)
+          VERSION="${TAG_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # Get tag annotation message
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' "$TAG_NAME")
+
+          # Parse affected projects (from tag message)
+          if echo "$TAG_MESSAGE" | grep -q "core"; then
+            echo "publish_libs=true" >> $GITHUB_OUTPUT
+          else
+            echo "publish_libs=false" >> $GITHUB_OUTPUT
+          fi
+
+  publish-libs:
+    name: Publish @weavcraft libs to NPM
+    if: needs.get-tag-info.outputs.publish_libs == 'true'
+    uses: ./.github/workflows/publish-libs.yml
+    needs:
+      - get-tag-info
+    with:
+      version: ${{ needs.get-tag-info.outputs.version || github.ref_name }}
+    secrets:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
