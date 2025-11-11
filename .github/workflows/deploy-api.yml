@@ -1,0 +1,59 @@
+name: Deploy API
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version to deploy (e.g., 1.0.0)"
+                required: true
+                type: string
+    workflow_call:
+        inputs:
+            version:
+                description: "Version to deploy"
+                required: true
+                type: string
+        secrets:
+            GIT_TOKEN:
+                required: true
+            KUBE_CONFIG:
+                required: true
+            HARBOR_HOST:
+                required: true
+            HARBOR_USERNAME:
+                required: true
+            HARBOR_TOKEN:
+                required: true
+            ENV_DB_MONGO_URI:
+                required: true
+            ENV_PUBLIC_SUPABASE_URL:
+                required: true
+            ENV_PUBLIC_SUPABASE_ANON_KEY:
+                required: true
+            ENV_JWT_SECRET:
+                required: true
+            ENV_JWT_EXPIRES_IN:
+                required: true
+
+jobs:
+    deploy-api:
+        name: Deploy api with K8s
+        uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
+        with:
+            appVersion: ${{ inputs.version || github.ref_name }}
+            helmVersion: ${{ inputs.version || github.ref_name }}
+            environment: k8s-weavcraft
+        secrets:
+            GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+            KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+            HARBOR_HOST: ${{ secrets.HARBOR_HOST }}
+            HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+            HARBOR_TOKEN: ${{ secrets.HARBOR_TOKEN }}
+            ENV_DB_MONGO_URI: ${{ secrets.ENV_DB_MONGO_URI }}
+            ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
+            ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
+            ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
+            ENV_JWT_EXPIRES_IN: ${{ secrets.ENV_JWT_EXPIRES_IN }}

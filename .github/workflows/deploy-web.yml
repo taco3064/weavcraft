@@ -1,0 +1,61 @@
+name: Deploy Web
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version to deploy (e.g., 1.0.0)"
+                required: true
+                type: string
+    workflow_call:
+        inputs:
+            version:
+                description: "Version to deploy"
+                required: true
+                type: string
+        secrets:
+            GIT_TOKEN:
+                required: true
+            USEWR_EMAIL:
+                required: true
+            VERCEL_TOKEN:
+                required: true
+            VERCEL_ORG_ID:
+                required: true
+            VERCEL_PROJECT_ID:
+                required: true
+            VERCEL_SCOPE:
+                required: true
+
+jobs:
+    deploy-web:
+        name: Deploy web to Vercel
+        runs-on: ubuntu-latest
+        environment: actions
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GIT_TOKEN }}
+
+            - name: Pull project again
+              id: init
+              run: |
+                  git config --global user.email "${{ secrets.USEWR_EMAIL }}"
+                  git config --global user.name "Taco Chang"
+                  git pull
+
+            - name: Deploy to Vercel
+              uses: amondnet/vercel-action@v25
+              with:
+                  vercel-token: ${{ secrets.VERCEL_TOKEN }}
+                  vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+                  vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+                  vercel-project-name: web
+                  vercel-args: "--prod"
+                  scope: ${{ secrets.VERCEL_SCOPE }}
