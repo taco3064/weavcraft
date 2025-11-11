@@ -52,7 +52,7 @@ jobs:
 
   publish-libs:
     name: Publish @weavcraft libs to NPM
-    if: needs.get-tag-info.outputs.publish_libs == 'true'
+    # if: needs.get-tag-info.outputs.publish_libs == 'true'
     uses: ./.github/workflows/publish-libs.yml
     needs:
       - get-tag-info
