@@ -1,61 +1,82 @@
-name: Deploy Web
+name: CD Release
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
-        inputs:
-            version:
-                description: "Version to deploy (e.g., 1.0.0)"
-                required: true
-                type: string
-    workflow_call:
-        inputs:
-            version:
-                description: "Version to deploy"
-                required: true
-                type: string
-        secrets:
-            GIT_TOKEN:
-                required: true
-            USEWR_EMAIL:
-                required: true
-            VERCEL_TOKEN:
-                required: true
-            VERCEL_ORG_ID:
-                required: true
-            VERCEL_PROJECT_ID:
-                required: true
-            VERCEL_SCOPE:
-                required: true
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (e.g., v1.0.0)"
+        required: true
+        type: string
 
 jobs:
-    deploy-web:
-        name: Deploy web to Vercel
-        runs-on: ubuntu-latest
-        environment: actions
+  get-tag-info:
+    name: Get tag information
+    runs-on: ubuntu-latest
+    environment: actions
+    outputs:
+      version: ${{ steps.tag-info.outputs.version }}
+      deploy_web: ${{ steps.tag-info.outputs.deploy_web }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
-                  token: ${{ secrets.GIT_TOKEN }}
+      - name: Get tag info
+        id: tag-info
+        run: |
+          # Get tag name
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG_NAME="${{ inputs.tag }}"
+          else
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+          fi
 
-            - name: Pull project again
-              id: init
-              run: |
-                  git config --global user.email "${{ secrets.USEWR_EMAIL }}"
-                  git config --global user.name "Taco Chang"
-                  git pull
+          # Parse version from tag name (remove 'v' prefix)
+          VERSION="${TAG_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-            - name: Deploy to Vercel
-              uses: amondnet/vercel-action@v25
-              with:
-                  vercel-token: ${{ secrets.VERCEL_TOKEN }}
-                  vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-                  vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-                  vercel-project-name: web
-                  vercel-args: "--prod"
-                  scope: ${{ secrets.VERCEL_SCOPE }}
+          # Get tag annotation message
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' "$TAG_NAME")
+
+          # Parse affected projects (from tag message)
+          if echo "$TAG_MESSAGE" | grep -q "web"; then
+            echo "deploy_web=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_web=false" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-web:
+    name: Deploy web to Vercel
+    if: needs.get-tag-info.outputs.deploy_web == 'true'
+    runs-on: ubuntu-latest
+    environment: actions
+    needs:
+      - get-tag-info
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Pull project again
+        id: init
+        run: |
+          git config --global user.email "${{ secrets.USEWR_EMAIL }}"
+          git config --global user.name "Taco Chang"
+          git pull
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-project-name: web
+          vercel-args: "--prod"
+          scope: ${{ secrets.VERCEL_SCOPE }}
