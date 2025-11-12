@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.88](https://github.com/taco3064/weavcraft/compare/v0.0.87...v0.0.88) (2025-11-12)
+
 ### [0.0.87](https://github.com/taco3064/weavcraft/compare/v0.0.86...v0.0.87) (2025-11-11)
 
 ### [0.0.86](https://github.com/taco3064/weavcraft/compare/v0.0.85...v0.0.86) (2025-11-11)
