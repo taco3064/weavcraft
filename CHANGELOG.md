@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.89](https://github.com/taco3064/weavcraft/compare/v0.0.88...v0.0.89) (2025-11-12)
+
+
+### Bug Fixes
+
+* **ci:** remove git pull step in deploy-web workflow ([29b9823](https://github.com/taco3064/weavcraft/commit/29b98231bc7eff9d71eb3cfa8066332a148e8067))
+
 ### [0.0.88](https://github.com/taco3064/weavcraft/compare/v0.0.87...v0.0.88) (2025-11-12)
 
 ### [0.0.87](https://github.com/taco3064/weavcraft/compare/v0.0.86...v0.0.87) (2025-11-11)
