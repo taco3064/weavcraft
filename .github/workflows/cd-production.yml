@@ -58,7 +58,7 @@ jobs:
       GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
   release-tag:
-    name: Publish libs
+    name: Release Tag
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: actions
