@@ -51,7 +51,6 @@ jobs:
           fi
   deploy-api:
     name: Deploy api with K8s
-    # if: needs.get-tag-info.outputs.deploy_api == 'true'
     uses: royfuwei/rf-devops/.github/workflows/weavcraft-deploy-k8s.yml@main
     with:
       appVersion: ${{ needs.get-tag-info.outputs.version || github.ref_name }}
