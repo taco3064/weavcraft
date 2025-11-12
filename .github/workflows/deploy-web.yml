@@ -52,7 +52,6 @@ jobs:
 
   deploy-web:
     name: Deploy web to Vercel
-    if: needs.get-tag-info.outputs.deploy_web == 'true'
     runs-on: ubuntu-latest
     environment: actions
     needs:
