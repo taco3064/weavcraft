@@ -1,5 +1,16 @@
 # Weavcraft
 
+> [!IMPORTANT]
+> **Archived · No Longer Maintained**
+>
+> This project has been permanently archived and is no longer maintained.
+>
+> No further development, updates, bug fixes, or support will be provided.
+>
+> The source code and documentation remain publicly available for historical purposes and technical reference.
+>
+> Please note that some dependencies, configurations, or integrations may be outdated or no longer functional.
+
 [![警报](https://sonarqube.royfuwei.dev/api/project_badges/measure?project=weavcraft-web&metric=alert_status&token=sqb_ce4a906ed0fae5a39374c58df13da7fc1d0ffb10)](https://sonarqube.royfuwei.dev/dashboard?id=weavcraft-web) web, [![警报](https://sonarqube.royfuwei.dev/api/project_badges/measure?project=weavcraft-api&metric=alert_status&token=sqb_e1bdd6a5abd15adffb0126a64d355e3c85e53e4c)](https://sonarqube.royfuwei.dev/dashboard?id=weavcraft-api) api, [![警报](https://sonarqube.royfuwei.dev/api/project_badges/measure?project=weavcraft-libs&metric=alert_status&token=sqb_1939738204883b581493590a57b98b3c8a0a06d5)](https://sonarqube.royfuwei.dev/dashboard?id=weavcraft-libs) libs
 
 **Unleash Your Creativity, Craft Your Digital World.**
